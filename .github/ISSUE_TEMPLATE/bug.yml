@@ -1,7 +1,8 @@
 name: 버그 리포트
 description: 버그를 보고하기 위한 템플릿입니다.
-title: '[bug]: '
-labels: ['bug']
+title: "[bug]: "
+labels: ["bug"]
+projects: ["FC-DEV-FinalProject/2"]
 body:
   - type: textarea
     id: bug-report

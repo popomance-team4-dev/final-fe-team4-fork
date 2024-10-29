@@ -9,19 +9,24 @@
     "lint": "eslint . --fix",
     "type-check": "tsc --noEmit -p tsconfig.app.json",
     "preview": "vite preview",
-    "prepare": "lefthook install",
-    "byul": "cp .github/hooks/byulBash.sh .git/hooks/prepare-commit-msg && chmod +x .git/hooks/prepare-commit-msg",
-    "byul:w": "copy .github\\hooks\\byulBash.sh .git\\hooks\\prepare-commit-msg"
+    "prepare": "lefthook install"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.454.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@types/node": "^22.8.4",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -29,7 +34,9 @@
     "eslint-plugin-react-refresh": "^0.4.13",
     "globals": "^15.11.0",
     "lefthook": "^1.8.2",
+    "postcss": "^8.4.47",
     "prettier": "3.3.3",
+    "tailwindcss": "^3.4.14",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.10.0",
     "vite": "^5.4.9"

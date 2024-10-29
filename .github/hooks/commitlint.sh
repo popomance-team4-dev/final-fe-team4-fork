@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # prepare-commit-msg
 
-# Exit if no commit message file is provided
 if [ -z "$1" ]; then
     echo "Error: No commit message file provided"
     exit 1

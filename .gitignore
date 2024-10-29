@@ -37,3 +37,4 @@ temp
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
+!typescriptreact.code-snippets

@@ -10,8 +10,8 @@
     "type-check": "tsc --noEmit -p tsconfig.app.json",
     "preview": "vite preview",
     "prepare": "lefthook install",
-    "byulBash": "cp .github/hooks/byulBash.sh .git/hooks/prepare-commit-msg && chmod +x .git/hooks/prepare-commit-msg",
-    "byulBash:window": "copy .github\\hooks\\byulBash.sh .git\\hooks\\prepare-commit-msg"
+    "byul": "cp .github/hooks/byulBash.sh .git/hooks/prepare-commit-msg && chmod +x .git/hooks/prepare-commit-msg",
+    "byul:w": "copy .github\\hooks\\byulBash.sh .git\\hooks\\prepare-commit-msg"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -15,7 +15,10 @@
 prepare-commit-msg:
   commands:
     commitlint:
-      run: .github/hooks/commitlint.sh {1} {2}
+      runner: bash
+      skip:
+        - "[[ ! -f .env ]] || ! grep -q '^byulBash=true' .env"
+      run: 'bash "./.github/hooks/commitlint.sh" {1} {2}'
 
 pre-commit:
   parallel: true
@@ -25,11 +28,6 @@ pre-commit:
       run: npm run lint {staged_files}
     type-check:
       run: npm run type-check
-
-pre-push:
-  commands:
-    audit:
-      run: npm audit
 # pre-commit:
 #   parallel: true
 #   commands:

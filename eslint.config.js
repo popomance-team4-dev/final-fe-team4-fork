@@ -22,6 +22,7 @@ export default [
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'prettier/prettier': ['error', { endOfLine: 'lf' }],
     },
   },
   eslintPluginPrettier,

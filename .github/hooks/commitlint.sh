@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # prepare-commit-msg
 
 # Exit if no commit message file is provided

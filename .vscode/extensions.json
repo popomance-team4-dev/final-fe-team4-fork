@@ -4,6 +4,6 @@
     "dbaeumer.vscode-eslint",
     "bradlc.vscode-tailwindcss",
     "csstools.postcss",
-    "GitHub.vscode-pull-request-github"
+    "GitHub.vscode-pull-request-github",
   ]
 }

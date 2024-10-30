@@ -6,6 +6,7 @@ import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import eslintPluginImport from 'eslint-plugin-import';
 import pluginQuery from '@tanstack/eslint-plugin-query';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default [
   js.configs.recommended,
@@ -22,6 +23,7 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       import: eslintPluginImport,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -31,6 +33,8 @@ export default [
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'import/no-unresolved': 'error',
       'import/named': 'error',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
     settings: {
       'import/resolver': {

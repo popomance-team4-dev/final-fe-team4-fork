@@ -1,9 +1,10 @@
-import reactLogo from '@/assets/react.svg';
 import './index.css';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+import reactLogo from '@/assets/react.svg';
 
+const queryClient = new QueryClient();
 function App() {
   return (
     <>

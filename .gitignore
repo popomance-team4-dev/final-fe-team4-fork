@@ -32,3 +32,9 @@ temp
 .env
 .env.local
 .env.development.local
+
+# vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!typescriptreact.code-snippets

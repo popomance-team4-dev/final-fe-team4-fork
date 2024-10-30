@@ -1,8 +1,8 @@
 feat:
   - head-branch: ['^feat/', '^feat-']
 
-setting:
-  - head-branch: ['^setting/', '^setting-']
+settings:
+  - head-branch: ['^settings/', '^settings-']
 
 design:
   - head-branch: ['^design/', '^design-']

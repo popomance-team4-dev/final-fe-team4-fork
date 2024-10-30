@@ -1,4 +1,4 @@
-name: Add needs-review and size/XL pull requests to projects
+name: Add pull requests to projects
 
 on:
   pull_request:
@@ -15,5 +15,5 @@ jobs:
         with:
           project-url: https://github.com/orgs/FC-DEV-FinalProject/projects/2 
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
-          labeled: needs-review, size/XL
-          label-operator: AND
+          labeled: feat, setting, fix, docs, refactor, test
+          label-operator: OR

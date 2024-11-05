@@ -60,6 +60,10 @@
   * {
     @apply border-border;
   }
+
+  html {
+    font-family: Pretendard, system-ui, sans-serif;
+  }
   body {
     @apply bg-background text-foreground;
   }

@@ -5,9 +5,9 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 export default {
   darkMode: ['class'],
   content: [
-    './src/components/**/*.{html,js}',
-    './scr/pages/**/*.{html,js}',
-    './src/routes/**/*.{html,js}',
+    './src/components/**/*.{html,js,jsx,ts,tsx}',
+    './src/pages/**/*.{html,js,jsx,ts,tsx}',
+    './src/routes/**/*.{html,js,ts,jsx,tsx}',
     './index.html',
   ],
   theme: {
@@ -19,6 +19,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Pretendard', ...fontFamily.sans],
+        pretendard: ['Pretendard', 'sans-serif'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -66,9 +70,7 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
-      fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans],
-      },
+
       keyframes: {
         'accordion-down': {
           from: {

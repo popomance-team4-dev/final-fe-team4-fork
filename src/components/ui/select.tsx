@@ -47,6 +47,8 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
           'relative z-50 w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-gray-200 bg-white text-gray-950 shadow-md',
           className
         )}
+        position="popper"
+        side="bottom"
         {...props}
       >
         <SelectPrimitive.Viewport className="p-1">{children}</SelectPrimitive.Viewport>

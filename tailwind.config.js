@@ -6,8 +6,8 @@ export default {
   darkMode: ['class'],
   content: [
     './src/components/**/*.{html,js,jsx,ts,tsx}',
-    './scr/pages/**/*.{html,js,jsx,ts,tsx}',
-    './src/routes/**/*.{html,js,}',
+    './src/pages/**/*.{html,js,jsx,ts,tsx}',
+    './src/routes/**/*.{html,js,ts,jsx,tsx}',
     './index.html',
   ],
   theme: {

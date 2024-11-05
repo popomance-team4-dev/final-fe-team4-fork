@@ -1,23 +1,15 @@
 import './index.css';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-import reactLogo from '@/assets/react.svg';
-
-const queryClient = new QueryClient();
-function App() {
+const App = () => {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <div>
-          <h1 className="h-1"> hi </h1>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={reactLogo} className="logo vite" alt="Vite logo" />
-          </a>
-        </div>
-      </QueryClientProvider>
+      {/* -----이 부분은 지워질 예정 */}
+      <div>
+        <a href="https://vitejs.dev" target="_blank"></a>
+      </div>
+      {/* -----이 부분은 지워질 예정 */}
     </>
   );
-}
+};
 
 export default App;

@@ -1,6 +1,6 @@
 'use client';
 
-import { AudioWaveform, Play, Volume2 } from 'lucide-react';
+import { AudioWaveform, CirclePlay, Volume2 } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -13,7 +13,7 @@ interface SoundStatusProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const STATUS_CONFIGS = {
-  global_speed: { icon: Play, unit: 'x' },
+  global_speed: { icon: CirclePlay, unit: 'x' },
   global_volume: { icon: Volume2, unit: '%' },
   global_pitch: { icon: AudioWaveform, unit: '' },
 } as const;

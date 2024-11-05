@@ -4,7 +4,12 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
-  content: ['src/**/*.{ts,js,tsx}', './index.html'],
+  content: [
+    './src/components/**/*.{html,js}',
+    './scr/pages/**/*.{html,js}',
+    './src/routes/**/*.{html,js}',
+    './index.html',
+  ],
   theme: {
     container: {
       center: 'true',

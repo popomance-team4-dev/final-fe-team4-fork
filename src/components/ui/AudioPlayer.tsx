@@ -79,7 +79,7 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
           }
         } catch (error) {
           if (!signal.aborted) {
-            console.error('Failed to initialize WaveSurfer:', error);
+            console.error('Failed to initialize WaveSurfer:', error); // 에러 처리는 추후에...
           }
         }
       };

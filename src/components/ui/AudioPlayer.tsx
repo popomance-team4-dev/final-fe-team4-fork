@@ -21,10 +21,13 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
     const [totalTime, setTotalTime] = React.useState(0);
 
     React.useEffect(() => {
+      const controller = new AbortController(); // AbortController 생성
+      const { signal } = controller; // signal을 비동기 작업에 전달
+
       let wavesurfer: WaveSurfer | null = null;
-      let isDestroyed = false; // 컴포넌트가 언마운트(제거) 되었는지 확인하는 변수
+
       const initWavesurfer = async () => {
-        if (!waveformRef.current || isDestroyed) return;
+        if (!waveformRef.current || signal.aborted) return;
 
         // WaveSurfer 설정 옵션
         const options: WaveSurferOptions = {
@@ -46,10 +49,10 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
           wavesurfer = WaveSurfer.create(options);
           wavesurferRef.current = wavesurfer;
 
-          if (!isDestroyed) {
+          if (!signal.aborted) {
             // 오디오 파일 로드 시 전체 시간 설정
             wavesurfer.on('ready', () => {
-              if (!isDestroyed) {
+              if (!signal.aborted) {
                 const duration = wavesurfer?.getDuration() || 0;
                 setTotalTime(duration);
               }
@@ -57,16 +60,16 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
 
             // 재생 중 현재 시간 업데이트
             wavesurfer.on('audioprocess', (time) => {
-              if (!isDestroyed) {
+              if (!signal.aborted) {
                 setCurrentTime(time);
               }
             });
 
             // 재생/일시정지/종료 상태 관리
-            wavesurfer.on('play', () => !isDestroyed && setIsPlaying(true));
-            wavesurfer.on('pause', () => !isDestroyed && setIsPlaying(false));
+            wavesurfer.on('play', () => !signal.aborted && setIsPlaying(true));
+            wavesurfer.on('pause', () => !signal.aborted && setIsPlaying(false));
             wavesurfer.on('finish', () => {
-              if (!isDestroyed) {
+              if (!signal.aborted) {
                 setIsPlaying(false);
                 setCurrentTime(0);
               }
@@ -76,7 +79,7 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
             await wavesurfer.load(audioUrl);
           }
         } catch (error) {
-          if (!isDestroyed) {
+          if (!signal.aborted) {
             console.error('Failed to initialize WaveSurfer:', error);
           }
         }
@@ -85,9 +88,9 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
       // WaveSurfer 초기화
       initWavesurfer();
 
-      // WaveSurfer가 언마운트 되었을 때 리소스를 정리하는 cleanup 함수
+      // cleanup 함수에서 AbortController를 통해 비동기 작업 취소
       return () => {
-        isDestroyed = true;
+        controller.abort(); // 컴포넌트가 언마운트되면 AbortController 취소
         if (wavesurfer) {
           wavesurfer.unAll(); // 모든 이벤트 리스너 제거
           wavesurfer.destroy(); // WaveSurfer 인스턴스 제거

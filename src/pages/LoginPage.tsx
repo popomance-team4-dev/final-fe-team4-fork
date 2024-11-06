@@ -1,33 +1,16 @@
-import { Button } from '@/components/ui/commonbutton';
+import LoginComponent from '@/components/login/loginbox';
+
 const LoginPage = () => {
   return (
-    <div>
-      <h1>LoginPage</h1>
-      <div>
-        <div>default</div>
-        <Button>Button</Button>
-        <Button disabled>Button</Button>
+    <div className="flex w-full h-screen">
+      {/* 왼쪽 이미지 영역 */}
+      <div className="w-1/2 h-full bg-[#F7F7F7]">
+        <img alt="Login Visual" className="w-full h-full object-cover" />
       </div>
-      <div>
-        <div>mid + icon</div>
-        <Button size="mid" icon>
-          Button
-        </Button>
-        <Button size="mid" icon disabled>
-          Button
-        </Button>
-      </div>
-      <div>
-        <div>icon</div>
-        <Button size="icon" />
-        <Button size="icon" disabled />
-      </div>
-      <div>
-        <div>Secondary - Grey</div>
-        <Button variant="secondary">Button</Button>
-        <Button variant="secondary" disabled>
-          Button
-        </Button>
+
+      {/* 오른쪽 로그인 영역 */}
+      <div className="w-1/2 h-full flex items-center justify-center bg-white">
+        <LoginComponent />
       </div>
     </div>
   );

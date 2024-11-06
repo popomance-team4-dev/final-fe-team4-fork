@@ -28,7 +28,9 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
       let wavesurfer: WaveSurfer | null = null;
 
       const initWavesurfer = async () => {
-        if (!waveformRef.current || signal.aborted) return;
+        if (!waveformRef.current || signal.aborted) {
+          return;
+        }
 
         const options: WaveSurferOptions = {
           container: waveformRef.current,
@@ -95,7 +97,9 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
     }, [audioUrl]);
 
     const handlePlayPause = () => {
-      if (!wavesurferRef.current) return;
+      if (!wavesurferRef.current) {
+        return;
+      }
 
       if (isPlaying) {
         wavesurferRef.current.pause();
@@ -105,7 +109,9 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
     };
 
     const formatTime = (seconds: number): string => {
-      if (!seconds) return '00:00';
+      if (!seconds) {
+        return '00:00';
+      }
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = Math.floor(seconds % 60);
       return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;

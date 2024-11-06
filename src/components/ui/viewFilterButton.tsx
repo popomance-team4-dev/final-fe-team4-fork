@@ -8,12 +8,20 @@ interface ViewButtonProps {
   isSelected: boolean;
   onClick: () => void;
   position: 'left' | 'right';
+  ariaLabel: string;
 }
 
-const ViewButton: React.FC<ViewButtonProps> = ({ label, isSelected, onClick, position }) => {
+const ViewButton: React.FC<ViewButtonProps> = ({
+  label,
+  isSelected,
+  onClick,
+  position,
+  ariaLabel,
+}) => {
   return (
     <button
       onClick={onClick}
+      aria-label={ariaLabel}
       className={cn(
         ' flex items-center justify-center p-1.5 transition-colors border w-7 h-6',
         position === 'left' ? 'rounded-l-full' : 'rounded-r-full',
@@ -35,12 +43,14 @@ const ViewButtonGroup: React.FC = () => {
         isSelected={isListView}
         onClick={() => setIsListView(true)}
         position="left"
+        ariaLabel="리스트 보기"
       />
       <ViewButton
         label={<LayoutGrid />}
         isSelected={!isListView}
         onClick={() => setIsListView(false)}
         position="right"
+        ariaLabel="그리드 보기"
       />
     </div>
   );

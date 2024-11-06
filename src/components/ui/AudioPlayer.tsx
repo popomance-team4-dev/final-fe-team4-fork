@@ -1,5 +1,6 @@
 'use client';
 
+import { throttle } from 'lodash';
 import * as React from 'react';
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js';
 
@@ -21,36 +22,33 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
     const [totalTime, setTotalTime] = React.useState(0);
 
     React.useEffect(() => {
-      const controller = new AbortController(); // AbortController 생성
-      const { signal } = controller; // signal을 비동기 작업에 전달
+      const controller = new AbortController();
+      const { signal } = controller;
 
       let wavesurfer: WaveSurfer | null = null;
 
       const initWavesurfer = async () => {
         if (!waveformRef.current || signal.aborted) return;
 
-        // WaveSurfer 설정 옵션
         const options: WaveSurferOptions = {
-          container: waveformRef.current, // 파형을 그릴 컨테이너
-          waveColor: '#c2d4ff', // 파형 색상
-          progressColor: '#356ae7', // 재생 진행 색상
-          cursorColor: 'transparent', // 커서 색상
-          barWidth: 2, // 파형 바 너비
-          barGap: 3, // 파형 바 간격
-          height: 36, // 파형 높이
-          normalize: true, // 파형 정규화 (진폭 균일화)
-          interact: true, // 사용자 상호작용 활성화
-          minPxPerSec: 30, // 초당 최소 픽셀 수 (파형 압축률)
-          fillParent: true, // 부모 요소 크기에 맞춤
+          container: waveformRef.current,
+          waveColor: '#c2d4ff',
+          progressColor: '#356ae7',
+          cursorColor: 'transparent',
+          barWidth: 2,
+          barGap: 3,
+          height: 36,
+          normalize: true,
+          interact: true,
+          minPxPerSec: 30,
+          fillParent: true,
         };
 
         try {
-          // WaveSurfer 인스턴스를 만들고 이벤트를 설정
           wavesurfer = WaveSurfer.create(options);
           wavesurferRef.current = wavesurfer;
 
           if (!signal.aborted) {
-            // 오디오 파일 로드 시 전체 시간 설정
             wavesurfer.on('ready', () => {
               if (!signal.aborted) {
                 const duration = wavesurfer?.getDuration() || 0;
@@ -58,14 +56,14 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
               }
             });
 
-            // 재생 중 현재 시간 업데이트
-            wavesurfer.on('audioprocess', (time) => {
+            const handleAudioProcess = throttle((time: number) => {
               if (!signal.aborted) {
                 setCurrentTime(time);
               }
-            });
+            }, 250);
 
-            // 재생/일시정지/종료 상태 관리
+            wavesurfer.on('audioprocess', handleAudioProcess);
+
             wavesurfer.on('play', () => !signal.aborted && setIsPlaying(true));
             wavesurfer.on('pause', () => !signal.aborted && setIsPlaying(false));
             wavesurfer.on('finish', () => {
@@ -75,7 +73,6 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
               }
             });
 
-            // 오디오 파일 로드
             await wavesurfer.load(audioUrl);
           }
         } catch (error) {
@@ -85,19 +82,17 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
         }
       };
 
-      // WaveSurfer 초기화
       initWavesurfer();
 
-      // cleanup 함수에서 AbortController를 통해 비동기 작업 취소
       return () => {
-        controller.abort(); // 컴포넌트가 언마운트되면 AbortController 취소
+        controller.abort();
         if (wavesurfer) {
-          wavesurfer.unAll(); // 모든 이벤트 리스너 제거
-          wavesurfer.destroy(); // WaveSurfer 인스턴스 제거
+          wavesurfer.unAll();
+          wavesurfer.destroy();
         }
         wavesurferRef.current = null;
       };
-    }, [audioUrl]); // audioUrl이 변경될 때마다 재실행
+    }, [audioUrl]);
 
     const handlePlayPause = () => {
       if (!wavesurferRef.current) return;

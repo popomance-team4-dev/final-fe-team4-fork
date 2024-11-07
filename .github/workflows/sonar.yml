@@ -35,12 +35,6 @@ jobs:
           
           ISSUES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&resolved=false" | jq -r '.total')
           echo "NEW_ISSUES=$ISSUES" >> $GITHUB_OUTPUT
-
-          DUPLICATED_LINES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/measures/component?componentKey=team4_fe&metricKeys=duplicated_lines_density" | jq -r '.component.measures[0].value')
-          echo "DUPLICATED_LINES=$DUPLICATED_LINES" >> $GITHUB_OUTPUT
-
-          SECURITY_HOTSPOTS=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&types=SECURITY_HOTSPOT&resolved=false" | jq -r '.total')
-          echo "SECURITY_HOTSPOTS=$SECURITY_HOTSPOTS" >> $GITHUB_OUTPUT
           
       - name: Comment PR
         if: always()
@@ -49,10 +43,6 @@ jobs:
           script: |
             const qualityGateStatus = "${{ steps.sonar-results.outputs.QUALITY_GATE }}";
             const newIssues = "${{ steps.sonar-results.outputs.NEW_ISSUES }}";
-            const duplicatedLines = "${{ steps.sonar-results.outputs.DUPLICATED_LINES }}";
-            const securityHotspots = "${{ steps.sonar-results.outputs.SECURITY_HOTSPOTS }}";
-
-
 
             let statusEmoji;
             if (qualityGateStatus === 'OK') {
@@ -69,11 +59,7 @@ jobs:
 
             💩 코드 품질 이슈 : **${newIssues}** 개   
 
-            📊 중복 코드 : **${duplicatedLines}** %
-
-            🔒 보안 취약점 : **${securityHotspots}** 건 
-
-            [Check SonarQube Quality Gate](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
+            [ 📊중복코드 또는 🔒보안취약점 이 있을 수 있습니다. ](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
                                   
             `;
             

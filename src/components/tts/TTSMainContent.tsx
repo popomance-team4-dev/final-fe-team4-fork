@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Button } from '@/components/ui/commonbutton';
-import { SaveButton, UploadButton } from '@/components/ui/iconButton';
+import { Button } from '@/components/ui/CommonButton';
+import { SaveButton, UploadButton } from '@/components/ui/IconButton';
 
 const TTSMainContent: React.FC = () => {
   return (

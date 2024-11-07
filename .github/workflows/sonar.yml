@@ -36,7 +36,12 @@ jobs:
           ISSUES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&resolved=false" | jq -r '.total')
           echo "NEW_ISSUES=$ISSUES" >> $GITHUB_OUTPUT
 
+          DUPLICATED_LINES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/measures/component?componentKey=team4_fe&metricKeys=duplicated_lines_density" | jq -r '.component.measures[0].value')
+          echo "DUPLICATED_LINES=$DUPLICATED_LINES" >> $GITHUB_OUTPUT
 
+          SECURITY_HOTSPOTS=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&types=SECURITY_HOTSPOT&resolved=false" | jq -r '.total')
+          echo "SECURITY_HOTSPOTS=$SECURITY_HOTSPOTS" >> $GITHUB_OUTPUT
+          
       - name: Comment PR
         if: always()
         uses: actions/github-script@v6
@@ -44,7 +49,11 @@ jobs:
           script: |
             const qualityGateStatus = "${{ steps.sonar-results.outputs.QUALITY_GATE }}";
             const newIssues = "${{ steps.sonar-results.outputs.NEW_ISSUES }}";
-            
+            const duplicatedLines = "${{ steps.sonar-results.outputs.DUPLICATED_LINES }}";
+            const securityHotspots = "${{ steps.sonar-results.outputs.SECURITY_HOTSPOTS }}";
+
+
+
             let statusEmoji;
             if (qualityGateStatus === 'OK') {
               statusEmoji = '✅';
@@ -53,11 +62,18 @@ jobs:
             }
             
             const comment = `## SonarQube 분석 결과
-            > 코드 품질향상을 위해 필수가 아닌 권장사항이며, 이슈를 해결하지 않아도 무방합니다. 
+            > 코드 품질향상을 위한 권장사항이며, 수정하지 않아도 무방합니다. 
+            > 하지만 더 멋진 코드가 될 수 있습니다. 😉
             
-            ${statusEmoji} Quality Gate : **${qualityGateStatus}**
+            ${statusEmoji} Quality Gate : **${qualityGateStatus}** 
 
-            📊 코드 품질 이슈 : **${newIssues}** 개   [바로가기](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
+            💩 코드 품질 이슈 : **${newIssues}** 개   
+
+            📊 중복 코드 : **${duplicatedLines}** %
+
+            🔒 보안 취약점 : **${securityHotspots}** 건 
+
+            [Check SonarQube Quality Gate](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
                                   
             `;
             

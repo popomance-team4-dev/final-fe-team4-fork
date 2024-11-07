@@ -22,6 +22,8 @@ interface TableHeaderProps {
   onAdd: () => void;
   onSelectAll?: () => void;
   isAllSelected?: boolean;
+  isListView: boolean;
+  onViewChange: (isListView: boolean) => void;
 }
 
 interface TableFooterProps {
@@ -43,11 +45,13 @@ interface TTSTableProps {
   isAllSelected?: boolean;
 }
 
-const TableHeader: React.FC<TableHeaderProps> = ({
+export const TableHeader: React.FC<TableHeaderProps> = ({
   onDelete,
   onAdd,
   onSelectAll,
   isAllSelected,
+  isListView,
+  onViewChange,
 }) => (
   <div className="flex flex-col bg-white w-full max-w-4xl mx-auto">
     <div className="flex items-center justify-between px-4 py-5 border-b border-gray-300">
@@ -63,7 +67,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({
           <span className="text-sm text-gray-800">텍스트 추가</span>
         </div>
       </div>
-      <ViewButtonGroup />
+      <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
     </div>
     <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b border-gray-300 bg-gray-50 text-sm font-medium text-black">
       <div className="w-4 ml-2 mr-2" />
@@ -78,7 +82,11 @@ const TableHeader: React.FC<TableHeaderProps> = ({
   </div>
 );
 
-const TableFooter: React.FC<TableFooterProps> = ({ selectedCount, onRegenerate, onDownload }) => (
+export const TableFooter: React.FC<TableFooterProps> = ({
+  selectedCount,
+  onRegenerate,
+  onDownload,
+}) => (
   <div className="w-full max-w-4xl mx-auto">
     <div className="flex items-center justify-between px-4 py-5 border-t border-gray-300 bg-white">
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
@@ -117,6 +125,32 @@ export const TTSTable: React.FC<TTSTableProps> = ({
   isAllSelected,
 }) => {
   const selectedCount = items.filter((item) => item.isSelected).length;
+  const [isListView, setIsListView] = React.useState(true);
+
+  const renderContent = () => {
+    if (isListView) {
+      return (
+        <TtsListTable
+          rows={items.map((item) => ({
+            id: item.id,
+            text: item.text,
+            isSelected: item.isSelected,
+            onPlay: () => onPlay(item.id),
+            speed: item.speed,
+            volume: item.volume,
+            pitch: item.pitch,
+            onSelectionChange,
+            onTextChange,
+          }))}
+          onSelectionChange={onSelectionChange}
+          onTextChange={onTextChange}
+        />
+      );
+    }
+
+    // 그리드 뷰 여기다가 추가
+    return null;
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col rounded-lg border border-gray-300 overflow-hidden bg-white">
@@ -125,26 +159,12 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         onAdd={onAdd}
         onSelectAll={onSelectAll}
         isAllSelected={isAllSelected}
+        isListView={isListView}
+        onViewChange={setIsListView}
       />
       <div className="relative flex-1">
         <ScrollArea className="h-[400px] absolute inset-0 pl-0.5 mr-0.5 my-0.5">
-          <div className="flex-1">
-            <TtsListTable
-              rows={items.map((item) => ({
-                id: item.id,
-                text: item.text,
-                isSelected: item.isSelected,
-                onPlay: () => onPlay(item.id),
-                speed: item.speed,
-                volume: item.volume,
-                pitch: item.pitch,
-                onSelectionChange,
-                onTextChange,
-              }))}
-              onSelectionChange={onSelectionChange}
-              onTextChange={onTextChange}
-            />
-          </div>
+          <div className="flex-1">{renderContent()}</div>
         </ScrollArea>
       </div>
       <TableFooter

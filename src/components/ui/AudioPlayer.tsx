@@ -1,6 +1,4 @@
-'use client';
-
-import { throttle } from 'lodash';
+import throttle from 'lodash.throttle';
 import * as React from 'react';
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js';
 

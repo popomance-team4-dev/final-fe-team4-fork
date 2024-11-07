@@ -1,13 +1,12 @@
 import { CirclePlus, Download, RefreshCw, Trash2 } from 'lucide-react';
 import * as React from 'react';
 
+import { TtsListTable } from '@/components/tts/TTSListTable';
 import { Checkbox } from '@/components/ui/CheckBox';
+import { IconButton } from '@/components/ui/IconButton';
 import { ScrollArea } from '@/components/ui/ScrollArea';
-
-import { IconButton } from './IconButton';
-import { Separator } from './Separator';
-import { TtsListTable } from './TTSListTable';
-import ViewButtonGroup from './ViewFilterButton';
+import { Separator } from '@/components/ui/Separator';
+import ViewButtonGroup from '@/components/ui/ViewFilterButton';
 
 interface TTSListItem {
   id: string;

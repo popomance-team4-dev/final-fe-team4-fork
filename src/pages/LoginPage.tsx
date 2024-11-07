@@ -1,33 +1,23 @@
-import { Button } from '@/components/ui/commonbutton';
+import LoginComponent from '@/components/login/LoginBox';
+import LoginLogo from '@/images/loginlogo.svg';
+
 const LoginPage = () => {
   return (
-    <div>
-      <h1>LoginPage</h1>
-      <div>
-        <div>default</div>
-        <Button>Button</Button>
-        <Button disabled>Button</Button>
-      </div>
-      <div>
-        <div>mid + icon</div>
-        <Button size="mid" icon>
-          Button
-        </Button>
-        <Button size="mid" icon disabled>
-          Button
-        </Button>
-      </div>
-      <div>
-        <div>icon</div>
-        <Button size="icon" />
-        <Button size="icon" disabled />
-      </div>
-      <div>
-        <div>Secondary - Grey</div>
-        <Button variant="secondary">Button</Button>
-        <Button variant="secondary" disabled>
-          Button
-        </Button>
+    <div className="h-screen w-full flex items-center justify-center bg-[#F7F7F7] overflow-hidden">
+      <div className="relative w-[1440px] h-screen max-h-[1024px] flex mx-auto">
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: `url(${LoginLogo})`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+        <div className="w-1/2" />
+        <div className="relative z-10 w-1/2 h-full flex items-center justify-center">
+          <LoginComponent />
+        </div>
       </div>
     </div>
   );

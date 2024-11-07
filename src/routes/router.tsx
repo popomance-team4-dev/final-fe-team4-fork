@@ -4,6 +4,7 @@ import Layout from '@/components/layouts/Layout';
 import NavbarLayout from '@/components/layouts/NavbarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import ConcatPage from '@/pages/ConcatPage';
+import ExamplePage from '@/pages/ExamplePage';
 import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
@@ -19,6 +20,7 @@ const PATH = {
   TTS: '/tts',
   CONCAT: '/concat',
   VC: '/vc',
+  EXAMPLE: '/example',
 } as const;
 
 const router = createBrowserRouter([
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: [
+      {
+        path: PATH.EXAMPLE,
+        element: <ExamplePage />,
+      },
       {
         path: PATH.LOGIN,
         element: <LoginPage />,

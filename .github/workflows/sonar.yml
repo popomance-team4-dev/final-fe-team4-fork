@@ -53,21 +53,12 @@ jobs:
               statusEmoji = '❌';
             }
 
-            let issueList = '';
-            if (issues.length > 0) {
-              issueList = '### 주요 이슈 목록:\n';
-              for (const issue of issues) {
-                issueList += `- **${issue.type}** (${issue.severity}) - 파일: ${issue.line}, 메시지: ${issue.message}\n`;
-              }
-            }
-            
             const comment = `## SonarQube 분석 결과
             > 코드 품질향상을 위해 필수가 아닌 권장사항이며, 이슈를 해결하지 않아도 무방합니다. 
             
             ${statusEmoji} Quality Gate : **${qualityGateStatus}**
 
             📊 코드 품질 이슈 : **${newIssues}** 개   [이슈 확인](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
-            ${issueList}
 
             `;
             

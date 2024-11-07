@@ -1,6 +1,6 @@
-import { LoginInput } from '@/components/ui/LoginInput';
 import { Checkbox } from '@/components/ui/CheckBox';
 import { Button } from '@/components/ui/CommonButton';
+import { LoginInput } from '@/components/login/LoginInput';
 import Logo from '@/images/logo.png';
 
 const LoginComponent = () => {

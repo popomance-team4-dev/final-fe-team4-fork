@@ -1,4 +1,4 @@
-import { Checkbox } from '@/components/ui/Checkbox';
+import { Checkbox } from '@/components/ui/CheckBox';
 import { PlayButton } from '@/components/ui/PlayButton';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/ui/SoundStatus';
 import { TextInput } from '@/components/ui/TextInput';

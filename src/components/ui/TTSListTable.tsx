@@ -1,7 +1,5 @@
-import React from 'react';
-
-import { Checkbox } from '@/components/ui/checkbox';
-import { PlayButton } from '@/components/ui/playButton'; // 재생 버튼 컴포넌트
+import { Checkbox } from '@/components/ui/CheckBox';
+import { PlayButton } from '@/components/ui/PlayButton';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/ui/SoundStatus';
 import { TextInput } from '@/components/ui/TextInput';
 

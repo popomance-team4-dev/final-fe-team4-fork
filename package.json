@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --fix",
-    "type-check": "tsc --noEmit -p tsconfig.app.json",
+    "type-check": "tsc --noEmit -p tsconfig.app.json --incremental",
     "preview": "vite preview",
     "prepare": "lefthook install"
   },

@@ -4,7 +4,7 @@ import { throttle } from 'lodash';
 import * as React from 'react';
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js';
 
-import { PlayButton } from '@/components/ui/playButton';
+import { PlayButton } from '@/components/ui/PlayButton';
 import { cn } from '@/lib/utils';
 
 interface AudioPlayerProps {

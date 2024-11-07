@@ -27,48 +27,49 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Get SonarQube Results
+      - name: Get SonarQube Analysis Results
         id: sonar-results
-        if: always()
         run: |
-          sleep 10  # SonarQube 분석 결과가 반영될 때까지 대기
+          QUALITY_GATE=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/qualitygates/project_status?projectKey=team4_fe" | jq -r '.projectStatus.status')
+          echo "QUALITY_GATE=$QUALITY_GATE" >> $GITHUB_OUTPUT
           
-          QUALITY_GATE=$(curl -X GET -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
-            "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=team4_fe" \
-            | jq -r '.projectStatus.status')
-          echo "QUALITY_GATE=${QUALITY_GATE}" >> $GITHUB_ENV
-          
-          NEW_ISSUES=$(curl -X GET -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
-            "${{ secrets.SONAR_HOST_URL }}/api/issues/search?componentKeys=team4_fe&createdAfter=$(date -d '24 hours ago' --iso-8601=seconds)&types=BUG,VULNERABILITY,CODE_SMELL" \
-            | jq -r '.total')
-          echo "NEW_ISSUES=${NEW_ISSUES}" >> $GITHUB_ENV
+          ISSUES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&resolved=false" | jq -r '.total')
+          echo "NEW_ISSUES=$ISSUES" >> $GITHUB_OUTPUT
+
 
       - name: Comment PR
         if: always()
         uses: actions/github-script@v6
         with:
           script: |
-            const qualityGateStatus = process.env.SONAR_QUALITY_GATE_STATUS || '실행 실패';
-            const newIssues = process.env.NEW_ISSUES || '확인 불가';
+            const qualityGateStatus = "${{ steps.sonar-results.outputs.QUALITY_GATE }}";
+            const newIssues = "${{ steps.sonar-results.outputs.NEW_ISSUES }}";
+            const issues = JSON.parse("${{ steps.sonar-results.outputs.ISSUES }}");
             
             let statusEmoji;
-            if (qualityGateStatus === 'PASSED') {
+            if (qualityGateStatus === 'OK') {
               statusEmoji = '✅';
-            } else if (qualityGateStatus === 'FAILED') {
-              statusEmoji = '❌';
             } else {
-              statusEmoji = '⚠️';
+              statusEmoji = '❌';
+            }
+
+            let issueList = '';
+            if (issues.length > 0) {
+              issueList = '### 주요 이슈 목록:\n';
+              for (const issue of issues) {
+                issueList += `- **${issue.type}** (${issue.severity}) - 파일: ${issue.line}, 메시지: ${issue.message}\n`;
+              }
             }
             
-            const comment = `### SonarQube 분석 결과
+            const comment = `## SonarQube 분석 결과
+            > 코드 품질향상을 위해 필수가 아닌 권장사항이며, 이슈를 해결하지 않아도 무방합니다. 
             
-            ${statusEmoji} **Quality Gate**: ${qualityGateStatus}
-            📊 **새로 발생한 이슈**: ${newIssues} 개 
-            [자세한 분석 결과 보기] https://ai.nowon.store/dashboard?id=team4_fe 
-            
-            코드 품질향상을 위해 필수가 아닌 권장사항이며, 이슈를 해결하지 않아도 무방합니다.
+            ${statusEmoji} Quality Gate : **${qualityGateStatus}**
+
+            📊 코드 품질 이슈 : **${newIssues}** 개   [이슈 확인](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
+            ${issueList}
+
             `;
-            
             
             await github.rest.issues.createComment({
               issue_number: context.issue.number,

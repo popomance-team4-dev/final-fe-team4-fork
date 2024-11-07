@@ -69,16 +69,6 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
       </div>
       <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
     </div>
-    <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b border-gray-300 bg-gray-50 text-sm font-medium text-black">
-      <div className="w-4 ml-2 mr-2" />
-      <div className="w-4 ml-2 mr-2.5" />
-      <div className="ml-6">텍스트</div>
-      <div className="w-[246px] flex gap-4.5">
-        <div className="w-[64px] text-center">속도</div>
-        <div className="w-[80px] text-center">볼륨</div>
-        <div className="w-[60px] text-center">피치</div>
-      </div>
-    </div>
   </div>
 );
 
@@ -130,21 +120,33 @@ export const TTSTable: React.FC<TTSTableProps> = ({
   const renderContent = () => {
     if (isListView) {
       return (
-        <TtsListTable
-          rows={items.map((item) => ({
-            id: item.id,
-            text: item.text,
-            isSelected: item.isSelected,
-            onPlay: () => onPlay(item.id),
-            speed: item.speed,
-            volume: item.volume,
-            pitch: item.pitch,
-            onSelectionChange,
-            onTextChange,
-          }))}
-          onSelectionChange={onSelectionChange}
-          onTextChange={onTextChange}
-        />
+        <>
+          <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b border-gray-300 bg-gray-50 text-sm font-medium text-black">
+            <div className="w-4 ml-2 mr-2" />
+            <div className="w-4 ml-2 mr-2" />
+            <div className="ml-6">텍스트</div>
+            <div className="w-[246px] flex gap-4.5">
+              <div className="w-[64px] text-center">속도</div>
+              <div className="w-[80px] text-center">볼륨</div>
+              <div className="w-[60px] text-center">피치</div>
+            </div>
+          </div>
+          <TtsListTable
+            rows={items.map((item) => ({
+              id: item.id,
+              text: item.text,
+              isSelected: item.isSelected,
+              onPlay: () => onPlay(item.id),
+              speed: item.speed,
+              volume: item.volume,
+              pitch: item.pitch,
+              onSelectionChange,
+              onTextChange,
+            }))}
+            onSelectionChange={onSelectionChange}
+            onTextChange={onTextChange}
+          />
+        </>
       );
     }
 

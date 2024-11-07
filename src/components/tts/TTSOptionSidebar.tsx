@@ -4,7 +4,7 @@ import {
   ApplyAllButton,
   ApplySelectionButton,
   ResetChangesButton,
-} from '@/components/ui/iconButton';
+} from '@/components/ui/IconButton';
 import {
   Select,
   SelectContent,
@@ -12,7 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select';
 import { StateController } from '@/components/ui/StateController';
 
 const TTSOptionsSidebar: React.FC = () => {

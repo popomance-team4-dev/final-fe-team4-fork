@@ -67,7 +67,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({
     </div>
     <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b border-gray-300 bg-gray-50 text-sm font-medium text-black">
       <div className="w-4 ml-2 mr-2" />
-      <div className="w-4 ml-2 mr-2" />
+      <div className="w-4 ml-2 mr-2.5" />
       <div className="ml-6">텍스트</div>
       <div className="w-[246px] flex gap-4.5">
         <div className="w-[64px] text-center">속도</div>

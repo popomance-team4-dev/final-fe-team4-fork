@@ -22,7 +22,7 @@ const formatValue = (value: number, unit: string) => {
 };
 
 const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
-  ({ label, value, unit = '', min = -100, max = 100, step = 1, onChange }, ref) => {
+  ({ label, value, unit = '', min = 0, max = 100, step = 1, onChange }, ref) => {
     const handleSliderChange = (newValue: number[]) => {
       onChange?.(newValue[0]);
     };
@@ -40,7 +40,7 @@ const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
     const formattedValue = formatValue(value, unit);
 
     return (
-      <div ref={ref} className="w-full space-y-">
+      <div ref={ref} className="w-full space-y-1">
         <span className="text-sm font-bold">{label}</span>
         <div className="flex items-center gap-2">
           <div className="relative flex grow items-center">

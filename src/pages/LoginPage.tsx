@@ -1,16 +1,23 @@
 import LoginComponent from '@/components/login/loginbox';
+import LoginLogo from '@/images/loginlogo.svg';
 
 const LoginPage = () => {
   return (
-    <div className="flex w-full h-screen">
-      {/* 왼쪽 이미지 영역 */}
-      <div className="w-1/2 h-full bg-[#F7F7F7]">
-        <img alt="Login Visual" className="w-full h-full object-cover" />
-      </div>
-
-      {/* 오른쪽 로그인 영역 */}
-      <div className="w-1/2 h-full flex items-center justify-center bg-white">
-        <LoginComponent />
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#F7F7F7] overflow-x-hidden">
+      <div className="relative w-[1440px] h-[1024px] flex mx-auto">
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: `url(${LoginLogo})`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+        <div className="w-1/2" />
+        <div className="relative z-10 w-1/2 h-full flex items-center justify-center">
+          <LoginComponent />
+        </div>
       </div>
     </div>
   );

@@ -4,14 +4,14 @@ import { NavSidebar } from '../NavSidebar';
 
 const NavbarLayout = () => {
   return (
-    <>
-      <div className="flex min-h-screen bg-gray-50">
+    <div className="flex justify-center bg-white min-h-screen">
+      <div className="flex w-full max-w-[1440px]">
         <NavSidebar />
-        <main className="flex-1 p-3">
+        <main className="flex-1">
           <Outlet />
         </main>
       </div>
-    </>
+    </div>
   );
 };
 

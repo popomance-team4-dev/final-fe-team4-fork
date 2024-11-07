@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/commonbutton';
+import { Button } from '@/components/ui/CommonButton';
 import Tooltip from '@/components/ui/tooltip';
 
 const ExamplePage = () => {

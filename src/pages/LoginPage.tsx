@@ -1,4 +1,4 @@
-import LoginComponent from '@/components/login/loginbox';
+import LoginComponent from '@/components/login/LoginBox';
 import LoginLogo from '@/images/loginlogo.svg';
 
 const LoginPage = () => {

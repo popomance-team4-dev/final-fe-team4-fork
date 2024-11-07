@@ -11,7 +11,7 @@ const TextInput: React.FC<TextInputProps> = ({ value, onChange, className, ...pr
       type="text"
       value={value}
       onChange={onChange}
-      className={`pl-2 pr-2 border border-transparent focus:border-1 focus:border-blue-500 rounded focus:outline-none ${className}`}
+      className={`pl-2 pr-2 border border-transparent focus:border focus:border-blue-500 rounded focus:outline-none ${className}`}
       {...props}
     />
   );

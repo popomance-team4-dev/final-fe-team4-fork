@@ -29,7 +29,7 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
         ref={ref}
         className={cn(
           'flex items-center justify-center',
-          'h-6 w-6 rounded-full',
+          'h-7 w-7 rounded-full',
           'bg-blue-900 hover:bg-blue-800',
           'transition-colors duration-200',
           className
@@ -38,7 +38,7 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
         aria-label={isPlaying ? 'Pause' : 'Play'}
         {...props}
       >
-        <Icon className="h-3 w-3 text-white fill-white" />
+        <Icon className="w-1/2 h-1/2 text-white fill-white" />
       </button>
     );
   }

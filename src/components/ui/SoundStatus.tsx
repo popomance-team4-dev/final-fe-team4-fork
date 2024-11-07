@@ -31,10 +31,13 @@ const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
     return (
       <div
         ref={ref}
-        className={cn('w-fit flex items-center gap-2 bg-purple-50 rounded-lg px-3 py-2', className)}
+        className={cn(
+          'w-fit flex items-center gap-2 bg-purple-50 rounded-md px-2 py-0.75',
+          className
+        )}
         {...props}
       >
-        <Icon className="w-4 h-4 text-purple-900 flex-shrink-0" />
+        <Icon className="w-4.5 h-4.5 text-purple-900 flex-shrink-0" />
         <span className="text-sm text-purple-900">
           {value.toFixed(1)}
           {unit}

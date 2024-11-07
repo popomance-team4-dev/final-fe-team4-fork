@@ -1,3 +1,5 @@
+import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+
 const TTSPage = () => {
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen">
@@ -23,9 +25,8 @@ const TTSPage = () => {
         </div>
 
         {/* Right Sidebar */}
-        <aside className="w-[276px] bg-gray-100 flex-shrink-0 min-h-full">
-          <h2>TTS 옵션 설정</h2>
-          {/* 오른쪽 사이드바 콘텐츠 */}
+        <aside className="w-[276px] flex-shrink-0 min-h-full">
+          <TTSOptionsSidebar />
         </aside>
       </div>
     </div>

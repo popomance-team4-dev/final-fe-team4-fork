@@ -56,11 +56,10 @@ jobs:
             > 하지만 더 멋진 코드가 될 수 있습니다. 😉
             
             ${statusEmoji} Quality Gate : **${qualityGateStatus}** 
+            📊 중복코드 또는 🔒 보안취약점 이 있을 수 있습니다. [ 바로가기 ](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
 
-            💩 코드 품질 이슈 : **${newIssues}** 개   
+            🛑 코드 품질 이슈 : **${newIssues}** 개   
 
-            [ 📊중복코드 또는 🔒보안취약점 이 있을 수 있습니다. ](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
-                                  
             `;
             
             await github.rest.issues.createComment({

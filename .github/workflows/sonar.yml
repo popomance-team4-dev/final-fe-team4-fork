@@ -1,24 +1,78 @@
-name: SonarQube analysis
+name: SonarQube Analysis Comment
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to analyze'
-        required: true
-        default: 'main'
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   sonarqube:
-    name: Build and analyze
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.inputs.branch }}  
-          fetch-depth: 0 
+          fetch-depth: 0
+
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@v3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: SonarQube Quality Gate
+        id: sonarqube-quality-gate
+        continue-on-error: true
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Get SonarQube Results
+        id: sonar-results
+        if: always()
+        run: |
+          sleep 10  # SonarQube 분석 결과가 반영될 때까지 대기
+          
+          QUALITY_GATE=$(curl -X GET -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
+            "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=team4_fe" \
+            | jq -r '.projectStatus.status')
+          echo "QUALITY_GATE=${QUALITY_GATE}" >> $GITHUB_ENV
+          
+          NEW_ISSUES=$(curl -X GET -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
+            "${{ secrets.SONAR_HOST_URL }}/api/issues/search?componentKeys=team4_fe&createdAfter=$(date -d '24 hours ago' --iso-8601=seconds)&types=BUG,VULNERABILITY,CODE_SMELL" \
+            | jq -r '.total')
+          echo "NEW_ISSUES=${NEW_ISSUES}" >> $GITHUB_ENV
+
+      - name: Comment PR
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const qualityGateStatus = process.env.SONAR_QUALITY_GATE_STATUS || '실행 실패';
+            const newIssues = process.env.NEW_ISSUES || '확인 불가';
+            
+            let statusEmoji;
+            if (qualityGateStatus === 'PASSED') {
+              statusEmoji = '✅';
+            } else if (qualityGateStatus === 'FAILED') {
+              statusEmoji = '❌';
+            } else {
+              statusEmoji = '⚠️';
+            }
+            
+            const comment = `### SonarQube 분석 결과
+            
+            ${statusEmoji} **Quality Gate**: ${qualityGateStatus}
+            📊 **새로 발생한 이슈**: ${newIssues} 개 
+            [자세한 분석 결과 보기] https://ai.nowon.store/dashboard?id=team4_fe 
+            
+            코드 품질향상을 위해 필수가 아닌 권장사항이며, 이슈를 해결하지 않아도 무방합니다.
+            `;
+            
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

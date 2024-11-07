@@ -1,4 +1,6 @@
-import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import TTSMainContent from '@/components/tts/TTSMainContent';
+import TTSOptionsSidebar from '@/components/tts/TTSOptionSidebar';
+import { AudioPlayer } from '@/components/ui/AudioPlayer';
 
 const TTSPage = () => {
   return (
@@ -13,14 +15,13 @@ const TTSPage = () => {
         <div className="flex-1 flex flex-col">
           {/* Main1 */}
           <section className="flex-1 ">
-            <h2>Main Content 1</h2>
-            {/* 메인1 콘텐츠 */}
+            <TTSMainContent />
           </section>
 
           {/* Main2 */}
-          <section className=" bg-gray-200 h-[135px]">
-            <h2>Main Content 2</h2>
-            {/* 메인2 콘텐츠 */}
+          <section className="h-[145px] mx-6">
+            <h2 className="text-[18px] font-semibold mb-2">전체 재생</h2>
+            <AudioPlayer audioUrl={''} />
           </section>
         </div>
 

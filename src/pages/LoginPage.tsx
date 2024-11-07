@@ -3,8 +3,8 @@ import LoginLogo from '@/images/loginlogo.svg';
 
 const LoginPage = () => {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#F7F7F7] overflow-x-hidden">
-      <div className="relative w-[1440px] h-[1024px] flex mx-auto">
+    <div className="h-screen w-full flex items-center justify-center bg-[#F7F7F7] overflow-hidden">
+      <div className="relative w-[1440px] h-screen max-h-[1024px] flex mx-auto">
         <div
           className="absolute inset-0 w-full h-full"
           style={{

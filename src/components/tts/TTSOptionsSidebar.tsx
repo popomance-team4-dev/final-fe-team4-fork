@@ -48,7 +48,7 @@ const TTSOptionsSidebar: React.FC = () => {
           label="속도"
           value={speed}
           unit="x"
-          min={-2.0}
+          min={0.5}
           max={2.0}
           step={0.1}
           onChange={setSpeed}

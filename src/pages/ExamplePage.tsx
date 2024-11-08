@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import TTSOptionsSidebar from '@/components/tts/TTSOptionSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { AudioPlayer } from '@/components/ui/AudioPlayer';
 import { Button } from '@/components/ui/CommonButton';
@@ -79,7 +79,6 @@ const ExamplePage = () => {
         <div>
           <div className="flex flex-wrap gap-4">
             {/* mid + icon */}
-
             <Button size="mid" icon>
               Button
             </Button>
@@ -122,34 +121,37 @@ const ExamplePage = () => {
 
       {/* TTS */}
       <section>
-        <h2 className="text-xl font-bold mb-16">TTS 테이블, 컨트롤러</h2>
-        <div className="flex gap-6 ">
+        <h2 className="text-xl font-bold mb-4">TTS</h2>
+        <div className="flex">
           <div className="flex-1">
-            <TTSTable
-              items={items}
-              isAllSelected={isAllSelected}
-              onSelectAll={handleSelectAll}
-              onSelectionChange={handleSelectionChange}
-              onTextChange={handleTextChange}
-              onDelete={handleDelete}
-              onAdd={() => {
-                setItems((prev) => [
-                  ...prev,
-                  {
-                    id: String(Date.now()),
-                    text: '',
-                    isSelected: false,
-                    speed: 1.0,
-                    volume: 60,
-                    pitch: 4.0,
-                  },
-                ]);
-              }}
-              onRegenerate={() => console.log('재생성')}
-              onDownload={() => console.log('다운로드')}
-              onPlay={(id) => console.log('재생:', id)}
-            />
+            <div className="w-[872px] h-[580px] border rounded-md overflow-hidden">
+              <TTSTable
+                items={items}
+                isAllSelected={isAllSelected}
+                onSelectAll={handleSelectAll}
+                onSelectionChange={handleSelectionChange}
+                onTextChange={handleTextChange}
+                onDelete={handleDelete}
+                onAdd={() => {
+                  setItems((prev) => [
+                    ...prev,
+                    {
+                      id: String(Date.now()),
+                      text: '',
+                      isSelected: false,
+                      speed: 1.0,
+                      volume: 60,
+                      pitch: 4.0,
+                    },
+                  ]);
+                }}
+                onRegenerate={() => console.log('재생성')}
+                onDownload={() => console.log('다운로드')}
+                onPlay={(id) => console.log('재생:', id)}
+              />
+            </div>
           </div>
+
           <TTSOptionsSidebar />
         </div>
       </section>

@@ -53,8 +53,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   isListView,
   onViewChange,
 }) => (
-  <div className="flex flex-col bg-white w-full max-w-4xl mx-auto">
-    <div className="flex items-center justify-between px-4 py-5 border-b border-gray-300">
+  <div className="flex flex-col bg-white">
+    <div className="flex items-center justify-between px-4 py-5 border-b">
       <div className="flex items-center space-x-4">
         <Checkbox checked={isAllSelected} onCheckedChange={onSelectAll} className="ml-2.5 mr-9" />
         <div onClick={onDelete} className="flex items-center gap-2 py-2 hover:cursor-pointer">
@@ -77,8 +77,8 @@ export const TableFooter: React.FC<TableFooterProps> = ({
   onRegenerate,
   onDownload,
 }) => (
-  <div className="w-full max-w-4xl mx-auto">
-    <div className="flex items-center justify-between px-4 py-5 border-t border-gray-300 bg-white">
+  <div className="bg-white">
+    <div className="flex items-center justify-between px-4 py-5 border-t">
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
       <div className="flex items-center space-x-2 mr-2">
         <IconButton
@@ -117,45 +117,8 @@ export const TTSTable: React.FC<TTSTableProps> = ({
   const selectedCount = items.filter((item) => item.isSelected).length;
   const [isListView, setIsListView] = React.useState(true);
 
-  const renderContent = () => {
-    if (isListView) {
-      return (
-        <>
-          <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b border-gray-300 bg-gray-50 text-sm font-medium text-black">
-            <div className="w-4 ml-2 mr-2" />
-            <div className="w-4 ml-2 mr-2" />
-            <div className="ml-6">텍스트</div>
-            <div className="w-[246px] flex gap-4.5">
-              <div className="w-[64px] text-center">속도</div>
-              <div className="w-[80px] text-center">볼륨</div>
-              <div className="w-[60px] text-center">피치</div>
-            </div>
-          </div>
-          <TtsListTable
-            rows={items.map((item) => ({
-              id: item.id,
-              text: item.text,
-              isSelected: item.isSelected,
-              onPlay: () => onPlay(item.id),
-              speed: item.speed,
-              volume: item.volume,
-              pitch: item.pitch,
-              onSelectionChange,
-              onTextChange,
-            }))}
-            onSelectionChange={onSelectionChange}
-            onTextChange={onTextChange}
-          />
-        </>
-      );
-    }
-
-    // 그리드 뷰 여기다가 추가
-    return null;
-  };
-
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col rounded-lg border border-gray-300 overflow-hidden bg-white">
+    <div className="flex flex-col h-[580px] bg-white">
       <TableHeader
         onDelete={onDelete}
         onAdd={onAdd}
@@ -164,9 +127,37 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         isListView={isListView}
         onViewChange={setIsListView}
       />
-      <div className="relative flex-1">
-        <ScrollArea className="h-[400px] absolute inset-0 pl-0.5 mr-0.5 my-0.5">
-          <div className="flex-1">{renderContent()}</div>
+      <div className="flex-1 min-h-0">
+        {isListView && (
+          <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
+            <div className="w-4 ml-2 mr-2" />
+            <div className="w-4 ml-2 mr-2" />
+            <div className="ml-6">텍스트</div>
+            <div className="w-[250px] flex gap-5">
+              <div className="w-[60px] text-center">속도</div>
+              <div className="w-[80px] text-center">볼륨</div>
+              <div className="w-[60px] text-center">피치</div>
+            </div>
+          </div>
+        )}
+        <ScrollArea className="h-[calc(100%-48px)] pr-2">
+          {isListView && (
+            <TtsListTable
+              rows={items.map((item) => ({
+                id: item.id,
+                text: item.text,
+                isSelected: item.isSelected,
+                onPlay: () => onPlay(item.id),
+                speed: item.speed,
+                volume: item.volume,
+                pitch: item.pitch,
+                onSelectionChange,
+                onTextChange,
+              }))}
+              onSelectionChange={onSelectionChange}
+              onTextChange={onTextChange}
+            />
+          )}
         </ScrollArea>
       </div>
       <TableFooter

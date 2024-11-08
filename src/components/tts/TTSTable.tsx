@@ -1,5 +1,6 @@
 import { CirclePlus, Download, RefreshCw, Trash2 } from 'lucide-react';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { TtsListTable } from '@/components/tts/TTSListTable';
 import { Checkbox } from '@/components/ui/CheckBox';
@@ -116,6 +117,18 @@ export const TTSTable: React.FC<TTSTableProps> = ({
 }) => {
   const selectedCount = items.filter((item) => item.isSelected).length;
   const [isListView, setIsListView] = React.useState(true);
+  const [internalIsAllSelected, setInternalIsAllSelected] = React.useState(isAllSelected);
+
+  useEffect(() => {
+    if (items.length === 0) {
+      setInternalIsAllSelected(false);
+      onSelectAll?.();
+    }
+  }, [items.length, onSelectAll]);
+
+  useEffect(() => {
+    setInternalIsAllSelected(isAllSelected);
+  }, [isAllSelected]);
 
   return (
     <div className="flex flex-col h-[580px] bg-white">
@@ -123,7 +136,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         onDelete={onDelete}
         onAdd={onAdd}
         onSelectAll={onSelectAll}
-        isAllSelected={isAllSelected}
+        isAllSelected={internalIsAllSelected}
         isListView={isListView}
         onViewChange={setIsListView}
       />

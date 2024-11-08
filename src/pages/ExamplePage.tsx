@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import TTSOptionsSidebar from '@/components/tts/TTSOptionSidebar';
+import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { AudioPlayer } from '@/components/ui/AudioPlayer';
 import { Button } from '@/components/ui/CommonButton';

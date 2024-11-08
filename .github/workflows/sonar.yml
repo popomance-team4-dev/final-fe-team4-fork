@@ -35,8 +35,7 @@ jobs:
           
           ISSUES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&resolved=false" | jq -r '.total')
           echo "NEW_ISSUES=$ISSUES" >> $GITHUB_OUTPUT
-
-
+          
       - name: Comment PR
         if: always()
         uses: actions/github-script@v6
@@ -44,7 +43,7 @@ jobs:
           script: |
             const qualityGateStatus = "${{ steps.sonar-results.outputs.QUALITY_GATE }}";
             const newIssues = "${{ steps.sonar-results.outputs.NEW_ISSUES }}";
-            
+
             let statusEmoji;
             if (qualityGateStatus === 'OK') {
               statusEmoji = '✅';
@@ -52,13 +51,16 @@ jobs:
               statusEmoji = '❌';
             }
             
-            const comment = `## SonarQube 분석 결과
-            > 코드 품질향상을 위해 필수가 아닌 권장사항이며, 이슈를 해결하지 않아도 무방합니다. 
-            
-            ${statusEmoji} Quality Gate : **${qualityGateStatus}**
+            const comment = `## SonarQube 분석 결과 [ 바로가기 ](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
 
-            📊 코드 품질 이슈 : **${newIssues}** 개   [바로가기](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
-                                  
+            ${statusEmoji} Quality Gate : **${qualityGateStatus}** 
+
+            🛑 코드 품질 이슈 : **${newIssues}** 개   
+
+
+            > 코드 품질향상을 위한 권장사항이며, 수정하지 않아도 무방합니다. 
+            > 하지만 더 멋진 코드가 될 수 있습니다. 😉
+            
             `;
             
             await github.rest.issues.createComment({

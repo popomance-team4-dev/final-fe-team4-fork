@@ -38,3 +38,6 @@ temp
 !.vscode/settings.json
 !.vscode/extensions.json
 !typescriptreact.code-snippets
+
+# typescript
+*.tsbuildinfo

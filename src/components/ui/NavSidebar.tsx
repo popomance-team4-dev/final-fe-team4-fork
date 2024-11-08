@@ -1,10 +1,8 @@
 import { FolderOpen, Home, LayoutDashboard, Plus } from 'lucide-react';
 
-// import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-// import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Separator } from '@/components/ui/Separator';
 
 export function NavSidebar() {
   return (

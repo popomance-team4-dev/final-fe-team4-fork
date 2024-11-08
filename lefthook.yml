@@ -12,6 +12,12 @@
 #       tags: backend security
 #       run: bundle audit
 #
+
+pre-push:
+  commands:
+    type-check:
+      run: npm run type-check
+
 prepare-commit-msg:
   commands:
     commitlint:

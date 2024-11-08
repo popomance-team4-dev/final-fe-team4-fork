@@ -25,6 +25,7 @@ interface TableHeaderProps {
   isAllSelected?: boolean;
   isListView: boolean;
   onViewChange: (isListView: boolean) => void;
+  itemCount: number;
 }
 
 interface TableFooterProps {
@@ -53,11 +54,16 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   isAllSelected,
   isListView,
   onViewChange,
+  itemCount,
 }) => (
   <div className="flex flex-col bg-white">
     <div className="flex items-center justify-between px-4 py-5 border-b">
       <div className="flex items-center space-x-4">
-        <Checkbox checked={isAllSelected} onCheckedChange={onSelectAll} className="ml-2.5 mr-9" />
+        <Checkbox
+          checked={itemCount > 0 && isAllSelected}
+          onCheckedChange={onSelectAll}
+          className="ml-2.5 mr-9"
+        />
         <div onClick={onDelete} className="flex items-center gap-2 py-2 hover:cursor-pointer">
           <Trash2 className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-800">삭제</span>
@@ -117,18 +123,12 @@ export const TTSTable: React.FC<TTSTableProps> = ({
 }) => {
   const selectedCount = items.filter((item) => item.isSelected).length;
   const [isListView, setIsListView] = React.useState(true);
-  const [internalIsAllSelected, setInternalIsAllSelected] = React.useState(isAllSelected);
 
   useEffect(() => {
-    if (items.length === 0) {
-      setInternalIsAllSelected(false);
+    if (items.length === 0 && isAllSelected) {
       onSelectAll?.();
     }
-  }, [items.length, onSelectAll]);
-
-  useEffect(() => {
-    setInternalIsAllSelected(isAllSelected);
-  }, [isAllSelected]);
+  }, [items.length, isAllSelected, onSelectAll]);
 
   return (
     <div className="flex flex-col h-[580px] bg-white">
@@ -136,9 +136,10 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         onDelete={onDelete}
         onAdd={onAdd}
         onSelectAll={onSelectAll}
-        isAllSelected={internalIsAllSelected}
+        isAllSelected={isAllSelected}
         isListView={isListView}
         onViewChange={setIsListView}
+        itemCount={items.length}
       />
       <div className="flex-1 min-h-0">
         {isListView && (

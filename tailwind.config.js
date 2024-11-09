@@ -105,9 +105,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: '8px',
-        md: '4px',
-        sm: '2px',
+        lg: '12px',
+        md: '8px',
+        sm: '4px',
       },
       spacing: {
         0.75: '3px',

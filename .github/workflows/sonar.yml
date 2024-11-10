@@ -3,6 +3,12 @@ name: SonarQube Analysis Comment
 on:
   pull_request:
     types: opened
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to analyze'
+        required: true
+        default: 'develop'
 
 jobs:
   sonarqube:

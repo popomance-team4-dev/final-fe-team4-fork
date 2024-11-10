@@ -2,7 +2,7 @@ name: SonarQube Analysis Comment
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: opened
 
 jobs:
   sonarqube:
@@ -44,16 +44,6 @@ jobs:
             const qualityGateStatus = "${{ steps.sonar-results.outputs.QUALITY_GATE }}";
             const newIssues = "${{ steps.sonar-results.outputs.NEW_ISSUES }}";
 
-            const comments = await github.rest.issues.listComments({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-
-            const lastSonarComment = comments.data
-              .reverse()
-              .find(comment => comment.body.includes('SonarQube 분석 결과'));
-
             let statusEmoji;
             if (qualityGateStatus === 'OK') {
               statusEmoji = '✅';
@@ -61,21 +51,21 @@ jobs:
               statusEmoji = '❌';
             }
             
-            const newComment = `## SonarQube 분석 결과 [ 바로가기 ](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
+            const comment = `## SonarQube 분석 결과 [ 바로가기 ](${{ secrets.SONAR_HOST_URL }}dashboard?id=team4_fe) 
 
             ${statusEmoji} Quality Gate : **${qualityGateStatus}** 
 
             🛑 코드 품질 이슈 : **${newIssues}** 개   
 
-            > 코드 품질향상을 위한 권장사항이며, 수정하지 않아도 무방합니다. 
-            > 하지만 더 멋진 코드가 될 수 있습니다. 😉`;
 
-            if (!lastSonarComment || !lastSonarComment.body.includes(`Quality Gate : **${qualityGateStatus}**`) || 
-                !lastSonarComment.body.includes(`코드 품질 이슈 : **${newIssues}** 개`)) {
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: newComment
-              });
-            }
+            > 코드 품질향상을 위한 권장사항이며, 수정하지 않아도 무방합니다. 
+            > 하지만 더 멋진 코드가 될 수 있습니다. 😉
+            
+            `;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

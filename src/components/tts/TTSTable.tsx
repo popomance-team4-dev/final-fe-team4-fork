@@ -88,7 +88,9 @@ export const TableFooter: React.FC<TableFooterProps> = ({
   isListView = true,
 }) => (
   <div className="bg-white">
-    <div className="flex items-center justify-between px-4 py-5 border-t">
+    <div
+      className={`flex items-center justify-between px-4 border-t ${isListView ? 'py-5' : 'py-[30px]'}`}
+    >
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
       {isListView && (
         <div className="flex items-center space-x-2 mr-2">

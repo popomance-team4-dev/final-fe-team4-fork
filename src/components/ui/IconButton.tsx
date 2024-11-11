@@ -1,6 +1,14 @@
 import { Slot } from '@radix-ui/react-slot';
-import { Download, Layers2, Layers3, RefreshCw, RotateCcw, Save, Upload } from 'lucide-react';
 import * as React from 'react';
+import {
+  TbDeviceFloppy,
+  TbDownload,
+  TbRefresh,
+  TbReload,
+  TbStack,
+  TbStack2,
+  TbUpload,
+} from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
 
@@ -10,6 +18,7 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   asChild?: boolean;
   iconBgColor?: string;
   iconColor?: string;
+  textColor?: string;
   width?: string;
 }
 
@@ -19,10 +28,12 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       icon,
       label,
       asChild = false,
-      iconBgColor = 'bg-gray-100',
-      iconColor = 'text-black',
+      iconBgColor,
+      iconColor,
+      textColor = 'text-gray-900',
       width = '228px',
       className,
+      disabled = false,
       ...props
     },
     ref
@@ -36,6 +47,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           'inline-flex items-center justify-center text-sm font-medium transition-colors',
           'hover:bg-gray-100',
           'bg-gray-50',
+          disabled ? 'opacity-40 cursor-not-allowed' : '',
           className
         )}
         aria-label={label}
@@ -55,16 +67,17 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             width: '20px',
             height: '20px',
             borderRadius: '5px',
+            fontSize: '20px',
           }}
         >
-          {React.cloneElement(icon as React.ReactElement, { width: 13, height: 13 })}
+          {React.cloneElement(icon as React.ReactElement, { width: 20, height: 20 })}
         </span>
         <span
+          className={cn(textColor)}
           style={{
-            color: 'var(--Text-primary, #1B1B1B)',
             fontFamily: 'Pretendard',
             fontSize: '16px',
-            fontWeight: 400,
+            fontWeight: 500,
             lineHeight: '24px',
           }}
         >
@@ -79,10 +92,11 @@ IconButton.displayName = 'IconButton';
 export function UploadButton() {
   return (
     <IconButton
-      icon={<Upload />}
+      icon={<TbUpload />}
       label="텍스트 파일 업로드"
-      iconBgColor="bg-purple-100"
+      iconBgColor="bg-purple-50"
       iconColor="text-purple-500"
+      textColor="text-gray-800"
       width="167px"
     />
   );
@@ -91,10 +105,11 @@ export function UploadButton() {
 export function SaveButton() {
   return (
     <IconButton
-      icon={<Save />}
+      icon={<TbDeviceFloppy />}
       label="저장"
       iconBgColor="bg-pink-50"
       iconColor="text-pink-500"
+      textColor="text-gray-800"
       width="76px"
     />
   );
@@ -103,10 +118,11 @@ export function SaveButton() {
 export function RecreateButton() {
   return (
     <IconButton
-      icon={<RefreshCw />}
+      icon={<TbReload />}
       label="재생성"
       iconBgColor="bg-blue-50"
-      iconColor="text-blue-600"
+      iconColor="text-blue-500"
+      textColor="text-gray-800"
       width="90px"
     />
   );
@@ -115,10 +131,11 @@ export function RecreateButton() {
 export function DownloadButton() {
   return (
     <IconButton
-      icon={<Download />}
+      icon={<TbDownload />}
       label="다운로드"
       iconBgColor="bg-blue-50"
-      iconColor="text-blue-600"
+      iconColor="text-blue-500"
+      textColor="text-gray-800"
       width="104px"
     />
   );
@@ -127,7 +144,7 @@ export function DownloadButton() {
 export function ApplySelectionButton() {
   return (
     <IconButton
-      icon={<Layers2 />}
+      icon={<TbStack />}
       label="선택 적용"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
@@ -138,7 +155,7 @@ export function ApplySelectionButton() {
 export function ApplyAllButton() {
   return (
     <IconButton
-      icon={<Layers3 />}
+      icon={<TbStack2 />}
       label="전체 적용"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
@@ -149,7 +166,7 @@ export function ApplyAllButton() {
 export function ResetChangesButton() {
   return (
     <IconButton
-      icon={<RotateCcw />}
+      icon={<TbRefresh />}
       label="변경 초기화"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"

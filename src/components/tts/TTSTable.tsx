@@ -1,6 +1,6 @@
-import { CirclePlus, Download, RefreshCw, Trash2 } from 'lucide-react';
 import * as React from 'react';
 import { useEffect } from 'react';
+import { TbCirclePlus, TbDownload, TbReload, TbTrash } from 'react-icons/tb';
 
 import { TtsListTable } from '@/components/tts/TTSListTable';
 import { Checkbox } from '@/components/ui/CheckBox';
@@ -65,12 +65,12 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
           className="ml-2.5 mr-9"
         />
         <div onClick={onDelete} className="flex items-center gap-2 py-2 hover:cursor-pointer">
-          <Trash2 className="w-4 h-4 text-gray-400" />
+          <TbTrash className="w-5 h-5 text-gray-400" />
           <span className="text-sm text-gray-800">삭제</span>
         </div>
         <Separator orientation="vertical" className="h-6 mr-2" />
         <div onClick={onAdd} className="flex items-center gap-2 py-2 hover:cursor-pointer">
-          <CirclePlus className="w-4 h-4 text-gray-400" />
+          <TbCirclePlus className="w-5 h-5 text-gray-400" />
           <span className="text-sm text-gray-800">텍스트 추가</span>
         </div>
       </div>
@@ -89,7 +89,7 @@ export const TableFooter: React.FC<TableFooterProps> = ({
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
       <div className="flex items-center space-x-2 mr-2">
         <IconButton
-          icon={<RefreshCw />}
+          icon={<TbReload />}
           label="재생성"
           iconBgColor="bg-blue-50"
           iconColor="text-blue-500"
@@ -97,7 +97,7 @@ export const TableFooter: React.FC<TableFooterProps> = ({
           onClick={onRegenerate}
         />
         <IconButton
-          icon={<Download />}
+          icon={<TbDownload />}
           label="다운로드"
           iconBgColor="bg-blue-50"
           iconColor="text-blue-500"

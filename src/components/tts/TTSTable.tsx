@@ -2,6 +2,7 @@ import { CirclePlus, Download, RefreshCw, Trash2 } from 'lucide-react';
 import * as React from 'react';
 import { useEffect } from 'react';
 
+import { TTSTableGrid } from '@/components/tts/TTSTableGrid';
 import { TtsTableList } from '@/components/tts/TTSTableList';
 import { Checkbox } from '@/components/ui/CheckBox';
 import { IconButton } from '@/components/ui/IconButton';
@@ -32,6 +33,7 @@ interface TableFooterProps {
   selectedCount: number;
   onRegenerate: () => void;
   onDownload: () => void;
+  isListView?: boolean;
 }
 
 interface TTSTableProps {
@@ -83,28 +85,31 @@ export const TableFooter: React.FC<TableFooterProps> = ({
   selectedCount,
   onRegenerate,
   onDownload,
+  isListView = true,
 }) => (
   <div className="bg-white">
     <div className="flex items-center justify-between px-4 py-5 border-t">
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
-      <div className="flex items-center space-x-2 mr-2">
-        <IconButton
-          icon={<RefreshCw />}
-          label="재생성"
-          iconBgColor="bg-blue-50"
-          iconColor="text-blue-500"
-          width="90px"
-          onClick={onRegenerate}
-        />
-        <IconButton
-          icon={<Download />}
-          label="다운로드"
-          iconBgColor="bg-blue-50"
-          iconColor="text-blue-500"
-          width="104px"
-          onClick={onDownload}
-        />
-      </div>
+      {isListView && (
+        <div className="flex items-center space-x-2 mr-2">
+          <IconButton
+            icon={<RefreshCw />}
+            label="재생성"
+            iconBgColor="bg-blue-50"
+            iconColor="text-blue-500"
+            width="90px"
+            onClick={onRegenerate}
+          />
+          <IconButton
+            icon={<Download />}
+            label="다운로드"
+            iconBgColor="bg-blue-50"
+            iconColor="text-blue-500"
+            width="104px"
+            onClick={onDownload}
+          />
+        </div>
+      )}
     </div>
   </div>
 );
@@ -142,42 +147,62 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         itemCount={items.length}
       />
       <div className="flex-1 min-h-0">
-        {isListView && (
-          <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
-            <div className="w-4 ml-2 mr-2" />
-            <div className="w-4 ml-2 mr-2" />
-            <div className="ml-6">텍스트</div>
-            <div className="w-[250px] flex gap-5">
-              <div className="w-[60px] text-center">속도</div>
-              <div className="w-[80px] text-center">볼륨</div>
-              <div className="w-[60px] text-center">피치</div>
+        {isListView ? (
+          <>
+            <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
+              <div className="w-4 ml-2 mr-2" />
+              <div className="w-4 ml-2 mr-2" />
+              <div className="ml-6">텍스트</div>
+              <div className="w-[250px] flex gap-5">
+                <div className="w-[60px] text-center">속도</div>
+                <div className="w-[80px] text-center">볼륨</div>
+                <div className="w-[60px] text-center">피치</div>
+              </div>
             </div>
-          </div>
-        )}
-        <ScrollArea className="h-[calc(100%-48px)] pr-2">
-          {isListView && (
-            <TtsTableList
-              rows={items.map((item) => ({
+            <ScrollArea className="h-[calc(100%-48px)] pr-2">
+              <TtsTableList
+                rows={items.map((item) => ({
+                  id: item.id,
+                  text: item.text,
+                  isSelected: item.isSelected,
+                  onPlay: () => onPlay(item.id),
+                  speed: item.speed,
+                  volume: item.volume,
+                  pitch: item.pitch,
+                  onSelectionChange,
+                  onTextChange,
+                }))}
+                onSelectionChange={onSelectionChange}
+                onTextChange={onTextChange}
+              />
+            </ScrollArea>
+          </>
+        ) : (
+          <ScrollArea className="h-[calc(100%-48px)] pr-2">
+            <TTSTableGrid
+              items={items.map((item) => ({
                 id: item.id,
                 text: item.text,
                 isSelected: item.isSelected,
-                onPlay: () => onPlay(item.id),
+                audioUrl: `/path/to/audio/${item.id}`,
                 speed: item.speed,
                 volume: item.volume,
                 pitch: item.pitch,
+                onPlay: () => onPlay(item.id),
+                onRegenerate: onRegenerate,
+                onDownload: onDownload,
                 onSelectionChange,
                 onTextChange,
               }))}
-              onSelectionChange={onSelectionChange}
-              onTextChange={onTextChange}
             />
-          )}
-        </ScrollArea>
+          </ScrollArea>
+        )}
       </div>
       <TableFooter
         selectedCount={selectedCount}
         onRegenerate={onRegenerate}
         onDownload={onDownload}
+        isListView={isListView}
       />
     </div>
   );

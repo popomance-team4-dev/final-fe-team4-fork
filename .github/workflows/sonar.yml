@@ -2,7 +2,13 @@ name: SonarQube Analysis Comment
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: opened
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to analyze'
+        required: true
+        default: 'develop'
 
 jobs:
   sonarqube:
@@ -35,7 +41,7 @@ jobs:
           
           ISSUES=$(curl --silent -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" "${{ secrets.SONAR_HOST_URL }}api/issues/search?componentKeys=team4_fe&resolved=false" | jq -r '.total')
           echo "NEW_ISSUES=$ISSUES" >> $GITHUB_OUTPUT
-          
+
       - name: Comment PR
         if: always()
         uses: actions/github-script@v6

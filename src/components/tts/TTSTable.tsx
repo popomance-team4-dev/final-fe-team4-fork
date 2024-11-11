@@ -42,8 +42,10 @@ interface TTSTableProps {
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
   onAdd: () => void;
-  onRegenerate: () => void;
-  onDownload: () => void;
+  onRegenerateAll: () => void; // 전체 재생성
+  onRegenerateItem: (id: string) => void; // 개별 항목 재생성
+  onDownloadAll: () => void; // 전체 다운로드
+  onDownloadItem: (id: string) => void; // 개별 항목 다운로드
   onPlay: (id: string) => void;
   onSelectAll?: () => void;
   isAllSelected?: boolean;
@@ -120,8 +122,10 @@ export const TTSTable: React.FC<TTSTableProps> = ({
   onTextChange,
   onDelete,
   onAdd,
-  onRegenerate,
-  onDownload,
+  onRegenerateAll,
+  onRegenerateItem,
+  onDownloadAll,
+  onDownloadItem,
   onPlay,
   onSelectAll,
   isAllSelected,
@@ -134,6 +138,18 @@ export const TTSTable: React.FC<TTSTableProps> = ({
       onSelectAll?.();
     }
   }, [items.length, isAllSelected, onSelectAll]);
+
+  const listItems = items.map((item) => ({
+    id: item.id,
+    text: item.text,
+    isSelected: item.isSelected,
+    onPlay: () => onPlay(item.id),
+    speed: item.speed,
+    volume: item.volume,
+    pitch: item.pitch,
+    onSelectionChange,
+    onTextChange,
+  }));
 
   return (
     <div className="flex flex-col h-[580px] bg-white">
@@ -161,17 +177,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
             </div>
             <ScrollArea className="h-[calc(100%-48px)] pr-2">
               <TtsTableList
-                rows={items.map((item) => ({
-                  id: item.id,
-                  text: item.text,
-                  isSelected: item.isSelected,
-                  onPlay: () => onPlay(item.id),
-                  speed: item.speed,
-                  volume: item.volume,
-                  pitch: item.pitch,
-                  onSelectionChange,
-                  onTextChange,
-                }))}
+                rows={listItems}
                 onSelectionChange={onSelectionChange}
                 onTextChange={onTextChange}
               />
@@ -189,8 +195,8 @@ export const TTSTable: React.FC<TTSTableProps> = ({
                 volume: item.volume,
                 pitch: item.pitch,
                 onPlay: () => onPlay(item.id),
-                onRegenerate: onRegenerate,
-                onDownload: onDownload,
+                onRegenerate: () => onRegenerateItem(item.id),
+                onDownload: () => onDownloadItem(item.id),
                 onSelectionChange,
                 onTextChange,
               }))}
@@ -200,8 +206,8 @@ export const TTSTable: React.FC<TTSTableProps> = ({
       </div>
       <TableFooter
         selectedCount={selectedCount}
-        onRegenerate={onRegenerate}
-        onDownload={onDownload}
+        onRegenerate={onRegenerateAll}
+        onDownload={onDownloadAll}
         isListView={isListView}
       />
     </div>

@@ -30,7 +30,14 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
   return (
     <div className="flex flex-col gap-4 p-4">
       {items.map((item) => (
-        <div key={item.id} className="p-4 border rounded-lg bg-white">
+        <div
+          key={item.id}
+          className={`p-4 rounded-md bg-white transition-colors ${
+            item.isSelected
+              ? 'border-blue-500 border-1 ring-2 ring-blue-500'
+              : 'border border-gray-300'
+          }`}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4.5">
               <Checkbox
@@ -81,5 +88,4 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
     </div>
   );
 };
-
 export { TTSTableGrid };

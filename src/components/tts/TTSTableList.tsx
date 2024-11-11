@@ -53,13 +53,13 @@ const TextRow: React.FC<TextRowProps> = ({
   );
 };
 
-interface TtsListTableProps {
+interface TtsTableListProps {
   rows: Omit<TextRowProps, 'onTextChange'>[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
 }
 
-const TtsListTable: React.FC<TtsListTableProps> = ({ rows, onSelectionChange, onTextChange }) => {
+const TtsTableList: React.FC<TtsTableListProps> = ({ rows, onSelectionChange, onTextChange }) => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       {rows.map((row) => (
@@ -74,4 +74,4 @@ const TtsListTable: React.FC<TtsListTableProps> = ({ rows, onSelectionChange, on
   );
 };
 
-export { TtsListTable };
+export { TtsTableList };

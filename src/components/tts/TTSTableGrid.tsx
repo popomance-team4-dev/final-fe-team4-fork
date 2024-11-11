@@ -33,20 +33,18 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
         <div
           key={item.id}
           className={`p-4 rounded-md bg-white transition-colors ${
-            item.isSelected
-              ? 'border-blue-500 border-1 ring-2 ring-blue-500'
-              : 'border border-gray-300'
+            item.isSelected ? 'border-blue-500 border-1 ring-2 ring-blue-500' : 'border'
           }`}
         >
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4.5">
+            <div className="flex items-center gap-5">
               <Checkbox
                 checked={item.isSelected}
                 onCheckedChange={() => item.onSelectionChange(item.id)}
-                className="ml-2 mr-2"
+                className="ml-2"
               />
 
-              <div className="flex gap-4.5">
+              <div className="flex gap-5">
                 <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={item.speed} />
                 <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={item.volume} />
                 <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={item.pitch} />
@@ -77,10 +75,10 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
             value={item.text}
             onChange={(e) => item.onTextChange(item.id, e.target.value)}
             placeholder="텍스트를 입력하세요."
-            className="w-full mb-5"
+            className="w-1/2 ml-12 mb-6"
           />
 
-          <div className="w-1/2">
+          <div className="w-1/2 ml-12">
             <AudioPlayer audioUrl={item.audioUrl} />
           </div>
         </div>

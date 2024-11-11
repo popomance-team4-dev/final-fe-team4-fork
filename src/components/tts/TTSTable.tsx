@@ -2,7 +2,7 @@ import { CirclePlus, Download, RefreshCw, Trash2 } from 'lucide-react';
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { TtsListTable } from '@/components/tts/TTSListTable';
+import { TtsTableList } from '@/components/tts/TTSTableList';
 import { Checkbox } from '@/components/ui/CheckBox';
 import { IconButton } from '@/components/ui/IconButton';
 import { ScrollArea } from '@/components/ui/ScrollArea';
@@ -156,7 +156,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         )}
         <ScrollArea className="h-[calc(100%-48px)] pr-2">
           {isListView && (
-            <TtsListTable
+            <TtsTableList
               rows={items.map((item) => ({
                 id: item.id,
                 text: item.text,

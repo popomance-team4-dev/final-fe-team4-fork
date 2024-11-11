@@ -181,7 +181,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         id: item.id,
         text: item.text,
         isSelected: item.isSelected,
-        audioUrl: `/path/to/audio/${item.id}`,
+        audioUrl: ``,
         speed: item.speed,
         volume: item.volume,
         pitch: item.pitch,

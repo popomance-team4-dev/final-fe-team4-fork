@@ -23,6 +23,17 @@ export default {
         sans: ['Pretendard', ...fontFamily.sans],
         pretendard: ['Pretendard', 'sans-serif'],
       },
+      fontSize: {
+        h1: ['40px', { lineHeight: '48px', fontWeight: '700' }],
+        h2: ['27px', { lineHeight: '35px', fontWeight: '700' }],
+        h3: ['24px', { lineHeight: '36px', fontWeight: '700' }],
+        h4: ['20px', { lineHeight: '28px', fontWeight: '700' }],
+        body1: ['17px', { lineHeight: '24px', fontWeight: '600' }],
+        body2: ['16px', { lineHeight: '24px', fontWeight: '500' }],
+        body3: ['14px', { lineHeight: '20px', fontWeight: '700' }],
+        body4: ['14px', { lineHeight: '20px', fontWeight: '500' }],
+        overline: ['12px', { lineHeight: '18px', fontWeight: '500' }],
+      },
       colors: {
         white: '#FFFFFF',
         black: '#1B1B1B',

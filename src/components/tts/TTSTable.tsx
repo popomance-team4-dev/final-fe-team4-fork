@@ -139,17 +139,40 @@ export const TTSTable: React.FC<TTSTableProps> = ({
     }
   }, [items.length, isAllSelected, onSelectAll]);
 
-  const listItems = items.map((item) => ({
-    id: item.id,
-    text: item.text,
-    isSelected: item.isSelected,
-    onPlay: () => onPlay(item.id),
-    speed: item.speed,
-    volume: item.volume,
-    pitch: item.pitch,
-    onSelectionChange,
-    onTextChange,
-  }));
+  const listItems = React.useMemo(
+    () =>
+      items.map((item) => ({
+        id: item.id,
+        text: item.text,
+        isSelected: item.isSelected,
+        onPlay: () => onPlay(item.id),
+        speed: item.speed,
+        volume: item.volume,
+        pitch: item.pitch,
+        onSelectionChange,
+        onTextChange,
+      })),
+    [items, onPlay, onSelectionChange, onTextChange]
+  );
+
+  const gridItems = React.useMemo(
+    () =>
+      items.map((item) => ({
+        id: item.id,
+        text: item.text,
+        isSelected: item.isSelected,
+        audioUrl: `/path/to/audio/${item.id}`,
+        speed: item.speed,
+        volume: item.volume,
+        pitch: item.pitch,
+        onPlay: () => onPlay(item.id),
+        onRegenerate: () => onRegenerateItem(item.id),
+        onDownload: () => onDownloadItem(item.id),
+        onSelectionChange,
+        onTextChange,
+      })),
+    [items, onPlay, onRegenerateItem, onDownloadItem, onSelectionChange, onTextChange]
+  );
 
   return (
     <div className="flex flex-col h-[580px] bg-white">
@@ -163,46 +186,29 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         itemCount={items.length}
       />
       <div className="flex-1 min-h-0">
-        {isListView ? (
-          <>
-            <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
-              <div className="w-4 ml-2 mr-2" />
-              <div className="w-4 ml-2 mr-2" />
-              <div className="ml-6">텍스트</div>
-              <div className="w-[250px] flex gap-5">
-                <div className="w-[60px] text-center">속도</div>
-                <div className="w-[80px] text-center">볼륨</div>
-                <div className="w-[60px] text-center">피치</div>
+        <ScrollArea className="h-[calc(100%-48px)] pr-2">
+          {isListView ? (
+            <>
+              <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
+                <div className="w-4 ml-2 mr-2" />
+                <div className="w-4 ml-2 mr-2" />
+                <div className="ml-6">텍스트</div>
+                <div className="w-[250px] flex gap-5">
+                  <div className="w-[60px] text-center">속도</div>
+                  <div className="w-[80px] text-center">볼륨</div>
+                  <div className="w-[60px] text-center">피치</div>
+                </div>
               </div>
-            </div>
-            <ScrollArea className="h-[calc(100%-48px)] pr-2">
               <TtsTableList
                 rows={listItems}
                 onSelectionChange={onSelectionChange}
                 onTextChange={onTextChange}
               />
-            </ScrollArea>
-          </>
-        ) : (
-          <ScrollArea className="h-[calc(100%-48px)] pr-2">
-            <TTSTableGrid
-              items={items.map((item) => ({
-                id: item.id,
-                text: item.text,
-                isSelected: item.isSelected,
-                audioUrl: `/path/to/audio/${item.id}`,
-                speed: item.speed,
-                volume: item.volume,
-                pitch: item.pitch,
-                onPlay: () => onPlay(item.id),
-                onRegenerate: () => onRegenerateItem(item.id),
-                onDownload: () => onDownloadItem(item.id),
-                onSelectionChange,
-                onTextChange,
-              }))}
-            />
-          </ScrollArea>
-        )}
+            </>
+          ) : (
+            <TTSTableGrid items={gridItems} />
+          )}
+        </ScrollArea>
       </div>
       <TableFooter
         selectedCount={selectedCount}

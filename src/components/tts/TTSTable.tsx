@@ -1,6 +1,6 @@
 import { CirclePlus, Download, RefreshCw, Trash2 } from 'lucide-react';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { TTSTableGrid } from '@/components/tts/TTSTableGrid';
 import { TtsTableList } from '@/components/tts/TTSTableList';
@@ -42,10 +42,8 @@ interface TTSTableProps {
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
   onAdd: () => void;
-  onRegenerateAll: () => void; // 전체 재생성
-  onRegenerateItem: (id: string) => void; // 개별 항목 재생성
-  onDownloadAll: () => void; // 전체 다운로드
-  onDownloadItem: (id: string) => void; // 개별 항목 다운로드
+  onRegenerateItem: (id: string) => void;
+  onDownloadItem: (id: string) => void;
   onPlay: (id: string) => void;
   onSelectAll?: () => void;
   isAllSelected?: boolean;
@@ -122,9 +120,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
   onTextChange,
   onDelete,
   onAdd,
-  onRegenerateAll,
   onRegenerateItem,
-  onDownloadAll,
   onDownloadItem,
   onPlay,
   onSelectAll,
@@ -138,6 +134,30 @@ export const TTSTable: React.FC<TTSTableProps> = ({
       onSelectAll?.();
     }
   }, [items.length, isAllSelected, onSelectAll]);
+
+  const handleRegenerate = useCallback(
+    (itemId?: string) => {
+      const selectedItems = items.filter((item) => item.isSelected);
+      if (itemId) {
+        onRegenerateItem(itemId);
+      } else if (selectedItems.length > 0) {
+        selectedItems.forEach((item) => onRegenerateItem(item.id));
+      }
+    },
+    [items, onRegenerateItem]
+  );
+
+  const handleDownload = useCallback(
+    (itemId?: string) => {
+      const selectedItems = items.filter((item) => item.isSelected);
+      if (itemId) {
+        onDownloadItem(itemId);
+      } else if (selectedItems.length > 0) {
+        selectedItems.forEach((item) => onDownloadItem(item.id));
+      }
+    },
+    [items, onDownloadItem]
+  );
 
   const listItems = React.useMemo(
     () =>
@@ -166,12 +186,12 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         volume: item.volume,
         pitch: item.pitch,
         onPlay: () => onPlay(item.id),
-        onRegenerate: () => onRegenerateItem(item.id),
-        onDownload: () => onDownloadItem(item.id),
+        onRegenerate: () => handleRegenerate(item.id),
+        onDownload: () => handleDownload(item.id),
         onSelectionChange,
         onTextChange,
       })),
-    [items, onPlay, onRegenerateItem, onDownloadItem, onSelectionChange, onTextChange]
+    [items, onPlay, handleRegenerate, handleDownload, onSelectionChange, onTextChange]
   );
 
   return (
@@ -212,8 +232,8 @@ export const TTSTable: React.FC<TTSTableProps> = ({
       </div>
       <TableFooter
         selectedCount={selectedCount}
-        onRegenerate={onRegenerateAll}
-        onDownload={onDownloadAll}
+        onRegenerate={() => handleRegenerate()}
+        onDownload={() => handleDownload()}
         isListView={isListView}
       />
     </div>

@@ -181,7 +181,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         id: item.id,
         text: item.text,
         isSelected: item.isSelected,
-        audioUrl: ``,
+        audioUrl: '',
         speed: item.speed,
         volume: item.volume,
         pitch: item.pitch,
@@ -206,29 +206,31 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         itemCount={items.length}
       />
       <div className="flex-1 min-h-0">
-        <ScrollArea className="h-[calc(100%-48px)] pr-2">
-          {isListView ? (
-            <>
-              <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
-                <div className="w-4 ml-2 mr-2" />
-                <div className="w-4 ml-2 mr-2" />
-                <div className="ml-6">텍스트</div>
-                <div className="w-[250px] flex gap-5">
-                  <div className="w-[60px] text-center">속도</div>
-                  <div className="w-[80px] text-center">볼륨</div>
-                  <div className="w-[60px] text-center">피치</div>
-                </div>
+        {isListView ? (
+          <>
+            <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
+              <div className="w-4 ml-2 mr-2" />
+              <div className="w-4 ml-2 mr-2" />
+              <div className="ml-6">텍스트</div>
+              <div className="w-[250px] flex gap-5">
+                <div className="w-[60px] text-center">속도</div>
+                <div className="w-[80px] text-center">볼륨</div>
+                <div className="w-[60px] text-center">피치</div>
               </div>
+            </div>
+            <ScrollArea className="h-[calc(100%-48px)] pr-2">
               <TtsTableList
                 rows={listItems}
                 onSelectionChange={onSelectionChange}
                 onTextChange={onTextChange}
               />
-            </>
-          ) : (
+            </ScrollArea>
+          </>
+        ) : (
+          <ScrollArea className="h-[calc(100%-48px)] pr-2">
             <TTSTableGrid items={gridItems} />
-          )}
-        </ScrollArea>
+          </ScrollArea>
+        )}
       </div>
       <TableFooter
         selectedCount={selectedCount}

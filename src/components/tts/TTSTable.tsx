@@ -229,7 +229,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
             </ScrollArea>
           </>
         ) : (
-          <ScrollArea className="h-[calc(100%-48px)] pr-2">
+          <ScrollArea className="h-full pr-2">
             <TTSTableGrid items={gridItems} />
           </ScrollArea>
         )}

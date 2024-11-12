@@ -1,5 +1,5 @@
-import { AlignJustify, LayoutGrid } from 'lucide-react';
 import React from 'react';
+import { TbLayoutGrid, TbList } from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
 
@@ -42,14 +42,14 @@ const ViewButtonGroup: React.FC<ViewButtonGroupProps> = ({ isListView, onViewCha
   return (
     <div className="flex rounded-full border-blue-500">
       <ViewButton
-        label={<AlignJustify />}
+        label={<TbList />}
         isSelected={isListView}
         onClick={() => onViewChange(true)}
         position="left"
         ariaLabel="list"
       />
       <ViewButton
-        label={<LayoutGrid />}
+        label={<TbLayoutGrid />}
         isSelected={!isListView}
         onClick={() => onViewChange(false)}
         position="right"

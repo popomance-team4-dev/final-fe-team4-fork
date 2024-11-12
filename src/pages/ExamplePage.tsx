@@ -12,8 +12,8 @@ import {
   UploadButton,
 } from '@/components/buttons/IconButton';
 import Tooltip from '@/components/common/Tooltip';
+import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
-import { TTSTable } from '@/components/tts/TTSTable';
 
 const ExamplePage = () => {
   const [items, setItems] = useState([

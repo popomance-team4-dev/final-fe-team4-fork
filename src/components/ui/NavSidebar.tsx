@@ -1,42 +1,51 @@
-import { FolderOpen, Home, LayoutDashboard, Plus } from 'lucide-react';
+import { FC } from 'react';
+import { TbFolders, TbFolderShare, TbSmartHome } from 'react-icons/tb';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/CommonButton';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import { Separator } from '@/components/ui/Separator';
 
+interface SidebarButtonProps {
+  icon: React.ElementType;
+  label: string;
+}
+
+const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
+  return (
+    <div className="w-full flex items-center justify-start py-2 px-2 rounded-lg cursor-pointer hover:bg-gray-50">
+      <Icon className="mr-2.5" style={{ width: '24px', height: '24px', color: '#1b1b1b' }} />
+      <span className="text-black">{label}</span>
+    </div>
+  );
+};
 export function NavSidebar() {
   return (
-    <div className="flex h-screen w-[240px] flex-col border-r bg-white">
-      <div className="p-6">
+    <div className="flex h-screen w-[244px] flex-col border-r bg-white p-6">
+      <div className="my-2">
         <div className="flex items-center gap-2 font-bold text-xl">
           <span className="text-emerald-600">AI</span>
           <span>PARK</span>
         </div>
       </div>
 
-      <Button className="mx-6 bg-blue-500 hover:bg-blue-600">
-        <Plus className="mr-2 h-4 w-4" />새 프로젝트 생성
+      <Separator className="my-6" />
+
+      <Button size="mid" icon>
+        새 프로젝트 생성
       </Button>
 
-      <ScrollArea className="flex-1 px-3 py-6">
-        <div className="space-y-1">
-          <Button variant="ghost" className="w-full justify-start font-normal">
-            <Home className="mr-2 h-4 w-4" />홈
-          </Button>
-          <Button variant="ghost" className="w-full justify-start font-normal">
-            <FolderOpen className="mr-2 h-4 w-4" />
-            프로젝트 목록
-          </Button>
-          <Button variant="ghost" className="w-full justify-start font-normal">
-            <LayoutDashboard className="mr-2 h-4 w-4" />
-            내보내기 내역
-          </Button>
+      <ScrollArea className="flex-1 py-6">
+        <div className="space-y-1  text-black text-body2">
+          <h2 className="py-2 ml-2 text-overline">General</h2>
+          <SidebarButton icon={TbSmartHome} label="홈" />
+          <SidebarButton icon={TbFolders} label="프로젝트 목록" />
+          <SidebarButton icon={TbFolderShare} label="내보내기 내역" />
         </div>
 
         <Separator className="my-4" />
 
-        <div className="px-4 py-2">
-          <h2 className="text-sm font-semibold">Workspace</h2>
+        <div className="py-2 ml-2">
+          <h2 className="text-overline text-black">Workspace</h2>
         </div>
       </ScrollArea>
     </div>

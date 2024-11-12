@@ -113,6 +113,14 @@ const ExamplePage = () => {
     setItems((prevItems) => prevItems.filter((item) => !item.isSelected));
   }, []);
 
+  const handleRegenerateItem = useCallback((id: string) => {
+    console.log('재생성 항목:', id);
+  }, []);
+
+  const handleDownloadItem = useCallback((id: string) => {
+    console.log('다운로드 항목:', id);
+  }, []);
+
   return (
     <div className="p-8 space-y-28">
       {/* 버튼 컴포넌트 */}
@@ -210,8 +218,8 @@ const ExamplePage = () => {
                     },
                   ]);
                 }}
-                onRegenerate={() => console.log('재생성')}
-                onDownload={() => console.log('다운로드')}
+                onRegenerateItem={handleRegenerateItem}
+                onDownloadItem={handleDownloadItem}
                 onPlay={(id) => console.log('재생:', id)}
               />
             </div>

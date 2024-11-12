@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
-import { TbCirclePlus, TbDownload, TbReload, TbTrash } from 'react-icons/tb';
+import { TbCirclePlus, TbTrash } from 'react-icons/tb';
 
-import { IconButton } from '@/components/buttons/IconButton';
+import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
 import ViewButtonGroup from '@/components/buttons/ViewFilterButton';
 import { TTSTableGrid } from '@/components/tts/table/TTSTableGrid';
 import { TTSTableList } from '@/components/tts/table/TTSTableList';
@@ -94,22 +94,8 @@ export const TableFooter: React.FC<TableFooterProps> = ({
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
       {isListView && (
         <div className="flex items-center space-x-2 mr-2">
-          <IconButton
-            icon={<TbReload />}
-            label="재생성"
-            iconBgColor="bg-blue-50"
-            iconColor="text-blue-500"
-            width="90px"
-            onClick={onRegenerate}
-          />
-          <IconButton
-            icon={<TbDownload />}
-            label="다운로드"
-            iconBgColor="bg-blue-50"
-            iconColor="text-blue-500"
-            width="104px"
-            onClick={onDownload}
-          />
+          <RecreateButton onClick={onRegenerate} />
+          <DownloadButton onClick={onDownload} />
         </div>
       )}
     </div>

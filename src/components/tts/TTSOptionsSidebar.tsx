@@ -5,20 +5,15 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/ui/IconButton';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/Select';
+import { Select, SelectItem } from '@/components/ui/Select';
 import { StateController } from '@/components/ui/StateController';
 
 const TTSOptionsSidebar: React.FC = () => {
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(60);
   const [pitch, setPitch] = useState(4.0);
+  const [selectedText, setSelectedText] = React.useState<string>('선택하세요');
+  const [selectedGender, setSelectedGender] = React.useState<'남자' | '여자'>('여자');
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -27,16 +22,20 @@ const TTSOptionsSidebar: React.FC = () => {
       {/* 음성 선택 */}
       <div className="mb-10">
         <label className="block text-sm font-bold mb-2">음성 선택</label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Select user" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="user1">User 1</SelectItem>
-              <SelectItem value="user2">User 2</SelectItem>
-            </SelectGroup>
-          </SelectContent>
+        <Select
+          selectedValue={selectedText}
+          selectedGender={selectedGender}
+          onValueChange={(value, gender) => {
+            setSelectedText(value);
+            setSelectedGender(gender);
+          }}
+        >
+          <SelectItem gender="여자" value="소연">
+            소연
+          </SelectItem>
+          <SelectItem gender="남자" value="정훈">
+            정훈
+          </SelectItem>
         </Select>
       </div>
 

@@ -140,7 +140,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
       </div>
 
       {isOpen && (
-        <div className="w-[504px] bg-white rounded-[8px] border border-[#C4C4C4] mt-2">
+        <div className="absolute w-[504px] bg-white rounded-[8px] border border-[#C4C4C4] mt-2 z-50">
           <div className="h-[40px] border-b border-[#C4C4C4] flex items-center px-4">
             <div className="flex gap-2">
               {['진행', '대기', '실패', '완료'].map((status) => (

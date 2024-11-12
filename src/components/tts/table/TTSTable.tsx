@@ -5,7 +5,7 @@ import { TbCirclePlus, TbDownload, TbReload, TbTrash } from 'react-icons/tb';
 import { IconButton } from '@/components/buttons/IconButton';
 import ViewButtonGroup from '@/components/buttons/ViewFilterButton';
 import { TTSTableGrid } from '@/components/tts/table/TTSTableGrid';
-import { TtsTableList } from '@/components/tts/table/TTSTableList';
+import { TTSTableList } from '@/components/tts/table/TTSTableList';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -221,7 +221,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
               </div>
             </div>
             <ScrollArea className="h-[calc(100%-48px)] pr-2">
-              <TtsTableList
+              <TTSTableList
                 rows={listItems}
                 onSelectionChange={onSelectionChange}
                 onTextChange={onTextChange}

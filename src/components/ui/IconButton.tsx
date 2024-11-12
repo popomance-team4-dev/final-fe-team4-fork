@@ -1,5 +1,7 @@
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
+import { FiPlay } from 'react-icons/fi';
+import { PiTrashBold } from 'react-icons/pi';
 import {
   TbDeviceFloppy,
   TbDownload,
@@ -11,7 +13,6 @@ import {
 } from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
-
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode;
   label: string;
@@ -177,7 +178,7 @@ export function ResetChangesButton() {
 export function DeleteCompletedButton() {
   return (
     <IconButton
-      icon={<Trash2 />}
+      icon={<PiTrashBold />}
       label="완료 작업 삭제"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-500"
@@ -189,7 +190,7 @@ export function DeleteCompletedButton() {
 export function RetryFailedButton() {
   return (
     <IconButton
-      icon={<Play />}
+      icon={<FiPlay />}
       label="실패 작업 재실행"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"

@@ -16,17 +16,18 @@ export type UnitStatusType = (typeof UNIT_SOUND_STATUS_TYPES)[keyof typeof UNIT_
 interface SoundStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   type: UnitStatusType;
   value: number;
+  showLabel?: boolean;
 }
 
 export const STATUS_CONFIGS = {
-  [UNIT_SOUND_STATUS_TYPES.SPEED]: { icon: CirclePlay, unit: 'x' },
-  [UNIT_SOUND_STATUS_TYPES.VOLUME]: { icon: Volume2, unit: '%' },
-  [UNIT_SOUND_STATUS_TYPES.PITCH]: { icon: AudioWaveform, unit: '' },
+  [UNIT_SOUND_STATUS_TYPES.SPEED]: { icon: CirclePlay, unit: 'x', label: '속도' },
+  [UNIT_SOUND_STATUS_TYPES.VOLUME]: { icon: Volume2, unit: '%', label: '볼륨' },
+  [UNIT_SOUND_STATUS_TYPES.PITCH]: { icon: AudioWaveform, unit: '', label: '피치' },
 } as const;
 
 const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
-  ({ className, type, value, ...props }, ref) => {
-    const { icon: Icon, unit } = STATUS_CONFIGS[type];
+  ({ className, type, value, showLabel = false, ...props }, ref) => {
+    const { icon: Icon, unit, label } = STATUS_CONFIGS[type];
 
     return (
       <div
@@ -39,6 +40,7 @@ const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
       >
         <Icon className="w-4.5 h-4.5 text-purple-900 flex-shrink-0" />
         <span className="text-sm text-purple-900">
+          {showLabel ? `${label} ` : ''}
           {value.toFixed(1)}
           {unit}
         </span>

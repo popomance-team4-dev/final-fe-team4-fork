@@ -195,27 +195,29 @@ export const TTSTable: React.FC<TTSTableProps> = ({
       />
       <div className="flex-1 min-h-0">
         {isListView ? (
-          <>
+          <div className="h-full relative">
             <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
               <div className="w-4 ml-2 mr-2" />
               <div className="w-4 ml-2 mr-2" />
               <div className="ml-6">텍스트</div>
-              <div className="w-[250px] flex gap-5">
-                <div className="w-[60px] text-center">속도</div>
-                <div className="w-[80px] text-center">볼륨</div>
-                <div className="w-[60px] text-center">피치</div>
+              <div className="flex gap-8">
+                <div className="w-[64px] text-center">속도</div>
+                <div className="w-[64px] text-center">볼륨</div>
+                <div className="w-[64px] text-center">피치</div>
               </div>
             </div>
-            <ScrollArea className="h-[calc(100%-48px)] pr-2">
-              <TTSTableList
-                rows={listItems}
-                onSelectionChange={onSelectionChange}
-                onTextChange={onTextChange}
-              />
-            </ScrollArea>
-          </>
+            <div className="absolute inset-x-0 bottom-0 top-[48px]">
+              <ScrollArea className="h-full">
+                <TTSTableList
+                  rows={listItems}
+                  onSelectionChange={onSelectionChange}
+                  onTextChange={onTextChange}
+                />
+              </ScrollArea>
+            </div>
+          </div>
         ) : (
-          <ScrollArea className="h-full pr-2">
+          <ScrollArea className="h-full">
             <TTSTableGrid items={gridItems} />
           </ScrollArea>
         )}

@@ -1,28 +1,33 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
 import { TTSTable } from '@/components/tts/table/TTSTable';
 import { Button } from '@/components/ui/button';
 
+interface TTSItem {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  speed: number;
+  volume: number;
+  pitch: number;
+}
+
 const TTSMainContent: React.FC = () => {
-  const [items, setItems] = useState([
-    {
-      id: '1',
-      text: '안녕하세요',
-      isSelected: false,
-      speed: 1.0,
-      volume: 60,
-      pitch: 4.0,
-    },
-    {
-      id: '2',
-      text: '반갑습니다',
-      isSelected: false,
-      speed: 1.0,
-      volume: 60,
-      pitch: 4.0,
-    },
-  ]);
+  const [items, setItems] = useState<TTSItem[]>([]);
+
+  useEffect(() => {
+    setItems([
+      {
+        id: String(Date.now()),
+        text: '',
+        isSelected: false,
+        speed: 1.0,
+        volume: 60,
+        pitch: 4.0,
+      },
+    ]);
+  }, []);
 
   const isAllSelected = items.every((item) => item.isSelected);
 

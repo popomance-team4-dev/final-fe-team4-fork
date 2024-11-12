@@ -44,7 +44,7 @@ const TextRow: React.FC<TextRowProps> = ({
         placeholder="텍스트를 입력하세요."
         className="flex-1 ml-2 mr-4"
       />
-      <div className="flex gap-4.5">
+      <div className="flex gap-6">
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />

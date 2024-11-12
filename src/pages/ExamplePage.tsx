@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 
+import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { AudioPlayer } from '@/components/ui/AudioPlayer';
@@ -34,6 +35,63 @@ const ExamplePage = () => {
       pitch: 4.0,
     },
   ]);
+
+  const [ttsFiles, setTTSFiles] = useState<TTSFile[]>([
+    {
+      id: 1,
+      name: 'text_001.txt',
+      status: '진행',
+      progress: 75,
+      createdAt: new Date().toISOString(), // 오늘
+    },
+    {
+      id: 2,
+      name: 'text_002.txt',
+      status: '진행',
+      progress: 82,
+      createdAt: new Date().toISOString(), // 오늘
+    },
+    {
+      id: 3,
+      name: 'text_003.txt',
+      status: '대기',
+      createdAt: new Date(Date.now() - 86400000).toISOString(), // 어제
+    },
+    {
+      id: 4,
+      name: 'text_004.txt',
+      status: '대기',
+      createdAt: new Date(Date.now() - 86400000).toISOString(), // 어제
+    },
+    {
+      id: 5,
+      name: 'text_005.txt',
+      status: '실패',
+      createdAt: new Date(Date.now() - 86400000 * 2).toISOString(), // 그저께
+    },
+    {
+      id: 6,
+      name: 'text_006.txt',
+      status: '완료',
+      createdAt: new Date(Date.now() - 86400000 * 7).toISOString(), // 일주일 전
+    },
+    {
+      id: 7,
+      name: 'text_007.txt',
+      status: '완료',
+      createdAt: new Date(Date.now() - 86400000 * 31).toISOString(), // 한달 전
+    },
+  ]);
+
+  const handleDeleteCompleted = useCallback(() => {
+    setTTSFiles((prev) => prev.filter((file) => file.status !== '완료'));
+  }, []);
+
+  const handleRetryFailed = useCallback(() => {
+    setTTSFiles((prev) =>
+      prev.map((file) => (file.status === '실패' ? { ...file, status: '대기' } : file))
+    );
+  }, []);
 
   const isAllSelected = items.every((item) => item.isSelected);
 
@@ -124,6 +182,13 @@ const ExamplePage = () => {
         <h2 className="text-xl font-bold mb-4">TTS</h2>
         <div className="flex">
           <div className="flex-1">
+            <div>
+              <TTSDropdown
+                files={ttsFiles}
+                onDeleteCompleted={handleDeleteCompleted}
+                onRetryFailed={handleRetryFailed}
+              />
+            </div>
             <div className="w-[872px] h-[580px] border rounded-md overflow-hidden">
               <TTSTable
                 items={items}
@@ -151,7 +216,6 @@ const ExamplePage = () => {
               />
             </div>
           </div>
-
           <TTSOptionsSidebar />
         </div>
       </section>

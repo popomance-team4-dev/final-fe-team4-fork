@@ -23,10 +23,18 @@ const formatDateCategory = (date: Date): string => {
   const diffTime = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return '오늘';
-  if (diffDays === 1) return '어제';
-  if (diffDays === 2) return '그저께';
-  if (diffDays <= 7) return '일주일 전';
+  if (diffDays === 0) {
+    return '오늘';
+  }
+  if (diffDays === 1) {
+    return '어제';
+  }
+  if (diffDays === 2) {
+    return '그저께';
+  }
+  if (diffDays <= 7) {
+    return '일주일 전';
+  }
   return '한달 전';
 };
 
@@ -34,7 +42,6 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatuses, setSelectedStatuses] = useState(['진행', '대기', '실패', '완료']);
 
-  // 파일들을 날짜 카테고리별로 그룹화
   const categorizedFiles = useMemo(() => {
     const grouped = files.reduce(
       (acc, file) => {
@@ -50,10 +57,8 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
       {} as Record<string, TTSFile[]>
     );
 
-    // 카테고리 순서 정의
     const categoryOrder = ['오늘', '어제', '그저께', '일주일 전', '한달 전'];
 
-    // 정렬된 카테고리로 새 객체 생성
     return categoryOrder.reduce(
       (acc, category) => {
         if (grouped[category]) {
@@ -65,7 +70,6 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
     );
   }, [files]);
 
-  // 상태별 파일 수 계산
   const stats = useMemo(() => {
     return files.reduce(
       (acc, file) => {
@@ -79,7 +83,9 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
   const toggleStatus = (status: string) => {
     setSelectedStatuses((prev) => {
       if (prev.includes(status)) {
-        if (prev.length === 1) return prev; // 최소 하나는 선택되어 있어야 함
+        if (prev.length === 1) {
+          return prev;
+        }
         return prev.filter((s) => s !== status);
       }
       return [...prev, status];
@@ -88,7 +94,6 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
 
   return (
     <div className="font-['Pretendard']">
-      {/* Header Stats */}
       <div className="w-[504px] h-[40px] bg-white rounded-[8px] border border-[#C4C4C4] px-4 flex items-center justify-between">
         <div className="flex space-x-4">
           <div className="flex items-center">
@@ -133,10 +138,8 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
         </button>
       </div>
 
-      {/* Dropdown Content */}
       {isOpen && (
         <div className="w-[504px] bg-white rounded-[8px] border border-[#C4C4C4] mt-2">
-          {/* Status Tags */}
           <div className="h-[40px] border-b border-[#C4C4C4] flex items-center px-4">
             <div className="flex gap-2">
               {['진행', '대기', '실패', '완료'].map((status) => (
@@ -155,7 +158,6 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             </div>
           </div>
 
-          {/* File List */}
           <div className="p-4">
             {Object.entries(categorizedFiles).map(([category, categoryFiles]) => {
               const filteredFiles = categoryFiles.filter((file) =>
@@ -216,7 +218,6 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             })}
           </div>
 
-          {/* Footer Actions */}
           <div className="flex items-center justify-center gap-6 border-t border-[#C4C4C4] px-3 py-4">
             <DeleteCompletedButton />
             <RetryFailedButton />

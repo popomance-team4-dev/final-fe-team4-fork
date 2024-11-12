@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { BsFillCircleFill } from 'react-icons/bs';
-import { VscChevronDown, VscChevronUp, VscLoading } from 'react-icons/vsc';
+import { VscChevronDown, VscChevronUp } from 'react-icons/vsc';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/ui/IconButton';
 
@@ -200,9 +201,12 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                           {file.status === '진행' ? (
                             <>
                               <span className="text-[14px] leading-[20px] text-gray-500 mr-2">
-                                • TTS 변환 중 {file.progress}%
+                                • TTS 변환 중
                               </span>
-                              <VscLoading className="animate-spin text-green" />
+                              <AiOutlineLoading3Quarters className="animate-spin text-green mr-[5px]" />
+                              <span className="text-[14px] leading-[20px] text-gray-500 mr-2">
+                                {file.progress}%
+                              </span>
                             </>
                           ) : (
                             <span className="text-[14px] leading-[20px] text-gray-500">

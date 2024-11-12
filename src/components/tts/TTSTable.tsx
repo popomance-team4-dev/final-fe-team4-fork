@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 import { TbCirclePlus, TbDownload, TbReload, TbTrash } from 'react-icons/tb';
 
+import { IconButton } from '@/components/buttons/IconButton';
+import ViewButtonGroup from '@/components/buttons/ViewFilterButton';
 import { TTSTableGrid } from '@/components/tts/TTSTableGrid';
 import { TtsTableList } from '@/components/tts/TTSTableList';
-import { Checkbox } from '@/components/ui/CheckBox';
-import { IconButton } from '@/components/ui/IconButton';
-import { ScrollArea } from '@/components/ui/ScrollArea';
-import { Separator } from '@/components/ui/Separator';
-import ViewButtonGroup from '@/components/ui/ViewFilterButton';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 
 interface TTSListItem {
   id: string;

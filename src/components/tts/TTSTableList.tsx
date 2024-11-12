@@ -1,7 +1,7 @@
-import { Checkbox } from '@/components/ui/CheckBox';
-import { PlayButton } from '@/components/ui/PlayButton';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/ui/SoundStatus';
-import { TextInput } from '@/components/ui/TextInput';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
+import { PlayButton } from '@/components/buttons/PlayButton';
+import { TextInput } from '@/components/common/TextInput';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface TextRowProps {
   id: string;

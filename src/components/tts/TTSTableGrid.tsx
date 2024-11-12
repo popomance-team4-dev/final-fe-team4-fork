@@ -1,11 +1,11 @@
 import { Download, RotateCcw } from 'lucide-react';
 import React from 'react';
 
-import { AudioPlayer } from '@/components/ui/AudioPlayer';
-import { Checkbox } from '@/components/ui/CheckBox';
-import { IconButton } from '@/components/ui/IconButton';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/ui/SoundStatus';
-import { TextInput } from '@/components/ui/TextInput';
+import { AudioPlayer } from '@/components/audio/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
+import { IconButton } from '@/components/buttons/IconButton';
+import { TextInput } from '@/components/common/TextInput';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface TTSTableGridItemProps {
   id: string;

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
+import { StateController } from '@/components/audio/StateController';
 import {
   ApplyAllButton,
   ApplySelectionButton,
   ResetChangesButton,
-} from '@/components/ui/IconButton';
+} from '@/components/buttons/IconButton';
 import {
   Select,
   SelectContent,
@@ -12,8 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/Select';
-import { StateController } from '@/components/ui/StateController';
+} from '@/components/ui/select';
 
 const TTSOptionsSidebar: React.FC = () => {
   const [speed, setSpeed] = useState(1.0);

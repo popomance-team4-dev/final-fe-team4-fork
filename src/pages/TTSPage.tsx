@@ -1,6 +1,6 @@
+import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import TTSMainContent from '@/components/tts/TTSMainContent';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
-import { AudioPlayer } from '@/components/ui/AudioPlayer';
 
 const TTSPage = () => {
   return (

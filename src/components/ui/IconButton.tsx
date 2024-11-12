@@ -1,5 +1,15 @@
 import { Slot } from '@radix-ui/react-slot';
-import { Download, Layers2, Layers3, RefreshCw, RotateCcw, Save, Upload } from 'lucide-react';
+import {
+  Download,
+  Layers2,
+  Layers3,
+  Play,
+  RefreshCw,
+  RotateCcw,
+  Save,
+  Trash2,
+  Upload,
+} from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -153,6 +163,30 @@ export function ResetChangesButton() {
       label="변경 초기화"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
+    />
+  );
+}
+
+export function DeleteCompletedButton() {
+  return (
+    <IconButton
+      icon={<Trash2 />}
+      label="완료 작업 삭제"
+      iconBgColor="bg-blue-50"
+      iconColor="text-blue-500"
+      width="228px"
+    />
+  );
+}
+
+export function RetryFailedButton() {
+  return (
+    <IconButton
+      icon={<Play />}
+      label="실패 작업 재실행"
+      iconBgColor="bg-blue-50"
+      iconColor="text-blue-600"
+      width="228px"
     />
   );
 }

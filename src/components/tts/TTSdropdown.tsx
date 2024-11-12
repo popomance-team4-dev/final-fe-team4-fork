@@ -164,7 +164,9 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                 selectedStatuses.includes(file.status)
               );
 
-              if (filteredFiles.length === 0) return null;
+              if (filteredFiles.length === 0) {
+                return null;
+              }
 
               return (
                 <div key={category} className="mb-6 last:mb-0">

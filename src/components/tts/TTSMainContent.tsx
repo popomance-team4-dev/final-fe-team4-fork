@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
-import { Button } from '@/components/buttons/CommonButton';
 import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
 import { TTSTable } from '@/components/tts/table/TTSTable';
+import { Button } from '@/components/ui/button';
 
 const TTSMainContent: React.FC = () => {
   const [items, setItems] = useState([

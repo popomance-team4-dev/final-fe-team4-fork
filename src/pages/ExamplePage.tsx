@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
-import { Button } from '@/components/buttons/CommonButton';
 import {
   ApplyAllButton,
   ApplySelectionButton,
@@ -14,6 +13,7 @@ import {
 import Tooltip from '@/components/common/Tooltip';
 import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import { Button } from '@/components/ui/button';
 
 const ExamplePage = () => {
   const [items, setItems] = useState([

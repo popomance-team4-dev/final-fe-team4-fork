@@ -1,5 +1,5 @@
-import { Button } from '@/components/buttons/CommonButton';
 import { LoginInput } from '@/components/login/LoginInput';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import Logo from '@/images/logo.png';
 

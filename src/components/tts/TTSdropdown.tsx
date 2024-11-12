@@ -94,62 +94,67 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
   };
 
   return (
-    <div className="font-['Pretendard']">
-      <div className="w-[504px] h-[40px] bg-white rounded-[8px] border border-[#C4C4C4] px-4 flex items-center justify-between">
-        <div className="flex space-x-4">
+    <div>
+      {/* 메인 드롭다운 버튼 */}
+      <div className="w-[504px] h-10 bg-background rounded-lg border border-gray-300 px-4 flex items-center justify-between">
+        <div className="flex gap-4">
+          {/* 진행 상태 */}
           <div className="flex items-center">
             <BsFillCircleFill className="w-2 h-2 text-green mr-2" />
-            <span className="text-[#1B1B1B] text-[14px] font-medium leading-[20px]">진행</span>
-            <div className="ml-2 bg-[#FAF7FF] px-2 rounded-[4px] h-[18px] flex items-center">
-              <span className="text-[#512A91] text-[12px] font-medium leading-[18px]">
-                {stats['진행'] || 0}
-              </span>
+            <span className="text-foreground text-sm font-medium">진행</span>
+            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
+              <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
             </div>
           </div>
+
+          {/* 대기 상태 */}
           <div className="flex items-center">
             <BsFillCircleFill className="w-2 h-2 text-yellow-500 mr-2" />
-            <span className="text-[#1B1B1B] text-[14px] font-medium leading-[20px]">대기</span>
-            <div className="ml-2 bg-[#FAF7FF] px-2 rounded-[4px] h-[18px] flex items-center">
-              <span className="text-[#512A91] text-[12px] font-medium leading-[18px]">
-                {stats['대기'] || 0}
-              </span>
+            <span className="text-foreground text-sm font-medium">대기</span>
+            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
+              <span className="text-[#512A91] text-xs font-medium">{stats['대기'] || 0}</span>
             </div>
           </div>
+
+          {/* 실패 상태 */}
           <div className="flex items-center">
             <BsFillCircleFill className="w-2 h-2 text-red-500 mr-2" />
-            <span className="text-[#1B1B1B] text-[14px] font-medium leading-[20px]">실패</span>
-            <div className="ml-2 bg-[#FAF7FF] px-2 rounded-[4px] h-[18px] flex items-center">
-              <span className="text-[#512A91] text-[12px] font-medium leading-[18px]">
-                {stats['실패'] || 0}
-              </span>
+            <span className="text-foreground text-sm font-medium">실패</span>
+            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
+              <span className="text-[#512A91] text-xs font-medium">{stats['실패'] || 0}</span>
             </div>
           </div>
+
+          {/* 완료 상태 */}
           <div className="flex items-center">
             <BsFillCircleFill className="w-2 h-2 text-blue-500 mr-2" />
-            <span className="text-[#1B1B1B] text-[14px] font-medium leading-[20px]">완료</span>
-            <div className="ml-2 bg-[#FAF7FF] px-2 rounded-[4px] h-[18px] flex items-center">
-              <span className="text-[#512A91] text-[12px] font-medium leading-[18px]">
-                {stats['완료'] || 0}
-              </span>
+            <span className="text-foreground text-sm font-medium">완료</span>
+            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
+              <span className="text-[#512A91] text-xs font-medium">{stats['완료'] || 0}</span>
             </div>
           </div>
         </div>
-        <button onClick={() => setIsOpen(!isOpen)} className="text-[#1B1B1B]">
+
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-foreground hover:bg-gray-100 p-1 rounded transition-colors"
+        >
           {isOpen ? <VscChevronUp size={20} /> : <VscChevronDown size={20} />}
         </button>
       </div>
 
       {isOpen && (
-        <div className="absolute w-[504px] bg-white rounded-[8px] border border-[#C4C4C4] mt-2 z-50">
-          <div className="h-[40px] border-b border-[#C4C4C4] flex items-center px-4">
+        <div className="absolute w-[504px] bg-background rounded-lg border border-gray-300 mt-2 z-50">
+          {/* 필터 버튼 영역 */}
+          <div className="h-10 border-b border-gray-300 flex items-center px-4">
             <div className="flex gap-2">
               {['진행', '대기', '실패', '완료'].map((status) => (
                 <button
                   key={status}
                   onClick={() => toggleStatus(status)}
-                  className={`h-[24px] px-2 rounded-[4px] text-[14px] font-medium leading-[20px] ${
+                  className={`h-6 px-2 rounded text-sm font-medium transition-colors ${
                     selectedStatuses.includes(status)
-                      ? 'bg-[#FAF7FF] text-[#512A91]'
+                      ? 'bg-secondary text-[#512A91]'
                       : 'bg-gray-100 text-gray-600'
                   }`}
                 >
@@ -159,6 +164,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             </div>
           </div>
 
+          {/* 파일 목록 영역 */}
           <div className="p-4">
             {Object.entries(categorizedFiles).map(([category, categoryFiles]) => {
               const filteredFiles = categoryFiles.filter((file) =>
@@ -171,13 +177,11 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
 
               return (
                 <div key={category} className="mb-6 last:mb-0">
-                  <h3 className="text-[14px] font-medium leading-[20px] text-[#1B1B1B] mb-2">
-                    {category}
-                  </h3>
+                  <h3 className="text-sm font-medium text-foreground mb-2">{category}</h3>
                   <div className="relative">
                     {filteredFiles.length > 1 && (
                       <div
-                        className="absolute left-1 top-3 bottom-3 w-[1px] bg-gray-200"
+                        className="absolute left-1 top-3 bottom-3 w-px bg-gray-200"
                         aria-hidden="true"
                       />
                     )}
@@ -195,21 +199,17 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                           }`}
                         />
                         <div className="flex items-center flex-1">
-                          <span className="text-[14px] font-medium leading-[20px] text-[#1B1B1B] mr-2">
+                          <span className="text-sm font-medium text-foreground mr-2">
                             {file.name}
                           </span>
                           {file.status === '진행' ? (
                             <>
-                              <span className="text-[14px] leading-[20px] text-gray-500 mr-2">
-                                • TTS 변환 중
-                              </span>
-                              <AiOutlineLoading3Quarters className="animate-spin text-green mr-[5px]" />
-                              <span className="text-[14px] leading-[20px] text-gray-500 mr-2">
-                                {file.progress}%
-                              </span>
+                              <span className="text-sm text-gray-500 mr-2">• TTS 변환 중</span>
+                              <AiOutlineLoading3Quarters className="animate-spin text-green mr-2" />
+                              <span className="text-sm text-gray-500">{file.progress}%</span>
                             </>
                           ) : (
-                            <span className="text-[14px] leading-[20px] text-gray-500">
+                            <span className="text-sm text-gray-500">
                               {file.status === '대기' && '• TTS 대기 중'}
                               {file.status === '실패' && '• TTS 실패'}
                               {file.status === '완료' && '• TTS 변환 완료'}
@@ -224,7 +224,8 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             })}
           </div>
 
-          <div className="flex items-center justify-center gap-6 border-t border-[#C4C4C4] px-3 py-4">
+          {/* 하단 버튼 영역 */}
+          <div className="flex items-center justify-center gap-6 border-t border-gray-300 px-3 py-4">
             <DeleteCompletedButton />
             <RetryFailedButton />
           </div>

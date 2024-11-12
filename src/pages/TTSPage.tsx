@@ -66,11 +66,9 @@ const TTSPage = () => {
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen">
       {/* Header */}
-      <header className="h-[92px] border-b border-[#C4C4C4]">
+      <header className="h-[92px] border-b ">
         <div className="pt-3 px-6">
-          <h1 className="text-[#1B1B1B] font-['Pretendard'] text-[14px] font-bold leading-[20px] mb-2">
-            My work status
-          </h1>
+          <h1 className=" text-[14px] font-bold mb-2">My work status</h1>
           <div className="relative">
             <TTSDropdown
               files={ttsFiles}

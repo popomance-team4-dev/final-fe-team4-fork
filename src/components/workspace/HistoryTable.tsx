@@ -34,7 +34,7 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
       <Table>
         <TableHeader className="border-t">
           <TableRow>
-            <TableHead className="pl-[62px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
+            <TableHead className="pl-[66px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">프로젝트명</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">파일명</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">내용</TableHead>
@@ -52,7 +52,7 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
               data-state={currentPlayingId === item.id ? 'selected' : undefined}
             >
               <TableCell className="font-medium">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-7">
                   <PlayButton
                     isPlaying={currentPlayingId === item.id}
                     onPlay={() => onPlay(item.id)}
@@ -69,7 +69,12 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
               </TableCell>
               <TableCell>
                 <div className="flex justify-start pl-3">
-                  <TbDownload className="h-6 w-6" />
+                  <button
+                    onClick={() => console.log('다운로드:', item.id)}
+                    aria-label="Download file"
+                  >
+                    <TbDownload className="h-6 w-6" />
+                  </button>
                 </div>
               </TableCell>
               <TableCell className="text-gray-700 pl-[60px]">{item.createdAt}</TableCell>

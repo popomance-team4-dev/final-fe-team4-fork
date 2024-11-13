@@ -270,10 +270,10 @@ const ExamplePage = () => {
       <section>
         <div className="flex items-end justify-between mb-6">
           <h3 className="text-2xl font-bold leading-9">최근 내보내기</h3>
-          <div className="flex items-center text-black">
-            <span className="text-sm mr-1">전체보기</span>
+          <button onClick={() => console.log('전체 보기')} className="flex items-center text-black">
+            <span className="text-sm mr-1">전체 보기</span>
             <TbChevronRight />
-          </div>
+          </button>
         </div>
         <HistoryTable
           items={historyItems}

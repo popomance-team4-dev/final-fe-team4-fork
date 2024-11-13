@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
 const mockServerClient = require('mockserver-client');
 const client = mockServerClient.mockServerClient('mock.popomance.kr', 80);
 

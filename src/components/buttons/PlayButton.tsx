@@ -1,7 +1,7 @@
 'use client';
 
-import { Pause, Play } from 'lucide-react';
 import * as React from 'react';
+import { TbPlayerPauseFilled, TbPlayerPlayFilled } from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
 
@@ -13,7 +13,7 @@ interface PlayButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
   ({ className, isPlaying = false, onPlay, onPause, ...props }, ref) => {
-    const Icon = isPlaying ? Pause : Play;
+    const Icon = isPlaying ? TbPlayerPauseFilled : TbPlayerPlayFilled;
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -29,7 +29,7 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
         ref={ref}
         className={cn(
           'flex items-center justify-center',
-          'h-7 w-7 rounded-full',
+          'h-[27px] w-[27px] rounded-full',
           'bg-blue-900 hover:bg-blue-800',
           'transition-colors duration-200',
           className
@@ -38,7 +38,7 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
         aria-label={isPlaying ? 'Pause' : 'Play'}
         {...props}
       >
-        <Icon className="w-1/2 h-1/2 text-white fill-white" />
+        <Icon className="w-1/2 h-1/2 text-white" />
       </button>
     );
   }

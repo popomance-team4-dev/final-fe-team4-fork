@@ -12,7 +12,7 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginQuery.configs['flat/recommended'],
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'temp'] },
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {

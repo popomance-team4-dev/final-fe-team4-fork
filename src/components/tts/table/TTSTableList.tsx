@@ -1,7 +1,7 @@
-import { Checkbox } from '@/components/ui/CheckBox';
-import { PlayButton } from '@/components/ui/PlayButton';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/ui/SoundStatus';
-import { TextInput } from '@/components/ui/TextInput';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
+import { PlayButton } from '@/components/buttons/PlayButton';
+import { TextInput } from '@/components/common/TextInput';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface TextRowProps {
   id: string;
@@ -44,7 +44,7 @@ const TextRow: React.FC<TextRowProps> = ({
         placeholder="텍스트를 입력하세요."
         className="flex-1 ml-2 mr-4"
       />
-      <div className="flex gap-4.5">
+      <div className="flex gap-6">
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
@@ -53,13 +53,13 @@ const TextRow: React.FC<TextRowProps> = ({
   );
 };
 
-interface TtsTableListProps {
+interface TTSTableListProps {
   rows: Omit<TextRowProps, 'onTextChange'>[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
 }
 
-const TtsTableList: React.FC<TtsTableListProps> = ({ rows, onSelectionChange, onTextChange }) => {
+const TTSTableList: React.FC<TTSTableListProps> = ({ rows, onSelectionChange, onTextChange }) => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       {rows.map((row) => (
@@ -74,4 +74,4 @@ const TtsTableList: React.FC<TtsTableListProps> = ({ rows, onSelectionChange, on
   );
 };
 
-export { TtsTableList };
+export { TTSTableList };

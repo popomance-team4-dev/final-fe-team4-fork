@@ -46,7 +46,7 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
           </TableRow>
         </TableHeader>
         <TableBody>
-          {items.map((item) => (
+          {items.slice(0, 5).map((item) => (
             <TableRow
               key={item.id}
               data-state={currentPlayingId === item.id ? 'selected' : undefined}

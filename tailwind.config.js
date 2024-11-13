@@ -37,7 +37,14 @@ export default {
       colors: {
         white: '#FFFFFF',
         black: '#1B1B1B',
-        green: '#22C55E',
+        green: {
+          50: '#E0FFE9',
+          500: '#22C55E',
+        },
+        yellow: {
+          50: '#FFFBCC',
+          500: '#FBBC05',
+        },
         blue: {
           50: '#edf1ff',
           100: '#c2d4ff',

@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { TbChevronRight } from 'react-icons/tb';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import {
@@ -15,6 +16,7 @@ import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { Button } from '@/components/ui/button';
+import { HistoryTable } from '@/components/workspace/HistoryTable';
 
 const ExamplePage = () => {
   const [items, setItems] = useState([
@@ -83,6 +85,39 @@ const ExamplePage = () => {
     },
   ]);
 
+  // History 테이블을 위한 상태
+  const [historyItems] = useState([
+    {
+      id: '1',
+      order: '01',
+      projectName: '프로젝트1 발표자료',
+      fileName: '오디오13.wav',
+      content: 'Lorem ipsum dolor sit amet consectetur.',
+      type: 'VC' as const,
+      createdAt: '2024. 11. 12',
+    },
+    {
+      id: '2',
+      order: '02',
+      projectName: '프로젝트1 발표자료',
+      fileName: '오디오13.wav',
+      content: 'Lorem ipsum dolor sit amet consectetur.',
+      type: 'TTS' as const,
+      createdAt: '2024. 11. 12',
+    },
+    {
+      id: '3',
+      order: '03',
+      projectName: '프로젝트1 발표자료',
+      fileName: '오디오13.wav',
+      content: 'Lorem ipsum dolor sit amet consectetur.',
+      type: 'CONCAT' as const,
+      createdAt: '2024. 11. 12',
+    },
+  ]);
+
+  const [currentPlayingId, setCurrentPlayingId] = useState<string>();
+
   const handleDeleteCompleted = useCallback(() => {
     setTTSFiles((prev) => prev.filter((file) => file.status !== '완료'));
   }, []);
@@ -120,6 +155,9 @@ const ExamplePage = () => {
   const handleDownloadItem = useCallback((id: string) => {
     console.log('다운로드 항목:', id);
   }, []);
+
+  const handlePlay = (id: string) => setCurrentPlayingId(id);
+  const handlePause = () => setCurrentPlayingId(undefined);
 
   return (
     <div className="p-8 space-y-28">
@@ -226,6 +264,23 @@ const ExamplePage = () => {
           </div>
           <TTSOptionsSidebar />
         </div>
+      </section>
+
+      {/* History 테이블 섹션 */}
+      <section>
+        <div className="flex items-end justify-between mb-6">
+          <h3 className="text-2xl font-bold leading-9">최근 내보내기</h3>
+          <div className="flex items-center text-black">
+            <span className="text-sm mr-1">전체보기</span>
+            <TbChevronRight />
+          </div>
+        </div>
+        <HistoryTable
+          items={historyItems}
+          currentPlayingId={currentPlayingId}
+          onPlay={handlePlay}
+          onPause={handlePause}
+        />
       </section>
     </div>
   );

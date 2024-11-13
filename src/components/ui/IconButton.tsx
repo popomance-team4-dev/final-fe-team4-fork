@@ -3,15 +3,16 @@ import * as React from 'react';
 import {
   TbDeviceFloppy,
   TbDownload,
+  TbPlayerPlayFilled,
   TbRefresh,
   TbReload,
   TbStack,
   TbStack2,
+  TbTrash,
   TbUpload,
 } from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
-
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode;
   label: string;
@@ -170,6 +171,30 @@ export function ResetChangesButton() {
       label="변경 초기화"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
+    />
+  );
+}
+
+export function DeleteCompletedButton() {
+  return (
+    <IconButton
+      icon={<TbTrash />}
+      label="완료 작업 삭제"
+      iconBgColor="bg-blue-50"
+      iconColor="text-blue-500"
+      width="228px"
+    />
+  );
+}
+
+export function RetryFailedButton() {
+  return (
+    <IconButton
+      icon={<TbPlayerPlayFilled />}
+      label="실패 작업 재실행"
+      iconBgColor="bg-blue-50"
+      iconColor="text-blue-600"
+      width="228px"
     />
   );
 }

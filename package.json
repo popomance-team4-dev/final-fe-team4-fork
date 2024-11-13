@@ -12,7 +12,9 @@
     "prepare": "lefthook install",
     "docker": "vite build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "mockup": "node ./mock/mockup.cjs",
+    "mockdown": "node ./mock/mockdown.cjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.2",
@@ -72,6 +74,7 @@
     "eslint-plugin-storybook": "^0.11.0",
     "globals": "^15.11.0",
     "lefthook": "^1.8.2",
+    "mockserver-client": "^5.15.0",
     "postcss": "^8.4.47",
     "prettier": "3.3.3",
     "storybook": "^8.4.2",

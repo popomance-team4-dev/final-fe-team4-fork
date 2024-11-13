@@ -68,7 +68,7 @@ const TTSMainContent: React.FC = () => {
         </div>
       </header>
 
-      <div className="w-[872px] h-[580px] border rounded-md mt-8 overflow-hidden">
+      <div className="w-[872px] h-[580px] mt-8 overflow-hidden">
         <TTSTable
           items={items}
           isAllSelected={isAllSelected}

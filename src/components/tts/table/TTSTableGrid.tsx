@@ -27,12 +27,12 @@ interface TTSTableGridProps {
 
 const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 px-0.5 pt-0.5">
       {items.map((item) => (
         <div
           key={item.id}
-          className={`p-4 rounded-md bg-white transition-colors ${
-            item.isSelected ? 'border-blue-500 border-1 ring-2 ring-blue-500' : 'border'
+          className={`p-4 rounded-md bg-white transition-colors shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)] ${
+            item.isSelected ? 'ring-2 ring-blue-500 ' : 'border border-gray-200'
           }`}
         >
           <div className="flex items-center justify-between mb-4">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
 const WorkspacePage = () => {

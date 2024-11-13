@@ -4,7 +4,6 @@ import { TbFolders, TbFolderShare, TbSmartHome } from 'react-icons/tb';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 
 interface SidebarButtonProps {
   icon: React.ElementType;
@@ -13,22 +12,20 @@ interface SidebarButtonProps {
 
 const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
-    <div className="py-2 group-hover/navbar:py-0">
-      <div className="w-full flex items-center justify-start py-0 px-2 group-hover/navbar:py-2 group-hover/navbar:px-2 rounded-lg cursor-pointer hover:bg-gray-50 ml-2">
-        <Icon className="mr-2.5" style={{ minWidth: '24px', height: '24px', color: '#1b1b1b' }} />
-        <span className="text-black opacity-0 w-0 h-0 group-hover/navbar:opacity-100 group-hover/navbar:w-auto group-hover/navbar:h-auto">
-          {label}
-        </span>
-      </div>
-      <div
-        className={cn(
-          'w-full flex justify-center overflow-visible',
-          label === '홈' ? 'ml-[-8px]' : 'ml-[-7px]'
-        )}
+    <div className="flex  flex-col  items-center px-2 py-2 ml-[-20px] rounded-lg cursor-pointer hover:bg-gray-50 group-hover/navbar:py-2  group-hover/navbar:flex-row  group-hover/navbar:ml-2">
+      <Icon className="min-w-[24px] h-6 text-[#1b1b1b]" />
+      <span
+        className="ml-2.5 text-black overflow-hidden whitespace-nowrap   
+        w-0 h-0 opacity-0 group-hover/navbar:w-auto group-hover/navbar:opacity-100  group-hover/navbar:h-auto"
       >
-        <span className="group-hover/navbar:absolute min-w-[40px] text-black opacity-100 w-auto h-auto group-hover/navbar:opacity-0 group-hover/navbar:w-0 group-hover/navbar:h-0 text-[11px] text-center">
-          {label}
-        </span>
+        {label}
+      </span>
+      <div
+        className={
+          'group-hover/navbar:absolute  text-[11px] opacity-100 group-hover/navbar:opacity-0'
+        }
+      >
+        {label}
       </div>
     </div>
   );

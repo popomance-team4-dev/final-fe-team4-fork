@@ -8,6 +8,8 @@ async function clearMocks() {
     method: 'GET',
     // 터미널에서 [ npm run mockdown ] 실행하면 삭제됩니다.
   });
+  // 또는 전체 지우기
+  // await client.reset();
 }
 
 clearMocks();

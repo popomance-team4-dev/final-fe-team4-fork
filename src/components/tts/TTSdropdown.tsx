@@ -1,10 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { BsFillCircleFill } from 'react-icons/bs';
-import { VscChevronDown, VscChevronUp } from 'react-icons/vsc';
+import { TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/ui/IconButton';
-
 export interface TTSFile {
   id: number;
   name: string;
@@ -100,7 +98,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
         <div className="flex gap-4">
           {/* 진행 상태 */}
           <div className="flex items-center">
-            <BsFillCircleFill className="w-2 h-2 text-green mr-2" />
+            <TbCircleFilled className="w-2 h-2 text-green mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
@@ -109,7 +107,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
 
           {/* 대기 상태 */}
           <div className="flex items-center">
-            <BsFillCircleFill className="w-2 h-2 text-yellow-500 mr-2" />
+            <TbCircleFilled className="w-2 h-2 text-yellow-500 mr-2" />
             <span className="text-foreground text-sm font-medium">대기</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['대기'] || 0}</span>
@@ -118,7 +116,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
 
           {/* 실패 상태 */}
           <div className="flex items-center">
-            <BsFillCircleFill className="w-2 h-2 text-red-500 mr-2" />
+            <TbCircleFilled className="w-2 h-2 text-red-500 mr-2" />
             <span className="text-foreground text-sm font-medium">실패</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['실패'] || 0}</span>
@@ -127,7 +125,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
 
           {/* 완료 상태 */}
           <div className="flex items-center">
-            <BsFillCircleFill className="w-2 h-2 text-blue-500 mr-2" />
+            <TbCircleFilled className="w-2 h-2 text-blue-500 mr-2" />
             <span className="text-foreground text-sm font-medium">완료</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['완료'] || 0}</span>
@@ -139,7 +137,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
           onClick={() => setIsOpen(!isOpen)}
           className="text-foreground hover:bg-gray-100 p-1 rounded transition-colors"
         >
-          {isOpen ? <VscChevronUp size={20} /> : <VscChevronDown size={20} />}
+          {isOpen ? <TbChevronUp size={20} /> : <TbChevronDown size={20} />}
         </button>
       </div>
 
@@ -187,7 +185,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                     )}
                     {filteredFiles.map((file) => (
                       <div key={file.id} className="flex items-center mb-3 last:mb-0 relative">
-                        <BsFillCircleFill
+                        <TbCircleFilled
                           className={`w-2 h-2 mr-3 z-10 ${
                             file.status === '진행'
                               ? 'text-green'

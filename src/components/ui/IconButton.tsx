@@ -1,14 +1,14 @@
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
-import { FiPlay } from 'react-icons/fi';
-import { PiTrashBold } from 'react-icons/pi';
 import {
   TbDeviceFloppy,
   TbDownload,
+  TbPlayerPlayFilled,
   TbRefresh,
   TbReload,
   TbStack,
   TbStack2,
+  TbTrash,
   TbUpload,
 } from 'react-icons/tb';
 
@@ -178,7 +178,7 @@ export function ResetChangesButton() {
 export function DeleteCompletedButton() {
   return (
     <IconButton
-      icon={<PiTrashBold />}
+      icon={<TbTrash />}
       label="완료 작업 삭제"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-500"
@@ -190,7 +190,7 @@ export function DeleteCompletedButton() {
 export function RetryFailedButton() {
   return (
     <IconButton
-      icon={<FiPlay />}
+      icon={<TbPlayerPlayFilled />}
       label="실패 작업 재실행"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"

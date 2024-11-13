@@ -35,6 +35,8 @@ const buttonVariants = cva(
       variant: {
         default:
           'bg-primary text-white hover:bg-blue-600 active:bg-blue-700 disabled:opacity-40 disabled:bg-primary',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
         secondary: [
           'border border-gray-300 rounded-lg font-medium',
           'bg-white text-gray-500',
@@ -42,10 +44,14 @@ const buttonVariants = cva(
           'active:bg-gray-100 active:text-black',
           'disabled:bg-white disabled:text-gray-300 disabled:cursor-not-allowed',
         ],
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-14 w-[360px] flex-shrink-0 rounded-lg text-[18px] font-semibold',
+        sm: 'h-9 rounded-md px-3',
         mid: 'w-[196px] px-[19px] py-3 gap-2.5 rounded-lg text-[16px] font-semibold',
+        lg: 'h-11 rounded-md px-8',
         icon: 'w-14 h-14 p-4 flex-shrink-0 rounded-lg',
       },
       hasIcon: {
@@ -95,7 +101,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
-
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

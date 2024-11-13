@@ -1,10 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
-import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
-import { TTSTable } from '@/components/tts/TTSTable';
-import { AudioPlayer } from '@/components/ui/AudioPlayer';
-import { Button } from '@/components/ui/CommonButton';
+import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import {
   ApplyAllButton,
   ApplySelectionButton,
@@ -13,8 +9,12 @@ import {
   ResetChangesButton,
   SaveButton,
   UploadButton,
-} from '@/components/ui/IconButton';
-import Tooltip from '@/components/ui/Tooltip';
+} from '@/components/buttons/IconButton';
+import Tooltip from '@/components/common/Tooltip';
+import { TTSTable } from '@/components/tts/table/TTSTable';
+import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
+import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import { Button } from '@/components/ui/button';
 
 const ExamplePage = () => {
   const [items, setItems] = useState([

@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { TbFolders, TbFolderShare, TbSmartHome } from 'react-icons/tb';
 
-import { Button } from '@/components/ui/CommonButton';
-import { ScrollArea } from '@/components/ui/ScrollArea';
-import { Separator } from '@/components/ui/Separator';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 
 interface SidebarButtonProps {
   icon: React.ElementType;

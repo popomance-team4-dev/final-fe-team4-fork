@@ -1,6 +1,6 @@
 import * as Slider from '@radix-ui/react-slider';
-import { Minus, Plus } from 'lucide-react';
 import * as React from 'react';
+import { TbMinus, TbPlus } from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
 
@@ -70,7 +70,7 @@ const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
               className="text-gray-600 hover:text-gray-900 pr-1 border-r border-gray-400"
               disabled={value <= min}
             >
-              <Minus className="h-4 w-4" />
+              <TbMinus className="h-4 w-4" />
             </button>
             <div className="min-w-[30px] text-center text-sm">
               {formattedValue}
@@ -81,7 +81,7 @@ const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
               className="text-gray-600 hover:text-gray-900 pl-1 border-l border-gray-400"
               disabled={value >= max}
             >
-              <Plus className="h-4 w-4" />
+              <TbPlus className="h-4 w-4" />
             </button>
           </div>
         </div>

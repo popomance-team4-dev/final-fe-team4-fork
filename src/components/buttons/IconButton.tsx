@@ -90,7 +90,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 );
 IconButton.displayName = 'IconButton';
 
-export function UploadButton() {
+export function UploadButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbUpload />}
@@ -99,11 +99,12 @@ export function UploadButton() {
       iconColor="text-purple-500"
       textColor="text-gray-800"
       width="167px"
+      onClick={onClick}
     />
   );
 }
 
-export function SaveButton() {
+export function SaveButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbDeviceFloppy />}
@@ -112,11 +113,12 @@ export function SaveButton() {
       iconColor="text-pink-500"
       textColor="text-gray-800"
       width="76px"
+      onClick={onClick}
     />
   );
 }
 
-export function RecreateButton() {
+export function RecreateButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbReload />}
@@ -125,11 +127,12 @@ export function RecreateButton() {
       iconColor="text-blue-500"
       textColor="text-gray-800"
       width="90px"
+      onClick={onClick}
     />
   );
 }
 
-export function DownloadButton() {
+export function DownloadButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbDownload />}
@@ -138,39 +141,43 @@ export function DownloadButton() {
       iconColor="text-blue-500"
       textColor="text-gray-800"
       width="104px"
+      onClick={onClick}
     />
   );
 }
 
-export function ApplySelectionButton() {
+export function ApplySelectionButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbStack />}
       label="선택 적용"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
+      onClick={onClick}
     />
   );
 }
 
-export function ApplyAllButton() {
+export function ApplyAllButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbStack2 />}
       label="전체 적용"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
+      onClick={onClick}
     />
   );
 }
 
-export function ResetChangesButton() {
+export function ResetChangesButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbRefresh />}
       label="변경 초기화"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
+      onClick={onClick}
     />
   );
 }

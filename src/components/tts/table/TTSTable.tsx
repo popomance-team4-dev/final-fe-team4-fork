@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
-import { TbCirclePlus, TbDownload, TbReload, TbTrash } from 'react-icons/tb';
+import { TbCirclePlus, TbTrash } from 'react-icons/tb';
 
-import { TTSTableGrid } from '@/components/tts/TTSTableGrid';
-import { TtsTableList } from '@/components/tts/TTSTableList';
-import { Checkbox } from '@/components/ui/CheckBox';
-import { IconButton } from '@/components/ui/IconButton';
-import { ScrollArea } from '@/components/ui/ScrollArea';
-import { Separator } from '@/components/ui/Separator';
-import ViewButtonGroup from '@/components/ui/ViewFilterButton';
+import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
+import ViewButtonGroup from '@/components/buttons/ViewFilterButton';
+import { TTSTableGrid } from '@/components/tts/table/TTSTableGrid';
+import { TTSTableList } from '@/components/tts/table/TTSTableList';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 interface TTSListItem {
   id: string;
@@ -58,8 +59,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   onViewChange,
   itemCount,
 }) => (
-  <div className="flex flex-col bg-white">
-    <div className="flex items-center justify-between px-4 py-5 border-b">
+  <div className={cn('flex flex-col bg-white', !isListView ? 'rounded-md border' : 'border-b')}>
+    <div className="flex items-center justify-between px-4 py-5">
       <div className="flex items-center space-x-4">
         <Checkbox
           checked={itemCount > 0 && isAllSelected}
@@ -87,29 +88,15 @@ export const TableFooter: React.FC<TableFooterProps> = ({
   onDownload,
   isListView = true,
 }) => (
-  <div className="bg-white">
+  <div className={cn('bg-white', !isListView && 'rounded-md border mt-4')}>
     <div
-      className={`flex items-center justify-between px-4 border-t ${isListView ? 'py-5' : 'py-[30px]'}`}
+      className={`flex items-center justify-between px-4 ${isListView ? 'py-5 border-t' : 'py-[30px]'}`}
     >
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
       {isListView && (
         <div className="flex items-center space-x-2 mr-2">
-          <IconButton
-            icon={<TbReload />}
-            label="재생성"
-            iconBgColor="bg-blue-50"
-            iconColor="text-blue-500"
-            width="90px"
-            onClick={onRegenerate}
-          />
-          <IconButton
-            icon={<TbDownload />}
-            label="다운로드"
-            iconBgColor="bg-blue-50"
-            iconColor="text-blue-500"
-            width="104px"
-            onClick={onDownload}
-          />
+          <RecreateButton onClick={onRegenerate} />
+          <DownloadButton onClick={onDownload} />
         </div>
       )}
     </div>
@@ -197,7 +184,12 @@ export const TTSTable: React.FC<TTSTableProps> = ({
   );
 
   return (
-    <div className="flex flex-col h-[580px] bg-white">
+    <div
+      className={cn(
+        'flex flex-col h-[580px]',
+        isListView ? 'bg-white border rounded-md overflow-hidden' : 'bg-transparent'
+      )}
+    >
       <TableHeader
         onDelete={onDelete}
         onAdd={onAdd}
@@ -207,29 +199,31 @@ export const TTSTable: React.FC<TTSTableProps> = ({
         onViewChange={setIsListView}
         itemCount={items.length}
       />
-      <div className="flex-1 min-h-0">
+      <div className={cn('flex-1 min-h-0', !isListView && 'mb-4.5')}>
         {isListView ? (
-          <>
+          <div className="h-full relative">
             <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
               <div className="w-4 ml-2 mr-2" />
               <div className="w-4 ml-2 mr-2" />
               <div className="ml-6">텍스트</div>
-              <div className="w-[250px] flex gap-5">
-                <div className="w-[60px] text-center">속도</div>
-                <div className="w-[80px] text-center">볼륨</div>
-                <div className="w-[60px] text-center">피치</div>
+              <div className="flex gap-8">
+                <div className="w-[64px] text-center">속도</div>
+                <div className="w-[64px] text-center">볼륨</div>
+                <div className="w-[64px] text-center">피치</div>
               </div>
             </div>
-            <ScrollArea className="h-[calc(100%-48px)] pr-2">
-              <TtsTableList
-                rows={listItems}
-                onSelectionChange={onSelectionChange}
-                onTextChange={onTextChange}
-              />
-            </ScrollArea>
-          </>
+            <div className="absolute inset-x-0 bottom-0 top-[48px]">
+              <ScrollArea className="h-full">
+                <TTSTableList
+                  rows={listItems}
+                  onSelectionChange={onSelectionChange}
+                  onTextChange={onTextChange}
+                />
+              </ScrollArea>
+            </div>
+          </div>
         ) : (
-          <ScrollArea className="h-full pr-2">
+          <ScrollArea className="h-full mt-3">
             <TTSTableGrid items={gridItems} />
           </ScrollArea>
         )}

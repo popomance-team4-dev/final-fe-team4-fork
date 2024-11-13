@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 
+import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSMainContent from '@/components/tts/TTSMainContent';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
-import { AudioPlayer } from '@/components/ui/AudioPlayer';
 
 const TTSPage = () => {
   const [ttsFiles, setTTSFiles] = useState<TTSFile[]>([

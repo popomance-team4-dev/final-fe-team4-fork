@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
 
-import { DeleteCompletedButton, RetryFailedButton } from '@/components/ui/IconButton';
+import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
 export interface TTSFile {
   id: number;
   name: string;

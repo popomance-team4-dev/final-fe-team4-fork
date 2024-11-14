@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
+import HomeCard from '@/components/workspace/HomeCard';
 import HomePopupBg from '@/images/HomePopupbg.svg';
-
-import HomeCard from './HomeCard';
 
 const HomePopup = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -14,7 +13,7 @@ const HomePopup = () => {
 
   return (
     <div
-      className="relative w-[1148px] h-[451px] rounded-xl bg-background flex-shrink-0"
+      className="relative w-full max-w-[1148px] h-auto min-h-[451px] rounded-xl bg-background flex-shrink-0"
       style={{
         backgroundImage: `url(${HomePopupBg})`,
         backgroundSize: 'cover',

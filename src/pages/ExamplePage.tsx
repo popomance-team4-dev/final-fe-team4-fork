@@ -15,7 +15,7 @@ import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { Button } from '@/components/ui/button';
-import RecentProjectCard from '@/components/workSpace/RecentProjectCard';
+import RecentProjectCard from '@/components/workspace/RecentProjectCard';
 
 const ExamplePage = () => {
   const [items, setItems] = useState([

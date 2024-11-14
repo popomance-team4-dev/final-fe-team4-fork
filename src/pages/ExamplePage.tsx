@@ -11,11 +11,11 @@ import {
   SaveButton,
   UploadButton,
 } from '@/components/buttons/IconButton';
-import Tooltip from '@/components/common/Tooltip';
 import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { Button } from '@/components/ui/button';
+import { TooltipWrapper } from '@/components/ui/tooltip';
 import { HistoryTable } from '@/components/workspace/HistoryTable';
 import RecentProjectCard from '@/components/workspace/RecentProjectCard';
 
@@ -213,7 +213,11 @@ const ExamplePage = () => {
       {/* 툴팁 컴포넌트 */}
       <section>
         <h2 className="text-xl font-bold mb-4">툴팁</h2>
-        <Tooltip text="변경된 설정을 적용하려면 재생성 버튼을 눌러주세요!" />
+        <TooltipWrapper text="변경된 설정을 적용하려면 재생성 버튼을 눌러주세요!">
+          <div className="cursor-help w-fit mt-4">
+            <p>테스트</p>
+          </div>
+        </TooltipWrapper>
       </section>
 
       {/* AudioPlayer 컴포넌트 */}

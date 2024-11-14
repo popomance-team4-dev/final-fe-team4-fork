@@ -1,5 +1,6 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
 import tailwindcssAnimate from 'tailwindcss-animate';
+import lineClamp from '@tailwindcss/line-clamp';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -33,11 +34,19 @@ export default {
         body3: ['14px', { lineHeight: '20px', fontWeight: '700' }],
         body4: ['14px', { lineHeight: '20px', fontWeight: '500' }],
         overline: ['12px', { lineHeight: '18px', fontWeight: '500' }],
+        tiny: ['11px', { lineHeight: '16px', fontWeight: '500' }],
       },
       colors: {
         white: '#FFFFFF',
         black: '#1B1B1B',
-        green: '#22C55E',
+        green: {
+          50: '#E0FFE9',
+          500: '#22C55E',
+        },
+        yellow: {
+          50: '#FFFBCC',
+          500: '#FBBC05',
+        },
         blue: {
           50: '#edf1ff',
           100: '#c2d4ff',
@@ -148,5 +157,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate, lineClamp],
 };

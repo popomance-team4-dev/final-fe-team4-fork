@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { TbPlaystationTriangle, TbVolume, TbWaveSquare } from 'react-icons/tb';
 
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 export const UNIT_SOUND_STATUS_TYPES = {
@@ -31,18 +32,11 @@ export const STATUS_CONFIGS = {
 } as const;
 
 const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
-  ({ className, type, value, showLabel = false, ...props }, ref) => {
+  ({ className, type, value, showLabel = false, ...props }) => {
     const { icon: Icon, unit, label, rotation } = STATUS_CONFIGS[type];
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          'w-fit flex items-center gap-2 bg-purple-50 rounded-md px-2 py-0.75',
-          className
-        )}
-        {...props}
-      >
+      <Badge variant="sound" className={cn('flex items-center gap-2', className)} {...props}>
         <Icon
           className="w-4.5 h-4.5 text-purple-900 flex-shrink-0"
           style={{ transform: `rotate(${rotation}deg)` }}
@@ -52,7 +46,7 @@ const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
           {value.toFixed(1)}
           {unit}
         </span>
-      </div>
+      </Badge>
     );
   }
 );

@@ -98,7 +98,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
         <div className="flex gap-4">
           {/* 진행 상태 */}
           <div className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-green mr-2" />
+            <TbCircleFilled className="w-2 h-2 text-green-500 mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
@@ -188,7 +188,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                         <TbCircleFilled
                           className={`w-2 h-2 mr-3 z-10 ${
                             file.status === '진행'
-                              ? 'text-green'
+                              ? 'text-green-500'
                               : file.status === '대기'
                                 ? 'text-yellow-500'
                                 : file.status === '실패'
@@ -203,7 +203,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                           {file.status === '진행' ? (
                             <>
                               <span className="text-sm text-gray-500 mr-2">• TTS 변환 중</span>
-                              <AiOutlineLoading3Quarters className="animate-spin text-green mr-2" />
+                              <AiOutlineLoading3Quarters className="animate-spin text-green-500 mr-2" />
                               <span className="text-sm text-gray-500">{file.progress}%</span>
                             </>
                           ) : (

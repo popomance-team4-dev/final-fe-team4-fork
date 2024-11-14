@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
+import RecentProject from '@/components/workspace/RecontProject';
+
 const WorkspacePage = () => {
   const [isPopupVisible, setPopupVisible] = useState(true);
 
   return (
-    <div>
+    <div className="max-w-[1200px]">
       <div className="p-6 bg-gray-200">
         {/* 환영 메시지 */}
         <p>User 님, 반갑습니다.</p>
@@ -27,7 +29,9 @@ const WorkspacePage = () => {
 
       <div>
         {/* 최근 프로젝트 영역 */}
-        <div className="h-[370px] bg-gray-400 p-4"></div>
+        <div>
+          <RecentProject />
+        </div>
       </div>
       <div>
         {/* 최근 내보내기 영역 */}

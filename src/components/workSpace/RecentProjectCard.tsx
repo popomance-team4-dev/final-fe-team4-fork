@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TbArrowUpRight, TbPlayerPlayFilled } from 'react-icons/tb';
 
 import RecentCardbg1 from '@/images/RecentCardbg1.svg';
@@ -12,7 +12,7 @@ interface RecentProjectCardProps {
   title: string;
   description: string;
   date: string;
-  type: 'TTS' | 'VC' | 'Concat';
+  type: string;
   language: string;
   voice: string;
   hasPlayback: boolean;
@@ -27,12 +27,18 @@ const RecentProjectCard: React.FC<RecentProjectCardProps> = ({
   // voice,
   hasPlayback,
 }) => {
-  const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+  const [background, setBackground] = useState<string>('');
+
+  useEffect(() => {
+    // 한 번만 설정된 배경을 유지
+    const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    setBackground(randomBackground);
+  }, []);
 
   return (
     <div className="w-[276px] h-[318px] flex-shrink-0 rounded-lg bg-gray-50 overflow-hidden px-6 pt-5 pb-5">
       <div className="relative h-40 overflow-hidden">
-        <img src={randomBackground} className="w-full h-full object-cover" />
+        <img src={background} className="w-full h-full object-cover" />
         <div className="absolute top-3 left-3 flex items-center bg-white opacity-70 px-1 py-1 rounded-full gap-1">
           {/* 보이스이미지가 없어서 원형으로 대체 */}
           <div className="w-5 h-5 bg-gray-400 rounded-full"></div>
@@ -61,7 +67,7 @@ const RecentProjectCard: React.FC<RecentProjectCardProps> = ({
 
       <div>
         <p className="text-overline text-black mb-2 line-clamp-2">{description}</p>
-        <span className="text-overline text-gray-200">{date}</span>
+        <span className="text-overline text-gray-500">{date}</span>
       </div>
     </div>
   );

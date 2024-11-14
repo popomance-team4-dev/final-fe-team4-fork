@@ -1,7 +1,7 @@
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import { PlayButton } from '@/components/buttons/PlayButton';
-import { TextInput } from '@/components/common/TextInput';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 
 interface TextRowProps {
   id: string;
@@ -38,7 +38,8 @@ const TextRow: React.FC<TextRowProps> = ({
         className="ml-2 mr-2"
       />
       <PlayButton onClick={onPlay} className="ml-2 mr-2 w-5 h-5" />
-      <TextInput
+      <Input
+        variant="text"
         value={text}
         onChange={handleTextChange}
         placeholder="텍스트를 입력하세요."

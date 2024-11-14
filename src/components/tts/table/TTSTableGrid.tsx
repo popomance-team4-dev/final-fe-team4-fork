@@ -3,8 +3,8 @@ import React from 'react';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
-import { TextInput } from '@/components/common/TextInput';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 
 interface TTSTableGridItemProps {
   id: string;
@@ -68,7 +68,8 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
             </div>
           </div>
 
-          <TextInput
+          <Input
+            variant="text"
             value={item.text}
             onChange={(e) => item.onTextChange(item.id, e.target.value)}
             placeholder="텍스트를 입력하세요."

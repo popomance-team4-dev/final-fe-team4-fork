@@ -1,6 +1,6 @@
-import { LoginInput } from '@/components/login/LoginInput';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
 
 const LoginComponent = () => {
@@ -14,7 +14,8 @@ const LoginComponent = () => {
         <label className="self-stretch text-black text-base font-medium leading-6 font-pretendard">
           이메일 (아이디)
         </label>
-        <LoginInput
+        <Input
+          variant="login"
           type="email"
           placeholder="aipark@aipark.ai"
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"
@@ -23,7 +24,8 @@ const LoginComponent = () => {
         <label className="mt-[20px] self-stretch text-black text-base font-medium leading-6 font-pretendard">
           비밀번호
         </label>
-        <LoginInput
+        <Input
+          variant="login"
           type="password"
           placeholder="8자 이상의 비밀번호"
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"

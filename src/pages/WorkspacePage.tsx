@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { TbChevronRight } from 'react-icons/tb';
 
-import HomePopup from '@/components/home/HomePopup';
 import { HistoryTable } from '@/components/workspace/HistoryTable';
+import HomePopup from '@/components/workspace/HomePopup';
 import RecentProject from '@/components/workspace/RecontProject';
 const WorkspacePage = () => {
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
 
 import RecentProjectCard from '@/components/workspace/RecentProjectCard';
@@ -57,7 +57,7 @@ const RecentProject = () => {
   const [isScrolledLeft, setIsScrolledLeft] = useState(false);
   const [isScrolledRight, setIsScrolledRight] = useState(projects.length > 4);
 
-  const updateScrollState = () => {
+  const handleScroll = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       setIsScrolledLeft(scrollLeft > 0);
@@ -65,22 +65,12 @@ const RecentProject = () => {
     }
   };
 
-  const handleScrollRight = () => {
+  const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft += 300;
-      updateScrollState();
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
-
-  const handleScrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft -= 300;
-      updateScrollState();
-    }
-  };
-  useEffect(() => {
-    updateScrollState(); // 초기 스크롤 상태 확인
-  }, []);
 
   return (
     <div className="p-6 h-[418px] max-w-[1336px]">
@@ -95,50 +85,43 @@ const RecentProject = () => {
       <div className="relative flex items-center">
         {/* 왼쪽 화살표 버튼 */}
         {projects.length > 4 && isScrolledLeft && (
-          <>
-            {/* 왼쪽 그라데이션 배경 */}
-            <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-white to-white/20 pointer-events-none z-10" />
-            <button
-              onClick={handleScrollLeft}
-              className="absolute left-0 w-[54px] h-[54px] rounded-xl bg-white flex items-center justify-center z-20"
-            >
-              <TbChevronLeft className="text-black w-8 h-8" />
-            </button>
-          </>
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 w-[54px] h-[54px] rounded-xl bg-white flex items-center justify-center z-20"
+          >
+            <TbChevronLeft className="text-black w-8 h-8" />
+          </button>
         )}
 
         {/* 스크롤 가능한 컨테이너 */}
         <div
           ref={scrollContainerRef}
-          onScroll={updateScrollState}
-          className="flex gap-6 overflow-x-hidden scrollbar-hide"
+          onScroll={handleScroll}
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
         >
           {projects.map((project, index) => (
-            <RecentProjectCard
-              key={index}
-              title={project.title}
-              description={project.description}
-              date={project.date}
-              type={project.type}
-              language={project.language}
-              voice={project.voice}
-              hasPlayback={project.hasPlayback}
-            />
+            <div key={index} className="snap-start">
+              <RecentProjectCard
+                title={project.title}
+                description={project.description}
+                date={project.date}
+                type={project.type}
+                language={project.language}
+                voice={project.voice}
+                hasPlayback={project.hasPlayback}
+              />
+            </div>
           ))}
         </div>
 
         {/* 오른쪽 화살표 버튼 */}
         {projects.length > 4 && isScrolledRight && (
-          <>
-            {/* 오른쪽 그라데이션 배경 */}
-            <div className="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-white to-white/20 pointer-events-none z-5" />
-            <button
-              onClick={handleScrollRight}
-              className="absolute right-0 w-[54px] h-[54px] rounded-xl bg-white flex items-center justify-center z-10"
-            >
-              <TbChevronRight className="text-black w-8 h-8" />
-            </button>
-          </>
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 w-[54px] h-[54px] rounded-xl bg-white flex items-center justify-center z-20"
+          >
+            <TbChevronRight className="text-black w-8 h-8" />
+          </button>
         )}
       </div>
     </div>

@@ -11,7 +11,7 @@ import {
   UploadButton,
 } from '@/components/buttons/IconButton';
 import Tooltip from '@/components/common/Tooltip';
-import HomeCard from '@/components/home/HomeCard';
+import HomePopup from '@/components/home/HomePopup';
 import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
@@ -229,12 +229,7 @@ const ExamplePage = () => {
       </section>
       {/* home */}
       <section>
-        <HomeCard
-          title="Custom Title"
-          description1="다양한 음성 샘플을 사용하여"
-          description2="원하는 음색으로 변환"
-          number="02"
-        />
+        <HomePopup />
       </section>
     </div>
   );

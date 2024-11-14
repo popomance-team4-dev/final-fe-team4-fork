@@ -3,6 +3,8 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
+import { Badge } from '@/components/ui/badge';
+
 export interface TTSFile {
   id: number;
   name: string;
@@ -100,36 +102,28 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
           <div className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-green-500 mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
-            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
-            </div>
+            <Badge variant="statuscount">{stats['진행'] || 0}</Badge>
           </div>
 
           {/* 대기 상태 */}
           <div className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-yellow-500 mr-2" />
             <span className="text-foreground text-sm font-medium">대기</span>
-            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['대기'] || 0}</span>
-            </div>
+            <Badge variant="statuscount">{stats['대기'] || 0}</Badge>
           </div>
 
           {/* 실패 상태 */}
           <div className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-red-500 mr-2" />
             <span className="text-foreground text-sm font-medium">실패</span>
-            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['실패'] || 0}</span>
-            </div>
+            <Badge variant="statuscount">{stats['실패'] || 0}</Badge>
           </div>
 
           {/* 완료 상태 */}
           <div className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-blue-500 mr-2" />
             <span className="text-foreground text-sm font-medium">완료</span>
-            <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['완료'] || 0}</span>
-            </div>
+            <Badge variant="statuscount">{stats['완료'] || 0}</Badge>
           </div>
         </div>
 
@@ -147,17 +141,18 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
           <div className="h-10 border-b border-gray-300 flex items-center px-4">
             <div className="flex gap-2">
               {['진행', '대기', '실패', '완료'].map((status) => (
-                <button
+                <Badge
                   key={status}
+                  variant="workstatus"
                   onClick={() => toggleStatus(status)}
-                  className={`h-6 px-2 rounded text-sm font-medium transition-colors ${
+                  className={
                     selectedStatuses.includes(status)
                       ? 'bg-secondary text-[#512A91]'
                       : 'bg-gray-100 text-gray-600'
-                  }`}
+                  }
                 >
                   {status}
-                </button>
+                </Badge>
               ))}
             </div>
           </div>

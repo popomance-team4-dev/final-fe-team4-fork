@@ -3,6 +3,8 @@ import { TbChevronRight, TbX } from 'react-icons/tb';
 
 import { HistoryTable } from '@/components/workspace/HistoryTable';
 
+import RecentProject from '@/components/workspace/RecontProject';
+
 const WorkspacePage = () => {
   const [isPopupVisible, setPopupVisible] = useState(true);
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
@@ -59,7 +61,7 @@ const WorkspacePage = () => {
   const handlePause = () => setCurrentPlayingId(undefined);
 
   return (
-    <div>
+    <div className="max-w-[1200px]">
       <div className="p-6 bg-gray-200">
         {/* 환영 메시지 */}
         <p>User 님, 반갑습니다.</p>
@@ -81,7 +83,9 @@ const WorkspacePage = () => {
 
       <div>
         {/* 최근 프로젝트 영역 */}
-        <div className="h-[370px] bg-gray-400 p-4"></div>
+        <div>
+          <RecentProject />
+        </div>
       </div>
 
       <div>

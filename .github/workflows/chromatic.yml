@@ -2,9 +2,13 @@ name: 'Chromatic'
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]  
   pull_request:
-    branches: [ main ]
+    branches: [ develop ]  
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   chromatic:
@@ -21,3 +25,6 @@ jobs:
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          exitOnceUploaded: true
+          autoAcceptChanges: 'develop'  
+          onlyChanged: true

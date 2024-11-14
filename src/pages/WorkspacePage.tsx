@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { TbChevronRight, TbX } from 'react-icons/tb';
+import { TbChevronRight } from 'react-icons/tb';
 
+import HomePopup from '@/components/home/HomePopup';
 import { HistoryTable } from '@/components/workspace/HistoryTable';
 import RecentProject from '@/components/workspace/RecontProject';
-
 const WorkspacePage = () => {
-  const [isPopupVisible, setPopupVisible] = useState(true);
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
 
   const historyItems = [
@@ -66,18 +65,9 @@ const WorkspacePage = () => {
         <p>User 님, 반갑습니다.</p>
       </div>
 
-      <div>
+      <div className="ml-[25px]">
         {/* 팝업 창 */}
-        {isPopupVisible && (
-          <div className="h-[428px] relative bg-blue-50 p-6 rounded-lg shadow-md">
-            <button
-              className="absolute top-4 right-4 text-xl text-gray-600 hover:text-gray-800"
-              onClick={() => setPopupVisible(false)}
-            >
-              <TbX /> {/* 팝업 닫기 버튼 */}
-            </button>
-          </div>
-        )}
+        <HomePopup />
       </div>
 
       <div>

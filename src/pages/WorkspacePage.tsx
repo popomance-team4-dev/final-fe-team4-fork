@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { TbChevronRight, TbX } from 'react-icons/tb';
 
 import { HistoryTable } from '@/components/workspace/HistoryTable';
-
 import RecentProject from '@/components/workspace/RecontProject';
 
 const WorkspacePage = () => {

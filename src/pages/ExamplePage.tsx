@@ -17,6 +17,7 @@ import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { Button } from '@/components/ui/button';
 import { HistoryTable } from '@/components/workspace/HistoryTable';
+import RecentProjectCard from '@/components/workspace/RecentProjectCard';
 
 const ExamplePage = () => {
   const [items, setItems] = useState([
@@ -221,6 +222,22 @@ const ExamplePage = () => {
         <div className="w-1/2">
           <AudioPlayer audioUrl="/sample.mp3" />
         </div>
+      </section>
+
+      {/* 최근프로젝트 카드 컴포넌트 */}
+      <section>
+        <h2 className="text-xl font-bold mb-4">최근프로젝트</h2>
+        <RecentProjectCard
+          language={'KR'}
+          type={'TTS'}
+          title={'프로젝트1 발표자료'}
+          description={
+            'Lorem ipsum dolor sit amet consectetur. Pulvinar sed diam eu turpis vitae arcu pel'
+          }
+          date={'금요일 오후 7:24'}
+          voice={''}
+          hasPlayback={true}
+        />
       </section>
 
       {/* TTS */}

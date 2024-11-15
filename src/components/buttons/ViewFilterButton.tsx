@@ -28,7 +28,7 @@ const ViewButton: React.FC<ViewButtonProps> = ({
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(
-        'flex items-center justify-center p-1.5 transition-colors border w-9 h-8',
+        'flex items-center justify-center p-1 transition-colors border w-8 h-8',
         position === 'left' ? 'rounded-l-sm' : 'rounded-r-sm',
         isSelected ? 'bg-blue-50 border-blue-600 text-blue-600' : 'border-gray-300 text-gray-700'
       )}
@@ -40,7 +40,7 @@ const ViewButton: React.FC<ViewButtonProps> = ({
 
 const ViewButtonGroup: React.FC<ViewButtonGroupProps> = ({ isListView, onViewChange }) => {
   return (
-    <div className="flex mr-2">
+    <div className="flex">
       <ViewButton
         label={<TbList size={24} />}
         isSelected={isListView}

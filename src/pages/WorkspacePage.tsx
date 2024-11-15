@@ -59,13 +59,13 @@ const WorkspacePage = () => {
   const handlePause = () => setCurrentPlayingId(undefined);
 
   return (
-    <div className="max-w-[1200px]">
-      <div className="p-6 bg-gray-200">
+    <div className="overflow-y-auto-auto">
+      <div className="p-6 bg-gray-200 h-[92px]">
         {/* 환영 메시지 */}
         <p>User 님, 반갑습니다.</p>
       </div>
 
-      <div className="ml-[25px]">
+      <div className="px-6 pt-6">
         {/* 팝업 창 */}
         <HomePopup />
       </div>
@@ -79,7 +79,7 @@ const WorkspacePage = () => {
 
       <div>
         {/* 최근 내보내기 영역 */}
-        <div className="bg-white p-4">
+        <div className="bg-white p-6">
           <div className="flex items-end justify-between mb-6">
             <h3 className="text-2xl font-bold leading-9">최근 내보내기</h3>
             <button

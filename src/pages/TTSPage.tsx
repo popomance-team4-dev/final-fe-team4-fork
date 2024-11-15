@@ -64,7 +64,7 @@ const TTSPage = () => {
   }, []);
 
   return (
-    <div className="max-w-[1200px] mx-auto flex flex-col min-h-screen">
+    <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
       {/* Header */}
       <header className="h-[92px] border-b ">
         <div className="pt-3 px-6">

@@ -125,7 +125,7 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex items-center gap-4 w-full bg-gray-50 rounded-lg px-4 py-6', className)}
+        className={cn('flex items-center gap-4 w-full bg-gray-50 rounded-lg px-20 py-5', className)}
       >
         <div className="flex items-center gap-4 shrink-0">
           <PlayButton isPlaying={isPlaying} onPlay={handlePlayPause} onPause={handlePlayPause} />

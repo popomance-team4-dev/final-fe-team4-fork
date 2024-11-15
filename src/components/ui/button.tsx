@@ -53,7 +53,7 @@ const buttonVariants = cva(
         mid: 'w-[196px] px-[19px] py-3 gap-2.5 rounded-lg text-[16px] font-semibold',
         lg: 'h-11 rounded-md px-8',
 
-        icon: 'w-14 h-14 group-hover/navbar:w-[196px] group-hover/navbar:px-[19px] flex-shrink-0 rounded-lg text-[16px] font-semibold',
+        icon: 'w-14 h-14 group-[.expanded]/navbar:w-[196px] group-[.expanded]/navbar:px-[19px] flex-shrink-0 rounded-lg text-[16px] font-semibold',
       },
       hasIcon: {
         true: 'inline-flex items-center',
@@ -84,7 +84,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <>
           <PlusIcon />
           {icon && (
-            <span className="opacity-0 w-0 group-hover/navbar:opacity-100 group-hover/navbar:w-auto group-hover/navbar:ml-2">
+            <span className="opacity-0 w-0 group-[.expanded]/navbar:opacity-100 group-[.expanded]/navbar:w-auto group-[.expanded]/navbar:ml-2">
               {children}
             </span>
           )}

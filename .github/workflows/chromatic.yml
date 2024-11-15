@@ -2,7 +2,7 @@ name: 'Chromatic'
 
 on:
   pull_request:
-    types: opened
+    types: [opened, synchronize]
 
 permissions:
   contents: read
@@ -28,18 +28,19 @@ jobs:
           autoAcceptChanges: 'develop'
           onlyChanged: true
 
-      - name: Comment PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v6
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: fc
         with:
-          script: |
-            const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
-            
-            const comment = `## Storybook 확인 [ 바로가기 ](${storybookUrl})`;
-            
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: 'Storybook'
+
+      - name: Create or Update Comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## Storybook 확인 [ 바로가기 ](${{ steps.chromatic.outputs.storybookUrl }})
+          edit-mode: replace

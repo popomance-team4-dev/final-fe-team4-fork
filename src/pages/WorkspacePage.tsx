@@ -59,7 +59,7 @@ const WorkspacePage = () => {
   const handlePause = () => setCurrentPlayingId(undefined);
 
   return (
-    <div className="overflow-y-auto-auto">
+    <div>
       <div className="p-6 bg-gray-200 h-[92px]">
         {/* 환영 메시지 */}
         <p>User 님, 반갑습니다.</p>

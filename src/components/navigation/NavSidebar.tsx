@@ -45,7 +45,7 @@ export function NavSidebar() {
     <div
       className={`flex h-screen w-[104px] flex-col border-r bg-white p-4 group/navbar ${isExpanded ? 'expanded w-[244px]' : ''}`}
     >
-      <div className="my-2">
+      <div className="my-3">
         <div className="flex items-center gap-2 font-bold text-xl">
           <span className="text-emerald-600">AI</span>
           <span className="opacity-0 group-[.expanded]/navbar:opacity-100">PARK</span>
@@ -61,19 +61,19 @@ export function NavSidebar() {
       <div className="scrollArea py-6">
         <div className="flex flex-col w-full text-black text-body2">
           <div>
-            <h2 className="py-2 text-overline ml-3">General</h2>
+            <h2 className="pt-2 pb-3 text-overline ml-3">General</h2>
           </div>
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full gap-3">
             <SidebarButton icon={TbSmartHome} label="홈" />
             <SidebarButton icon={TbFolders} label="프로젝트" />
             <SidebarButton icon={TbFolderShare} label="내보내기" />
           </div>
         </div>
         <Separator className="my-4" />
-        <div className="py-2">
+        <div className="pt-2 pb-3">
           <h2 className="text-overline text-black whitespace-nowrap ml-2">Workspace</h2>
         </div>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full gap-3">
           <SidebarButton icon={TbFileTypography} label="TTS" />
           <SidebarButton icon={TbFileMusic} label="VC" />
           <SidebarButton icon={TbFileDatabase} label="CONCAT" />

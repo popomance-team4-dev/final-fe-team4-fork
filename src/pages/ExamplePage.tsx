@@ -17,6 +17,7 @@ import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { Button } from '@/components/ui/button';
 import { HistoryTable } from '@/components/workspace/HistoryTable';
+import HomePopup from '@/components/workspace/HomePopup';
 import RecentProjectCard from '@/components/workspace/RecentProjectCard';
 
 const ExamplePage = () => {
@@ -298,6 +299,9 @@ const ExamplePage = () => {
           onPlay={handlePlay}
           onPause={handlePause}
         />
+      </section>
+      <section>
+        <HomePopup />
       </section>
     </div>
   );

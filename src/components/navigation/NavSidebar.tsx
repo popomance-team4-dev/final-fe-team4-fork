@@ -63,19 +63,19 @@ export function NavSidebar() {
           <div className="mr-4">
             <h2 className="py-2 text-overline self-start group-[.expanded]/navbar:ml-2">General</h2>
           </div>
-          <div className="flex flex-col w-full translate-x-3 group-[.expanded]/navbar:w-full group-[.expanded]/navbar:px-3 group-[.expanded]/navbar:-translate-x-1">
+          <div className="flex flex-col w-full translate-x-3 group-[.expanded]/navbar:w-full  group-[.expanded]/navbar:-translate-x-1">
             <SidebarButton icon={TbSmartHome} label="홈" />
             <SidebarButton icon={TbFolders} label="프로젝트" />
             <SidebarButton icon={TbFolderShare} label="내보내기" />
           </div>
         </div>
         <Separator className="my-4 " />
-        <div className="py-2 ml-1 ">
+        <div className="py-2 ml-2 ">
           <h2 className="text-overline text-black whitespace-nowrap group-[.expanded]/navbar:ml-1">
             Workspace
           </h2>
         </div>
-        <div className="translate-x-4 translate-y-2  group-[.expanded]/navbar:-translate-x-1 group-[.expanded]/navbar:ml-3">
+        <div className="mx-12 py-2 group-[.expanded]/navbar:-translate-x-1  group-[.expanded]/navbar:ml-1">
           <SidebarButton icon={TbFileTypography} label="TTS" />
           <SidebarButton icon={TbFileMusic} label="VC" />
           <SidebarButton icon={TbFileDatabase} label="CONCAT" />

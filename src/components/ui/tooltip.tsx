@@ -52,4 +52,4 @@ const TooltipWrapper = ({ text, children, delayDuration = 0, className }: Toolti
   );
 };
 
-export { TooltipWrapper };
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipWrapper };

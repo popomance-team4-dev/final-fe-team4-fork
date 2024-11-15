@@ -5,7 +5,6 @@ import NavbarLayout from '@/components/layouts/NavbarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import ConcatPage from '@/pages/ConcatPage';
 import ErrorPage from '@/pages/ErrorPage';
-import ExamplePage from '@/pages/ExamplePage';
 import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
     // 모든 라우트에 대한 에러 처리
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: PATH.EXAMPLE,
-        element: <ExamplePage />,
-      },
       {
         path: PATH.LOGIN,
         element: <LoginPage />,

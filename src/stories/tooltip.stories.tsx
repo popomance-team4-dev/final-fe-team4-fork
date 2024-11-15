@@ -1,7 +1,5 @@
-// TooltipWrapper.stories.tsx
 import { Meta, StoryFn } from '@storybook/react';
 
-import { RecreateButton } from '@/components/buttons/IconButton';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper, TooltipWrapperProps } from '@/components/ui/tooltip';
 
@@ -11,14 +9,14 @@ import { TooltipWrapper, TooltipWrapperProps } from '@/components/ui/tooltip';
  * ### 기본적인 사용법
  * ```tsx
  * <TooltipWrapper text="툴팁 메시지">
- *   <RecreateButton />
+ *   <Button />
  * </TooltipWrapper>
  * ```
  *
  * ### 딜레이 추가
  * ```tsx
  * <TooltipWrapper text="툴팁 메시지" delayDuration={200}>
- *   <RecreateButton />
+ *   <Button />
  * </TooltipWrapper>
  * ```
  *
@@ -28,7 +26,7 @@ import { TooltipWrapper, TooltipWrapperProps } from '@/components/ui/tooltip';
  *   text="툴팁 메시지"
  *   className="bg-blue-500 text-white"
  * >
- *   <RecreateButton />
+ *   <Button />
  * </TooltipWrapper>
  * ```
  *
@@ -39,7 +37,7 @@ import { TooltipWrapper, TooltipWrapperProps } from '@/components/ui/tooltip';
  *   delayDuration={200}
  *   className="max-w-xs z-50"
  * >
- *   <RecreateButton />
+ *   <Button />
  * </TooltipWrapper>
  * ```
  */
@@ -49,7 +47,7 @@ export default {
   argTypes: {
     text: {
       control: 'text',
-      defaultValue: 'This is a tooltip message',
+      defaultValue: '툴팁 메시지',
       description: '툴팁에 표시될 텍스트',
     },
     delayDuration: {
@@ -74,38 +72,19 @@ export default {
 
 const Template: StoryFn<TooltipWrapperProps> = (args) => (
   <TooltipWrapper {...args}>
-    <Button>Hover over me</Button>
-  </TooltipWrapper>
-);
-
-const IconButtonTemplate: StoryFn<TooltipWrapperProps> = (args) => (
-  <TooltipWrapper {...args}>
-    <RecreateButton />
+    <Button>버튼</Button>
   </TooltipWrapper>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-  text: 'This is a tooltip message',
+  text: '툴팁 메시지',
   className: 'max-w-xs z-50',
 };
 
 export const DelayedTooltip = Template.bind({});
 DelayedTooltip.args = {
-  text: 'This tooltip appears after a delay',
+  text: '툴팁 메시지 딜레이',
   delayDuration: 500,
-  className: 'max-w-xs z-50',
-};
-
-export const CustomClassTooltip = Template.bind({});
-CustomClassTooltip.args = {
-  text: 'This tooltip has custom styling',
-  className: 'bg-blue-500 text-white p-2 rounded-md shadow-lg max-w-xs z-50',
-};
-
-export const IconButtonTooltip = IconButtonTemplate.bind({});
-IconButtonTooltip.args = {
-  text: '텍스트를 다시 생성합니다',
-  delayDuration: 200,
   className: 'max-w-xs z-50',
 };

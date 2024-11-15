@@ -3,8 +3,12 @@ name: 'Chromatic'
 on:
   push:
     branches: [ develop ]
+    paths:
+      - './src/stories/**'
   pull_request:
     branches: [ develop ]
+    paths:
+      - './src/stories/**'
 
 permissions:
   contents: read
@@ -37,7 +41,7 @@ jobs:
           script: |
             const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
             
-            const comment = `## Storybook 확인 [ 바로가기 ](${storybookUrl})`;
+            const comment = `## Storybook [ 바로가기 ](${storybookUrl})`;
             
             await github.rest.issues.createComment({
               issue_number: context.issue.number,

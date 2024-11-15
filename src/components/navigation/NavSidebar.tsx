@@ -19,17 +19,17 @@ interface SidebarButtonProps {
 
 const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
-    <div className="flex flex-col h-[52px] w-full items-center px-2 ml-[-20px] rounded-lg cursor-pointer hover:text hover:bg-gray-50 group-[.expanded]/navbar:py-2  group-[.expanded]/navbar:flex-row  group-[.expanded]/navbar:ml-2">
-      <Icon className="min-w-6 h-6 text-black" />
+    <div className="flex flex-col h-[52px] w-full items-center px-2 ml-[-20px] rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:py-2  group-[.expanded]/navbar:flex-row  group-[.expanded]/navbar:ml-2 group/sidebarButton">
+      <Icon className="min-w-6 h-6 text-black group-hover/sidebarButton:text-primary" />
       <span
         className="ml-2.5 text-black overflow-hidden whitespace-nowrap   
-        w-0 h-0 opacity-0 group-[.expanded]/navbar:w-auto group-[.expanded]/navbar:opacity-100  group-[.expanded]/navbar:h-auto"
+        w-0 h-0 opacity-0 group-[.expanded]/navbar:w-auto group-[.expanded]/navbar:opacity-100  group-[.expanded]/navbar:h-auto group-hover/sidebarButton:text-primary"
       >
         {label}
       </span>
       <div
         className={
-          'group-[.expanded]/navbar:absolute  text-[11px] opacity-100 group-[.expanded]/navbar:opacity-0'
+          'group-[.expanded]/navbar:absolute  text-[11px] opacity-100 group-[.expanded]/navbar:opacity-0 group-hover/sidebarButton:text-primary'
         }
       >
         {label}
@@ -63,9 +63,11 @@ export function NavSidebar() {
           <div className="mr-4">
             <h2 className="py-2 text-overline self-start group-[.expanded]/navbar:ml-2">General</h2>
           </div>
-          <SidebarButton icon={TbSmartHome} label="홈" />
-          <SidebarButton icon={TbFolders} label="프로젝트" />
-          <SidebarButton icon={TbFolderShare} label="내보내기" />
+          <div className="flex flex-col w-full translate-x-2 group-[.expanded]/navbar:w-[calc(100%-10px)] group-[.expanded]/navbar:translate-x-0">
+            <SidebarButton icon={TbSmartHome} label="홈" />
+            <SidebarButton icon={TbFolders} label="프로젝트" />
+            <SidebarButton icon={TbFolderShare} label="내보내기" />
+          </div>
         </div>
         <Separator className="my-4 " />
         <div className="py-2 ml-1 ">

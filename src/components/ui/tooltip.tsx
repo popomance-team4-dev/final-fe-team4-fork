@@ -34,7 +34,7 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-interface TooltipWrapperProps {
+export interface TooltipWrapperProps {
   text: string;
   children: React.ReactNode;
   delayDuration?: number;
@@ -52,4 +52,4 @@ const TooltipWrapper = ({ text, children, delayDuration = 0, className }: Toolti
   );
 };
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipWrapper };
+export { TooltipWrapper };

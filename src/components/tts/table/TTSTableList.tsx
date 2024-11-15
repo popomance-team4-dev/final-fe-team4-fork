@@ -1,7 +1,7 @@
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import { PlayButton } from '@/components/buttons/PlayButton';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface TextRowProps {
   id: string;
@@ -26,8 +26,13 @@ const TextRow: React.FC<TextRowProps> = ({
   onSelectionChange,
   onTextChange,
 }) => {
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onTextChange(id, e.target.value);
+  };
+
+  const handleTextAreaResize = (element: HTMLTextAreaElement) => {
+    element.style.height = 'auto';
+    element.style.height = `${element.scrollHeight}px`;
   };
 
   return (
@@ -38,12 +43,16 @@ const TextRow: React.FC<TextRowProps> = ({
         className="ml-2 mr-2"
       />
       <PlayButton onClick={onPlay} className="ml-2 mr-2 w-5 h-5" />
-      <Input
-        variant="text"
+      <Textarea
         value={text}
-        onChange={handleTextChange}
+        onChange={(e) => {
+          handleTextChange(e);
+          handleTextAreaResize(e.target);
+        }}
+        onInput={(e) => handleTextAreaResize(e.currentTarget)}
         placeholder="텍스트를 입력하세요."
-        className="flex-1 ml-2 mr-4"
+        className="flex-1 ml-2 mr-4 min-h-[40px] border-0 overflow-hidden"
+        rows={1}
       />
       <div className="flex gap-6">
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />

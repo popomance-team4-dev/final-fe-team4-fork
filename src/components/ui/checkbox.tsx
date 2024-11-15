@@ -1,3 +1,5 @@
+'use client';
+
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as React from 'react';
 import { TbCheck } from 'react-icons/tb';
@@ -19,12 +21,11 @@ const Checkbox = React.forwardRef<
     )}
     {...props}
   >
-    <CheckboxPrimitive.Indicator className="flex items-center justify-center">
+    <CheckboxPrimitive.Indicator className={cn('flex items-center justify-center text-current')}>
       <TbCheck className="h-4 w-4 text-white" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));
-
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 export { Checkbox };

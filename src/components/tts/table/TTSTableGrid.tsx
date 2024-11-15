@@ -4,7 +4,7 @@ import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface TTSTableGridItemProps {
   id: string;
@@ -26,6 +26,11 @@ interface TTSTableGridProps {
 }
 
 const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
+  const handleTextAreaResize = (element: HTMLTextAreaElement) => {
+    element.style.height = 'auto';
+    element.style.height = `${element.scrollHeight}px`;
+  };
+
   return (
     <div className="flex flex-col gap-4 px-0.5 pt-0.5">
       {items.map((item) => (
@@ -68,12 +73,16 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
             </div>
           </div>
 
-          <Input
-            variant="text"
+          <Textarea
             value={item.text}
-            onChange={(e) => item.onTextChange(item.id, e.target.value)}
+            onChange={(e) => {
+              item.onTextChange(item.id, e.target.value);
+              handleTextAreaResize(e.target);
+            }}
+            onInput={(e) => handleTextAreaResize(e.currentTarget)}
             placeholder="텍스트를 입력하세요."
-            className="w-3/5 mb-6"
+            className="w-3/5 min-h-[40px] overflow-hidden mb-6 border-0"
+            rows={1}
           />
 
           <div className="w-3/5">

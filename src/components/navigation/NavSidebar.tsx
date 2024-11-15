@@ -19,7 +19,7 @@ interface SidebarButtonProps {
 
 const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
-    <div className="flex flex-col  group-[.expanded]/navbar:justify-start justify-center  h-[60px] w-full items-center px-2 ml-[-20px] rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:py-2  group-[.expanded]/navbar:flex-row  group-[.expanded]/navbar:ml-2 group/sidebarButton">
+    <div className="flex flex-col  group-[.expanded]/navbar:justify-start justify-center py-2 w-full group-[.expanded]/navbar:w-48 items-center px-2 ml-[-20px] rounded-lg cursor-pointer hover:bg-gray-50  group-[.expanded]/navbar:flex-row  group-[.expanded]/navbar:ml-2 group/sidebarButton">
       <Icon className="min-w-6 h-6 text-black group-hover/sidebarButton:text-primary" />
       <span
         className="ml-2.5 text-black overflow-hidden whitespace-nowrap   
@@ -29,7 +29,7 @@ const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
       </span>
       <div
         className={
-          'group-[.expanded]/navbar:absolute  text-[11px] opacity-100 group-[.expanded]/navbar:opacity-0 group-hover/sidebarButton:text-primary'
+          'group-[.expanded]/navbar:absolute  text-xs opacity-100 group-[.expanded]/navbar:opacity-0 group-hover/sidebarButton:text-primary'
         }
       >
         {label}
@@ -59,11 +59,11 @@ export function NavSidebar() {
       </Button>
 
       <div className="scrollArea py-6">
-        <div className="flex flex-col items-center w-full space-y-1 text-black text-body2 ml-2 group-[.expanded]/navbar:items-start">
+        <div className="flex flex-col items-center w-full  text-black text-body2 ml-2 group-[.expanded]/navbar:items-start">
           <div className="mr-4">
             <h2 className="py-2 text-overline self-start group-[.expanded]/navbar:ml-2">General</h2>
           </div>
-          <div className="flex flex-col w-full translate-x-2 group-[.expanded]/navbar:w-[calc(100%-20px)] group-[.expanded]/navbar:translate-x-0">
+          <div className="flex flex-col w-full translate-x-3 group-[.expanded]/navbar:w-full group-[.expanded]/navbar:px-3 group-[.expanded]/navbar:-translate-x-1">
             <SidebarButton icon={TbSmartHome} label="홈" />
             <SidebarButton icon={TbFolders} label="프로젝트" />
             <SidebarButton icon={TbFolderShare} label="내보내기" />
@@ -75,7 +75,7 @@ export function NavSidebar() {
             Workspace
           </h2>
         </div>
-        <div className="translate-x-4 translate-y-2  group-[.expanded]/navbar:translate-x-[-8px] group-[.expanded]/navbar:ml-3">
+        <div className="translate-x-4 translate-y-2  group-[.expanded]/navbar:-translate-x-1 group-[.expanded]/navbar:ml-3">
           <SidebarButton icon={TbFileTypography} label="TTS" />
           <SidebarButton icon={TbFileMusic} label="VC" />
           <SidebarButton icon={TbFileDatabase} label="CONCAT" />

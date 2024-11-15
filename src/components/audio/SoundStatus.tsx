@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { TbPlaystationTriangle, TbVolume, TbWaveSquare } from 'react-icons/tb';
 

@@ -1,7 +1,7 @@
 import { TbDownload } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/buttons/PlayButton';
-import { AudioBadge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -29,6 +29,11 @@ interface HistoryTableProps {
 }
 
 export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: HistoryTableProps) {
+  const AudioBadge = (type: 'VC' | 'TTS' | 'CONCAT') => {
+    const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
+    return <Badge variant={variant}>{type}</Badge>;
+  };
+
   return (
     <div className="w-full">
       <Table>
@@ -64,9 +69,7 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
               <TableCell>{item.projectName}</TableCell>
               <TableCell>{item.fileName}</TableCell>
               <TableCell className="max-w-md truncate">{item.content}</TableCell>
-              <TableCell>
-                <AudioBadge type={item.type} />
-              </TableCell>
+              <TableCell>{AudioBadge(item.type)}</TableCell>
               <TableCell>
                 <div className="flex justify-start pl-3">
                   <button

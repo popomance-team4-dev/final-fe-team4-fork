@@ -19,7 +19,7 @@ interface SidebarButtonProps {
 
 const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
-    <div className="flex flex-col h-[52px] w-[180px] items-center px-2 ml-[-20px] rounded-lg cursor-pointer hover:text hover:bg-gray-50 group-[.expanded]/navbar:py-2  group-[.expanded]/navbar:flex-row  group-[.expanded]/navbar:ml-2">
+    <div className="flex flex-col h-[52px] w-full items-center px-2 ml-[-20px] rounded-lg cursor-pointer hover:text hover:bg-gray-50 group-[.expanded]/navbar:py-2  group-[.expanded]/navbar:flex-row  group-[.expanded]/navbar:ml-2">
       <Icon className="min-w-6 h-6 text-black" />
       <span
         className="ml-2.5 text-black overflow-hidden whitespace-nowrap   

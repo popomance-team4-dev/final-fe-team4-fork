@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
 
-const LoginComponent = () => {
+const SigninForm = () => {
   return (
     <div className="w-[432px] h-[600px] flex-shrink-0 rounded-xl border border-gray-300 bg-white flex flex-col">
       <div className="mt-[56px] mb-[80px] flex justify-center">
@@ -15,7 +15,7 @@ const LoginComponent = () => {
           이메일 (아이디)
         </label>
         <Input
-          variant="login"
+          variant="signin"
           type="email"
           placeholder="aipark@aipark.ai"
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"
@@ -25,7 +25,7 @@ const LoginComponent = () => {
           비밀번호
         </label>
         <Input
-          variant="login"
+          variant="signin"
           type="password"
           placeholder="8자 이상의 비밀번호"
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"
@@ -67,4 +67,4 @@ const LoginComponent = () => {
   );
 };
 
-export default LoginComponent;
+export default SigninForm;

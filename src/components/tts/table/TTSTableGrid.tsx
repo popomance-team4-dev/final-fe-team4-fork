@@ -32,15 +32,17 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-0.5 pt-0.5">
+    <div className="flex flex-col gap-4">
       {items.map((item) => (
         <div
           key={item.id}
-          className={`p-4 rounded-md bg-white transition-colors shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)] ${
-            item.isSelected ? 'ring-2 ring-blue-500 ' : 'border border-gray-200'
+          className={`p-4 rounded-md bg-white transition-colors ${
+            item.isSelected
+              ? 'border border-primary shadow-[inset_0px_0px_5px_2px_rgba(59,130,246,0.2)]'
+              : 'border'
           }`}
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-5">
               <Checkbox
                 checked={item.isSelected}
@@ -67,7 +69,7 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-6 mr-2">
               <RecreateButton onClick={item.onRegenerate} />
               <DownloadButton onClick={item.onDownload} />
             </div>
@@ -81,12 +83,12 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
             placeholder="텍스트를 입력하세요."
-            className="w-3/5 min-h-[40px] overflow-hidden mb-6 border-0"
+            className="w-3/5 min-h-[40px] overflow-hidden mb-2 border-0"
             rows={1}
           />
 
           <div className="w-3/5">
-            <AudioPlayer audioUrl={item.audioUrl} />
+            <AudioPlayer audioUrl={item.audioUrl} className="px-6 py-3" />
           </div>
         </div>
       ))}

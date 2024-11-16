@@ -73,7 +73,7 @@ const RecentProject = () => {
   };
 
   return (
-    <div className="p-6 h-[418px] max-w-[1336px]">
+    <div className="px-6 pt-6 h-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <h3 className="text-h3">최근 프로젝트</h3>
         <p className="text-black text-body2 flex items-center gap-1 cursor-pointer">
@@ -97,7 +97,7 @@ const RecentProject = () => {
         <div
           ref={scrollContainerRef}
           onScroll={handleScroll}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
+          className="flex gap-6 overflow-x-hidden snap-x snap-mandatory scrollbar-hide scroll-smooth"
         >
           {projects.map((project, index) => (
             <div key={index} className="snap-start">

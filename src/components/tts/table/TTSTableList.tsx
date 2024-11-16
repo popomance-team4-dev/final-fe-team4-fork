@@ -36,7 +36,7 @@ const TextRow: React.FC<TextRowProps> = ({
   };
 
   return (
-    <div className="flex items-center p-4 border-b">
+    <div className="flex items-center px-4 py-2 border-b">
       <Checkbox
         checked={isSelected}
         onCheckedChange={() => onSelectionChange(id)}
@@ -71,7 +71,7 @@ interface TTSTableListProps {
 
 const TTSTableList: React.FC<TTSTableListProps> = ({ rows, onSelectionChange, onTextChange }) => {
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full mx-auto">
       {rows.map((row) => (
         <TextRow
           key={row.id}

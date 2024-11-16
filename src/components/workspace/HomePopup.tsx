@@ -13,7 +13,7 @@ const HomePopup = () => {
 
   return (
     <div
-      className="relative w-full max-w-[1148px] h-auto min-h-[451px] rounded-xl bg-background flex-shrink-0"
+      className="relative w-full h-auto min-h-[451px] rounded-xl bg-background flex-shrink-0"
       style={{
         backgroundImage: `url(${HomePopupBg})`,
         backgroundSize: 'cover',

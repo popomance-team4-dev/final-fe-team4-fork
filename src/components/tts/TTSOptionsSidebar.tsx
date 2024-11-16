@@ -177,7 +177,7 @@ const TTSOptionsSidebar: React.FC = () => {
       />
 
       {/* 적용 버튼들 */}
-      <div className="flex flex-col gap-2 mt-8">
+      <div className="flex flex-col my-12 gap-4">
         <ApplySelectionButton />
         <ApplyAllButton />
         <ResetChangesButton />

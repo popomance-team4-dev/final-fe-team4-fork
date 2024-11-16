@@ -8,7 +8,6 @@ type SelectItemType = {
   value: string;
   label: string;
   icon?: React.ReactNode;
-  subLabel?: string;
 };
 
 interface SelectProps extends React.ComponentProps<typeof SelectPrimitive.Root> {
@@ -28,12 +27,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         </SelectTrigger>
         <SelectContent>
           {items.map((item) => (
-            <SelectItem
-              key={item.value}
-              value={item.value}
-              icon={item.icon}
-              subLabel={item.subLabel}
-            >
+            <SelectItem key={item.value} value={item.value} icon={item.icon}>
               {item.label}
             </SelectItem>
           ))}
@@ -153,7 +147,6 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 interface SelectItemProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {
   icon?: React.ReactNode;
-  subLabel?: string;
 }
 
 const SelectItem = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Item>, SelectItemProps>(

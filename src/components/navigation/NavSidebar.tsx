@@ -9,7 +9,7 @@ import {
   TbSmartHome,
 } from 'react-icons/tb';
 
-import { PlusButton } from '@/components/buttons/PlusButton';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import logofull from '@/images/logofull.png';
 import logomini from '@/images/logomini.png';
@@ -17,19 +17,15 @@ import logomini from '@/images/logomini.png';
 interface NavSidebarButtonProps {
   icon: React.ElementType;
   label: string;
-  onClick?: () => void;
 }
 
-const NavSidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label, onClick }) => {
+const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
-    <button
-      onClick={onClick}
-      className="flex flex-col group-[.expanded]/navbar:justify-start justify-center py-2 w-full group-[.expanded]/navbar:w-48 items-center px-2 rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:flex-row group/NavsidebarButton"
-    >
-      <Icon className="min-w-6 h-6 text-black group-hover/NavsidebarButton:text-primary" />
+    <div className="flex flex-col group-[.expanded]/navbar:justify-start justify-center py-2 w-full group-[.expanded]/navbar:w-48 items-center px-2 rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:flex-row group/sidebarButton">
+      <Icon className="min-w-6 h-6 text-black group-hover/sidebarButton:text-primary" />
       <span
         className="ml-2.5 text-black overflow-hidden whitespace-nowrap   
-        w-0 h-0 opacity-0 group-[.expanded]/navbar:w-auto group-[.expanded]/navbar:opacity-100  group-[.expanded]/navbar:h-auto group-hover/NavsidebarButton:text-primary"
+        w-0 h-0 opacity-0 group-[.expanded]/navbar:w-auto group-[.expanded]/navbar:opacity-100  group-[.expanded]/navbar:h-auto group-hover/sidebarButton:text-primary"
       >
         {label}
       </span>
@@ -40,7 +36,7 @@ const NavSidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label, onClic
       >
         {label}
       </div>
-    </button>
+    </div>
   );
 };
 
@@ -75,7 +71,9 @@ export function NavSidebar() {
 
       {/* <Separator className="mb-6" /> */}
 
-      <PlusButton text="새 프로젝트 생성" isExpanded={isExpanded} className="mt-6" />
+      <Button size="icon" icon className="mt-6">
+        새 프로젝트 생성
+      </Button>
 
       <div className="scrollArea py-6">
         <div className="flex flex-col w-full text-black text-body2">
@@ -89,9 +87,9 @@ export function NavSidebar() {
             </h2>
           </div>
           <div className="flex flex-col w-full gap-3">
-            <NavSidebarButton icon={TbSmartHome} label="홈" />
-            <NavSidebarButton icon={TbFolders} label="프로젝트" />
-            <NavSidebarButton icon={TbFolderShare} label="내보내기" />
+            <SidebarButton icon={TbSmartHome} label="홈" />
+            <SidebarButton icon={TbFolders} label="프로젝트" />
+            <SidebarButton icon={TbFolderShare} label="내보내기" />
           </div>
         </div>
         <Separator className="my-4" />
@@ -105,18 +103,14 @@ export function NavSidebar() {
           </h2>
         </div>
         <div className="flex flex-col w-full gap-3">
-          <NavSidebarButton icon={TbFileTypography} label="TTS" />
-          <NavSidebarButton icon={TbFileMusic} label="VC" />
-          <NavSidebarButton icon={TbFileDatabase} label="CONCAT" />
+          <SidebarButton icon={TbFileTypography} label="TTS" />
+          <SidebarButton icon={TbFileMusic} label="VC" />
+          <SidebarButton icon={TbFileDatabase} label="CONCAT" />
         </div>
       </div>
       <div className="mt-auto h-20">
         <Separator className="my-4" />
-        <button
-          className="mt-2 ml-4 p-2 rounded-lg hover:bg-gray-50"
-          onClick={() => setIsExpanded(!isExpanded)}
-          aria-label={isExpanded ? '사이드바 축소' : '사이드바 확장'}
-        >
+        <button className="mt-2 ml-4" onClick={() => setIsExpanded(!isExpanded)}>
           <TbLayoutSidebar className="w-6 h-6 group-[.expanded]/navbar:text-gray-300 text-black" />
         </button>
       </div>

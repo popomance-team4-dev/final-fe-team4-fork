@@ -30,11 +30,16 @@ export const STATUS_CONFIGS = {
 } as const;
 
 const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
-  ({ className, type, value, showLabel = false, ...props }) => {
+  ({ className, type, value, showLabel = false, ...props }, ref) => {
     const { icon: Icon, unit, label, rotation } = STATUS_CONFIGS[type];
 
     return (
-      <Badge variant="sound" className={cn('flex items-center gap-2', className)} {...props}>
+      <Badge
+        ref={ref}
+        variant="sound"
+        className={cn('flex items-center gap-2', className)}
+        {...props}
+      >
         <Icon
           className="w-4.5 h-4.5 text-purple-900 flex-shrink-0"
           style={{ transform: `rotate(${rotation}deg)` }}

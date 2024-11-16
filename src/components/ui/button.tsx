@@ -2,6 +2,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
+import PlusIcon from '@/components/icons/PlusIcon';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
@@ -30,10 +31,15 @@ const buttonVariants = cva(
         lg: 'h-11 rounded-md px-8',
         icon: 'w-14 h-14 group-[.expanded]/navbar:w-[196px] group-[.expanded]/navbar:px-[19px] flex-shrink-0 rounded-lg text-[16px] font-semibold',
       },
+      hasIcon: {
+        true: 'inline-flex items-center',
+        false: '',
+      },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      hasIcon: false,
     },
   }
 );
@@ -42,15 +48,39 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  icon?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, icon = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
 
+    const content =
+      size === 'icon' ? (
+        <>
+          <PlusIcon />
+          {icon && (
+            <span className="opacity-0 w-0 group-[.expanded]/navbar:opacity-100 group-[.expanded]/navbar:w-auto group-[.expanded]/navbar:ml-2">
+              {children}
+            </span>
+          )}
+        </>
+      ) : (
+        <>
+          {icon && <PlusIcon />}
+          {children}
+        </>
+      );
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-        {children}
+      <Comp
+        className={cn(
+          buttonVariants({ variant, size, hasIcon: icon || size === 'icon', className })
+        )}
+        ref={ref}
+        {...props}
+      >
+        {content}
       </Comp>
     );
   }

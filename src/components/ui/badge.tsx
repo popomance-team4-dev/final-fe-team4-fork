@@ -10,7 +10,7 @@ const badgeVariants = cva('inline-flex items-center rounded-md px-2.5 py-0.5 tex
       vc: 'bg-pink-50 text-pink-500 ring-pink-50',
       tts: 'bg-green-50 text-green-500 ring-green-50',
       concat: 'bg-yellow-50 text-yellow-500 ring-yellow-50',
-      sound: 'w-fit bg-purple-50 rounded-md px-2 py-0.75 ring-purple-50',
+      sound: 'w-fit bg-purple-50 rounded-md px-2 py-[3px] ring-purple-50',
     },
   },
   defaultVariants: {

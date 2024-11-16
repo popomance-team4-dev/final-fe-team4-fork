@@ -1,8 +1,7 @@
-import * as Slider from '@radix-ui/react-slider';
 import * as React from 'react';
 import { TbMinus, TbPlus } from 'react-icons/tb';
 
-import { cn } from '@/lib/utils';
+import { Slider } from '@/components/ui/slider';
 
 interface StateControllerProps {
   label: string;
@@ -44,27 +43,15 @@ const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
         <span className="text-sm font-bold">{label}</span>
         <div className="flex items-center gap-2">
           <div className="relative flex grow items-center">
-            <Slider.Root
-              className="relative flex h-10 w-full touch-none select-none items-center"
+            <Slider
               value={[value]}
               min={min}
               max={max}
               step={step}
               onValueChange={handleSliderChange}
-            >
-              <Slider.Track className="relative h-[2px] w-full grow bg-gray-300">
-                <Slider.Range className="absolute h-full bg-black" />
-              </Slider.Track>
-              <Slider.Thumb
-                className={cn(
-                  'block h-[10px] w-[10px] rounded-full bg-black',
-                  'focus:outline-none focus:ring-2 focus:ring-gray-400',
-                  'disabled:pointer-events-none disabled:opacity-50'
-                )}
-              />
-            </Slider.Root>
+            />
           </div>
-          <div className="flex items-center gap-1 rounded-lg bg-gray-100 px-2 py-1">
+          <div className="flex items-center gap-1 rounded-md bg-gray-50 px-2 py-1">
             <button
               onClick={handleDecrease}
               className="text-gray-600 hover:text-gray-900 pr-1 border-r border-gray-400"

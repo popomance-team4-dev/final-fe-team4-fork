@@ -34,22 +34,4 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-export interface TooltipWrapperProps {
-  text: string;
-  children: React.ReactNode;
-  delayDuration?: number;
-  className?: string;
-}
-
-const TooltipWrapper = ({ text, children, delayDuration = 0, className }: TooltipWrapperProps) => {
-  return (
-    <TooltipProvider>
-      <Tooltip delayDuration={delayDuration}>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent className={className}>{text}</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
-
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipWrapper };
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };

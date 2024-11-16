@@ -60,12 +60,12 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   itemCount,
 }) => (
   <div className={cn('flex flex-col bg-white', !isListView ? 'rounded-md border' : 'border-b')}>
-    <div className="flex items-center justify-between px-4 py-5">
+    <div className="flex items-center justify-between px-6 py-3">
       <div className="flex items-center space-x-4">
         <Checkbox
           checked={itemCount > 0 && isAllSelected}
           onCheckedChange={onSelectAll}
-          className="ml-2.5 mr-9"
+          className="mr-9"
         />
         <div onClick={onDelete} className="flex items-center gap-2 py-2 hover:cursor-pointer">
           <TbTrash className="w-5 h-5 text-gray-400" />
@@ -90,11 +90,11 @@ export const TableFooter: React.FC<TableFooterProps> = ({
 }) => (
   <div className={cn('bg-white', !isListView && 'rounded-md border mt-4')}>
     <div
-      className={`flex items-center justify-between px-4 ${isListView ? 'py-5 border-t' : 'py-[30px]'}`}
+      className={`flex items-center justify-between px-4 ${isListView ? 'py-4 border-t' : 'h-[40px]'}`}
     >
       <div className="text-sm text-black font-medium ml-2">선택 항목: {selectedCount}</div>
       {isListView && (
-        <div className="flex items-center space-x-2 mr-2">
+        <div className="flex items-center space-x-6 mr-2">
           <RecreateButton onClick={onRegenerate} />
           <DownloadButton onClick={onDownload} />
         </div>
@@ -202,7 +202,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
       <div className={cn('flex-1 min-h-0', !isListView && 'mb-4.5')}>
         {isListView ? (
           <div className="h-full relative">
-            <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-3 border-b bg-gray-50 text-sm font-medium text-black">
+            <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
               <div className="w-4 ml-2 mr-2" />
               <div className="w-4 ml-2 mr-2" />
               <div className="ml-6">텍스트</div>
@@ -212,7 +212,7 @@ export const TTSTable: React.FC<TTSTableProps> = ({
                 <div className="w-[64px] text-center">피치</div>
               </div>
             </div>
-            <div className="absolute inset-x-0 bottom-0 top-[48px]">
+            <div className="absolute inset-x-0 bottom-0 top-[37px]">
               <ScrollArea className="h-full">
                 <TTSTableList
                   rows={listItems}

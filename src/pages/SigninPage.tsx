@@ -1,5 +1,5 @@
 import SigninForm from '@/components/auth/SigninForm';
-import SigninLogo from '@/images/signinlogo.svg';
+import SigninLogo from '@/images/signin-logo.svg';
 
 const SigninPage = () => {
   return (

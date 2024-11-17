@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
 import HomeCard from '@/components/workspace/HomeCard';
-import HomePopupBg from '@/images/HomePopupbg.svg';
+import HomePopupBg from '@/images/home-popup-bg.svg';
 
 const HomePopup = () => {
   const [isVisible, setIsVisible] = useState(true);

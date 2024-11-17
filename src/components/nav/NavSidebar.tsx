@@ -11,8 +11,8 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import logofull from '@/images/logofull.png';
-import logomini from '@/images/logomini.png';
+import logofull from '@/images/logo-full.png';
+import logomini from '@/images/logo-mini.png';
 
 interface NavSidebarButtonProps {
   icon: React.ElementType;

@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
-import { TTSTable } from '@/components/tts/table/TTSTable';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSdropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import { TTSTable } from '@/components/tts/TTSTable';
 import { Button } from '@/components/ui/button';
 
 interface TTSItem {

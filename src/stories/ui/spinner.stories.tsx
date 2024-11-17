@@ -1,4 +1,3 @@
-// spinner.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Spinner } from '@/components/ui/spinner';

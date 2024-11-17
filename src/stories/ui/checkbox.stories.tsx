@@ -1,4 +1,3 @@
-// checkbox.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Checkbox } from '@/components/ui/checkbox';

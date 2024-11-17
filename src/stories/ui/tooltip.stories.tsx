@@ -1,4 +1,3 @@
-// tooltip.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

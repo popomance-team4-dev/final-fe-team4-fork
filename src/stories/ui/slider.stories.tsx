@@ -1,4 +1,3 @@
-// slider.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Slider } from '@/components/ui/slider';

@@ -1,4 +1,3 @@
-// separator.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Separator } from '@/components/ui/separator';

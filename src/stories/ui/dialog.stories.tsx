@@ -61,7 +61,6 @@ import {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 기본 다이얼로그
 export const Default: Story = {
   render: () => (
     <Dialog>
@@ -86,7 +85,6 @@ export const Default: Story = {
   ),
 };
 
-// 확인 대화상자
 export const Confirmation: Story = {
   render: () => (
     <Dialog>
@@ -115,7 +113,6 @@ export const Confirmation: Story = {
   ),
 };
 
-// 폼 다이얼로그
 export const WithForm: Story = {
   render: () => (
     <Dialog>

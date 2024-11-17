@@ -1,4 +1,3 @@
-// switch.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Switch } from '@/components/ui/switch';

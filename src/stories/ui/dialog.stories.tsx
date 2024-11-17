@@ -17,17 +17,16 @@ const meta = {
   title: 'ui/dialog',
   component: Dialog,
   parameters: {
-    layout: 'centered',
     docs: {
       description: {
         component: `
-다이얼로그 컴포넌트의 다양한 사용 예제입니다.
+Dialog 컴포넌트는 다양한 다이얼로그 스타일을 제공합니다.
 
 <br />
 
 ## Import
 \`\`\`tsx
-import { 
+import {
   Dialog,
   DialogTrigger,
   DialogContent,
@@ -41,140 +40,17 @@ import {
 
 <br />
 
-## 사용 예제
+### 주요 구성 요소
+- **Dialog**: 다이얼로그 루트 컴포넌트.
+- **DialogTrigger**: 다이얼로그를 열기 위한 트리거.
+- **DialogContent**: 다이얼로그의 내용이 포함된 컨테이너.
+- **DialogHeader**: 다이얼로그 제목과 설명 영역.
+- **DialogFooter**: 다이얼로그 하단의 버튼 배치.
+- **DialogTitle**: 다이얼로그 제목.
+- **DialogDescription**: 다이얼로그 설명.
+- **DialogClose**: 다이얼로그를 닫기 위한 버튼.
 
-### 1. 기본 다이얼로그
-가장 기본적인 형태의 다이얼로그입니다.
-
-\`\`\`tsx
-<Dialog>
-  <DialogTrigger>
-    <Button>다이얼로그 열기</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>기본 다이얼로그</DialogTitle>
-      <DialogDescription>이것은 기본 다이얼로그입니다.</DialogDescription>
-    </DialogHeader>
-    <div>여기에 내용을 입력하세요.</div>
-    <DialogFooter className="flex justify-center gap-4">
-      <DialogClose>
-        <Button size="sm" variant="outline" className="w-24">
-          닫기
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-\`\`\`
-
-### 2. 확인 대화상자
-사용자 작업 확인을 위한 다이얼로그입니다.
-
-\`\`\`tsx
-<Dialog>
-  <DialogTrigger>
-    <Button>삭제</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>삭제 확인</DialogTitle>
-      <DialogDescription>정말 삭제하시겠습니까?</DialogDescription>
-    </DialogHeader>
-    <DialogFooter className="flex justify-center gap-4">
-      <DialogClose>
-        <Button size="sm" variant="outline" className="w-24">
-          취소
-        </Button>
-      </DialogClose>
-      <Button size="sm" variant="destructive" className="w-24">
-        삭제
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-\`\`\`
-
-### 3. 폼 다이얼로그
-사용자가 정보를 입력할 수 있는 폼을 포함한 다이얼로그입니다.
-
-\`\`\`tsx
-<Dialog>
-  <DialogTrigger>
-    <Button>프로필 편집</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>프로필 편집</DialogTitle>
-      <DialogDescription>프로필 정보를 수정하세요.</DialogDescription>
-    </DialogHeader>
-    <div className="grid gap-4 py-4">
-      <div className="grid gap-2">
-        <label htmlFor="name">이름</label>
-        <Input id="name" placeholder="이름 입력" />
-      </div>
-      <div className="grid gap-2">
-        <label htmlFor="email">이메일</label>
-        <Input id="email" placeholder="이메일 입력" />
-      </div>
-    </div>
-    <DialogFooter className="flex justify-center gap-4">
-      <DialogClose>
-        <Button size="sm" variant="outline" className="w-24">
-          취소
-        </Button>
-      </DialogClose>
-      <Button size="sm" className="w-24">
-        저장
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-\`\`\`
-
-### 4. 커스텀 스타일
-다이얼로그에 커스텀 스타일을 적용한 예제입니다.
-
-\`\`\`tsx
-<Dialog>
-  <DialogTrigger>
-    맞춤 스타일
-  </DialogTrigger>
-  <DialogContent className="bg-blue-100">
-    <DialogHeader>
-      <DialogTitle className="text-blue-700">맞춤 제목</DialogTitle>
-      <DialogDescription className="text-blue-500">
-        맞춤 스타일의 다이얼로그입니다.
-      </DialogDescription>
-    </DialogHeader>
-    <div className="py-4">여기에 맞춤 스타일의 내용을 입력하세요.</div>
-    <DialogFooter className="flex justify-center gap-4">
-      <DialogClose>
-        <Button size="sm" className="text-blue-700">
-          닫기
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-\`\`\`
-
-<br />
-
-## 주요 스타일
-
-### Header (DialogHeader)
-- \`flex flex-col space-y-1.5\`: 수직 정렬 및 요소 간격
-- \`text-center sm:text-left\`: 반응형 텍스트 정렬
-
-### Footer (DialogFooter)
-- \`flex justify-center gap-4\`: 중앙 정렬 및 간격
-- 버튼을 중앙에 정렬하기 위해 사용
-
-### Content (DialogContent)
-- \`bg-background\`: 배경색
-- \`p-6\`: 내부 패딩
-- \`rounded-lg\`: 둥근 모서리
+---
         `,
       },
     },
@@ -185,20 +61,22 @@ import {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/* Default Dialog */
-export const Basic: Story = {
+// 기본 다이얼로그
+export const Default: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger>다이얼로그 열기</DialogTrigger>
+      <DialogTrigger>
+        <Button size="sm">다이얼로그 열기</Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>기본 다이얼로그</DialogTitle>
           <DialogDescription>이것은 기본 다이얼로그입니다.</DialogDescription>
         </DialogHeader>
-        <div>여기에 내용을 입력하세요.</div>
-        <DialogFooter className="flex justify-center gap-4">
+        <p>여기에 본문 내용을 입력하세요.</p>
+        <DialogFooter>
           <DialogClose>
-            <Button size="sm" variant="outline" className="w-24">
+            <Button size="sm" variant="outline">
               닫기
             </Button>
           </DialogClose>
@@ -208,23 +86,27 @@ export const Basic: Story = {
   ),
 };
 
-/* Confirmation Dialog */
+// 확인 대화상자
 export const Confirmation: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger>삭제</DialogTrigger>
+      <DialogTrigger>
+        <Button size="sm" variant="destructive">
+          삭제
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>삭제 확인</DialogTitle>
-          <DialogDescription>정말 삭제하시겠습니까?</DialogDescription>
+          <DialogDescription>정말로 삭제하시겠습니까?</DialogDescription>
         </DialogHeader>
-        <DialogFooter className="flex justify-center gap-4">
+        <DialogFooter>
           <DialogClose>
-            <Button size="sm" variant="outline" className="w-24">
+            <Button size="sm" variant="outline">
               취소
             </Button>
           </DialogClose>
-          <Button size="sm" variant="destructive" className="w-24">
+          <Button size="sm" variant="destructive">
             삭제
           </Button>
         </DialogFooter>
@@ -233,61 +115,38 @@ export const Confirmation: Story = {
   ),
 };
 
-/* Form Dialog */
+// 폼 다이얼로그
 export const WithForm: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger>프로필 편집</DialogTrigger>
+      <DialogTrigger>
+        <Button size="sm">프로필 편집</Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>프로필 편집</DialogTitle>
-          <DialogDescription>프로필 정보를 수정하세요.</DialogDescription>
+          <DialogDescription>필요한 정보를 수정하세요.</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <label htmlFor="name">이름</label>
-            <Input id="name" placeholder="이름 입력" />
+        <form>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">이름</label>
+            <Input placeholder="이름 입력" className="w-full" />
           </div>
-          <div className="grid gap-2">
-            <label htmlFor="email">이메일</label>
-            <Input id="email" placeholder="이메일 입력" />
+          <div className="mb-4">
+            <label className="block text-sm font-medium">이메일</label>
+            <Input type="email" placeholder="이메일 입력" className="w-full" />
           </div>
-        </div>
-        <DialogFooter className="flex justify-center gap-4">
-          <DialogClose>
-            <Button size="sm" variant="outline" className="w-24">
-              취소
+          <DialogFooter>
+            <DialogClose>
+              <Button size="sm" variant="outline">
+                취소
+              </Button>
+            </DialogClose>
+            <Button size="sm" type="submit">
+              저장
             </Button>
-          </DialogClose>
-          <Button size="sm" className="w-24">
-            저장
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  ),
-};
-
-/* Custom Styled Dialog */
-export const CustomStyled: Story = {
-  render: () => (
-    <Dialog>
-      <DialogTrigger>맞춤 스타일</DialogTrigger>
-      <DialogContent className="bg-blue-100">
-        <DialogHeader>
-          <DialogTitle className="text-blue-700">맞춤 제목</DialogTitle>
-          <DialogDescription className="text-blue-500">
-            맞춤 스타일의 다이얼로그입니다.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4">여기에 맞춤 스타일의 내용을 입력하세요.</div>
-        <DialogFooter className="flex justify-center gap-4">
-          <DialogClose>
-            <Button size="sm" className="text-blue-700">
-              닫기
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   ),

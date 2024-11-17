@@ -12,18 +12,19 @@ type SelectItemType = {
 
 interface SelectProps extends React.ComponentProps<typeof SelectPrimitive.Root> {
   placeholder?: string;
-  items: SelectItemType[];
+  items?: SelectItemType[];
   icon?: React.ReactNode;
+  className?: string;
 }
 
 const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
-  ({ placeholder, items, icon, ...props }, ref) => {
-    const defaultValue = items?.[0]?.value || '';
+  ({ placeholder, items = [], icon, className, ...props }, ref) => {
+    const defaultValue = items.length > 0 ? items[0].value : '';
 
     return (
       <SelectPrimitive.Root {...props} defaultValue={defaultValue}>
-        <SelectTrigger ref={ref} icon={icon}>
-          <SelectValue placeholder={placeholder || items[0]?.label} />
+        <SelectTrigger ref={ref} icon={icon} className={className}>
+          <SelectValue placeholder={placeholder || items[0]?.label || 'Select...'} />
         </SelectTrigger>
         <SelectContent>
           {items.map((item) => (
@@ -44,6 +45,7 @@ const SelectValue = SelectPrimitive.Value;
 interface SelectTriggerProps
   extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
   icon?: React.ReactNode;
+  className?: string;
 }
 
 const SelectTrigger = React.forwardRef<

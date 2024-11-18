@@ -41,7 +41,7 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
           normalize: true,
           interact: true,
           minPxPerSec: 60,
-          fillParent: true,
+          fillParent: false,
           barRadius: 0,
           cursorWidth: 0,
           mediaControls: false,

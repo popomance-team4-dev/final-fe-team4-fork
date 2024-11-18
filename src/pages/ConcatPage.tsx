@@ -1,9 +1,9 @@
-const ConcatPage = () => {
+const CONCATPage = () => {
   return (
     <div>
-      <h1>ConcatPage</h1>
+      <h1>CONCATPage</h1>
     </div>
   );
 };
 
-export default ConcatPage;
+export default CONCATPage;

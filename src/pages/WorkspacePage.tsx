@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { TbChevronRight } from 'react-icons/tb';
 
 import { HistoryTable } from '@/components/workspace/HistoryTable';
 import HomePopup from '@/components/workspace/HomePopup';
@@ -79,17 +78,7 @@ const WorkspacePage = () => {
 
       <div>
         {/* 최근 내보내기 영역 */}
-        <div className="bg-white p-6">
-          <div className="flex items-end justify-between mb-6">
-            <h3 className="text-2xl font-bold leading-9">최근 내보내기</h3>
-            <button
-              onClick={() => console.log('전체 보기')}
-              className="flex items-center text-black"
-            >
-              <span className="text-sm mr-1">전체 보기</span>
-              <TbChevronRight />
-            </button>
-          </div>
+        <div>
           <HistoryTable
             items={historyItems}
             onPlay={handlePlay}

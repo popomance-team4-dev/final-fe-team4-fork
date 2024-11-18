@@ -4,8 +4,8 @@ import { TbCirclePlus, TbTrash } from 'react-icons/tb';
 
 import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
 import ViewButtonGroup from '@/components/buttons/ViewFilterButton';
-import { TTSTableGrid } from '@/components/tts/table/TTSTableGrid';
-import { TTSTableList } from '@/components/tts/table/TTSTableList';
+import { TTSTableGrid } from '@/components/tts/TTSTableGrid';
+import { TTSTableList } from '@/components/tts/TTSTableList';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';

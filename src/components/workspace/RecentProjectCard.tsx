@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { TbArrowUpRight, TbPlayerPlayFilled } from 'react-icons/tb';
 
-import RecentCardbg1 from '@/images/RecentCardbg1.svg';
-import RecentCardbg2 from '@/images/RecentCardbg2.svg';
-import RecentCardbg3 from '@/images/RecentCardbg3.svg';
-import RecentCardbg4 from '@/images/RecentCardbg4.svg';
+import RecentCardbg1 from '@/images/recent-card-bg1.svg';
+import RecentCardbg2 from '@/images/recent-card-bg2.svg';
+import RecentCardbg3 from '@/images/recent-card-bg3.svg';
+import RecentCardbg4 from '@/images/recent-card-bg4.svg';
 
 const backgrounds = [RecentCardbg1, RecentCardbg2, RecentCardbg3, RecentCardbg4];
 

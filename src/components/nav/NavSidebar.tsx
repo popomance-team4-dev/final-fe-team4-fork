@@ -11,15 +11,15 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import logofull from '@/images/logofull.png';
-import logomini from '@/images/logomini.png';
+import logofull from '@/images/logo-full.png';
+import logomini from '@/images/logo-mini.png';
 
-interface SidebarButtonProps {
+interface NavSidebarButtonProps {
   icon: React.ElementType;
   label: string;
 }
 
-const SidebarButton: FC<SidebarButtonProps> = ({ icon: Icon, label }) => {
+const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
     <div className="flex flex-col group-[.expanded]/navbar:justify-start justify-center py-2 w-full group-[.expanded]/navbar:w-48 items-center px-2 rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:flex-row group/sidebarButton">
       <Icon className="min-w-6 h-6 text-black group-hover/sidebarButton:text-primary" />

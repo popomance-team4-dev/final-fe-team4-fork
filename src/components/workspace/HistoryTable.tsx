@@ -1,4 +1,4 @@
-import { TbDownload } from 'react-icons/tb';
+import { TbChevronRight, TbDownload } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/buttons/PlayButton';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +35,14 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
   };
 
   return (
-    <div className="w-full">
+    <div className="px-6 pt-6 h-auto">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
+        <h3 className="text-h3">최근 내보내기</h3>
+        <p className="text-black text-body2 flex items-center gap-1 cursor-pointer">
+          전체보기
+          <TbChevronRight className="w-6 h-6" />
+        </p>
+      </div>
       <Table>
         <TableHeader className="border-t">
           <TableRow>

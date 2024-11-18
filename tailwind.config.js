@@ -8,6 +8,7 @@ export default {
   content: [
     './src/components/**/*.{html,js,jsx,ts,tsx}',
     './src/pages/**/*.{html,js,jsx,ts,tsx}',
+    './src/layouts/**/*.{html,js,jsx,ts,tsx}',
     './src/routes/**/*.{html,js,ts,jsx,tsx}',
     './index.html',
   ],

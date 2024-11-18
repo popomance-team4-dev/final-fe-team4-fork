@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import Layout from '@/components/layouts/Layout';
-import NavbarLayout from '@/components/layouts/NavbarLayout';
+import Layout from '@/layouts/Layout';
+import NavbarLayout from '@/layouts/NavbarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import ConcatPage from '@/pages/ConcatPage';
+import CONCATPage from '@/pages/ConcatPage';
 import ErrorPage from '@/pages/ErrorPage';
-import LoginPage from '@/pages/LoginPage';
+import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
 import VCPage from '@/pages/VCPage';
@@ -13,7 +13,7 @@ import WorkspacePage from '@/pages/WorkspacePage';
 
 const PATH = {
   HOME: '/',
-  LOGIN: '/login',
+  SIGNIN: '/signin',
   SIGNUP: '/signup',
   WORKSPACE: '/workspace',
   ACCOUNT_RECOVERY: '/account-recovery',
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: PATH.LOGIN,
-        element: <LoginPage />,
+        path: PATH.SIGNIN,
+        element: <SigninPage />,
       },
       {
         path: PATH.SIGNUP,
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
           },
           {
             path: PATH.CONCAT,
-            element: <ConcatPage />,
+            element: <CONCATPage />,
           },
           {
             path: PATH.VC,

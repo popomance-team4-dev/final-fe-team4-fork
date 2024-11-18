@@ -16,7 +16,8 @@
     "mockup": "node ./mock/mockup.cjs",
     "mockdown": "node ./mock/mockdown.cjs",
     "chromatic": "chromatic",
-    "orval": "curl http://api.popomance.kr:8080/v3/api-docs > openapi.json  && orval --config ./orval.config.cjs"
+    "orval": "orval --config ./orval.config.cjs",
+    "api-docs": "widdershins  --search false ./docs/openapi.json  --language_tabs 'shell:Shell' 'javascript:JavaScript' -o ./docs/api.md "
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.1",

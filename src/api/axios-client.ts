@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const BASE_URL = 'http://api.popomance.kr:8080';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   const instance = axios.create({

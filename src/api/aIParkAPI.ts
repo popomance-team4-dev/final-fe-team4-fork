@@ -32,7 +32,7 @@ import type {
   UploadUnitParams,
   VCSaveDto,
 } from './aIParkAPI.schemas';
-import { customInstance } from './custom-client';
+import { customInstance } from './axios-client';
 
 /**
  * VC 프로젝트 상태를 가져옵니다.

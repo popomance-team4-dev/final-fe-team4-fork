@@ -1,0 +1,651 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "AIPark API",
+    "description": "기업연계 파이널 프로젝트 API 문서 백엔드 개발용",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://api.popomance.kr:8080", "description": "Generated server url" }],
+  "paths": {
+    "/vc/{projectId}/save": {
+        "parameters": [{
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }],
+      "post": {
+        "tags": ["vc-view-controller-_team-_multi"],
+        "summary": "VC 상태 로드",
+        "description": "VC 프로젝트 상태를 가져옵니다.",
+        "operationId": "vcSave",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/VCSaveDto" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/target/upload": {
+      "post": {
+        "tags": ["vc-controller-_team-_api"],
+        "summary": "타겟 오디오 업로드 및 Voice ID 생성",
+        "description": "사용자가 업로드한 타겟 오디오 파일을 사용하여 Voice ID를 생성합니다.",
+        "operationId": "uploadTargetAudio",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["targetAudio"],
+                "type": "object",
+                "properties": { "targetAudio": { "type": "string", "format": "binary" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/convert/batch": {
+      "post": {
+        "tags": ["vc-controller-_team-_api"],
+        "summary": "여러 소스 오디오 파일 변환 요청",
+        "description": "사용자가 업로드한 여러 소스 오디오 파일을 타겟 Voice ID로 변환합니다.",
+        "operationId": "convertMultipleVoices",
+        "parameters": [
+          { "name": "voiceId", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["sourceAudios"],
+                "type": "object",
+                "properties": {
+                  "sourceAudios": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "binary" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/{projectId}/save": {
+      "post": {
+        "parameters": [{
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }],
+        "tags": ["tts-view-controller-_team-_multi"],
+        "summary": "TTS 상태 저장",
+        "description": "TTS 프로젝트 상태를 저장합니다.",
+        "operationId": "ttsSave",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/TTSSaveDto" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/upload-generated-audio-to-bucket": {
+      "post": {
+        "tags": ["s-3-controller"],
+        "summary": "유닛(TTS or VC) 오디오 업로드",
+        "description": "유닛 오디오를 S3 버킷에 저장하고 메타데이터를 DB에 저장하는 api입니다.<br><br>매개변수 : <br>- 유닛 id, <br>- 프로젝트 id, <br>- 프로젝트 타입 (TTS, VC, Concat), <br>- 오디오 파일",
+        "operationId": "uploadUnit",
+        "parameters": [
+          {
+            "name": "detailId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": { "file": { "type": "string", "format": "binary" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/upload-generated-audio-to-bucket": {
+      "post": {
+        "tags": ["s-3-controller"],
+        "summary": "유닛(TTS or VC) 오디오 업로드",
+        "description": "유닛 오디오를 S3 버킷에 저장하고 메타데이터를 DB에 저장하는 api입니다.<br><br>매개변수 : <br>- 유닛 id, <br>- 프로젝트 id, <br>- 프로젝트 타입 (TTS, VC, Concat), <br>- 오디오 파일",
+        "operationId": "uploadUnit_1",
+        "parameters": [
+          {
+            "name": "detailId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": { "file": { "type": "string", "format": "binary" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/convert/single": {
+      "post": {
+        "tags": ["tts-controller-_team-_api"],
+        "summary": "Convert Single Text to WAV",
+        "description": "Google TTS API를 사용하여 개별 텍스트를 WAV 형식으로 변환합니다.\n\n매개변수:\n- text: 변환할 텍스트 (예: '안녕하세요')\n- languageCode: 언어 코드 (예: 'ko-KR', 'en-US')\n- gender: 성별 ('male', 'female', 'neutral')\n- speed: 말하는 속도 (범위: 0.25 ~ 4.0, 기본값: 1.0)\n- volume: 볼륨 조정 (범위: -96.0 ~ 16.0 데시벨, 기본값: 0.0)\n- pitch: 음의 높낮이 (범위: -20.0 ~ 20.0, 기본값: 0.0)\n- id: 변환하고자 하는 tts_Detail ID 값 (예: 1, 2, 3, ...)",
+        "operationId": "convertSingleText",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "언어 불일치 오류",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          },
+          "200": {
+            "description": "WAV 파일 변환 성공",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          },
+          "500": {
+            "description": "서버 오류 발생",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/convert/batch": {
+      "post": {
+        "tags": ["tts-controller-_team-_api"],
+        "summary": "Convert Batch of Texts to WAV",
+        "description": "여러 텍스트 세그먼트를 한꺼번에 WAV 형식으로 변환합니다.\n\n매개변수:\n- text: 변환할 텍스트 세그먼트 리스트 (JSON 형식)\n  - text: 변환할 텍스트 (예: 'Hello')\n  - languageCode: 언어 코드 (예: 'en-US')\n  - gender: 성별 ('male', 'female', 'neutral')\n  - speed: 말하는 속도 (범위: 0.25 ~ 4.0, 기본값: 1.0)\n  - volume: 볼륨 조정 (범위: -96.0 ~ 16.0 데시벨, 기본값: 0.0)\n  - pitch: 음의 높낮이 (범위: -20.0 ~ 20.0, 기본값: 0.0)",
+        "operationId": "convertBatchTexts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "array", "items": { "type": "integer", "format": "int64" } }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "언어 불일치 오류",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          },
+          "200": {
+            "description": "WAV 파일 변환 성공",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          },
+          "500": {
+            "description": "서버 오류 발생",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/upload-local-to-bucket": {
+      "post": {
+        "tags": ["s-3-controller"],
+        "summary": "유저가 가지고 있는 오디오를 버킷에 저장",
+        "description": "VC, CONCAT으로 변환할 오디오를 클라이언트 로컬컴퓨터로부터 버킷에 저장하는 api입니다.<br><br>매개변수:<br>- 파일, <br>- 멤버Id, <br>- projectId, <br>- audioType<br>오디오 타입이 VC_TRG일 경우 마지막 매개변수로 voiceId를 입력합니다.",
+        "operationId": "uploadFiles",
+        "parameters": [
+          {
+            "name": "memberId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          { "name": "audioType", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "voiceId", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["files"],
+                "type": "object",
+                "properties": {
+                  "files": { "type": "array", "items": { "type": "string", "format": "binary" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/concat/upload-local-to-bucket": {
+      "post": {
+        "tags": ["s-3-controller"],
+        "summary": "유저가 가지고 있는 오디오를 버킷에 저장",
+        "description": "VC, CONCAT으로 변환할 오디오를 클라이언트 로컬컴퓨터로부터 버킷에 저장하는 api입니다.<br><br>매개변수:<br>- 파일, <br>- 멤버Id, <br>- projectId, <br>- audioType<br>오디오 타입이 VC_TRG일 경우 마지막 매개변수로 voiceId를 입력합니다.",
+        "operationId": "uploadFiles_1",
+        "parameters": [
+          {
+            "name": "memberId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          { "name": "audioType", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "voiceId", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["files"],
+                "type": "object",
+                "properties": {
+                  "files": { "type": "array", "items": { "type": "string", "format": "binary" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/concat/upload-generated-audio-to-bucket": {
+      "post": {
+        "tags": ["s-3-controller"],
+        "summary": "Concat 오디오 업로드",
+        "description": "컨캣 오디오를 S3 버킷에 저장하고 메타데이터를 DB에 저장하는 api입니다.<br><br>매개변수 : <br>- 프로젝트 id, <br>- 오디오 파일",
+        "operationId": "uploadConcat",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": { "file": { "type": "string", "format": "binary" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/concat/convert/batch": {
+      "post": {
+        "tags": ["concat-controller-_team-_api"],
+        "operationId": "convertMultipleAudios",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["sourceAudios"],
+                "type": "object",
+                "properties": {
+                  "sourceAudios": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "binary" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/{projectId}": {
+      "get": {
+        "tags": ["vc-view-controller-_team-_multi"],
+        "summary": "VC 상태 로드",
+        "description": "VC 프로젝트 상태를 가져옵니다.",
+        "operationId": "ttsLoad",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/{projectId}": {
+      "get": {
+        "tags": ["tts-view-controller-_team-_multi"],
+        "summary": "TTS 상태 로드",
+        "description": "TTS 프로젝트 상태를 가져옵니다.",
+        "operationId": "ttsLoad_1",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/converted/download": {
+      "get": {
+        "tags": ["tts-controller-_team-_api"],
+        "summary": "Download Converted WAV File",
+        "description": "변환된 WAV 파일을 다운로드합니다.\n\n매개변수:\n- path: 다운로드할 WAV 파일의 경로 (예: 'output/tts_output_123456.wav')",
+        "operationId": "downloadFile",
+        "parameters": [
+          { "name": "path", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "WAV 파일 다운로드 성공",
+            "content": { "*/*": { "schema": { "type": "string", "format": "binary" } } }
+          },
+          "404": {
+            "description": "파일을 찾을 수 없음",
+            "content": { "*/*": { "schema": { "type": "string", "format": "binary" } } }
+          }
+        }
+      }
+    },
+    "/test/success": {
+      "get": {
+        "tags": ["test-controller"],
+        "operationId": "testSuccess",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/test/fail": {
+      "get": {
+        "tags": ["test-controller"],
+        "operationId": "testFail",
+        "parameters": [
+          {
+            "name": "Do Would you like to throw an exception?",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/tts/download-generated-audio-from-bucket": {
+      "get": {
+        "tags": ["s-3-controller"],
+        "summary": "버킷에 있는 오디오 다운로드",
+        "description": "오디오를 S3 버킷으로부터 다운로드 받을수 있는 URL을 제공하는 API 입니다.<br><br>매개변수:<br>- 버킷 경로",
+        "operationId": "downloadGeneratedAudio",
+        "parameters": [
+          { "name": "bucketRoute", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/download-to-generate-audio-from-bucket": {
+      "get": {
+        "tags": ["s-3-controller"],
+        "summary": "버킷에 있는 오디오 다운로드",
+        "description": "오디오를 S3 버킷으로부터 다운로드 받을수 있는 URL을 제공하는 API 입니다.<br><br>매개변수:<br>- 버킷 경로",
+        "operationId": "downloadGeneratedAudio_1",
+        "parameters": [
+          { "name": "bucketRoute", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/vc/download-generated-audio-from-bucket": {
+      "get": {
+        "tags": ["s-3-controller"],
+        "summary": "버킷에 있는 오디오 다운로드",
+        "description": "오디오를 S3 버킷으로부터 다운로드 받을수 있는 URL을 제공하는 API 입니다.<br><br>매개변수:<br>- 버킷 경로",
+        "operationId": "downloadGeneratedAudio_2",
+        "parameters": [
+          { "name": "bucketRoute", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/concat/download-generated-audio-from-bucket": {
+      "get": {
+        "tags": ["s-3-controller"],
+        "summary": "버킷에 있는 오디오 다운로드",
+        "description": "오디오를 S3 버킷으로부터 다운로드 받을수 있는 URL을 제공하는 API 입니다.<br><br>매개변수:<br>- 버킷 경로",
+        "operationId": "downloadGeneratedAudio_3",
+        "parameters": [
+          { "name": "bucketRoute", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    },
+    "/concat/download-to-generate-audio-from-bucket": {
+      "get": {
+        "tags": ["s-3-controller"],
+        "summary": "버킷에 있는 오디오 다운로드",
+        "description": "오디오를 S3 버킷으로부터 다운로드 받을수 있는 URL을 제공하는 API 입니다.<br><br>매개변수:<br>- 버킷 경로",
+        "operationId": "downloadGeneratedAudio_4",
+        "parameters": [
+          { "name": "bucketRoute", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ResponseDto" } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VCSaveDto": {
+        "type": "object",
+        "properties": { "id": { "type": "integer", "format": "int64" } }
+      },
+      "ResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "code": { "type": "integer", "format": "int32" },
+          "message": { "type": "string" }
+        }
+      },
+      "TTSDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "unitScript": { "type": "string" },
+          "unitSpeed": { "type": "number", "format": "float" },
+          "unitPitch": { "type": "number", "format": "float" },
+          "unitVolume": { "type": "number", "format": "float" },
+          "isDeleted": { "type": "boolean" },
+          "unitSequence": { "type": "integer", "format": "int32" },
+          "voiceStyleId": { "type": "integer", "format": "int64" },
+          "projectId": { "type": "integer", "format": "int64" }
+        }
+      },
+      "TTSSaveDto": {
+        "type": "object",
+        "properties": {
+          "projectId": { "type": "integer", "format": "int64" },
+          "projectName": { "type": "string" },
+          "voiceStyleId": { "type": "integer", "format": "int64" },
+          "fullScript": { "type": "string" },
+          "globalSpeed": { "type": "number", "format": "float" },
+          "globalPitch": { "type": "number", "format": "float" },
+          "globalVolume": { "type": "number", "format": "float" },
+          "apiStatus": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "SUCCESS",
+              "FAILURE",
+              "PARTIAL_FAILURE",
+              "CANCELLED",
+              "NOT_STARTED"
+            ]
+          },
+          "ttsDetails": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TTSDetailDto" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/layouts/Layout';
 import NavbarLayout from '@/layouts/NavbarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import CONCATPage from '@/pages/CONCATPage';
+import CONCATPage from '@/pages/ConcatPage';
 import ErrorPage from '@/pages/ErrorPage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';

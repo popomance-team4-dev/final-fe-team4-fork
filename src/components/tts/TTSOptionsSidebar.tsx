@@ -9,6 +9,12 @@ import {
 } from '@/components/buttons/IconButton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
+import Ian from '@/images/avatar/Ian.jpg';
+import Jennie from '@/images/avatar/Jennie.png';
+import Jisu from '@/images/avatar/Jisu.jpg';
+import Lisa from '@/images/avatar/Lisa.jpg';
+import Rose from '@/images/avatar/Rose.jpg';
+import Ryan from '@/images/avatar/Ryan.jpg';
 
 type SelectItemType = {
   value: string;
@@ -22,7 +28,7 @@ const voiceOptions: SelectItemType[] = [
     label: '제니',
     icon: (
       <Avatar className="h-5 w-5">
-        <AvatarImage src="" alt="제니" />
+        <AvatarImage src={Jennie} alt="제니" />
         <AvatarFallback>제</AvatarFallback>
       </Avatar>
     ),
@@ -32,7 +38,7 @@ const voiceOptions: SelectItemType[] = [
     label: '리사',
     icon: (
       <Avatar className="h-5 w-5">
-        <AvatarImage src="" alt="리사" />
+        <AvatarImage src={Lisa} alt="리사" />
         <AvatarFallback>리</AvatarFallback>
       </Avatar>
     ),
@@ -42,7 +48,7 @@ const voiceOptions: SelectItemType[] = [
     label: '지수',
     icon: (
       <Avatar className="h-5 w-5">
-        <AvatarImage src="" alt="지수" />
+        <AvatarImage src={Jisu} alt="지수" />
         <AvatarFallback>지</AvatarFallback>
       </Avatar>
     ),
@@ -52,7 +58,7 @@ const voiceOptions: SelectItemType[] = [
     label: '로제',
     icon: (
       <Avatar className="h-5 w-5">
-        <AvatarImage src="" alt="로제" />
+        <AvatarImage src={Rose} alt="로제" />
         <AvatarFallback>로</AvatarFallback>
       </Avatar>
     ),
@@ -62,7 +68,7 @@ const voiceOptions: SelectItemType[] = [
     label: '라이언',
     icon: (
       <Avatar className="h-5 w-5">
-        <AvatarImage src="" alt="라이언" />
+        <AvatarImage src={Ryan} alt="라이언" />
         <AvatarFallback>라</AvatarFallback>
       </Avatar>
     ),
@@ -72,7 +78,7 @@ const voiceOptions: SelectItemType[] = [
     label: '이안',
     icon: (
       <Avatar className="h-5 w-5">
-        <AvatarImage src="" alt="이안" />
+        <AvatarImage src={Ian} alt="이안" />
         <AvatarFallback>이</AvatarFallback>
       </Avatar>
     ),

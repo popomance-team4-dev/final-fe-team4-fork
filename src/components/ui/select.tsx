@@ -60,6 +60,7 @@ const SelectTrigger = React.forwardRef<
       'px-3 py-2 text-sm',
       'focus:outline-none focus:ring-1 focus:ring-blue-500',
       'disabled:cursor-not-allowed disabled:opacity-50',
+      'group',
       className
     )}
     {...props}
@@ -69,7 +70,7 @@ const SelectTrigger = React.forwardRef<
       {children}
     </div>
     <SelectPrimitive.Icon asChild>
-      <TbChevronDown className="h-4 w-4" />
+      <TbChevronDown className="h-4 w-4 group-aria-expanded:rotate-180" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));

@@ -9,12 +9,12 @@ import {
 } from '@/components/buttons/IconButton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
-import Ian from '@/images/avatar/Ian.jpg';
-import Jennie from '@/images/avatar/Jennie.png';
-import Jisu from '@/images/avatar/Jisu.jpg';
-import Lisa from '@/images/avatar/Lisa.jpg';
-import Rose from '@/images/avatar/Rose.jpg';
-import Ryan from '@/images/avatar/Ryan.jpg';
+import Ian from '@/images/avatar/ian.jpg';
+import Jennie from '@/images/avatar/jennie.png';
+import Jisu from '@/images/avatar/jisu.jpg';
+import Lisa from '@/images/avatar/lisa.jpg';
+import Rose from '@/images/avatar/rose.jpg';
+import Ryan from '@/images/avatar/ryan.jpg';
 
 type SelectItemType = {
   value: string;

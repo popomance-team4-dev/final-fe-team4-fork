@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import TermsDialog from '@/components/forms/TermsDialog';
+import TermsAgreement from '@/components/terms/TermsAgreement';
+import TermsDialog from '@/components/terms/TermsDialog';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -193,144 +193,7 @@ const SignupForm = () => {
           )}
         />
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="all-terms"
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  form.setValue('terms', ['age', 'service', 'privacy']);
-                } else {
-                  form.setValue('terms', []);
-                }
-              }}
-              checked={form.watch('terms').length === 3}
-              className="h-[18px] w-[18px]"
-            />
-            <label htmlFor="all-terms" className="text-sm font-medium">
-              모두 동의
-            </label>
-          </div>
-
-          <FormField
-            control={form.control}
-            name="terms"
-            render={() => (
-              <FormItem>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <FormField
-                      control={form.control}
-                      name="terms"
-                      render={({ field }) => (
-                        <FormItem className="flex h-[18px] items-center">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes('age')}
-                              onCheckedChange={(checked) => {
-                                const currentTerms = field.value || [];
-                                if (checked) {
-                                  field.onChange([...currentTerms, 'age']);
-                                } else {
-                                  field.onChange(currentTerms.filter((value) => value !== 'age'));
-                                }
-                              }}
-                              className="h-[18px] w-[18px]"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <div className="flex items-center">
-                      <label className="text-sm font-medium">
-                        <span className="text-primary">(필수)</span> 만14세 이상
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <FormField
-                      control={form.control}
-                      name="terms"
-                      render={({ field }) => (
-                        <FormItem className="flex h-[18px] items-center">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes('service')}
-                              onCheckedChange={(checked) => {
-                                const currentTerms = field.value || [];
-                                if (checked) {
-                                  field.onChange([...currentTerms, 'service']);
-                                } else {
-                                  field.onChange(
-                                    currentTerms.filter((value) => value !== 'service')
-                                  );
-                                }
-                              }}
-                              className="h-[18px] w-[18px]"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <div className="flex items-center">
-                      <label className="text-sm font-medium">
-                        <span className="text-primary">(필수)</span> 이용약관 동의{' '}
-                        <button
-                          type="button"
-                          onClick={() => handleOpenTerms('service')}
-                          className="text-gray-400 hover:text-gray-600 ml-2"
-                        >
-                          보기
-                        </button>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <FormField
-                      control={form.control}
-                      name="terms"
-                      render={({ field }) => (
-                        <FormItem className="flex h-[18px] items-center">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes('privacy')}
-                              onCheckedChange={(checked) => {
-                                const currentTerms = field.value || [];
-                                if (checked) {
-                                  field.onChange([...currentTerms, 'privacy']);
-                                } else {
-                                  field.onChange(
-                                    currentTerms.filter((value) => value !== 'privacy')
-                                  );
-                                }
-                              }}
-                              className="h-[18px] w-[18px]"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <div className="flex items-center">
-                      <label className="text-sm font-medium">
-                        <span className="text-primary">(필수)</span> 개인정보 수집 · 이용 동의{' '}
-                        <button
-                          type="button"
-                          onClick={() => handleOpenTerms('privacy')}
-                          className="text-gray-400 hover:text-gray-600 ml-2"
-                        >
-                          보기
-                        </button>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <TermsAgreement control={form.control} onOpenTerms={handleOpenTerms} />
 
         <Button type="submit" className="my-8 w-full">
           회원 가입하기

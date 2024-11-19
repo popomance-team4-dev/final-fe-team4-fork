@@ -43,7 +43,7 @@ const SignupForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col px-[36px] space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col p-9 space-y-5">
         <div className="flex flex-col space-y-2">
           <FormLabel className="text-black font-medium">
             이메일 (아이디) <span className="text-red-500">*</span>
@@ -307,7 +307,7 @@ const SignupForm = () => {
           />
         </div>
 
-        <Button type="submit" className="mt-8 w-full">
+        <Button type="submit" className="my-8 w-full">
           회원 가입하기
         </Button>
       </form>

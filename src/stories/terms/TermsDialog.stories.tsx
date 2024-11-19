@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import TermsDialog from '@/components/terms/TermsDialog';
+import TermsDialog from '@/components/terms/TermDialog';
 
 const meta = {
   title: 'terms/TermsDialog',

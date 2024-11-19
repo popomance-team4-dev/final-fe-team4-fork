@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useForm } from 'react-hook-form';
 
-import TermsAgreement from '@/components/terms/TermsAgreement';
+import TermsAgreement from '@/components/terms/TermAgreement';
 import { Form } from '@/components/ui/form';
 import { SignupFormData } from '@/types/signup';
 

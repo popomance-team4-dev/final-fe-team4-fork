@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import TermsAgreement from '@/components/terms/TermsAgreement';
-import TermsDialog from '@/components/terms/TermsDialog';
+import TermsAgreement from '@/components/terms/TermAgreement';
+import TermsDialog from '@/components/terms/TermDialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
-import { TERMS } from '@/constants/terms';
+import { TERM } from '@/constants/term';
 import { SignupFormData } from '@/types/signup';
 import { signupFormSchema, transformFormToRequest } from '@/utils/signupSchema';
 
@@ -55,7 +55,7 @@ const SignupForm = () => {
     setTermsDialog({
       open: true,
       title: type === 'service' ? '이용약관' : '개인정보 처리방침',
-      content: type === 'service' ? TERMS.SERVICE : TERMS.PRIVACY,
+      content: type === 'service' ? TERM.SERVICE : TERM.PRIVACY,
     });
   };
 

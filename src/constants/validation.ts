@@ -16,6 +16,6 @@ export const SIGNUP_VALIDATION = {
 } as const;
 
 export const SIGNUP_VALIDATION_PATTERNS = {
-  PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/,
   PHONE: /^\d{3}-\d{4}-\d{4}$/,
 } as const;

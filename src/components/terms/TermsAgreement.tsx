@@ -4,22 +4,22 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { SignupFormData } from '@/types/signup';
 
-interface TermAgreementProps {
+interface TermsAgreementProps {
   control: Control<SignupFormData>;
-  onOpenTerm: (type: 'service' | 'privacy') => void;
+  onOpenTerms: (type: 'service' | 'privacy') => void;
 }
 
-const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
+const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <FormField
           control={control}
-          name="term"
+          name="terms"
           render={({ field }) => (
             <>
               <Checkbox
-                id="all-term"
+                id="all-terms"
                 onCheckedChange={(checked) => {
                   if (checked) {
                     field.onChange(['age', 'service', 'privacy']);
@@ -30,7 +30,7 @@ const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
                 checked={field.value?.length === 3}
                 className="h-[18px] w-[18px]"
               />
-              <label htmlFor="all-term" className="text-sm font-medium">
+              <label htmlFor="all-terms" className="text-sm font-medium">
                 모두 동의
               </label>
             </>
@@ -40,13 +40,13 @@ const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
 
       <FormField
         control={control}
-        name="term"
+        name="terms"
         render={({ field }) => (
           <FormItem>
             <div className="flex flex-col gap-2">
               {[
-                { id: 'age', label: '만14세 이상', showViewButton: false },
-                { id: 'service', label: '이용약관 동의', showViewButton: true },
+                { id: 'age', label: '만 14세 이상', showViewButton: false },
+                { id: 'service', label: '서비스 이용약관 동의', showViewButton: true },
                 { id: 'privacy', label: '개인정보 수집 · 이용 동의', showViewButton: true },
               ].map(({ id, label, showViewButton }) => (
                 <div key={id} className="flex items-center gap-2">
@@ -54,11 +54,11 @@ const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
                     <Checkbox
                       checked={field.value?.includes(id)}
                       onCheckedChange={(checked) => {
-                        const currentTerm = field.value || [];
+                        const currentTerms = field.value || [];
                         if (checked) {
-                          field.onChange([...currentTerm, id]);
+                          field.onChange([...currentTerms, id]);
                         } else {
-                          field.onChange(currentTerm.filter((value) => value !== id));
+                          field.onChange(currentTerms.filter((value) => value !== id));
                         }
                       }}
                       className="h-[18px] w-[18px]"
@@ -70,7 +70,7 @@ const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
                       {showViewButton && (
                         <button
                           type="button"
-                          onClick={() => onOpenTerm(id as 'service' | 'privacy')}
+                          onClick={() => onOpenTerms(id as 'service' | 'privacy')}
                           className="text-gray-400 hover:text-gray-600 ml-2"
                         >
                           보기
@@ -89,4 +89,4 @@ const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
   );
 };
 
-export default TermAgreement;
+export default TermsAgreement;

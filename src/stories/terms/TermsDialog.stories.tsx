@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import termDialog from '@/components/terms/TermDialog';
+import TermsDialog from '@/components/terms/TermsDialog';
 
 const meta = {
-  title: 'term/termDialog',
-  component: termDialog,
+  title: 'terms/TermsDialog',
+  component: TermsDialog,
   parameters: {
     docs: {
       description: {
@@ -15,7 +15,7 @@ const meta = {
 
 ## Import
 \`\`\`tsx
-import { termDialog } from '@/components/term/termDialog';
+import { termsDialog } from '@/components/terms/termsDialog';
 \`\`\`
 
 <br />
@@ -32,7 +32,7 @@ import { termDialog } from '@/components/term/termDialog';
 ## 사용 예시
 
 \`\`\`tsx
-<termDialog 
+<termsDialog 
   open={open}
   onOpenChange={setOpen}
   title="이용약관"
@@ -44,7 +44,7 @@ import { termDialog } from '@/components/term/termDialog';
     },
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof termDialog>;
+} satisfies Meta<typeof TermsDialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -64,6 +64,8 @@ export const Default: Story = {
 제3조 (약관의 효력과 변경)
 1. 이 약관은 서비스를 이용하고자 하는 모든 회원에 대하여 그 효력을 발생합니다.
 2. 회사는 약관의 규제에 관한 법률 등 관련법을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.`,
+    type: 'service',
+    onAgree: () => {},
   },
 };
 
@@ -87,6 +89,8 @@ export const LongContent: Story = {
 회사는 법령에 따른 개인정보 보유·이용기간 또는 정보주체로부터 개인정보를 수집 시에 동의받은 개인정보 보유·이용기간 내에서 개인정보를 처리·보유합니다.`
       )
       .join('\n'),
+    type: 'privacy',
+    onAgree: () => {},
   },
 };
 
@@ -96,5 +100,7 @@ export const Closed: Story = {
     onOpenChange: () => {},
     title: '이용약관',
     content: '약관 내용...',
+    type: 'service',
+    onAgree: () => {},
   },
 };

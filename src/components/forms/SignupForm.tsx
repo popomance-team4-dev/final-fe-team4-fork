@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import TermAgreement from '@/components/terms/TermAgreement';
-import TermDialog from '@/components/terms/TermDialog';
+import TermsAgreement from '@/components/terms/TermsAgreement';
+import TermsDialog from '@/components/terms/TermsDialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,9 +15,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
-import { TERM } from '@/constants/term';
+import { TERMS } from '@/constants/terms';
 import { SignupFormData } from '@/types/signup';
-import { signupFormSchema, transformFormToRequest } from '@/utils/signupSchema';
+import { SignupFormRequest, signupFormSchema } from '@/utils/signupSchema';
 
 const SignupForm = () => {
   const form = useForm<SignupFormData>({
@@ -30,18 +30,19 @@ const SignupForm = () => {
       gender: '',
       birth_date: '',
       phone: '',
-      term: [],
+      terms: [],
     },
   });
 
-  const [termDialog, setTermDialog] = useState({
+  const [termsDialog, setTermsDialog] = useState({
     open: false,
     title: '',
     content: '',
+    type: '' as 'service' | 'privacy',
   });
 
   const onSubmit = (data: SignupFormData) => {
-    const requestData = transformFormToRequest(data);
+    const requestData = SignupFormRequest(data);
     console.log(requestData);
   };
 
@@ -51,12 +52,20 @@ const SignupForm = () => {
     console.log('이메일 중복 체크:', email);
   };
 
-  const handleOpenTerm = (type: 'service' | 'privacy') => {
-    setTermDialog({
+  const handleOpenTerms = (type: 'service' | 'privacy') => {
+    setTermsDialog({
       open: true,
-      title: type === 'service' ? '이용약관' : '개인정보 처리방침',
-      content: type === 'service' ? TERM.SERVICE : TERM.PRIVACY,
+      title: type === 'service' ? '서비스 이용약관' : '개인정보 처리방침',
+      content: type === 'service' ? TERMS.SERVICE : TERMS.PRIVACY,
+      type,
     });
+  };
+
+  const handleAgreeTerms = (type: 'service' | 'privacy') => {
+    const currentTerms = form.getValues('terms') || [];
+    if (!currentTerms.includes(type)) {
+      form.setValue('terms', [...currentTerms, type]);
+    }
   };
 
   return (
@@ -194,17 +203,19 @@ const SignupForm = () => {
           )}
         />
 
-        <TermAgreement control={form.control} onOpenTerm={handleOpenTerm} />
+        <TermsAgreement control={form.control} onOpenTerms={handleOpenTerms} />
 
         <Button type="submit" className="my-8 w-full">
           회원 가입하기
         </Button>
 
-        <TermDialog
-          open={termDialog.open}
-          onOpenChange={(open) => setTermDialog((prev) => ({ ...prev, open }))}
-          title={termDialog.title}
-          content={termDialog.content}
+        <TermsDialog
+          open={termsDialog.open}
+          onOpenChange={(open) => setTermsDialog((prev) => ({ ...prev, open }))}
+          title={termsDialog.title}
+          content={termsDialog.content}
+          type={termsDialog.type}
+          onAgree={handleAgreeTerms}
         />
       </form>
     </Form>

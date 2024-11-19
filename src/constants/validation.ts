@@ -11,7 +11,7 @@ export const SIGNUP_VALIDATION = {
     PHONE: '올바른 전화번호 형식이 아닙니다.',
   },
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
-  TERM_REQUIRED: '필수 약관에 모두 동의해주세요.',
+  TERMS_REQUIRED: '필수 약관에 모두 동의해주세요.',
   PASSWORD_MAX_LENGTH: '비밀번호는 최대 50자까지 입력 가능합니다.',
 } as const;
 

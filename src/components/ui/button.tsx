@@ -27,7 +27,7 @@ const buttonVariants = cva(
       size: {
         default: 'h-14 w-[360px] flex-shrink-0 rounded-lg text-[18px] font-semibold',
         sm: 'h-9 rounded-md px-3',
-        mid: 'w-[196px] px-[19px] py-3 gap-2.5 rounded-lg text-[16px] font-semibold',
+        md: 'w-[196px] px-[19px] py-3 gap-2.5 rounded-lg text-[16px] font-semibold',
         lg: 'h-11 rounded-md px-8',
         icon: 'w-14 h-14 group-[.expanded]/navbar:w-[196px] group-[.expanded]/navbar:px-[19px] flex-shrink-0 rounded-lg text-[16px] font-semibold',
       },

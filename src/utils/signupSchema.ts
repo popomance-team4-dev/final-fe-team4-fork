@@ -30,8 +30,8 @@ export const signupFormSchema = z
       .min(1, { message: SIGNUP_VALIDATION.REQUIRED.PHONE })
       .regex(SIGNUP_VALIDATION_PATTERNS.PHONE, { message: SIGNUP_VALIDATION.INVALID.PHONE }),
 
-    term: z.array(z.string()).refine((value) => value.length >= 3, {
-      message: SIGNUP_VALIDATION.TERM_REQUIRED,
+    terms: z.array(z.string()).refine((value) => value.length >= 3, {
+      message: SIGNUP_VALIDATION.TERMS_REQUIRED,
     }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
@@ -40,7 +40,7 @@ export const signupFormSchema = z
   });
 
 // 폼 데이터를 API 요청 형식으로 변환
-export const transformFormToRequest = (formData: SignupFormData): SignupRequest => {
+export const SignupFormRequest = (formData: SignupFormData): SignupRequest => {
   return {
     email: formData.email,
     pwd: formData.password,
@@ -48,7 +48,7 @@ export const transformFormToRequest = (formData: SignupFormData): SignupRequest 
     gender: formData.gender || null,
     birth_date: formData.birth_date,
     phone_number: formData.phone,
-    tou: formData.term.length === 3 ? 'Y' : 'N',
+    tou: formData.terms.length === 3 ? 'Y' : 'N',
     is_deleted: false,
   };
 };

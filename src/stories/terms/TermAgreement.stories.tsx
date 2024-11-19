@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useForm } from 'react-hook-form';
 
-import TermsAgreement from '@/components/terms/TermAgreement';
+import termAgreement from '@/components/terms/TermAgreement';
 import { Form } from '@/components/ui/form';
 import { SignupFormData } from '@/types/signup';
 
 const meta = {
-  title: 'terms/TermsAgreement',
-  component: TermsAgreement,
+  title: 'term/termAgreement',
+  component: termAgreement,
   parameters: {
     layout: 'centered',
   },
@@ -23,7 +23,7 @@ const meta = {
           gender: '',
           birth_date: '',
           phone: '',
-          terms: [],
+          term: [],
         },
       });
 
@@ -34,21 +34,21 @@ const meta = {
       );
     },
   ],
-} satisfies Meta<typeof TermsAgreement>;
+} satisfies Meta<typeof termAgreement>;
 
 export default meta;
 
-type Story = StoryObj<typeof TermsAgreement>;
+type Story = StoryObj<typeof termAgreement>;
 
 export const Default: Story = {
   args: {
-    onOpenTerms: (type) => {
-      console.log(`Opening ${type} terms`);
+    onOpenTerm: (type) => {
+      console.log(`Opening ${type} term`);
     },
   },
 };
 
-export const WithPreselectedTerms: Story = {
+export const WithPreselectedterm: Story = {
   decorators: [
     (Story) => {
       const form = useForm<SignupFormData>({
@@ -60,7 +60,7 @@ export const WithPreselectedTerms: Story = {
           gender: '',
           birth_date: '',
           phone: '',
-          terms: ['age', 'service'],
+          term: ['age', 'service'],
         },
       });
 
@@ -72,13 +72,13 @@ export const WithPreselectedTerms: Story = {
     },
   ],
   args: {
-    onOpenTerms: (type) => {
-      console.log(`Opening ${type} terms`);
+    onOpenTerm: (type) => {
+      console.log(`Opening ${type} term`);
     },
   },
 };
 
-export const WithAllTermsSelected: Story = {
+export const WithAlltermSelected: Story = {
   decorators: [
     (Story) => {
       const form = useForm<SignupFormData>({
@@ -90,7 +90,7 @@ export const WithAllTermsSelected: Story = {
           gender: '',
           birth_date: '',
           phone: '',
-          terms: ['age', 'service', 'privacy'],
+          term: ['age', 'service', 'privacy'],
         },
       });
 
@@ -102,16 +102,16 @@ export const WithAllTermsSelected: Story = {
     },
   ],
   args: {
-    onOpenTerms: (type) => {
-      console.log(`Opening ${type} terms`);
+    onOpenTerm: (type) => {
+      console.log(`Opening ${type} term`);
     },
   },
 };
 
 export const Interactive: Story = {
   args: {
-    onOpenTerms: (type) => {
-      alert(`Opening ${type} terms and conditions dialog`);
+    onOpenTerm: (type) => {
+      alert(`Opening ${type} term and conditions dialog`);
     },
   },
   parameters: {

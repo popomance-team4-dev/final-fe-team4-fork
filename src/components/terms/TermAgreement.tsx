@@ -4,22 +4,22 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { SignupFormData } from '@/types/signup';
 
-interface TermsAgreementProps {
+interface TermAgreementProps {
   control: Control<SignupFormData>;
-  onOpenTerms: (type: 'service' | 'privacy') => void;
+  onOpenTerm: (type: 'service' | 'privacy') => void;
 }
 
-const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
+const TermAgreement = ({ control, onOpenTerm }: TermAgreementProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <FormField
           control={control}
-          name="terms"
+          name="term"
           render={({ field }) => (
             <>
               <Checkbox
-                id="all-terms"
+                id="all-term"
                 onCheckedChange={(checked) => {
                   if (checked) {
                     field.onChange(['age', 'service', 'privacy']);
@@ -30,7 +30,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                 checked={field.value?.length === 3}
                 className="h-[18px] w-[18px]"
               />
-              <label htmlFor="all-terms" className="text-sm font-medium">
+              <label htmlFor="all-term" className="text-sm font-medium">
                 모두 동의
               </label>
             </>
@@ -40,7 +40,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
 
       <FormField
         control={control}
-        name="terms"
+        name="term"
         render={({ field }) => (
           <FormItem>
             <div className="flex flex-col gap-2">
@@ -54,11 +54,11 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                     <Checkbox
                       checked={field.value?.includes(id)}
                       onCheckedChange={(checked) => {
-                        const currentTerms = field.value || [];
+                        const currentTerm = field.value || [];
                         if (checked) {
-                          field.onChange([...currentTerms, id]);
+                          field.onChange([...currentTerm, id]);
                         } else {
-                          field.onChange(currentTerms.filter((value) => value !== id));
+                          field.onChange(currentTerm.filter((value) => value !== id));
                         }
                       }}
                       className="h-[18px] w-[18px]"
@@ -70,7 +70,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                       {showViewButton && (
                         <button
                           type="button"
-                          onClick={() => onOpenTerms(id as 'service' | 'privacy')}
+                          onClick={() => onOpenTerm(id as 'service' | 'privacy')}
                           className="text-gray-400 hover:text-gray-600 ml-2"
                         >
                           보기
@@ -89,4 +89,4 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
   );
 };
 
-export default TermsAgreement;
+export default TermAgreement;

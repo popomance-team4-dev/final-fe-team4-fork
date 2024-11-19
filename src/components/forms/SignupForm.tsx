@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import TermsAgreement from '@/components/terms/TermAgreement';
-import TermsDialog from '@/components/terms/TermDialog';
+import TermAgreement from '@/components/terms/TermAgreement';
+import TermDialog from '@/components/terms/TermDialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -30,11 +30,11 @@ const SignupForm = () => {
       gender: '',
       birth_date: '',
       phone: '',
-      terms: [],
+      term: [],
     },
   });
 
-  const [termsDialog, setTermsDialog] = useState({
+  const [termDialog, setTermDialog] = useState({
     open: false,
     title: '',
     content: '',
@@ -51,8 +51,8 @@ const SignupForm = () => {
     console.log('이메일 중복 체크:', email);
   };
 
-  const handleOpenTerms = (type: 'service' | 'privacy') => {
-    setTermsDialog({
+  const handleOpenTerm = (type: 'service' | 'privacy') => {
+    setTermDialog({
       open: true,
       title: type === 'service' ? '이용약관' : '개인정보 처리방침',
       content: type === 'service' ? TERM.SERVICE : TERM.PRIVACY,
@@ -194,17 +194,17 @@ const SignupForm = () => {
           )}
         />
 
-        <TermsAgreement control={form.control} onOpenTerms={handleOpenTerms} />
+        <TermAgreement control={form.control} onOpenTerm={handleOpenTerm} />
 
         <Button type="submit" className="my-8 w-full">
           회원 가입하기
         </Button>
 
-        <TermsDialog
-          open={termsDialog.open}
-          onOpenChange={(open) => setTermsDialog((prev) => ({ ...prev, open }))}
-          title={termsDialog.title}
-          content={termsDialog.content}
+        <TermDialog
+          open={termDialog.open}
+          onOpenChange={(open) => setTermDialog((prev) => ({ ...prev, open }))}
+          title={termDialog.title}
+          content={termDialog.content}
         />
       </form>
     </Form>

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import TermsDialog from '@/components/terms/TermDialog';
+import termDialog from '@/components/terms/TermDialog';
 
 const meta = {
-  title: 'terms/TermsDialog',
-  component: TermsDialog,
+  title: 'term/termDialog',
+  component: termDialog,
   parameters: {
     docs: {
       description: {
@@ -15,7 +15,7 @@ const meta = {
 
 ## Import
 \`\`\`tsx
-import { TermsDialog } from '@/components/terms/TermsDialog';
+import { termDialog } from '@/components/term/termDialog';
 \`\`\`
 
 <br />
@@ -32,7 +32,7 @@ import { TermsDialog } from '@/components/terms/TermsDialog';
 ## 사용 예시
 
 \`\`\`tsx
-<TermsDialog 
+<termDialog 
   open={open}
   onOpenChange={setOpen}
   title="이용약관"
@@ -44,7 +44,7 @@ import { TermsDialog } from '@/components/terms/TermsDialog';
     },
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof TermsDialog>;
+} satisfies Meta<typeof termDialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

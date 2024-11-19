@@ -1,14 +1,14 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-interface TermsDialogProps {
+interface TermDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   content: string;
 }
 
-const TermsDialog = ({ open, onOpenChange, title, content }: TermsDialogProps) => {
+const TermDialog = ({ open, onOpenChange, title, content }: TermDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[800px] max-h-[80vh]">
@@ -23,4 +23,4 @@ const TermsDialog = ({ open, onOpenChange, title, content }: TermsDialogProps) =
   );
 };
 
-export default TermsDialog;
+export default TermDialog;

@@ -30,8 +30,8 @@ export const signupFormSchema = z
       .min(1, { message: SIGNUP_VALIDATION.REQUIRED.PHONE })
       .regex(SIGNUP_VALIDATION_PATTERNS.PHONE, { message: SIGNUP_VALIDATION.INVALID.PHONE }),
 
-    terms: z.array(z.string()).refine((value) => value.length >= 3, {
-      message: SIGNUP_VALIDATION.TERMS_REQUIRED,
+    term: z.array(z.string()).refine((value) => value.length >= 3, {
+      message: SIGNUP_VALIDATION.TERM_REQUIRED,
     }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
@@ -48,7 +48,7 @@ export const transformFormToRequest = (formData: SignupFormData): SignupRequest 
     gender: formData.gender || null,
     birth_date: formData.birth_date,
     phone_number: formData.phone,
-    tou: formData.terms.length === 3 ? 'Y' : 'N',
+    tou: formData.term.length === 3 ? 'Y' : 'N',
     is_deleted: false,
   };
 };

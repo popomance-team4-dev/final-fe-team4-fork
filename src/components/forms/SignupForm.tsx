@@ -12,14 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select } from '@/components/ui/select';
 import { SignupFormData } from '@/types/signup';
 import { signupFormSchema, transformFormToRequest } from '@/utils/signupSchema';
 
@@ -72,7 +65,7 @@ const SignupForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="button" onClick={handleEmailCheck} className="w-[100px] h-[50px]">
+            <Button type="button" onClick={handleEmailCheck} className="w-[100px] h-[50px] text-md">
               중복 확인
             </Button>
           </div>
@@ -147,19 +140,16 @@ const SignupForm = () => {
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel className="text-black font-medium">성별</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="h-[50px]">
-                      <SelectValue placeholder="성별" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="male">남성</SelectItem>
-                      <SelectItem value="female">여성</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  placeholder="선택"
+                  className="h-[50px]"
+                  items={[
+                    { value: 'male', label: '남성' },
+                    { value: 'female', label: '여성' },
+                  ]}
+                />
                 <FormMessage />
               </FormItem>
             )}

@@ -1,10 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import Layout from '@/components/layouts/Layout';
-import NavbarLayout from '@/components/layouts/NavbarLayout';
+import Layout from '@/layouts/Layout';
+import NavbarLayout from '@/layouts/NavbarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import ConcatPage from '@/pages/ConcatPage';
-import LoginPage from '@/pages/LoginPage';
+import CONCATPage from '@/pages/ConcatPage';
+import ErrorPage from '@/pages/ErrorPage';
+import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
 import VCPage from '@/pages/VCPage';
@@ -12,24 +13,27 @@ import WorkspacePage from '@/pages/WorkspacePage';
 
 const PATH = {
   HOME: '/',
-  LOGIN: '/login',
+  SIGNIN: '/signin',
   SIGNUP: '/signup',
   WORKSPACE: '/workspace',
   ACCOUNT_RECOVERY: '/account-recovery',
   TTS: '/tts',
   CONCAT: '/concat',
   VC: '/vc',
+  EXAMPLE: '/example',
+  ERROR: '/error',
 } as const;
 
 const router = createBrowserRouter([
-  // 네비바X, 로그인, 회원가입, 비밀번호 찾기 라우트
   {
     path: '/',
     element: <Layout />,
+    // 모든 라우트에 대한 에러 처리
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: PATH.LOGIN,
-        element: <LoginPage />,
+        path: PATH.SIGNIN,
+        element: <SigninPage />,
       },
       {
         path: PATH.SIGNUP,
@@ -38,6 +42,11 @@ const router = createBrowserRouter([
       {
         path: PATH.ACCOUNT_RECOVERY,
         element: <AccountRecoveryPage />,
+      },
+      // 특정 에러 페이지 경로
+      {
+        path: PATH.ERROR,
+        element: <ErrorPage />,
       },
       // 네비바o, TTS, Concat, VC 라우트
       {
@@ -54,13 +63,18 @@ const router = createBrowserRouter([
           },
           {
             path: PATH.CONCAT,
-            element: <ConcatPage />,
+            element: <CONCATPage />,
           },
           {
             path: PATH.VC,
             element: <VCPage />,
           },
         ],
+      },
+      // 와일드카드 404 에러 페이지
+      {
+        path: '*',
+        element: <ErrorPage />,
       },
     ],
   },

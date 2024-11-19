@@ -50,10 +50,7 @@ const SignupForm = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col px-[36px] space-y-5 border-none outline-none"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col px-[36px] space-y-5">
         <div className="flex flex-col space-y-2">
           <FormLabel className="text-black font-medium">
             이메일 (아이디) <span className="text-red-500">*</span>
@@ -65,7 +62,11 @@ const SignupForm = () => {
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormControl>
-                    <Input placeholder="aipark@aipark.ai" className="h-[50px]" {...field} />
+                    <Input
+                      placeholder="aipark@aipark.ai"
+                      className="h-[50px] placeholder:text-gray-100"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,8 +89,8 @@ const SignupForm = () => {
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="8-50자의 비밀번호를 입력해 주세요"
-                  className="h-[50px]"
+                  placeholder="8-50자의 비밀번호를 입력해 주세요."
+                  className="h-[50px] placeholder:text-gray-100"
                   {...field}
                 />
               </FormControl>
@@ -109,8 +110,8 @@ const SignupForm = () => {
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="비밀번호를 다시 입력해 주세요"
-                  className="h-[50px]"
+                  placeholder="비밀번호를 다시 입력해 주세요."
+                  className="h-[50px] placeholder:text-gray-100"
                   {...field}
                 />
               </FormControl>
@@ -129,7 +130,11 @@ const SignupForm = () => {
                   이름 <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="홍길동" className="h-[50px]" {...field} />
+                  <Input
+                    placeholder="이름을 입력해주세요."
+                    className="h-[50px] placeholder:text-gray-100"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +175,11 @@ const SignupForm = () => {
                 전화번호 <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="010-0000-0000" className="h-[50px]" {...field} />
+                <Input
+                  placeholder="010-0000-0000"
+                  className="h-[50px] placeholder:text-gray-100"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

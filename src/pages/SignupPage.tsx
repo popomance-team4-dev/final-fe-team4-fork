@@ -16,10 +16,10 @@ const SignupPage = () => {
         />
         <div className="w-1/2" />
         <div className="relative z-10 w-1/2 h-full bg-white overflow-y-auto">
-          <div className="mt-[88px] mb-[40px] ml-[156px] flex flex-col">
+          <div className="mt-[88px] mb-[36px] ml-[156px] flex flex-col">
             <h2 className="text-[24px] font-bold leading-9">회원가입</h2>
             <div className="mt-2">
-              <span className="text-sm text-gray-600">이미 계정이 있으신가요? </span>
+              <span className="text-sm text-gray-900">이미 계정이 있으신가요? </span>
               <button
                 type="button"
                 className="text-sm text-primary font-medium hover:text-blue-700"

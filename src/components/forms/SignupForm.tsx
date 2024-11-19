@@ -47,6 +47,7 @@ const SignupForm = () => {
 
   const handleEmailCheck = () => {
     const email = form.getValues('email');
+    // api 준비되면 실제 이메일 중복 체크 구현
     console.log('이메일 중복 체크:', email);
   };
 

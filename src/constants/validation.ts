@@ -12,6 +12,7 @@ export const SIGNUP_VALIDATION = {
   },
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   TERMS_REQUIRED: '필수 약관에 모두 동의해주세요.',
+  PASSWORD_MAX_LENGTH: '비밀번호는 최대 50자까지 입력 가능합니다.',
 } as const;
 
 export const SIGNUP_VALIDATION_PATTERNS = {

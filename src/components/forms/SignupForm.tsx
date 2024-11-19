@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import TermsDialog from '@/components/forms/TermsDialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -13,6 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { TERMS } from '@/constants/terms';
 import { SignupFormData } from '@/types/signup';
 import { signupFormSchema, transformFormToRequest } from '@/utils/signupSchema';
 
@@ -31,6 +34,12 @@ const SignupForm = () => {
     },
   });
 
+  const [termsDialog, setTermsDialog] = useState({
+    open: false,
+    title: '',
+    content: '',
+  });
+
   const onSubmit = (data: SignupFormData) => {
     const requestData = transformFormToRequest(data);
     console.log(requestData);
@@ -39,6 +48,14 @@ const SignupForm = () => {
   const handleEmailCheck = () => {
     const email = form.getValues('email');
     console.log('이메일 중복 체크:', email);
+  };
+
+  const handleOpenTerms = (type: 'service' | 'privacy') => {
+    setTermsDialog({
+      open: true,
+      title: type === 'service' ? '이용약관' : '개인정보 처리방침',
+      content: type === 'service' ? TERMS.SERVICE : TERMS.PRIVACY,
+    });
   };
 
   return (
@@ -259,7 +276,11 @@ const SignupForm = () => {
                     <div className="flex items-center">
                       <label className="text-sm font-medium">
                         <span className="text-primary">(필수)</span> 이용약관 동의{' '}
-                        <button type="button" className="text-gray-400 hover:text-gray-600 ml-2">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenTerms('service')}
+                          className="text-gray-400 hover:text-gray-600 ml-2"
+                        >
                           보기
                         </button>
                       </label>
@@ -294,7 +315,11 @@ const SignupForm = () => {
                     <div className="flex items-center">
                       <label className="text-sm font-medium">
                         <span className="text-primary">(필수)</span> 개인정보 수집 · 이용 동의{' '}
-                        <button type="button" className="text-gray-400 hover:text-gray-600 ml-2">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenTerms('privacy')}
+                          className="text-gray-400 hover:text-gray-600 ml-2"
+                        >
                           보기
                         </button>
                       </label>
@@ -310,6 +335,13 @@ const SignupForm = () => {
         <Button type="submit" className="my-8 w-full">
           회원 가입하기
         </Button>
+
+        <TermsDialog
+          open={termsDialog.open}
+          onOpenChange={(open) => setTermsDialog((prev) => ({ ...prev, open }))}
+          title={termsDialog.title}
+          content={termsDialog.content}
+        />
       </form>
     </Form>
   );

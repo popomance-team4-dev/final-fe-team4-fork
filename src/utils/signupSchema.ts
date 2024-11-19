@@ -14,6 +14,7 @@ export const signupFormSchema = z
     password: z
       .string()
       .min(8, { message: SIGNUP_VALIDATION.REQUIRED.PASSWORD })
+      .max(50, { message: SIGNUP_VALIDATION.PASSWORD_MAX_LENGTH })
       .regex(SIGNUP_VALIDATION_PATTERNS.PASSWORD, { message: SIGNUP_VALIDATION.INVALID.PASSWORD }),
 
     passwordConfirm: z.string().min(1, { message: SIGNUP_VALIDATION.REQUIRED.PASSWORD }),

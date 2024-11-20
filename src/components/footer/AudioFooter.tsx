@@ -16,8 +16,8 @@ interface AudioFooterProps {
 const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
   ({ audioUrl, className }, ref) => {
     return (
-      <div ref={ref} className={cn('flex items-center h-[92px] pl-4 gap-3 bg-white', className)}>
-        <Badge variant="default" className="flex items-center gap-4">
+      <div ref={ref} className={cn('flex items-center h-[92px] gap-4 bg-white', className)}>
+        <Badge variant="default" className="flex-shrink-0 flex items-center gap-4">
           <Avatar className="h-7 w-7 border border-gray-200">
             <AvatarImage src={Jennie} alt="제니" />
             <AvatarFallback>제</AvatarFallback>
@@ -25,20 +25,23 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
           <span className="text-[14px]">KR</span>
         </Badge>
 
-        <Badge variant="default" className="text-[14px] mr-4 py-1.5 ">
+        <Badge variant="default" className="flex-shrink-0 text-[14px] py-1.5">
           명랑한 · 재미있음
         </Badge>
 
-        <Separator orientation="vertical" className="h-[52px] mr-4" />
+        <Separator orientation="vertical" className="flex-shrink-0 h-[56px]" />
 
-        <div className="flex-1">
-          <AudioPlayer audioUrl={audioUrl} className="bg-transparent w-[900px] px-0 py-0" />
+        <div className="flex-1 min-w-0">
+          <AudioPlayer
+            audioUrl={audioUrl}
+            className="bg-transparent w-full max-w-[976px] px-0 py-0"
+          />
         </div>
 
-        <Separator orientation="vertical" className="h-[52px] mr-4" />
+        <Separator orientation="vertical" className="flex-shrink-0 h-[56px] mr-4" />
 
         <button
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-full transition-colors"
           aria-label="History"
         >
           <TbHistory className="w-7 h-7 text-black" />

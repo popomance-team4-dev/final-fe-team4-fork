@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
+import AudioFooter from '@/components/footer/AudioFooter';
 import TTSDropdown, { TTSFile } from '@/components/tts/TTSDropdown';
 import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
@@ -187,7 +187,7 @@ const TTSPage = () => {
 
       {/* Playback */}
       <section className="h-[92px] px-6">
-        <AudioPlayer audioUrl={''} />
+        <AudioFooter audioUrl="/sample.mp3" />
       </section>
     </div>
   );

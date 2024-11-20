@@ -4,6 +4,8 @@ import { TbHistory } from 'react-icons/tb';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import Jennie from '@/images/avatar/jennie.png';
 import { cn } from '@/lib/utils';
 
 interface AudioFooterProps {
@@ -14,29 +16,32 @@ interface AudioFooterProps {
 const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
   ({ audioUrl, className }, ref) => {
     return (
-      <div ref={ref} className={cn('h-[80px] flex items-center gap-4 p-4 bg-white', className)}>
-        {/* Left Section */}
-        <div className="flex items-center gap-3">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="profile.jpg" alt="KR" />
-            <AvatarFallback>KR</AvatarFallback>
+      <div ref={ref} className={cn('flex items-center h-[92px] pl-4 gap-3 bg-white', className)}>
+        <Badge variant="default" className="flex items-center gap-4">
+          <Avatar className="h-7 w-7 border border-gray-200">
+            <AvatarImage src={Jennie} alt="제니" />
+            <AvatarFallback>제</AvatarFallback>
           </Avatar>
+          <span className="text-[14px]">KR</span>
+        </Badge>
 
-          <Badge variant="sound" className="text-[11px] bg-purple-50 text-purple-900">
-            KR
-          </Badge>
+        <Badge variant="default" className="text-[14px] mr-4 py-1.5 ">
+          명랑한 · 재미있음
+        </Badge>
 
-          <span className="text-sm text-gray-900">명랑한 · 재미있음</span>
-        </div>
+        <Separator orientation="vertical" className="h-[52px] mr-4" />
 
-        {/* AudioPlayer Section */}
         <div className="flex-1">
-          <AudioPlayer audioUrl={audioUrl} className="bg-transparent px-0 py-0" />
+          <AudioPlayer audioUrl={audioUrl} className="bg-transparent w-[900px] px-0 py-0" />
         </div>
 
-        {/* History Button */}
-        <button className="p-2 hover:bg-gray-100 rounded-full">
-          <TbHistory className="w-5 h-5 text-gray-600" />
+        <Separator orientation="vertical" className="h-[52px] mr-4" />
+
+        <button
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label="History"
+        >
+          <TbHistory className="w-7 h-7 text-black" />
         </button>
       </div>
     );

@@ -64,12 +64,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 \`\`\`tsx
 // 기본 체크박스
-<Checkbox id="terms" />
+<Checkbox id="term" />
 
 // 라벨과 함께 사용
 <div className="flex items-center space-x-2">
-  <Checkbox id="terms" />
-  <label htmlFor="terms">이용약관에 동의합니다</label>
+  <Checkbox id="term" />
+  <label htmlFor="term">이용약관에 동의합니다</label>
 </div>
 
 // 기본 체크된 상태
@@ -94,8 +94,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <div className="flex items-center space-x-2">
-      <Checkbox id="terms" />
-      <label htmlFor="terms" className="text-sm font-medium leading-none">
+      <Checkbox id="term" />
+      <label htmlFor="term" className="text-sm font-medium leading-none">
         이용약관에 동의합니다
       </label>
     </div>
@@ -142,20 +142,20 @@ export const WithForm: Story = {
   render: () => (
     <div className="grid gap-4">
       <div className="flex items-center space-x-2">
-        <Checkbox id="terms1" />
-        <label htmlFor="terms1" className="text-sm font-medium leading-none">
+        <Checkbox id="term1" />
+        <label htmlFor="term1" className="text-sm font-medium leading-none">
           이용약관에 동의합니다 (필수)
         </label>
       </div>
       <div className="flex items-center space-x-2">
-        <Checkbox id="terms2" />
-        <label htmlFor="terms2" className="text-sm font-medium leading-none">
+        <Checkbox id="term2" />
+        <label htmlFor="term2" className="text-sm font-medium leading-none">
           개인정보 수집 및 이용에 동의합니다 (필수)
         </label>
       </div>
       <div className="flex items-center space-x-2">
-        <Checkbox id="terms3" />
-        <label htmlFor="terms3" className="text-sm font-medium leading-none">
+        <Checkbox id="term3" />
+        <label htmlFor="term3" className="text-sm font-medium leading-none">
           마케팅 정보 수신에 동의합니다 (선택)
         </label>
       </div>

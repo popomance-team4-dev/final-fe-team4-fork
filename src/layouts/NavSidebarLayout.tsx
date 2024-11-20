@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 
-import { NavSidebar } from '@/components/nav/NavSidebar';
+import { NavSidebar } from '@/components/sidebar/NavSidebar';
 
-const NavbarLayout = () => {
+const NavSidebarLayout = () => {
   return (
     <div className="flex justify-center bg-white min-h-screen">
       <div className="flex w-full max-w-[1440px]">
@@ -17,4 +17,4 @@ const NavbarLayout = () => {
   );
 };
 
-export default NavbarLayout;
+export default NavSidebarLayout;

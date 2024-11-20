@@ -6,7 +6,7 @@ import { SignupFormData } from '@/types/signup';
 
 interface TermsAgreementProps {
   control: Control<SignupFormData>;
-  onOpenTerms: (type: 'service' | 'privacy') => void;
+  onOpenTerms: (type: 'service' | 'privacy', isAll?: boolean) => void;
 }
 
 type TermField = ControllerRenderProps<SignupFormData, 'terms'>;
@@ -15,27 +15,23 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
   const handleAllTermsChange = (checked: boolean, field: TermField) => {
     if (checked) {
       field.onChange(['age']);
-      onOpenTerms('service');
+      onOpenTerms('service', true);
     } else {
       field.onChange([]);
     }
   };
 
   const handleTermChange = (checked: boolean, id: string, field: TermField) => {
-    const currentTerms = field.value || [];
-
     if (checked) {
-      field.onChange([...currentTerms, id]);
+      if (id === 'age') {
+        const currentTerms = field.value || [];
+        field.onChange([...currentTerms, id]);
+      } else if (id === 'service' || id === 'privacy') {
+        onOpenTerms(id, false);
+      }
     } else {
+      const currentTerms = field.value || [];
       field.onChange(currentTerms.filter((value: string) => value !== id));
-    }
-  };
-
-  const handleViewTerms = (id: 'service' | 'privacy', field: TermField) => {
-    onOpenTerms(id);
-    const currentTerms = field.value || [];
-    if (!currentTerms.includes(id)) {
-      field.onChange([...currentTerms, id]);
     }
   };
 
@@ -67,10 +63,10 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
           <FormItem>
             <div className="flex flex-col gap-2">
               {[
-                { id: 'age', label: '만 14세 이상', showViewButton: false },
-                { id: 'service', label: '서비스 이용약관 동의', showViewButton: true },
-                { id: 'privacy', label: '개인정보 수집 · 이용 동의', showViewButton: true },
-              ].map(({ id, label, showViewButton }) => (
+                { id: 'age', label: '만 14세 이상' },
+                { id: 'service', label: '서비스 이용약관 동의' },
+                { id: 'privacy', label: '개인정보 수집 · 이용 동의' },
+              ].map(({ id, label }) => (
                 <div key={id} className="flex items-center gap-2">
                   <FormItem className="flex h-[18px] items-center">
                     <Checkbox
@@ -79,19 +75,19 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                       className="h-[18px] w-[18px]"
                     />
                   </FormItem>
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-between flex-1">
                     <label className="text-sm font-medium">
                       <span className="text-primary">(필수)</span> {label}
-                      {showViewButton && (
-                        <button
-                          type="button"
-                          onClick={() => handleViewTerms(id as 'service' | 'privacy', field)}
-                          className="text-gray-400 hover:text-gray-600 ml-2"
-                        >
-                          보기
-                        </button>
-                      )}
                     </label>
+                    {id !== 'age' && (
+                      <button
+                        type="button"
+                        onClick={() => onOpenTerms(id as 'service' | 'privacy')}
+                        className="text-sm text-gray-500 hover:text-gray-700"
+                      >
+                        보기
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}

@@ -41,6 +41,8 @@ const SignupForm = () => {
     type: '' as 'service' | 'privacy',
   });
 
+  const [isAllTermsFlow, setIsAllTermsFlow] = useState(false);
+
   const onSubmit = (data: SignupFormData) => {
     const requestData = SignupFormRequest(data);
     console.log(requestData);
@@ -52,7 +54,8 @@ const SignupForm = () => {
     console.log('이메일 중복 체크:', email);
   };
 
-  const handleOpenTerms = (type: 'service' | 'privacy') => {
+  const handleOpenTerms = (type: 'service' | 'privacy', isAll: boolean = false) => {
+    setIsAllTermsFlow(isAll);
     setTermsDialog({
       open: true,
       title: type === 'service' ? '서비스 이용약관' : '개인정보 처리방침',
@@ -64,18 +67,14 @@ const SignupForm = () => {
   const handleAgreeTerms = (type: 'service' | 'privacy') => {
     const currentTerms = form.getValues('terms') || [];
 
-    if (currentTerms.length === 1 && currentTerms.includes('age') && type === 'service') {
-      form.setValue('terms', [...currentTerms, type]);
+    if (!currentTerms.includes(type)) {
+      form.setValue('terms', [...currentTerms, type], { shouldValidate: true });
+    }
+
+    if (isAllTermsFlow && type === 'service') {
       setTimeout(() => {
-        handleOpenTerms('privacy');
+        handleOpenTerms('privacy', true);
       }, 100);
-    } else if (
-      currentTerms.length === 2 &&
-      currentTerms.includes('age') &&
-      currentTerms.includes('service') &&
-      type === 'privacy'
-    ) {
-      form.setValue('terms', [...currentTerms, type]);
     }
   };
 

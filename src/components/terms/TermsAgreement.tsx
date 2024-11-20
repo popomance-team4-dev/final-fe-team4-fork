@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Control, ControllerRenderProps } from 'react-hook-form';
 
 import { Checkbox } from '@/components/ui/checkbox';
@@ -12,11 +13,15 @@ interface TermsAgreementProps {
 type TermsField = ControllerRenderProps<SignupFormData, 'terms'>;
 
 const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
+  const [isAllTermsFlow, setIsAllTermsFlow] = useState(false);
+
   const handleAllTermsChange = (checked: boolean, field: TermsField) => {
     if (checked) {
+      setIsAllTermsFlow(true);
       field.onChange(['age']);
       onOpenTerms('service', true);
     } else {
+      setIsAllTermsFlow(false);
       field.onChange([]);
     }
   };
@@ -92,7 +97,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                 </div>
               ))}
             </div>
-            <FormMessage />
+            {!isAllTermsFlow && <FormMessage />}
           </FormItem>
         )}
       />

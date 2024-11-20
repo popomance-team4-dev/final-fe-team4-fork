@@ -8,7 +8,6 @@ export interface Member {
   email: string;
   pwd: string;
   name: string;
-  gender: string | null;
   birth_date: string;
   phone_number: string;
   tou: string;
@@ -23,7 +22,6 @@ export interface SignupRequest {
   email: string;
   pwd: string;
   name: string;
-  gender: string | null;
   birth_date: string;
   phone_number: string;
   tou: string;

@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
 import { TERMS } from '@/constants/terms';
 import { SignupFormData } from '@/types/signup';
 import { SignupFormRequest, signupFormSchema } from '@/utils/signupSchema';
@@ -27,7 +26,6 @@ const SignupForm = () => {
       password: '',
       passwordConfirm: '',
       name: '',
-      gender: '',
       birth_date: '',
       phone: '',
       terms: [],
@@ -166,27 +164,6 @@ const SignupForm = () => {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="gender"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel className="text-black font-medium">성별</FormLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  placeholder="선택"
-                  className="h-[50px]"
-                  items={[
-                    { value: 'male', label: '남성' },
-                    { value: 'female', label: '여성' },
-                  ]}
-                />
                 <FormMessage />
               </FormItem>
             )}

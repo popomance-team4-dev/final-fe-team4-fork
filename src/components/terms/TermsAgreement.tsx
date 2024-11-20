@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Control } from 'react-hook-form';
 
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,34 +11,10 @@ interface TermsAgreementProps {
 }
 
 const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
+  const [readTerms, setReadTerms] = useState<string[]>([]);
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <FormField
-          control={control}
-          name="terms"
-          render={({ field }) => (
-            <>
-              <Checkbox
-                id="all-terms"
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    field.onChange(['age', 'service', 'privacy']);
-                  } else {
-                    field.onChange([]);
-                  }
-                }}
-                checked={field.value?.length === 3}
-                className="h-[18px] w-[18px]"
-              />
-              <label htmlFor="all-terms" className="text-sm font-medium">
-                모두 동의
-              </label>
-            </>
-          )}
-        />
-      </div>
-
       <FormField
         control={control}
         name="terms"
@@ -55,10 +32,15 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                       checked={field.value?.includes(id)}
                       onCheckedChange={(checked) => {
                         const currentTerms = field.value || [];
-                        if (checked) {
-                          field.onChange([...currentTerms, id]);
+                        if (id === 'age' || readTerms.includes(id)) {
+                          if (checked) {
+                            field.onChange([...currentTerms, id]);
+                          } else {
+                            field.onChange(currentTerms.filter((value) => value !== id));
+                          }
                         } else {
-                          field.onChange(currentTerms.filter((value) => value !== id));
+                          onOpenTerms(id as 'service' | 'privacy');
+                          setReadTerms((prev) => [...prev, id]);
                         }
                       }}
                       className="h-[18px] w-[18px]"
@@ -70,7 +52,10 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                       {showViewButton && (
                         <button
                           type="button"
-                          onClick={() => onOpenTerms(id as 'service' | 'privacy')}
+                          onClick={() => {
+                            onOpenTerms(id as 'service' | 'privacy');
+                            setReadTerms((prev) => [...prev, id]);
+                          }}
                           className="text-gray-400 hover:text-gray-600 ml-2"
                         >
                           보기

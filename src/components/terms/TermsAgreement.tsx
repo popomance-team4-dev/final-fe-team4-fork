@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Control } from 'react-hook-form';
+import { Control, ControllerRenderProps } from 'react-hook-form';
 
 import { Checkbox } from '@/components/ui/checkbox';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -10,11 +9,57 @@ interface TermsAgreementProps {
   onOpenTerms: (type: 'service' | 'privacy') => void;
 }
 
+type TermField = ControllerRenderProps<SignupFormData, 'terms'>;
+
 const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
-  const [readTerms, setReadTerms] = useState<string[]>([]);
+  const handleAllTermsChange = (checked: boolean, field: TermField) => {
+    if (checked) {
+      field.onChange(['age']);
+      onOpenTerms('service');
+    } else {
+      field.onChange([]);
+    }
+  };
+
+  const handleTermChange = (checked: boolean, id: string, field: TermField) => {
+    const currentTerms = field.value || [];
+
+    if (checked) {
+      field.onChange([...currentTerms, id]);
+    } else {
+      field.onChange(currentTerms.filter((value: string) => value !== id));
+    }
+  };
+
+  const handleViewTerms = (id: 'service' | 'privacy', field: TermField) => {
+    onOpenTerms(id);
+    const currentTerms = field.value || [];
+    if (!currentTerms.includes(id)) {
+      field.onChange([...currentTerms, id]);
+    }
+  };
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <FormField
+          control={control}
+          name="terms"
+          render={({ field }) => (
+            <>
+              <Checkbox
+                id="all-term"
+                onCheckedChange={(checked) => handleAllTermsChange(checked as boolean, field)}
+                checked={field.value?.length === 3}
+                className="h-[18px] w-[18px]"
+              />
+              <label htmlFor="all-term" className="text-sm font-medium">
+                모두 동의
+              </label>
+            </>
+          )}
+        />
+      </div>
       <FormField
         control={control}
         name="terms"
@@ -30,19 +75,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                   <FormItem className="flex h-[18px] items-center">
                     <Checkbox
                       checked={field.value?.includes(id)}
-                      onCheckedChange={(checked) => {
-                        const currentTerms = field.value || [];
-                        if (id === 'age' || readTerms.includes(id)) {
-                          if (checked) {
-                            field.onChange([...currentTerms, id]);
-                          } else {
-                            field.onChange(currentTerms.filter((value) => value !== id));
-                          }
-                        } else {
-                          onOpenTerms(id as 'service' | 'privacy');
-                          setReadTerms((prev) => [...prev, id]);
-                        }
-                      }}
+                      onCheckedChange={(checked) => handleTermChange(checked as boolean, id, field)}
                       className="h-[18px] w-[18px]"
                     />
                   </FormItem>
@@ -52,10 +85,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                       {showViewButton && (
                         <button
                           type="button"
-                          onClick={() => {
-                            onOpenTerms(id as 'service' | 'privacy');
-                            setReadTerms((prev) => [...prev, id]);
-                          }}
+                          onClick={() => handleViewTerms(id as 'service' | 'privacy', field)}
                           className="text-gray-400 hover:text-gray-600 ml-2"
                         >
                           보기

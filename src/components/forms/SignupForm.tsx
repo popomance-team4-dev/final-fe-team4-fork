@@ -63,7 +63,18 @@ const SignupForm = () => {
 
   const handleAgreeTerms = (type: 'service' | 'privacy') => {
     const currentTerms = form.getValues('terms') || [];
-    if (!currentTerms.includes(type)) {
+
+    if (currentTerms.length === 1 && currentTerms.includes('age') && type === 'service') {
+      form.setValue('terms', [...currentTerms, type]);
+      setTimeout(() => {
+        handleOpenTerms('privacy');
+      }, 100);
+    } else if (
+      currentTerms.length === 2 &&
+      currentTerms.includes('age') &&
+      currentTerms.includes('service') &&
+      type === 'privacy'
+    ) {
       form.setValue('terms', [...currentTerms, type]);
     }
   };

@@ -9,10 +9,10 @@ interface TermsAgreementProps {
   onOpenTerms: (type: 'service' | 'privacy', isAll?: boolean) => void;
 }
 
-type TermField = ControllerRenderProps<SignupFormData, 'terms'>;
+type TermsField = ControllerRenderProps<SignupFormData, 'terms'>;
 
 const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
-  const handleAllTermsChange = (checked: boolean, field: TermField) => {
+  const handleAllTermsChange = (checked: boolean, field: TermsField) => {
     if (checked) {
       field.onChange(['age']);
       onOpenTerms('service', true);
@@ -21,7 +21,7 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
     }
   };
 
-  const handleTermChange = (checked: boolean, id: string, field: TermField) => {
+  const handleTermChange = (checked: boolean, id: string, field: TermsField) => {
     if (checked) {
       if (id === 'age') {
         const currentTerms = field.value || [];
@@ -68,22 +68,22 @@ const TermsAgreement = ({ control, onOpenTerms }: TermsAgreementProps) => {
                 { id: 'privacy', label: '개인정보 수집 · 이용 동의' },
               ].map(({ id, label }) => (
                 <div key={id} className="flex items-center gap-2">
-                  <FormItem className="flex h-[18px] items-center">
+                  <FormItem className="flex items-center space-x-2 m-0">
                     <Checkbox
                       checked={field.value?.includes(id)}
                       onCheckedChange={(checked) => handleTermChange(checked as boolean, id, field)}
                       className="h-[18px] w-[18px]"
                     />
                   </FormItem>
-                  <div className="flex items-center justify-between flex-1">
-                    <label className="text-sm font-medium">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium leading-none">
                       <span className="text-primary">(필수)</span> {label}
                     </label>
                     {id !== 'age' && (
                       <button
                         type="button"
                         onClick={() => onOpenTerms(id as 'service' | 'privacy')}
-                        className="text-sm text-gray-500 hover:text-gray-700"
+                        className="text-sm text-gray-500 hover:text-gray-700 ml-1"
                       >
                         보기
                       </button>

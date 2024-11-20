@@ -45,7 +45,7 @@ export function NavSidebar() {
 
   return (
     <div
-      className={`flex h-screen w-[104px] flex-col border-r bg-white px-6 pb-4 group/navbar ${isExpanded ? 'expanded w-[244px]' : ''}`}
+      className={`flex h-screen w-[104px] flex-col border-r bg-white px-6 group/navbar ${isExpanded ? 'expanded w-[244px]' : ''}`}
     >
       <div className=" border-b flex items-center">
         <div className="h-[91px] w-full flex items-center gap-2">
@@ -108,9 +108,9 @@ export function NavSidebar() {
           <SidebarButton icon={TbFileDatabase} label="CONCAT" />
         </div>
       </div>
-      <div className="mt-auto h-20">
-        <Separator className="my-4" />
-        <button className="mt-2 ml-4" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="mt-auto h-[93px]">
+        <Separator />
+        <button className="mt-9 ml-4" onClick={() => setIsExpanded(!isExpanded)}>
           <TbLayoutSidebar className="w-6 h-6 group-[.expanded]/navbar:text-gray-300 text-black" />
         </button>
       </div>

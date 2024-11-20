@@ -120,8 +120,8 @@ const TTSPage = () => {
   return (
     <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
       {/* Header */}
-      <header className="h-[92px] border-b">
-        <div className="pt-3 px-6">
+      <header className="h-[92px] ml-6 border-b">
+        <div className="pt-3">
           <h1 className="text-[14px] font-bold mb-2">My work status</h1>
           <div className="relative">
             <TTSDropdown
@@ -133,11 +133,10 @@ const TTSPage = () => {
         </div>
       </header>
 
-      <div className="flex flex-1">
-        {/* Main Content Group */}
-        <div className="flex-1 flex flex-col">
-          {/* Main1 */}
-          <section className="flex-1 p-6 flex flex-col">
+      <div className="flex flex-1 h-[839px] ml-6 border-b">
+        {/* Main1 */}
+        <section className="flex-1 py-6 pr-6 flex flex-col">
+          <div className="h-[71px]">
             <h4 className="text-sm font-normal">텍스트 파일을 나만의 음성 파일로</h4>
             <header className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold">TTS · 프로젝트 1</h2>
@@ -146,51 +145,50 @@ const TTSPage = () => {
                 <SaveButton />
               </div>
             </header>
+          </div>
 
-            <div className="h-[580px] mt-8 overflow-hidden">
-              <TTSTable
-                items={items}
-                isAllSelected={isAllSelected}
-                onSelectAll={handleSelectAll}
-                onSelectionChange={handleSelectionChange}
-                onTextChange={handleTextChange}
-                onDelete={handleDelete}
-                onAdd={() => {
-                  setItems((prev) => [
-                    ...prev,
-                    {
-                      id: String(Date.now()),
-                      text: '',
-                      isSelected: false,
-                      speed: 1.0,
-                      volume: 60,
-                      pitch: 4.0,
-                    },
-                  ]);
-                }}
-                onRegenerateItem={handleRegenerateItem}
-                onDownloadItem={handleDownloadItem}
-                onPlay={(id) => console.log('재생:', id)}
-              />
-            </div>
+          <div className="h-[580px] mt-6 overflow-hidden">
+            <TTSTable
+              items={items}
+              isAllSelected={isAllSelected}
+              onSelectAll={handleSelectAll}
+              onSelectionChange={handleSelectionChange}
+              onTextChange={handleTextChange}
+              onDelete={handleDelete}
+              onAdd={() => {
+                setItems((prev) => [
+                  ...prev,
+                  {
+                    id: String(Date.now()),
+                    text: '',
+                    isSelected: false,
+                    speed: 1.0,
+                    volume: 60,
+                    pitch: 4.0,
+                  },
+                ]);
+              }}
+              onRegenerateItem={handleRegenerateItem}
+              onDownloadItem={handleDownloadItem}
+              onPlay={(id) => console.log('재생:', id)}
+            />
+          </div>
 
-            <div className="mt-6 text-center">
-              <Button>TTS 생성</Button>
-            </div>
-          </section>
-
-          {/* Main2 */}
-          <section className="h-[145px] mx-6">
-            <h2 className="text-[18px] font-semibold mb-2">전체 재생</h2>
-            <AudioPlayer audioUrl={''} />
-          </section>
-        </div>
+          <div className="mt-6 text-center">
+            <Button>TTS 생성</Button>
+          </div>
+        </section>
 
         {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0 min-h-full">
+        <aside className="w-[276px] flex-shrink-0">
           <TTSOptionsSidebar />
         </aside>
       </div>
+
+      {/* Playback */}
+      <section className="h-[92px] px-6">
+        <AudioPlayer audioUrl={''} />
+      </section>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
 import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
 import AudioFooter from '@/components/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/header/FileProgressHeader';
+import ProjectTitle from '@/components/section/ProjectTitle';
 import TTSOptionsSidebar from '@/components/sidebar/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { Button } from '@/components/ui/button';
@@ -138,16 +138,8 @@ const TTSPage = () => {
         {/* Main1 */}
         <section className="flex-1 py-6 pr-6 flex flex-col">
           <div className="h-[71px]">
-            <h4 className="text-sm font-normal">텍스트 파일을 나만의 음성 파일로</h4>
-            <header className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">TTS · 프로젝트 1</h2>
-              <div className="flex gap-6">
-                <UploadButton />
-                <SaveButton />
-              </div>
-            </header>
+            <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
           </div>
-
           <div className="h-[580px] mt-6 overflow-hidden">
             <TTSTable
               items={items}

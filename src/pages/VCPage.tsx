@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
+import ProjectTitle from '@/components/section/ProjectTitle';
 import { Button } from '@/components/ui/button';
 
 const VCPage = () => {
@@ -23,9 +24,12 @@ const VCPage = () => {
           {/* Main1 */}
           <section className="flex-1 py-6 pr-6 flex flex-col">
             <div className="h-[71px]">
-              <header className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">VC · 프로젝트 1</h2>
-              </header>
+              <ProjectTitle
+                type="VC"
+                projectTitle="프로젝트 1"
+                onSave={() => console.log('저장')}
+                onClose={() => console.log('닫기')}
+              />
             </div>
 
             {/* 팝업 창 */}

@@ -3,6 +3,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbChevronDown, TbChevronUp, TbCircleFilled, TbRotate } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
+import { Badge } from '@/components/ui/badge';
 
 export interface FileProgressItem {
   id: number;
@@ -96,40 +97,40 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
       <div className="w-[504px] h-10 bg-background rounded-lg border border-gray-300 px-4 flex items-center justify-between">
         <div className="flex gap-4">
           {/* 진행 상태 */}
-          <button onClick={() => setSelectedStatuses(['진행'])} className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-green-500 mr-2" />
+          <Badge variant="progress">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{fileStats['진행'] || 0}</span>
             </div>
-          </button>
+          </Badge>
 
           {/* 대기 상태 */}
-          <button onClick={() => setSelectedStatuses(['대기'])} className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-yellow-500 mr-2" />
+          <Badge variant="waiting">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">대기</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{fileStats['대기'] || 0}</span>
             </div>
-          </button>
+          </Badge>
 
           {/* 실패 상태 */}
-          <button onClick={() => setSelectedStatuses(['실패'])} className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-red-500 mr-2" />
+          <Badge variant="failed">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">실패</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{fileStats['실패'] || 0}</span>
             </div>
-          </button>
+          </Badge>
 
           {/* 완료 상태 */}
-          <button onClick={() => setSelectedStatuses(['완료'])} className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-blue-500 mr-2" />
+          <Badge variant="completed">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">완료</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{fileStats['완료'] || 0}</span>
             </div>
-          </button>
+          </Badge>
         </div>
 
         <div className="flex items-center gap-2">

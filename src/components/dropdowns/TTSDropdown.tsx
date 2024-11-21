@@ -3,6 +3,8 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbCheck, TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
+import { Badge } from '@/components/ui/badge';
+
 export interface TTSFile {
   id: number;
   name: string;
@@ -97,40 +99,40 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
       <div className="w-[504px] h-10 bg-background rounded-lg border border-gray-300 px-4 flex items-center justify-between">
         <div className="flex gap-4">
           {/* 진행 상태 */}
-          <div className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-green-500 mr-2" />
+          <Badge variant="progress">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
             </div>
-          </div>
+          </Badge>
 
           {/* 대기 상태 */}
-          <div className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-yellow-500 mr-2" />
+          <Badge variant="waiting">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">대기</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['대기'] || 0}</span>
             </div>
-          </div>
+          </Badge>
 
           {/* 실패 상태 */}
-          <div className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-red-500 mr-2" />
+          <Badge variant="failed">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">실패</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['실패'] || 0}</span>
             </div>
-          </div>
+          </Badge>
 
           {/* 완료 상태 */}
-          <div className="flex items-center">
-            <TbCircleFilled className="w-2 h-2 text-blue-500 mr-2" />
+          <Badge variant="completed">
+            <TbCircleFilled className="w-2 h-2 mr-2" />
             <span className="text-foreground text-sm font-medium">완료</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['완료'] || 0}</span>
             </div>
-          </div>
+          </Badge>
         </div>
 
         <button

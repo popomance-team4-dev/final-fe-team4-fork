@@ -10,6 +10,10 @@ const badgeVariants = cva('inline-flex items-center rounded-md px-2.5 py-0.5 tex
       vc: 'bg-pink-50 text-pink-500 ring-pink-50',
       tts: 'bg-green-50 text-green-500 ring-green-50',
       concat: 'bg-yellow-50 text-yellow-500 ring-yellow-50',
+      progress: 'flex items-center text-foreground text-sm font-medium [&>svg]:text-green-500',
+      waiting: 'flex items-center text-foreground text-sm font-medium [&>svg]:text-yellow-500',
+      failed: 'flex items-center text-foreground text-sm font-medium [&>svg]:text-red-500',
+      completed: 'flex items-center text-foreground text-sm font-medium [&>svg]:text-blue-500',
     },
   },
   defaultVariants: {

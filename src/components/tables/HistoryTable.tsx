@@ -1,4 +1,4 @@
-import { TbChevronRight, TbDownload } from 'react-icons/tb';
+import { TbChevronRight, TbCircleFilled, TbDownload } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/buttons/PlayButton';
 import { Badge } from '@/components/ui/badge';
@@ -11,18 +11,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface HistoryItem {
+interface HistoryTableItem {
   id: string;
   order: string;
   projectName: string;
   fileName: string;
   content: string;
   type: 'VC' | 'TTS' | 'CONCAT';
+  status: '진행' | '대기중' | '실패' | '완료';
   createdAt: string;
 }
 
 interface HistoryTableProps {
-  items: HistoryItem[];
+  items: HistoryTableItem[];
   onPlay: (id: string) => void;
   onPause: (id: string) => void;
   currentPlayingId?: string;
@@ -32,6 +33,24 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
   const AudioBadge = (type: 'VC' | 'TTS' | 'CONCAT') => {
     const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
     return <Badge variant={variant}>{type}</Badge>;
+  };
+
+  const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
+    const variantMap = {
+      진행: 'progress',
+      대기중: 'waiting',
+      실패: 'failed',
+      완료: 'completed',
+    } as const;
+
+    return (
+      <div className="flex justify-start">
+        <Badge variant={variantMap[status]}>
+          <TbCircleFilled className="w-2 h-2 mr-2" />
+          {status}
+        </Badge>
+      </div>
+    );
   };
 
   return (
@@ -46,12 +65,17 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
       <Table>
         <TableHeader className="border-t">
           <TableRow>
-            <TableHead className="pl-[66px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
+            <TableHead className="pl-[74px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
+            <TableHead className="bg-gray-50 font-bold text-gray-900">
+              <div className="flex flex-col gap-2">
+                <span>유형</span>
+              </div>
+            </TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">프로젝트명</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">파일명</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">내용</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">유형</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">다운로드</TableHead>
+            <TableHead className="bg-gray-50 font-bold text-gray-900">상태</TableHead>
+            <TableHead className="bg-gray-50 font-bold text-gray-900 pl-9">다운로드</TableHead>
             <TableHead className="pl-[60px] bg-gray-50 font-bold text-gray-900">
               업데이트 날짜
             </TableHead>
@@ -64,7 +88,7 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
               data-state={currentPlayingId === item.id ? 'selected' : undefined}
             >
               <TableCell className="font-medium">
-                <div className="flex items-center gap-7">
+                <div className="flex items-center gap-9">
                   <PlayButton
                     isPlaying={currentPlayingId === item.id}
                     onPlay={() => onPlay(item.id)}
@@ -73,12 +97,15 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
                   {item.order}
                 </div>
               </TableCell>
+              <TableCell>{AudioBadge(item.type)}</TableCell>
               <TableCell>{item.projectName}</TableCell>
               <TableCell>{item.fileName}</TableCell>
-              <TableCell className="max-w-md truncate">{item.content}</TableCell>
-              <TableCell>{AudioBadge(item.type)}</TableCell>
+              <TableCell className="max-w-md pr-0 truncate">{item.content}</TableCell>
+              <TableCell className="pl-0">
+                <div className="flex">{StatusBadge(item.status)}</div>
+              </TableCell>
               <TableCell>
-                <div className="flex justify-start pl-3">
+                <div className="flex justify-start pl-8">
                   <button
                     onClick={() => console.log('다운로드:', item.id)}
                     aria-label="Download file"

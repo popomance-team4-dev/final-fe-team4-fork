@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { Button } from '@/components/ui/button';
+import FileUploadAlert from '@/components/ui/FileUploadAlert';
 
 const CONCATPage = () => {
-  const [isPopupVisible, setPopupVisible] = useState(true);
+  const [showAlert, setShowAlert] = useState(true);
 
   return (
     <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
@@ -29,17 +29,14 @@ const CONCATPage = () => {
             </div>
 
             {/* 팝업 창 */}
-            {isPopupVisible && (
-              <div className="h-[52px] flex bg-blue-50 rounded-lg shadow-md relative">
-                <button
-                  className="absolute top-2 right-2 text-xl text-gray-600 hover:text-gray-800"
-                  onClick={() => setPopupVisible(false)}
-                >
-                  <TbX /> {/* 팝업 닫기 버튼 */}
-                </button>
-                <p className="m-auto text-center text-gray-800">This is a popup!</p>
-              </div>
-            )}
+            <div className="flex relative">
+              {showAlert && (
+                <FileUploadAlert
+                  message="Concat 작업을 시작하려면 반드시 오디오 파일을 업로드해 주세요."
+                  onClose={() => setShowAlert(false)}
+                />
+              )}
+            </div>
 
             <div className="h-[580px] mt-6 overflow-hidden"></div>
 

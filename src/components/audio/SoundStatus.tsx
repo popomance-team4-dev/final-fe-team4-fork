@@ -36,8 +36,8 @@ const SoundStatus = React.forwardRef<HTMLDivElement, SoundStatusProps>(
     return (
       <Badge
         ref={ref}
-        variant="sound"
-        className={cn('flex items-center gap-2 h-[26px]', className)}
+        variant="default"
+        className={cn('flex items-center gap-2 h-7', className)}
         {...props}
       >
         <Icon

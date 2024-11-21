@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { AudioPlayer } from '@/components/audio/AudioPlayer';
-import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
-import TTSDropdown, { TTSFile } from '@/components/tts/TTSDropdown';
-import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
+import AudioFooter from '@/components/footer/AudioFooter';
+import { FileProgressHeader } from '@/components/header/FileProgressHeader';
+import ProjectTitle from '@/components/section/ProjectTitle';
+import TTSOptionsSidebar from '@/components/sidebar/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { Button } from '@/components/ui/button';
-
+import jisuImage from '@/images/avatar/jisu.jpg';
 interface TTSItem {
   id: string;
   text: string;
@@ -17,7 +18,7 @@ interface TTSItem {
 }
 
 const TTSPage = () => {
-  const [ttsFiles, setTTSFiles] = useState<TTSFile[]>([
+  const [progressFiles, setProgressFiles] = useState<FileProgressItem[]>([
     {
       id: 1,
       name: 'text_001.txt',
@@ -80,11 +81,11 @@ const TTSPage = () => {
   }, []);
 
   const handleDeleteCompleted = useCallback(() => {
-    setTTSFiles((prev) => prev.filter((file) => file.status !== '완료'));
+    setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
   }, []);
 
   const handleRetryFailed = useCallback(() => {
-    setTTSFiles((prev) =>
+    setProgressFiles((prev) =>
       prev.map((file) => (file.status === '실패' ? { ...file, status: '대기' } : file))
     );
   }, []);
@@ -121,32 +122,24 @@ const TTSPage = () => {
     <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
       {/* Header */}
       <header className="h-[92px] ml-6 border-b">
-        <div className="pt-3">
-          <h1 className="text-[14px] font-bold mb-2">My work status</h1>
-          <div className="relative">
-            <TTSDropdown
-              files={ttsFiles}
-              onDeleteCompleted={handleDeleteCompleted}
-              onRetryFailed={handleRetryFailed}
-            />
-          </div>
-        </div>
+        <FileProgressHeader
+          name="김바타"
+          email="aipark@aipark.ai"
+          imageUrl={jisuImage}
+          files={progressFiles}
+          onDeleteCompleted={handleDeleteCompleted}
+          onRetryFailed={handleRetryFailed}
+          onMyPage={() => console.log('마이페이지')}
+          onSignout={() => console.log('로그아웃')}
+        />
       </header>
 
       <div className="flex flex-1 h-[839px] ml-6 border-b">
         {/* Main1 */}
         <section className="flex-1 py-6 pr-6 flex flex-col">
           <div className="h-[71px]">
-            <h4 className="text-sm font-normal">텍스트 파일을 나만의 음성 파일로</h4>
-            <header className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">TTS · 프로젝트 1</h2>
-              <div className="flex gap-6">
-                <UploadButton />
-                <SaveButton />
-              </div>
-            </header>
+            <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
           </div>
-
           <div className="h-[580px] mt-6 overflow-hidden">
             <TTSTable
               items={items}
@@ -187,7 +180,7 @@ const TTSPage = () => {
 
       {/* Playback */}
       <section className="h-[92px] px-6">
-        <AudioPlayer audioUrl={''} />
+        <AudioFooter audioUrl="/sample.mp3" />
       </section>
     </div>
   );

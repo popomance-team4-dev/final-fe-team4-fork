@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { TbCheck, TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
+import { TbChevronDown, TbChevronUp, TbCircleFilled, TbRotate } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
 export interface TTSFile {
@@ -39,7 +39,7 @@ const formatDateCategory = (date: Date): string => {
 
 const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedStatuses, setSelectedStatuses] = useState(['진행', '대기', '실패', '완료']);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
   const categorizedFiles = useMemo(() => {
     const grouped = files.reduce(
@@ -82,12 +82,10 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
   const toggleStatus = (status: string) => {
     setSelectedStatuses((prev) => {
       if (prev.includes(status)) {
-        if (prev.length === 1) {
-          return prev;
-        }
         return prev.filter((s) => s !== status);
+      } else {
+        return [...prev, status];
       }
-      return [...prev, status];
     });
   };
 
@@ -97,48 +95,50 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
       <div className="w-[504px] h-10 bg-background rounded-lg border border-gray-300 px-4 flex items-center justify-between">
         <div className="flex gap-4">
           {/* 진행 상태 */}
-          <div className="flex items-center">
+          <button onClick={() => setSelectedStatuses(['진행'])} className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-green-500 mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
             </div>
-          </div>
+          </button>
 
           {/* 대기 상태 */}
-          <div className="flex items-center">
+          <button onClick={() => setSelectedStatuses(['대기'])} className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-yellow-500 mr-2" />
             <span className="text-foreground text-sm font-medium">대기</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['대기'] || 0}</span>
             </div>
-          </div>
+          </button>
 
           {/* 실패 상태 */}
-          <div className="flex items-center">
+          <button onClick={() => setSelectedStatuses(['실패'])} className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-red-500 mr-2" />
             <span className="text-foreground text-sm font-medium">실패</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['실패'] || 0}</span>
             </div>
-          </div>
+          </button>
 
           {/* 완료 상태 */}
-          <div className="flex items-center">
+          <button onClick={() => setSelectedStatuses(['완료'])} className="flex items-center">
             <TbCircleFilled className="w-2 h-2 text-blue-500 mr-2" />
             <span className="text-foreground text-sm font-medium">완료</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
               <span className="text-[#512A91] text-xs font-medium">{stats['완료'] || 0}</span>
             </div>
-          </div>
+          </button>
         </div>
 
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="text-foreground hover:bg-gray-100 p-1 rounded transition-colors"
-        >
-          {isOpen ? <TbChevronUp size={20} /> : <TbChevronDown size={20} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-foreground hover:bg-gray-100 p-1 rounded transition-colors"
+          >
+            {isOpen ? <TbChevronUp size={20} /> : <TbChevronDown size={20} />}
+          </button>
+        </div>
       </div>
 
       {isOpen && (
@@ -150,29 +150,33 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                 <button
                   key={status}
                   onClick={() => toggleStatus(status)}
-                  className={`h-6 px-2 rounded text-sm font-medium transition-colors flex items-center ${
+                  className={`h-6 px-2 rounded text-sm font-medium transition-colors ${
                     selectedStatuses.includes(status)
-                      ? 'bg-secondary text-[#512A91]'
-                      : 'bg-gray-100 text-gray-600'
+                      ? 'bg-[#E2E8F0] text-[#512A91]'
+                      : 'bg-secondary text-[#512A91]'
                   }`}
                 >
-                  {selectedStatuses.includes(status) && <TbCheck className="w-4 h-4 mr-1" />}
                   {status}
                 </button>
               ))}
+              {/* 리셋 버튼 */}
+              <button
+                onClick={() => setSelectedStatuses([])}
+                className="text-gray-500 ml-2"
+                title="필터 초기화"
+              >
+                <TbRotate size={16} />
+              </button>
             </div>
           </div>
-
           {/* 파일 목록 영역 */}
           <div className="p-4">
             {Object.entries(categorizedFiles).map(([category, categoryFiles]) => {
-              const filteredFiles = categoryFiles.filter((file) =>
-                selectedStatuses.includes(file.status)
+              const filteredFiles = categoryFiles.filter(
+                (file) => selectedStatuses.length === 0 || selectedStatuses.includes(file.status)
               );
 
-              if (filteredFiles.length === 0) {
-                return null;
-              }
+              if (filteredFiles.length === 0) return null;
 
               return (
                 <div key={category} className="mb-6 last:mb-0">
@@ -222,7 +226,6 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
               );
             })}
           </div>
-
           {/* 하단 버튼 영역 */}
           <div className="flex items-center justify-center gap-6 border-t border-gray-300 px-3 py-4">
             <DeleteCompletedButton />

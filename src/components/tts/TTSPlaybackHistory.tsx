@@ -64,7 +64,7 @@ const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ id }) => {
               <div className="ml-8 w-[21px] h-[64px] rounded-bl-3xl border-l-[2px] border-b-2 border-l-gray-700-500 relative">
                 <div
                   key={index}
-                  className={`absolute h-[64px] w-0 border-l-[2px] bg-gray-300 ml-[-2px] -translate-y-4 line`}
+                  className={`absolute h-[64px] w-0 border-l-[2px] bg-gray-300 ml-[-1.5px] -translate-y-4 line`}
                 />
               </div>
             ) : (

@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import FileUploadAlert, { ALERT_MESSAGES } from '@/components/alerts/FileUploadAlert';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
-import CONCATOptionsSidebar from '@/components/sidebar/CONCATOptionsSidebar';
 import ProjectTitle from '@/components/section/ProjectTitle';
+import CONCATOptionsSidebar from '@/components/sidebar/CONCATOptionsSidebar';
 import { Button } from '@/components/ui/button';
 
 const CONCATPage = () => {

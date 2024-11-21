@@ -5,13 +5,18 @@ import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js';
 import { PlayButton } from '@/components/buttons/PlayButton';
 import { cn } from '@/lib/utils';
 
-interface AudioPlayerProps {
+export enum PlayerMode {
+  MINI = 'MINI',
+  NORMAL = 'NORMAL',
+}
+export interface AudioPlayerProps {
   audioUrl: string;
   className?: string;
+  mode?: PlayerMode;
 }
 
 const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
-  ({ audioUrl, className }, ref) => {
+  ({ audioUrl, className, mode = PlayerMode.NORMAL }, ref) => {
     const waveformRef = React.useRef<HTMLDivElement>(null);
     const wavesurferRef = React.useRef<WaveSurfer | null>(null);
 
@@ -84,7 +89,7 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
           }
         } catch (error) {
           if (!signal.aborted) {
-            console.error('Failed to initialize WaveSurfer:', error); // 에러 처리는 추후에...
+            console.error('Failed to initialize WaveSurfer:', error); // 에러 처리는 추후에... 알겠습니당
           }
         }
       };
@@ -125,10 +130,24 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex items-center gap-4 w-full bg-gray-50 rounded-lg px-20 py-5', className)}
+        className={cn(
+          'flex items-center gap-4 w-full bg-white rounded-lg',
+          mode === PlayerMode.NORMAL ? 'px-20 py-5' : 'w-[362px] max-[1200px]:w-[200px]',
+          className
+        )}
       >
         <div className="flex items-center gap-4 shrink-0">
-          <PlayButton isPlaying={isPlaying} onPlay={handlePlayPause} onPause={handlePlayPause} />
+          {mode === PlayerMode.NORMAL && (
+            <PlayButton isPlaying={isPlaying} onPlay={handlePlayPause} onPause={handlePlayPause} />
+          )}
+          {mode === PlayerMode.MINI && (
+            <PlayButton
+              isPlaying={isPlaying}
+              onPlay={handlePlayPause}
+              onPause={handlePlayPause}
+              className="w-5 h-5"
+            />
+          )}
           <div className="text-sm text-black w-[45px]">{formatTime(currentTime)}</div>
         </div>
 

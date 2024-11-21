@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
@@ -40,44 +40,8 @@ const TextRow: React.FC<TextRowProps> = ({
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  // 음원 히스토리 내역 토글
+  // TTS 음원 재생성 히스토리 내역 토글
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-
-  // 가짜 음원 히스토리 데이터
-  const fakeHistoryItems = [
-    {
-      id: '1',
-      text: '안녕하세요. 반갑습니다.',
-      speed: 1.0,
-      volume: 60.0,
-      pitch: 4.0,
-    },
-    {
-      id: '2',
-      text: '안녕하세요. 반갑습니다.',
-      speed: 1.0,
-      volume: 60.0,
-      pitch: 4.0,
-    },
-    {
-      id: '3',
-      text: '안녕하세요. 반갑습니다.',
-      speed: 1.0,
-      volume: 60.0,
-      pitch: 4.0,
-    },
-  ];
-
-  // 음원 히스토리 내역들
-  const [historyItems, setHistoryItems] = useState([...fakeHistoryItems]);
-
-  // 음원 히스토리 내역 초기화
-
-  useEffect(() => {
-    // 히스토리 내역을 백엔드에서 가져오는 로직이 있어야됨
-    // const historyItems = await fetchHistoryItems();
-    setHistoryItems([...fakeHistoryItems]);
-  }, []);
 
   return (
     <>
@@ -113,7 +77,7 @@ const TextRow: React.FC<TextRowProps> = ({
           </div>
         </div>
       </div>
-      {isHistoryOpen && <TTSPlaybackHistory historyItems={historyItems} />}
+      {isHistoryOpen && <TTSPlaybackHistory id={id} />}
     </>
   );
 };

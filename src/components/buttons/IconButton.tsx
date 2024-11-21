@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   TbDeviceFloppy,
   TbDownload,
+  TbHistory,
   TbPlayerPlayFilled,
   TbRefresh,
   TbReload,
@@ -142,6 +143,28 @@ export function DownloadButton({ onClick }: { onClick?: () => void }) {
       textColor="text-gray-800"
       width="104px"
       onClick={onClick}
+    />
+  );
+}
+export function TTSPlaybackHistoryButton({
+  onClick,
+  isActive,
+}: {
+  onClick?: () => void;
+  isActive: boolean;
+}) {
+  return (
+    <IconButton
+      icon={<TbHistory />}
+      label="내역"
+      iconBgColor="bg-blue-50"
+      iconColor="text-blue-500"
+      textColor={`text-gray-800 group-hover/tts:text-blue-500 ${isActive ? 'text-blue-500' : ''}`}
+      width="78px"
+      onClick={onClick}
+      className={`hover:bg-blue-50 border border-transparent hover:border-blue-500 group/tts
+        ${isActive ? 'border-blue-500 bg-blue-50' : ''}
+        `}
     />
   );
 }

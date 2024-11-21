@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
-import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
+import {
+  DownloadButton,
+  RecreateButton,
+  TTSPlaybackHistoryButton,
+} from '@/components/buttons/IconButton';
+import TTSPlaybackHistory from '@/components/tts/TTSPlaybackHistory';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -21,19 +26,26 @@ interface TTSTableGridItemProps {
   onTextChange: (id: string, newText: string) => void;
 }
 
+interface TTSGridItemProps {
+  item: TTSTableGridItemProps;
+}
+
 interface TTSTableGridProps {
   items: TTSTableGridItemProps[];
 }
 
-const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
+const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
     element.style.height = `${element.scrollHeight}px`;
   };
 
+  // TTS 음원 재생성 히스토리 내역 토글
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
   return (
     <div className="flex flex-col gap-4">
-      {items.map((item) => (
+      <div>
         <div
           key={item.id}
           className={`p-4 rounded-md bg-white transition-colors ${
@@ -72,6 +84,13 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
             <div className="flex items-center space-x-6 mr-2">
               <RecreateButton onClick={item.onRegenerate} />
               <DownloadButton onClick={item.onDownload} />
+              <TTSPlaybackHistoryButton
+                onClick={() => {
+                  item.onDownload();
+                  setIsHistoryOpen(!isHistoryOpen);
+                }}
+                isActive={isHistoryOpen}
+              />
             </div>
           </div>
 
@@ -86,14 +105,24 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
             className="w-3/5 min-h-[40px] overflow-hidden mb-2 border-0"
             rows={1}
           />
-
-          <div className="w-3/5">
+          <div className="w-3/5 mb-5">
             <AudioPlayer audioUrl={item.audioUrl} className="px-6 py-3" />
           </div>
+          <div className="-mx-4 -my-4">{isHistoryOpen && <TTSPlaybackHistory id={'id'} />}</div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
+  return (
+    <div className="flex flex-col gap-4">
+      {items.map((item) => (
+        <TTSGridItem key={item.id} item={item} />
       ))}
     </div>
   );
 };
 
-export { TTSTableGrid };
+export { TTSGridItem as TTSGridItem, TTSTableGrid };

@@ -1,34 +1,75 @@
 import { Checkbox } from '@radix-ui/react-checkbox';
+import { useEffect, useMemo, useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer, PlayerMode } from '@/components/audio/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 
-interface HistoryItem {
-  id: string;
-  text: string;
-  speed: number;
-  volume: number;
-  pitch: number;
-}
-
 interface TTSPlaybackHistoryProps {
-  historyItems: HistoryItem[];
+  id: string;
 }
 
-const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ historyItems }) => {
+const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ id }) => {
+  console.log(id);
+
+  // 가짜 TTS 재생성성히스토리 데이터들임, 백엔드 연결 이후 삭제 필요
+  const fakeHistoryItems = useMemo(
+    () => [
+      {
+        id: '1',
+        text: '안녕하세요. 반갑습니다.',
+        speed: 1.0,
+        volume: 60.0,
+        pitch: 4.0,
+      },
+      {
+        id: '2',
+        text: '안녕하세요. 반갑습니다.',
+        speed: 1.0,
+        volume: 60.0,
+        pitch: 4.0,
+      },
+      {
+        id: '3',
+        text: '안녕하세요. 반갑습니다.',
+        speed: 1.0,
+        volume: 60.0,
+        pitch: 4.0,
+      },
+    ],
+    []
+  );
+
+  // 음원 히스토리 내역들
+  const [historyItems, setHistoryItems] = useState([...fakeHistoryItems]);
+
+  // 음원 히스토리 내역을 fetch 이후 초기화
+  useEffect(() => {
+    // 히스토리 내역을 백엔드에서 가져오는 로직이 있어야됨
+    // const historyItems = await fetchHistoryItems(id);
+    setHistoryItems([...fakeHistoryItems]);
+  }, []);
+
+  // 음원 히스토리 내역 삭제
+  const handleDelete = (id: string) => {
+    setHistoryItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
   return (
     <div className="flex bg-gray-50">
       <div className="relative">
-        <div className="ml-8 w-[21px] h-[40px] rounded-bl-3xl border-l-2 border-b-[0.1em] border-l-gray-700-500"></div>
-        {[...historyItems.slice(1)].map((_, index) => (
+        {[...historyItems].map((_, index) => (
           <>
-            <div className="ml-8 w-[21px] h-[64px] rounded-bl-3xl border-l-[0.1em] border-b-2 border-l-gray-700-500 relative">
-              <div
-                key={index}
-                className={`absolute h-[64px] w-0 border-l-[0.1em] bg-gray-300 ml-[-2px] -translate-y-4 line`}
-              />
-            </div>
+            {index !== 0 ? (
+              <div className="ml-8 w-[21px] h-[64px] rounded-bl-3xl border-l-[2px] border-b-2 border-l-gray-700-500 relative">
+                <div
+                  key={index}
+                  className={`absolute h-[64px] w-0 border-l-[2px] bg-gray-300 ml-[-2px] -translate-y-4 line`}
+                />
+              </div>
+            ) : (
+              <div className="ml-8 w-[21px] h-[40px] rounded-bl-3xl border-l-2 border-b-[0.1em] border-l-gray-700-500"></div>
+            )}
           </>
         ))}
       </div>
@@ -45,7 +86,10 @@ const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ historyItems })
               />
               <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={historyItem.volume} />
               <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={historyItem.pitch} />
-              <TbX className="w-6 h-6 text-gray-700 mr-3 cursor-pointer" />
+              <TbX
+                className="w-6 h-6 text-gray-700 mr-3 cursor-pointer"
+                onClick={() => handleDelete(historyItem.id)}
+              />
             </div>
           </div>
         ))}

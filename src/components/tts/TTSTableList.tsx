@@ -1,3 +1,5 @@
+import { TbHistory } from 'react-icons/tb';
+
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import { PlayButton } from '@/components/buttons/PlayButton';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -54,10 +56,13 @@ const TextRow: React.FC<TextRowProps> = ({
         className="flex-1 ml-2 mr-4 min-h-[40px] border-0 overflow-hidden"
         rows={1}
       />
-      <div className="flex gap-6">
+      <div className="flex gap-2">
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
         <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
+        <div className="flex w-12 justify-center">
+          <TbHistory className="w-5 h-5" />
+        </div>
       </div>
     </div>
   );

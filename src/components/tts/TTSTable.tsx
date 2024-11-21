@@ -206,10 +206,11 @@ export const TTSTable: React.FC<TTSTableProps> = ({
               <div className="w-4 ml-2 mr-2" />
               <div className="w-4 ml-2 mr-2" />
               <div className="ml-6">텍스트</div>
-              <div className="flex gap-8">
-                <div className="w-[64px] text-center">속도</div>
-                <div className="w-[64px] text-center">볼륨</div>
-                <div className="w-[64px] text-center">피치</div>
+              <div className="flex">
+                <div className="text-center">속도</div>
+                <div className="text-center ml-14">볼륨</div>
+                <div className="text-center ml-14">피치</div>
+                <div className="text-center ml-10 mr-3">내역</div>
               </div>
             </div>
             <div className="absolute inset-x-0 bottom-0 top-[37px]">

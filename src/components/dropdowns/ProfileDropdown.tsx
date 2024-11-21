@@ -37,9 +37,9 @@ const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
           </div>
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger className="outline-none">
-              <button className="text-foreground hover:bg-gray-100 p-1 rounded transition-colors">
+              <div className="text-foreground hover:bg-gray-100 p-1 rounded transition-colors mr-2">
                 {isOpen ? <TbChevronUp size={20} /> : <TbChevronDown size={20} />}
-              </button>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[184px]" sideOffset={12}>
               <DropdownMenuItem onClick={onMyPage} className="px-3 py-2">

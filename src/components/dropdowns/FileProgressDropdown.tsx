@@ -3,7 +3,8 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbChevronDown, TbChevronUp, TbCircleFilled, TbRotate } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
-export interface TTSFile {
+
+export interface FileProgressItem {
   id: number;
   name: string;
   status: '진행' | '대기' | '실패' | '완료';
@@ -11,8 +12,8 @@ export interface TTSFile {
   createdAt: string;
 }
 
-export interface TTSDropdownProps {
-  files: TTSFile[];
+export interface FileProgressDropdownProps {
+  items: FileProgressItem[];
   onDeleteCompleted?: () => void;
   onRetryFailed?: () => void;
 }
@@ -37,12 +38,12 @@ const formatDateCategory = (date: Date): string => {
   return '한달 전';
 };
 
-const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
+const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
   const categorizedFiles = useMemo(() => {
-    const grouped = files.reduce(
+    const grouped = items.reduce(
       (acc, file) => {
         const date = new Date(file.createdAt);
         const category = formatDateCategory(date);
@@ -53,7 +54,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
         acc[category].push(file);
         return acc;
       },
-      {} as Record<string, TTSFile[]>
+      {} as Record<string, FileProgressItem[]>
     );
 
     const categoryOrder = ['오늘', '어제', '그저께', '일주일 전', '한달 전'];
@@ -65,19 +66,19 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
         }
         return acc;
       },
-      {} as Record<string, TTSFile[]>
+      {} as Record<string, FileProgressItem[]>
     );
-  }, [files]);
+  }, [items]);
 
-  const stats = useMemo(() => {
-    return files.reduce(
+  const fileStats = useMemo(() => {
+    return items.reduce(
       (acc, file) => {
         acc[file.status] = (acc[file.status] || 0) + 1;
         return acc;
       },
       {} as Record<string, number>
     );
-  }, [files]);
+  }, [items]);
 
   const toggleStatus = (status: string) => {
     setSelectedStatuses((prev) => {
@@ -99,7 +100,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             <TbCircleFilled className="w-2 h-2 text-green-500 mr-2" />
             <span className="text-foreground text-sm font-medium">진행</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['진행'] || 0}</span>
+              <span className="text-[#512A91] text-xs font-medium">{fileStats['진행'] || 0}</span>
             </div>
           </button>
 
@@ -108,7 +109,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             <TbCircleFilled className="w-2 h-2 text-yellow-500 mr-2" />
             <span className="text-foreground text-sm font-medium">대기</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['대기'] || 0}</span>
+              <span className="text-[#512A91] text-xs font-medium">{fileStats['대기'] || 0}</span>
             </div>
           </button>
 
@@ -117,7 +118,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             <TbCircleFilled className="w-2 h-2 text-red-500 mr-2" />
             <span className="text-foreground text-sm font-medium">실패</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['실패'] || 0}</span>
+              <span className="text-[#512A91] text-xs font-medium">{fileStats['실패'] || 0}</span>
             </div>
           </button>
 
@@ -126,7 +127,7 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
             <TbCircleFilled className="w-2 h-2 text-blue-500 mr-2" />
             <span className="text-foreground text-sm font-medium">완료</span>
             <div className="ml-2 bg-secondary rounded px-2 h-[18px] flex items-center">
-              <span className="text-[#512A91] text-xs font-medium">{stats['완료'] || 0}</span>
+              <span className="text-[#512A91] text-xs font-medium">{fileStats['완료'] || 0}</span>
             </div>
           </button>
         </div>
@@ -171,51 +172,51 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
           </div>
           {/* 파일 목록 영역 */}
           <div className="p-4">
-            {Object.entries(categorizedFiles).map(([category, categoryFiles]) => {
-              const filteredFiles = categoryFiles.filter(
-                (file) => selectedStatuses.length === 0 || selectedStatuses.includes(file.status)
+            {Object.entries(categorizedFiles).map(([category, categoryItems]) => {
+              const filteredItems = categoryItems.filter(
+                (item) => selectedStatuses.length === 0 || selectedStatuses.includes(item.status)
               );
 
-              if (filteredFiles.length === 0) return null;
+              if (filteredItems.length === 0) return null;
 
               return (
                 <div key={category} className="mb-6 last:mb-0">
                   <h3 className="text-sm font-medium text-foreground mb-2">{category}</h3>
                   <div className="relative">
-                    {filteredFiles.length > 1 && (
+                    {filteredItems.length > 1 && (
                       <div
                         className="absolute left-1 top-3 bottom-3 w-px bg-gray-200"
                         aria-hidden="true"
                       />
                     )}
-                    {filteredFiles.map((file) => (
-                      <div key={file.id} className="flex items-center mb-3 last:mb-0 relative">
+                    {filteredItems.map((item) => (
+                      <div key={item.id} className="flex items-center mb-3 last:mb-0 relative">
                         <TbCircleFilled
                           className={`w-2 h-2 mr-3 z-10 ${
-                            file.status === '진행'
+                            item.status === '진행'
                               ? 'text-green-500'
-                              : file.status === '대기'
+                              : item.status === '대기'
                                 ? 'text-yellow-500'
-                                : file.status === '실패'
+                                : item.status === '실패'
                                   ? 'text-red-500'
                                   : 'text-blue-500'
                           }`}
                         />
                         <div className="flex items-center flex-1">
                           <span className="text-sm font-medium text-foreground mr-2">
-                            {file.name}
+                            {item.name}
                           </span>
-                          {file.status === '진행' ? (
+                          {item.status === '진행' ? (
                             <>
                               <span className="text-sm text-gray-500 mr-2">• TTS 변환 중</span>
                               <AiOutlineLoading3Quarters className="animate-spin text-green-500 mr-2" />
-                              <span className="text-sm text-gray-500">{file.progress}%</span>
+                              <span className="text-sm text-gray-500">{item.progress}%</span>
                             </>
                           ) : (
                             <span className="text-sm text-gray-500">
-                              {file.status === '대기' && '• TTS 대기 중'}
-                              {file.status === '실패' && '• TTS 실패'}
-                              {file.status === '완료' && '• TTS 변환 완료'}
+                              {item.status === '대기' && '• TTS 대기 중'}
+                              {item.status === '실패' && '• TTS 실패'}
+                              {item.status === '완료' && '• TTS 변환 완료'}
                             </span>
                           )}
                         </div>
@@ -237,4 +238,4 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
   );
 };
 
-export default TTSDropdown;
+export default FileProgressDropdown;

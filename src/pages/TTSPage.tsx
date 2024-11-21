@@ -1,21 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
+import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
 import AudioFooter from '@/components/footer/AudioFooter';
-import { WorkStatusHeader } from '@/components/header/WorkStatusHeader';
+import { FileProgressHeader } from '@/components/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/sidebar/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { Button } from '@/components/ui/button';
 import jisuImage from '@/images/avatar/jisu.jpg';
-
-interface TTSFile {
-  id: number;
-  name: string;
-  status: '진행' | '대기' | '실패' | '완료';
-  progress?: number;
-  createdAt: string;
-}
-
 interface TTSItem {
   id: string;
   text: string;
@@ -26,7 +18,7 @@ interface TTSItem {
 }
 
 const TTSPage = () => {
-  const [ttsFiles, setTTSFiles] = useState<TTSFile[]>([
+  const [progressFiles, setProgressFiles] = useState<FileProgressItem[]>([
     {
       id: 1,
       name: 'text_001.txt',
@@ -89,11 +81,11 @@ const TTSPage = () => {
   }, []);
 
   const handleDeleteCompleted = useCallback(() => {
-    setTTSFiles((prev) => prev.filter((file) => file.status !== '완료'));
+    setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
   }, []);
 
   const handleRetryFailed = useCallback(() => {
-    setTTSFiles((prev) =>
+    setProgressFiles((prev) =>
       prev.map((file) => (file.status === '실패' ? { ...file, status: '대기' } : file))
     );
   }, []);
@@ -130,11 +122,11 @@ const TTSPage = () => {
     <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
       {/* Header */}
       <header className="h-[92px] ml-6 border-b">
-        <WorkStatusHeader
+        <FileProgressHeader
           name="김바타"
           email="aipark@aipark.ai"
           imageUrl={jisuImage}
-          files={ttsFiles}
+          files={progressFiles}
           onDeleteCompleted={handleDeleteCompleted}
           onRetryFailed={handleRetryFailed}
           onMyPage={() => console.log('마이페이지')}

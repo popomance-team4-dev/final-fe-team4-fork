@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { SaveButton, UploadButton } from '@/components/buttons/IconButton';
-import TTSDropdown, { TTSFile } from '@/components/tts/TTSDropdown';
-import TTSOptionsSidebar from '@/components/tts/TTSOptionsSidebar';
+import AudioFooter from '@/components/footer/AudioFooter';
+import { WorkStatusHeader } from '@/components/header/WorkStatusHeader';
+import TTSOptionsSidebar from '@/components/sidebar/TTSOptionsSidebar';
 import { TTSTable } from '@/components/tts/TTSTable';
 import { Button } from '@/components/ui/button';
+import jisuImage from '@/images/avatar/jisu.jpg';
+
+interface TTSFile {
+  id: number;
+  name: string;
+  status: '진행' | '대기' | '실패' | '완료';
+  progress?: number;
+  createdAt: string;
+}
 
 interface TTSItem {
   id: string;
@@ -121,16 +130,16 @@ const TTSPage = () => {
     <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
       {/* Header */}
       <header className="h-[92px] ml-6 border-b">
-        <div className="pt-3">
-          <h1 className="text-[14px] font-bold mb-2">My work status</h1>
-          <div className="relative">
-            <TTSDropdown
-              files={ttsFiles}
-              onDeleteCompleted={handleDeleteCompleted}
-              onRetryFailed={handleRetryFailed}
-            />
-          </div>
-        </div>
+        <WorkStatusHeader
+          name="김바타"
+          email="aipark@aipark.ai"
+          imageUrl={jisuImage}
+          files={ttsFiles}
+          onDeleteCompleted={handleDeleteCompleted}
+          onRetryFailed={handleRetryFailed}
+          onMyPage={() => console.log('마이페이지')}
+          onSignout={() => console.log('로그아웃')}
+        />
       </header>
 
       <div className="flex flex-1 h-[839px] ml-6 border-b">
@@ -187,7 +196,7 @@ const TTSPage = () => {
 
       {/* Playback */}
       <section className="h-[92px] px-6">
-        <AudioPlayer audioUrl={''} />
+        <AudioFooter audioUrl="/sample.mp3" />
       </section>
     </div>
   );

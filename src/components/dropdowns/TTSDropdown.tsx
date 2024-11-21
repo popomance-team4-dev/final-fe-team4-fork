@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
+import { TbCheck, TbChevronDown, TbChevronUp, TbCircleFilled } from 'react-icons/tb';
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
 export interface TTSFile {
@@ -150,12 +150,13 @@ const TTSDropdown: React.FC<TTSDropdownProps> = ({ files }) => {
                 <button
                   key={status}
                   onClick={() => toggleStatus(status)}
-                  className={`h-6 px-2 rounded text-sm font-medium transition-colors ${
+                  className={`h-6 px-2 rounded text-sm font-medium transition-colors flex items-center ${
                     selectedStatuses.includes(status)
                       ? 'bg-secondary text-[#512A91]'
                       : 'bg-gray-100 text-gray-600'
                   }`}
                 >
+                  {selectedStatuses.includes(status) && <TbCheck className="w-4 h-4 mr-1" />}
                   {status}
                 </button>
               ))}

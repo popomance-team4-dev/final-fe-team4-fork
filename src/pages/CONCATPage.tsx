@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
+import CONCATOptionsSidebar from '@/components/sidebar/CONCATOptionsSidebar';
 import { Button } from '@/components/ui/button';
 
 const CONCATPage = () => {
@@ -50,7 +51,9 @@ const CONCATPage = () => {
         </div>
 
         {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0 bg-gray-50"></aside>
+        <aside className="w-[276px] flex-shrink-0">
+          <CONCATOptionsSidebar />
+        </aside>
       </div>
 
       {/* Playback */}

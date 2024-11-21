@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import FileUploadAlert, { ALERT_MESSAGES } from '@/components/alerts/FileUploadAlert';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
+import CONCATOptionsSidebar from '@/components/sidebar/CONCATOptionsSidebar';
 import ProjectTitle from '@/components/section/ProjectTitle';
 import { Button } from '@/components/ui/button';
 
@@ -51,7 +52,9 @@ const CONCATPage = () => {
         </div>
 
         {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0 bg-gray-50"></aside>
+        <aside className="w-[276px] flex-shrink-0">
+          <CONCATOptionsSidebar />
+        </aside>
       </div>
 
       {/* Playback */}

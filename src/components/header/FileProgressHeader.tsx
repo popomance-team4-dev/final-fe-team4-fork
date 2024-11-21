@@ -1,18 +1,20 @@
+import FileProgressDropdown, {
+  FileProgressItem,
+} from '@/components/dropdowns/FileProgressDropdown';
 import ProfileDropdown from '@/components/dropdowns/ProfileDropdown';
-import TTSDropdown, { TTSFile } from '@/components/dropdowns/TTSDropdown';
 
-interface WorkStatusHeaderProps {
+interface FileProgressHeaderProps {
   name: string;
   email: string;
   imageUrl?: string;
-  files: TTSFile[];
+  files: FileProgressItem[];
   onDeleteCompleted: () => void;
   onRetryFailed: () => void;
   onMyPage: () => void;
   onSignout: () => void;
 }
 
-export const WorkStatusHeader = ({
+export const FileProgressHeader = ({
   name,
   email,
   imageUrl,
@@ -21,14 +23,14 @@ export const WorkStatusHeader = ({
   onRetryFailed,
   onMyPage,
   onSignout,
-}: WorkStatusHeaderProps) => {
+}: FileProgressHeaderProps) => {
   return (
     <div className="flex items-center justify-between pt-3">
       <div className="space-y-2">
         <h1 className="text-[14px] font-bold">My work status</h1>
         <div className="relative">
-          <TTSDropdown
-            files={files}
+          <FileProgressDropdown
+            items={files}
             onDeleteCompleted={onDeleteCompleted}
             onRetryFailed={onRetryFailed}
           />

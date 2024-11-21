@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import MainHeader from '@/components/header/MainHeader';
-import { HistoryTable } from '@/components/workspace/HistoryTable';
+import { HistoryTable } from '@/components/tables/HistoryTable';
 import HomePopup from '@/components/workspace/HomePopup';
 import RecentProject from '@/components/workspace/RecontProject';
 import jisuImage from '@/images/avatar/jisu.jpg';
@@ -17,6 +17,7 @@ const WorkspacePage = () => {
       fileName: '오디오11.wav',
       content: 'Lorem ipsum dolor sit amet consectetur.',
       type: 'VC' as const,
+      status: '완료' as const,
       createdAt: '2024. 11. 12',
     },
     {
@@ -26,6 +27,7 @@ const WorkspacePage = () => {
       fileName: '오디오12.wav',
       content: 'Lorem ipsum dolor sit amet consectetur.',
       type: 'TTS' as const,
+      status: '대기중' as const,
       createdAt: '2024. 11. 12',
     },
     {
@@ -35,6 +37,7 @@ const WorkspacePage = () => {
       fileName: '오디오13.wav',
       content: 'Lorem ipsum dolor sit amet consectetur.',
       type: 'CONCAT' as const,
+      status: '실패' as const,
       createdAt: '2024. 11. 12',
     },
     {
@@ -44,6 +47,7 @@ const WorkspacePage = () => {
       fileName: '오디오14.wav',
       content: 'Lorem ipsum dolor sit amet consectetur.',
       type: 'VC' as const,
+      status: '진행' as const,
       createdAt: '2024. 11. 13',
     },
     {
@@ -53,6 +57,7 @@ const WorkspacePage = () => {
       fileName: '오디오15.wav',
       content: 'Lorem ipsum dolor sit amet consectetur.',
       type: 'TTS' as const,
+      status: '완료' as const,
       createdAt: '2024. 11. 13',
     },
   ];
@@ -72,7 +77,7 @@ const WorkspacePage = () => {
         />
       </div>
 
-      <div className="px-6 pt-6">
+      <div className="px-6">
         {/* 팝업 창 */}
         <HomePopup />
       </div>

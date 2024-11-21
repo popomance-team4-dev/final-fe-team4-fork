@@ -1,9 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
-import NavbarLayout from '@/layouts/NavbarLayout';
+import NavbarLayout from '@/layouts/NavSidebarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import CONCATPage from '@/pages/ConcatPage';
+import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';

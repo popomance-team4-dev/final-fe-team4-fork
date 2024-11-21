@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
+import MainHeader from '@/components/header/MainHeader';
 import { HistoryTable } from '@/components/workspace/HistoryTable';
 import HomePopup from '@/components/workspace/HomePopup';
 import RecentProject from '@/components/workspace/RecontProject';
+import jisuImage from '@/images/avatar/jisu.jpg';
+
 const WorkspacePage = () => {
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
 
@@ -59,9 +62,14 @@ const WorkspacePage = () => {
 
   return (
     <div>
-      <div className="p-6 bg-gray-200 h-[92px]">
-        {/* 환영 메시지 */}
-        <p>User 님, 반갑습니다.</p>
+      <div className="h-[92px] ml-6 border-b">
+        <MainHeader
+          name="김바타"
+          email="aipark@aipark.ai"
+          imageUrl={jisuImage}
+          onMyPage={() => console.log('마이페이지')}
+          onSignout={() => console.log('로그아웃')}
+        />
       </div>
 
       <div className="px-6 pt-6">

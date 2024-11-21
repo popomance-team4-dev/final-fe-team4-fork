@@ -146,44 +146,45 @@ const TTSOptionsSidebar: React.FC = () => {
       <hr className="my-8" />
 
       {/* 속도 */}
-      <StateController
-        label="속도"
-        value={speed}
-        unit="x"
-        min={0.5}
-        max={2.0}
-        step={0.1}
-        onChange={setSpeed}
-      />
-
-      <hr className="my-8" />
-
+      <div className="mb-6">
+        <StateController
+          label="속도"
+          value={speed}
+          unit="x"
+          min={0.5}
+          max={2.0}
+          step={0.1}
+          onChange={setSpeed}
+        />
+      </div>
       {/* 볼륨 */}
-      <StateController
-        label="볼륨"
-        value={volume}
-        unit="%"
-        min={0}
-        max={100}
-        step={1}
-        onChange={setVolume}
-      />
-
-      <hr className="my-8" />
+      <div className="mb-6">
+        <StateController
+          label="볼륨"
+          value={volume}
+          unit="%"
+          min={0}
+          max={100}
+          step={1}
+          onChange={setVolume}
+        />
+      </div>
 
       {/* 피치 */}
-      <StateController
-        label="피치"
-        value={pitch}
-        unit=""
-        min={0}
-        max={10}
-        step={0.1}
-        onChange={setPitch}
-      />
+      <div className="mb-12">
+        <StateController
+          label="피치"
+          value={pitch}
+          unit=""
+          min={0}
+          max={10}
+          step={0.1}
+          onChange={setPitch}
+        />
+      </div>
 
       {/* 적용 버튼들 */}
-      <div className="flex flex-col my-12 gap-4">
+      <div className="flex flex-col gap-4">
         <ApplySelectionButton />
         <ApplyAllButton />
         <ResetChangesButton />

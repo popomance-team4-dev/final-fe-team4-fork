@@ -161,13 +161,15 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
                 </button>
               ))}
               {/* 리셋 버튼 */}
-              <button
-                onClick={() => setSelectedStatuses([])}
-                className="text-gray-500 ml-2"
-                title="필터 초기화"
-              >
-                <TbRotate size={16} />
-              </button>
+              {selectedStatuses.length > 0 && (
+                <button
+                  onClick={() => setSelectedStatuses([])}
+                  className="text-gray-500 ml-2"
+                  title="필터 초기화"
+                >
+                  <TbRotate size={16} />
+                </button>
+              )}
             </div>
           </div>
           {/* 파일 목록 영역 */}

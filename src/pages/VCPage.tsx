@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+import FileUploadAlert, { ALERT_MESSAGES } from '@/components/alerts/FileUploadAlert';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { Button } from '@/components/ui/button';
-import FileUploadAlert from '@/components/ui/FileUploadAlert';
 
 const VCPage = () => {
   const [showAlert, setShowAlert] = useState(true);
@@ -32,7 +32,7 @@ const VCPage = () => {
             <div className="flex relative">
               {showAlert && (
                 <FileUploadAlert
-                  message="VC 작업을 시작하려면 반드시 오디오 파일을 업로드해 주세요."
+                  message={ALERT_MESSAGES.VC_UPLOAD_REQUIRED}
                   onClose={() => setShowAlert(false)}
                 />
               )}

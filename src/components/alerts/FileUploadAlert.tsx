@@ -6,6 +6,11 @@ interface FileUploadAlertProps {
   onClose: () => void;
 }
 
+export const ALERT_MESSAGES = {
+  VC_UPLOAD_REQUIRED: 'VC 작업을 시작하려면 반드시 오디오 파일을 업로드해 주세요.',
+  CONCAT_UPLOAD_REQUIRED: 'VC 작업을 시작하려면 반드시 오디오 파일을 업로드해 주세요.',
+};
+
 const FileUploadAlert: React.FC<FileUploadAlertProps> = ({ message, onClose }) => {
   return (
     <div className="pt-5 w-full">

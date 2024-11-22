@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import FileUploadAlert, { ALERT_MESSAGES } from '@/components/guide/FileUploadPopup';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
+import VCOptionsSidebar from '@/components/section/sidebar/VCOptionsSidebar';
 import { TableContents } from '@/components/tables/common/TableContents';
 import { Button } from '@/components/ui/button';
 
@@ -120,7 +121,9 @@ const VCPage = () => {
         </div>
 
         {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0 bg-gray-50"></aside>
+        <aside className="w-[276px] flex-shrink-0">
+          <VCOptionsSidebar />
+        </aside>
       </div>
 
       {/* Playback */}

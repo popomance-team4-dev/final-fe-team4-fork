@@ -4,6 +4,7 @@ import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer, PlayerMode } from '@/components/audio/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
+import HistoryTree from '@/components/tts/TTSHistoryTree';
 
 interface TTSPlaybackHistoryProps {
   id: string;
@@ -57,21 +58,8 @@ const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ id }) => {
 
   return (
     <div className="flex bg-gray-50">
-      <div className="relative">
-        {[...historyItems].map((_, index) => (
-          <>
-            {index !== 0 ? (
-              <div className="ml-8 w-[21px] h-[64px] rounded-bl-3xl border-l-[2px] border-b-2 border-l-gray-700-500 relative">
-                <div
-                  key={index}
-                  className={`absolute h-[64px] w-0 border-l-[2px] bg-gray-300 ml-[-1.5px] -translate-y-4 line`}
-                />
-              </div>
-            ) : (
-              <div className="ml-8 w-[21px] h-[40px] rounded-bl-3xl border-l-2 border-b-[0.1em] border-l-gray-700-500"></div>
-            )}
-          </>
-        ))}
+      <div>
+        <HistoryTree historyItems={historyItems} />
       </div>
       <div className="mb-3 w-full mr-2">
         {historyItems.map((historyItem) => (

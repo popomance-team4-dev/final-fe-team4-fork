@@ -8,7 +8,7 @@ import {
 } from '@/components/buttons/IconButton';
 import { StateController } from '@/components/feature/StateController';
 
-const CONCATOptionsSidebar: React.FC = () => {
+const CONCATSidebar: React.FC = () => {
   const [silenceAfterSentence, setSilenceAfterSentence] = useState(0); // 문장 뒤 무음 추가
   const [silenceAtStart, setSilenceAtStart] = useState(0); // 맨 앞 무음 추가
   const [silenceAtEnd, setSilenceAtEnd] = useState(0); // 맨 뒤 무음 추가
@@ -65,4 +65,4 @@ const CONCATOptionsSidebar: React.FC = () => {
   );
 };
 
-export default CONCATOptionsSidebar;
+export default CONCATSidebar;

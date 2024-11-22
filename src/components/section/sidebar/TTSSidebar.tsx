@@ -103,7 +103,7 @@ const styleOptions: SelectItemType[] = [
   { value: '날카로운 · 정확함', label: '날카로운 · 정확함' },
 ];
 
-const TTSOptionsSidebar: React.FC = () => {
+const TTSSidebar: React.FC = () => {
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(60);
   const [pitch, setPitch] = useState(4.0);
@@ -204,4 +204,4 @@ const TTSOptionsSidebar: React.FC = () => {
   );
 };
 
-export default TTSOptionsSidebar;
+export default TTSSidebar;

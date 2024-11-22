@@ -6,9 +6,9 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/buttons/IconButton';
-import VCselectTabs from '@/components/tabs/VCselectTabs';
+import VCselectTabs from '@/components/tabs/VCSidebarTabs';
 import { Switch } from '@/components/ui/switch';
-const VCOptionsSidebar: React.FC = () => {
+const VCSidebar: React.FC = () => {
   const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
   return (
     <aside className="w-[276px] min-h-full border-l border-gray-200 bg-background">
@@ -41,4 +41,4 @@ const VCOptionsSidebar: React.FC = () => {
     </aside>
   );
 };
-export default VCOptionsSidebar;
+export default VCSidebar;

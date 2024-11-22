@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { AudioPlayer } from '@/components/feature/AudioPlayer';
 import CONCATMainContents from '@/components/section/contents/CONCATMainContents';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
-import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATOptionsSidebar';
+import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATSidebar';
 
 interface CONCATItem {
   id: string;

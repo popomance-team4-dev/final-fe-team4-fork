@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { TbDotsVertical, TbPencil, TbTrash } from 'react-icons/tb';
-interface KeBobProps {
+interface KebabMenuProps {
   onRename: () => void;
   onDelete: () => void;
 }
-const KeBob: React.FC<KeBobProps> = ({ onRename, onDelete }) => {
+const KebabMenu: React.FC<KebabMenuProps> = ({ onRename, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = (e: React.MouseEvent, action: () => void) => {
     e.stopPropagation();
@@ -43,4 +43,4 @@ const KeBob: React.FC<KeBobProps> = ({ onRename, onDelete }) => {
     </div>
   );
 };
-export default KeBob;
+export default KebabMenu;

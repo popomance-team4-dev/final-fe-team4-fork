@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { AudioPlayer } from '@/components/feature/AudioPlayer';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
 import VCMainContents from '@/components/section/contents/VCMainContents';
-import VCOptionsSidebar from '@/components/section/sidebar/VCOptionsSidebar';
+import VCOptionsSidebar from '@/components/section/sidebar/VCSidebar';
 
 interface VCItem {
   id: string;

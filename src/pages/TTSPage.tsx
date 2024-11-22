@@ -5,7 +5,7 @@ import ProjectTitle from '@/components/section/contents/ProjectTitle';
 import TTSMainContents from '@/components/section/contents/TTSMainContents';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
-import TTSOptionsSidebar from '@/components/section/sidebar/TTSOptionsSidebar';
+import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import jisuImage from '@/images/avatar/jisu.jpg';
 interface TTSItem {
   id: string;

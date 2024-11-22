@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { TbHistory } from 'react-icons/tb';
 
+import AudioHistoryDialog from '@/components/audio/AudioHistoryDialog';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import Jennie from '@/images/avatar/jennie.png';
 import { cn } from '@/lib/utils';
@@ -40,12 +42,20 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
 
         <Separator orientation="vertical" className="flex-shrink-0 h-[56px] mr-4" />
 
-        <button
-          className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-full transition-colors"
-          aria-label="History"
-        >
-          <TbHistory className="w-7 h-7 text-black" />
-        </button>
+        {/* Dialog Trigger */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="History"
+            >
+              <TbHistory className="w-7 h-7 text-black" />
+            </button>
+          </DialogTrigger>
+
+          {/* Dialog Content */}
+          <AudioHistoryDialog />
+        </Dialog>
       </div>
     );
   }

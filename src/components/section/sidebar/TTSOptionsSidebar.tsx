@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
-import { StateController } from '@/components/audio/StateController';
 import {
   ApplyAllButton,
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/buttons/IconButton';
+import { StateController } from '@/components/feature/StateController';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
 import Ian from '@/images/avatar/ian.jpg';

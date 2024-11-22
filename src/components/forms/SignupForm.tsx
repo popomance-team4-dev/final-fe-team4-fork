@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import TermsDialog from '@/components/dialogs/TermsDialog';
-import TermsAgreement from '@/components/section/contents/TermsAgreement';
+import TermsAgreement from '@/components/feature/TermsAgreement';
 import { Button } from '@/components/ui/button';
 import {
   Form,

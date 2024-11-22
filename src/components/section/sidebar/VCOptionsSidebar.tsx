@@ -6,8 +6,8 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/buttons/IconButton';
+import VCselectTabs from '@/components/tabs/VCselectTabs';
 import { Switch } from '@/components/ui/switch';
-import VCselectTabs from '@/components/vc/VCselectTabs';
 const VCOptionsSidebar: React.FC = () => {
   const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
   return (

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import { PlayButton } from '@/components/buttons/PlayButton';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/feature/SoundStatus';
 import TTSPlaybackHistory from '@/components/tables/tts/TTSPlaybackHistory';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { AudioPlayer } from '@/components/audio/AudioPlayer';
+import { AudioPlayer } from '@/components/feature/AudioPlayer';
 import FileUploadAlert, { ALERT_MESSAGES } from '@/components/guide/FileUploadPopup';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
 import VCOptionsSidebar from '@/components/section/sidebar/VCOptionsSidebar';

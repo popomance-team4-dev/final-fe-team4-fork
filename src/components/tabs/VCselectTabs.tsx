@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { TbFileMusic } from 'react-icons/tb';
 
-import KeBob from '@/components/ui/kebob';
+import KeBob from '@/components/dropdowns/kebob';
+import FileUploadBox from '@/components/feature/FileUploadBox';
 import Pagination from '@/components/ui/pagination';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import FileUploadBox from '@/components/vc/FileUploadBox';
 interface VCselect {
   id: string;
   name: string;

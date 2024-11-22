@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-import { AudioPlayer } from '@/components/audio/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/audio/SoundStatus';
 import {
   DownloadButton,
   RecreateButton,
   TTSPlaybackHistoryButton,
 } from '@/components/buttons/IconButton';
+import { AudioPlayer } from '@/components/feature/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/feature/SoundStatus';
 import TTSPlaybackHistory from '@/components/tables/tts/TTSPlaybackHistory';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { TbSettings } from 'react-icons/tb';
 
-import { StateController } from '@/components/audio/StateController';
 import {
   ApplyAllButton,
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/buttons/IconButton';
+import { StateController } from '@/components/feature/StateController';
 
 const CONCATOptionsSidebar: React.FC = () => {
   const [silenceAfterSentence, setSilenceAfterSentence] = useState(0); // 문장 뒤 무음 추가

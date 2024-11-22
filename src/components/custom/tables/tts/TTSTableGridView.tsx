@@ -4,12 +4,13 @@ import {
   DownloadButton,
   RecreateButton,
   TTSPlaybackHistoryButton,
-} from '@/components/buttons/IconButton';
-import { AudioPlayer } from '@/components/feature/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/feature/SoundStatus';
-import TTSPlaybackHistory from '@/components/tables/tts/TTSPlaybackHistory';
+} from '@/components/custom/buttons/IconButton';
+import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+
+import TTSPlaybackHistory from './TTSPlaybackHistory';
 
 interface TTSTableGridViewItemProps {
   id: string;

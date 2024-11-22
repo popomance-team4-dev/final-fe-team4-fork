@@ -2,7 +2,7 @@ import throttle from 'lodash.throttle';
 import * as React from 'react';
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js';
 
-import { PlayButton } from '@/components/buttons/PlayButton';
+import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { cn } from '@/lib/utils';
 
 export enum PlayerMode {

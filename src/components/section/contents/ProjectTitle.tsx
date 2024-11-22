@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TbCheck, TbPencil, TbX } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 
-import { SaveButton } from '@/components/buttons/IconButton';
+import { SaveButton } from '@/components/custom/buttons/IconButton';
 import {
   Breadcrumb,
   BreadcrumbItem,

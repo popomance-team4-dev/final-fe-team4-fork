@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { TbFileMusic } from 'react-icons/tb';
 
-import KeBob from '@/components/dropdowns/KebabMenu';
-import FileUploadBox from '@/components/feature/FileUploadBox';
+import KeBob from '@/components/custom/dropdowns/KebabMenu';
+import FileUploadBox from '@/components/custom/feature/FileUploadBox';
 import Pagination from '@/components/ui/pagination';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 

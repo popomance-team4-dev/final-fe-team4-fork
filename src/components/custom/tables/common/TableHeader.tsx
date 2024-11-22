@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { TbCirclePlus, TbTrash } from 'react-icons/tb';
 
-import { UploadAudioButton, UploadTextButton } from '@/components/buttons/IconButton';
-import ViewButtonGroup from '@/components/buttons/ViewFilterButton';
+import { UploadAudioButton, UploadTextButton } from '@/components/custom/buttons/IconButton';
+import ViewButtonGroup from '@/components/custom/buttons/ViewFilterButton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';

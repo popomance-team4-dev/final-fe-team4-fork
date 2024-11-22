@@ -1,4 +1,4 @@
-import ProfileDropdown from '@/components/dropdowns/ProfileDropdown';
+import ProfileDropdown from '@/components/custom/dropdowns/ProfileDropdown';
 
 interface MainHeaderProps {
   name: string;

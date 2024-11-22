@@ -2,9 +2,10 @@ import { Checkbox } from '@radix-ui/react-checkbox';
 import { useEffect, useMemo, useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
-import { AudioPlayer, PlayerMode } from '@/components/feature/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/feature/SoundStatus';
-import HistoryTree from '@/components/tables/tts/TTSHistoryTree';
+import { AudioPlayer, PlayerMode } from '@/components/custom/feature/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
+
+import HistoryTree from './TTSHistoryTree';
 
 interface TTSPlaybackHistoryProps {
   id: string;

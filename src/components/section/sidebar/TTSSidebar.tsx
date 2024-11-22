@@ -5,8 +5,8 @@ import {
   ApplyAllButton,
   ApplySelectionButton,
   ResetChangesButton,
-} from '@/components/buttons/IconButton';
-import { StateController } from '@/components/feature/StateController';
+} from '@/components/custom/buttons/IconButton';
+import { StateController } from '@/components/custom/feature/StateController';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
 import Ian from '@/images/avatar/ian.jpg';

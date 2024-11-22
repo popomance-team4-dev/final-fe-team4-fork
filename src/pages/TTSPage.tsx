@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
+import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
 import TTSMainContents from '@/components/section/contents/TTSMainContents';
 import AudioFooter from '@/components/section/footer/AudioFooter';

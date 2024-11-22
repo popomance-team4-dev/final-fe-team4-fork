@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import HomePopup from '@/components/guide/HomePopup';
+import HomePopup from '@/components/custom/guide/HomePopup';
+import { HistoryTable } from '@/components/custom/tables/home/HistoryTable';
 import RecentProject from '@/components/section/contents/RecontProject';
 import MainHeader from '@/components/section/header/MainHeader';
-import { HistoryTable } from '@/components/tables/home/HistoryTable';
 import jisuImage from '@/images/avatar/jisu.jpg';
 
 const HomePage = () => {

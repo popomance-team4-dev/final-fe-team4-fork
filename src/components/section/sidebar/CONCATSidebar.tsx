@@ -5,8 +5,8 @@ import {
   ApplyAllButton,
   ApplySelectionButton,
   ResetChangesButton,
-} from '@/components/buttons/IconButton';
-import { StateController } from '@/components/feature/StateController';
+} from '@/components/custom/buttons/IconButton';
+import { StateController } from '@/components/custom/feature/StateController';
 
 const CONCATSidebar: React.FC = () => {
   const [silenceAfterSentence, setSilenceAfterSentence] = useState(0); // 문장 뒤 무음 추가

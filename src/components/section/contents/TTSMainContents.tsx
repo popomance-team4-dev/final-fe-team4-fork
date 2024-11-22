@@ -1,4 +1,4 @@
-import { TableContents } from '@/components/tables/common/TableContents';
+import { TableContents } from '@/components/custom/tables/common/TableContents';
 import { Button } from '@/components/ui/button';
 
 interface TTSItem {

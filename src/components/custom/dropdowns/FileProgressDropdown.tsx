@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbChevronDown, TbChevronUp, TbCircleFilled, TbRotate } from 'react-icons/tb';
 
-import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
+import { DeleteCompletedButton, RetryFailedButton } from '@/components/custom/buttons/IconButton';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 

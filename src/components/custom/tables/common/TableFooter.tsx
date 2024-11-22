@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { DownloadButton, RecreateButton } from '@/components/buttons/IconButton';
+import { DownloadButton, RecreateButton } from '@/components/custom/buttons/IconButton';
 import { cn } from '@/lib/utils';
 
 interface TableFooterProps {

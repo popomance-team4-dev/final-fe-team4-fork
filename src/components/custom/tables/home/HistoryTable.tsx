@@ -1,6 +1,6 @@
 import { TbChevronRight, TbCircleFilled, TbDownload } from 'react-icons/tb';
 
-import { PlayButton } from '@/components/buttons/PlayButton';
+import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,

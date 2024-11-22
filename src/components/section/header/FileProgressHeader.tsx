@@ -1,7 +1,7 @@
 import FileProgressDropdown, {
   FileProgressItem,
-} from '@/components/dropdowns/FileProgressDropdown';
-import ProfileDropdown from '@/components/dropdowns/ProfileDropdown';
+} from '@/components/custom/dropdowns/FileProgressDropdown';
+import ProfileDropdown from '@/components/custom/dropdowns/ProfileDropdown';
 
 interface FileProgressHeaderProps {
   name: string;

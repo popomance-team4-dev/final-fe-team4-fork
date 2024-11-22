@@ -1,7 +1,7 @@
 import React from 'react';
 import { TbAlertCircleFilled, TbX } from 'react-icons/tb';
 
-interface FileUploadAlertProps {
+interface FileUploadPopupProps {
   message: string;
   onClose: () => void;
 }
@@ -11,7 +11,7 @@ export const ALERT_MESSAGES = {
   CONCAT_UPLOAD_REQUIRED: 'VC 작업을 시작하려면 반드시 오디오 파일을 업로드해 주세요.',
 };
 
-const FileUploadAlert: React.FC<FileUploadAlertProps> = ({ message, onClose }) => {
+const FileUploadPopup: React.FC<FileUploadPopupProps> = ({ message, onClose }) => {
   return (
     <div className="pt-5 w-full">
       <div className="flex items-center justify-between h-8 px-4 border border-red-500 bg-red-50 rounded-md">
@@ -31,4 +31,4 @@ const FileUploadAlert: React.FC<FileUploadAlertProps> = ({ message, onClose }) =
   );
 };
 
-export default FileUploadAlert;
+export default FileUploadPopup;

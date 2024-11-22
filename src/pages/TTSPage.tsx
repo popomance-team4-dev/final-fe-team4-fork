@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
-import AudioFooter from '@/components/footer/AudioFooter';
-import { FileProgressHeader } from '@/components/header/FileProgressHeader';
-import ProjectTitle from '@/components/section/ProjectTitle';
-import TTSOptionsSidebar from '@/components/sidebar/TTSOptionsSidebar';
-import { TTSTable } from '@/components/tts/TTSTable';
+import ProjectTitle from '@/components/section/contents/ProjectTitle';
+import AudioFooter from '@/components/section/footer/AudioFooter';
+import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
+import TTSOptionsSidebar from '@/components/section/sidebar/TTSOptionsSidebar';
+import { TableContents } from '@/components/tables/common/TableContents';
 import { Button } from '@/components/ui/button';
 import jisuImage from '@/images/avatar/jisu.jpg';
 interface TTSItem {
@@ -141,7 +141,7 @@ const TTSPage = () => {
             <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
           </div>
           <div className="h-[580px] mt-6 overflow-hidden">
-            <TTSTable
+            <TableContents
               items={items}
               isAllSelected={isAllSelected}
               onSelectAll={handleSelectAll}

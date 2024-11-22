@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { TbHistory } from 'react-icons/tb';
 
-import AudioHistoryDialog from '@/components/audio/AudioHistoryDialog';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
+import AudioHistoryDialog from '@/components/dialogs/AudioHistoryDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';

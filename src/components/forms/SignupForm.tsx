@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import TermsAgreement from '@/components/terms/TermsAgreement';
-import TermsDialog from '@/components/terms/TermsDialog';
+import TermsDialog from '@/components/dialogs/TermsDialog';
+import TermsAgreement from '@/components/section/contents/TermsAgreement';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -26,7 +26,6 @@ const SignupForm = () => {
       password: '',
       passwordConfirm: '',
       name: '',
-      birth_date: '',
       phone: '',
       terms: [],
     },

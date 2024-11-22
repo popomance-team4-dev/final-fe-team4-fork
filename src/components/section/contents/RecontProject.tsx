@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
 
-import RecentProjectCard from '@/components/workspace/RecentProjectCard';
+import RecentProjectCard from '@/components/cards/RecentProjectCard';
 
 //더미 데이터
 const projects = [

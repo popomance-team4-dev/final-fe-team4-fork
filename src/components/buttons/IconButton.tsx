@@ -91,11 +91,25 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 );
 IconButton.displayName = 'IconButton';
 
-export function UploadButton({ onClick }: { onClick?: () => void }) {
+export function UploadTextButton({ onClick }: { onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbUpload />}
       label="텍스트 파일 업로드"
+      iconBgColor="bg-purple-50"
+      iconColor="text-purple-500"
+      textColor="text-gray-800"
+      width="167px"
+      onClick={onClick}
+    />
+  );
+}
+
+export function UploadAudioButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <IconButton
+      icon={<TbUpload />}
+      label="오디오 파일 업로드"
       iconBgColor="bg-purple-50"
       iconColor="text-purple-500"
       textColor="text-gray-800"

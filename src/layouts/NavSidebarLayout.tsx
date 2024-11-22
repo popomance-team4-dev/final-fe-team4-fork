@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { NavSidebar } from '@/components/sidebar/NavSidebar';
+import { NavSidebar } from '@/components/section/sidebar/NavSidebar';
 
 const NavSidebarLayout = () => {
   return (

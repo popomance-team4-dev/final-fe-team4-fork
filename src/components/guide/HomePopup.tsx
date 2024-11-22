@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
-import HomeCard from '@/components/workspace/HomeCard';
+import HomeCard from '@/components/cards/HomeCard';
 import HomePopupBg from '@/images/home-popup-bg.svg';
 
 const HomePopup = () => {

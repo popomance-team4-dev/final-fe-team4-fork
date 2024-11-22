@@ -7,11 +7,11 @@ import {
   RecreateButton,
   TTSPlaybackHistoryButton,
 } from '@/components/buttons/IconButton';
-import TTSPlaybackHistory from '@/components/tts/TTSPlaybackHistory';
+import TTSPlaybackHistory from '@/components/tables/tts/TTSPlaybackHistory';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 
-interface TTSTableGridItemProps {
+interface TTSTableGridViewItemProps {
   id: string;
   text: string;
   audioUrl: string;
@@ -27,11 +27,11 @@ interface TTSTableGridItemProps {
 }
 
 interface TTSGridItemProps {
-  item: TTSTableGridItemProps;
+  item: TTSTableGridViewItemProps;
 }
 
-interface TTSTableGridProps {
-  items: TTSTableGridItemProps[];
+interface TTSTableGridViewProps {
+  items: TTSTableGridViewItemProps[];
 }
 
 const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
@@ -115,7 +115,7 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
   );
 };
 
-const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
+const TTSTableGridView: React.FC<TTSTableGridViewProps> = ({ items }) => {
   return (
     <div className="flex flex-col gap-4">
       {items.map((item) => (
@@ -125,4 +125,4 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
   );
 };
 
-export { TTSGridItem as TTSGridItem, TTSTableGrid };
+export { TTSGridItem as TTSGridItem, TTSTableGridView };

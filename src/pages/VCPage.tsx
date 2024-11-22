@@ -3,8 +3,8 @@ import { useState } from 'react';
 import FileUploadAlert, { ALERT_MESSAGES } from '@/components/alerts/FileUploadAlert';
 import { AudioPlayer } from '@/components/audio/AudioPlayer';
 import ProjectTitle from '@/components/section/ProjectTitle';
+import VCOptionsSidebar from '@/components/sidebar/VCOptionsSidebar';
 import { Button } from '@/components/ui/button';
-
 const VCPage = () => {
   const [showAlert, setShowAlert] = useState(true);
 
@@ -51,7 +51,9 @@ const VCPage = () => {
         </div>
 
         {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0 bg-gray-50"></aside>
+        <aside className="w-[276px] flex-shrink-0">
+          <VCOptionsSidebar />
+        </aside>
       </div>
 
       {/* Playback */}

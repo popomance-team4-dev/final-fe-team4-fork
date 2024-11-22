@@ -4,6 +4,7 @@ import { TbChevronDown, TbChevronUp, TbCircleFilled, TbRotate } from 'react-icon
 
 import { DeleteCompletedButton, RetryFailedButton } from '@/components/buttons/IconButton';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export interface FileProgressItem {
   id: number;
@@ -18,6 +19,13 @@ export interface FileProgressDropdownProps {
   onDeleteCompleted?: () => void;
   onRetryFailed?: () => void;
 }
+
+const statusColorMap = {
+  진행: 'text-green-500',
+  대기: 'text-yellow-500',
+  실패: 'text-red-500',
+  완료: 'text-blue-500',
+} as const;
 
 const formatDateCategory = (date: Date): string => {
   const now = new Date();
@@ -195,15 +203,7 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
                     {filteredItems.map((item) => (
                       <div key={item.id} className="flex items-center mb-3 last:mb-0 relative">
                         <TbCircleFilled
-                          className={`w-2 h-2 mr-3 z-10 ${
-                            item.status === '진행'
-                              ? 'text-green-500'
-                              : item.status === '대기'
-                                ? 'text-yellow-500'
-                                : item.status === '실패'
-                                  ? 'text-red-500'
-                                  : 'text-blue-500'
-                          }`}
+                          className={cn(`w-2 h-2 mr-3 z-10 `, statusColorMap[item.status])}
                         />
                         <div className="flex items-center flex-1">
                           <span className="text-sm font-medium text-foreground mr-2">

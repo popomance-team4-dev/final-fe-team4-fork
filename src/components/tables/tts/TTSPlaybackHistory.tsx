@@ -4,6 +4,7 @@ import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer, PlayerMode } from '@/components/feature/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/feature/SoundStatus';
+import HistoryTree from '@/components/tables/tts/TTSHistoryTree';
 
 interface TTSPlaybackHistoryProps {
   id: string;
@@ -57,25 +58,15 @@ const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ id }) => {
 
   return (
     <div className="flex bg-gray-50">
-      <div className="relative">
-        {[...historyItems].map((_, index) => (
-          <>
-            {index !== 0 ? (
-              <div className="ml-8 w-[21px] h-[64px] rounded-bl-3xl border-l-[2px] border-b-2 border-l-gray-700-500 relative">
-                <div
-                  key={index}
-                  className={`absolute h-[64px] w-0 border-l-[2px] bg-gray-300 ml-[-1.5px] -translate-y-4 line`}
-                />
-              </div>
-            ) : (
-              <div className="ml-8 w-[21px] h-[40px] rounded-bl-3xl border-l-2 border-b-[0.1em] border-l-gray-700-500"></div>
-            )}
-          </>
-        ))}
+      <div>
+        <HistoryTree historyItems={historyItems} />
       </div>
       <div className="mb-3 w-full mr-2">
         {historyItems.map((historyItem) => (
-          <div className="flex items-center px-4 py-2 mt-3 mb-1 h-15 rounded-lg bg-white">
+          <div
+            key={historyItem.id}
+            className="flex items-center px-4 py-2 mt-3 mb-1 h-15 rounded-lg bg-white"
+          >
             <Checkbox className="mx-4" />
             <AudioPlayer audioUrl={''} mode={PlayerMode.MINI} className="flex-1" />
             <div className="flex gap-6 ml-auto items-center">

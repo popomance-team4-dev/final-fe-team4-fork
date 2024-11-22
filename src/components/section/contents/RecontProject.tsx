@@ -6,6 +6,7 @@ import RecentProjectCard from '@/components/cards/RecentProjectCard';
 //더미 데이터
 const projects = [
   {
+    id: 1,
     title: '프로젝트1 발표자료',
     description: '안녕하세요. 프로젝트1에 대한 발표를 시작해 보겠습니다.',
     date: '금요일 오후 7:24',
@@ -15,6 +16,7 @@ const projects = [
     hasPlayback: true,
   },
   {
+    id: 2,
     title: '프로젝트2 발표자료',
     description: '안녕하세요. 프로젝트2에 대한 발표를 시작해 보겠습니다.',
     date: '화요일 오후 3:15',
@@ -24,6 +26,7 @@ const projects = [
     hasPlayback: false,
   },
   {
+    id: 3,
     title: '프로젝트3 발표자료',
     description: '안녕하세요. 프로젝트3에 대한 발표를 시작해 보겠습니다.',
     date: '수요일 오전 11:05',
@@ -33,6 +36,7 @@ const projects = [
     hasPlayback: true,
   },
   {
+    id: 4,
     title: '프로젝트4 발표자료',
     description: '안녕하세요. 프로젝트4에 대한 발표를 시작해 보겠습니다.',
     date: '목요일 오후 5:00',
@@ -42,6 +46,7 @@ const projects = [
     hasPlayback: false,
   },
   {
+    id: 5,
     title: '프로젝트5 발표자료',
     description: '안녕하세요. 프로젝트5에 대한 발표를 시작해 보겠습니다.',
     date: '금요일 오후 1:30',
@@ -99,8 +104,8 @@ const RecentProject = () => {
           onScroll={handleScroll}
           className="flex gap-6 overflow-x-hidden snap-x snap-mandatory scrollbar-hide scroll-smooth"
         >
-          {projects.map((project, index) => (
-            <div key={index} className="snap-start">
+          {projects.map((project, _index) => (
+            <div key={project.id} className="snap-start">
               <RecentProjectCard
                 title={project.title}
                 description={project.description}

@@ -8,7 +8,6 @@ export interface Member {
   email: string;
   pwd: string;
   name: string;
-  birth_date: string;
   phone_number: string;
   tou: string;
   is_deleted: boolean;
@@ -22,7 +21,6 @@ export interface SignupRequest {
   email: string;
   pwd: string;
   name: string;
-  birth_date: string;
   phone_number: string;
   tou: string;
   is_deleted: boolean;

@@ -3,10 +3,10 @@ import { useState } from 'react';
 import HomePopup from '@/components/guide/HomePopup';
 import RecentProject from '@/components/section/contents/RecontProject';
 import MainHeader from '@/components/section/header/MainHeader';
-import { HistoryTable } from '@/components/tables/workspace/HistoryTable';
+import { HistoryTable } from '@/components/tables/home/HistoryTable';
 import jisuImage from '@/images/avatar/jisu.jpg';
 
-const WorkspacePage = () => {
+const HomePage = () => {
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
 
   const historyItems = [
@@ -104,4 +104,4 @@ const WorkspacePage = () => {
   );
 };
 
-export default WorkspacePage;
+export default HomePage;

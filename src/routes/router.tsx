@@ -5,22 +5,20 @@ import NavbarLayout from '@/layouts/NavSidebarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
+import HomePage from '@/pages/HomePage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
 import VCPage from '@/pages/VCPage';
-import WorkspacePage from '@/pages/WorkspacePage';
 
 const PATH = {
   HOME: '/',
   SIGNIN: '/signin',
   SIGNUP: '/signup',
-  WORKSPACE: '/workspace',
   ACCOUNT_RECOVERY: '/account-recovery',
   TTS: '/tts',
-  CONCAT: '/concat',
   VC: '/vc',
-  EXAMPLE: '/example',
+  CONCAT: '/concat',
   ERROR: '/error',
 } as const;
 
@@ -54,8 +52,8 @@ const router = createBrowserRouter([
         element: <NavbarLayout />,
         children: [
           {
-            path: PATH.WORKSPACE,
-            element: <WorkspacePage />,
+            path: PATH.HOME,
+            element: <HomePage />,
           },
           {
             path: PATH.TTS,

@@ -5,10 +5,6 @@ import { cn } from '@/lib/utils';
 interface HistoryBranchProps {
   isFirst?: boolean;
   branchColor?: string;
-  height?: {
-    first: number;
-    other: number;
-  };
   className?: string;
 }
 

@@ -1,11 +1,9 @@
 import { useCallback, useState } from 'react';
 
 import { AudioPlayer } from '@/components/feature/AudioPlayer';
-import FileUploadAlert, { ALERT_MESSAGES } from '@/components/guide/FileUploadPopup';
+import CONCATMainContents from '@/components/section/contents/CONCATMainContents';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
 import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATOptionsSidebar';
-import { TableContents } from '@/components/tables/common/TableContents';
-import { Button } from '@/components/ui/button';
 
 interface CONCATItem {
   id: string;
@@ -90,33 +88,18 @@ const CONCATPage = () => {
               />
             </div>
 
-            {/* 팝업 창 */}
-            <div className="flex relative">
-              {showAlert && (
-                <FileUploadAlert
-                  message={ALERT_MESSAGES.CONCAT_UPLOAD_REQUIRED}
-                  onClose={() => setShowAlert(false)}
-                />
-              )}
-            </div>
-
-            <div className="h-[580px] mt-6 overflow-hidden">
-              <TableContents
-                items={items}
-                onSelectionChange={handleSelectionChange}
-                onTextChange={handleTextChange}
-                onDelete={handleDelete}
-                onAdd={handleAdd}
-                onPlay={handlePlay}
-                onSelectAll={handleSelectAll}
-                isAllSelected={items.every((item) => item.isSelected)}
-                type="CONCAT"
-              />
-            </div>
-
-            <div className="mt-6 text-center">
-              <Button>CONCAT 생성</Button>
-            </div>
+            <CONCATMainContents
+              items={items}
+              showAlert={showAlert}
+              onCloseAlert={() => setShowAlert(false)}
+              onSelectionChange={handleSelectionChange}
+              onTextChange={handleTextChange}
+              onDelete={handleDelete}
+              onAdd={handleAdd}
+              onPlay={handlePlay}
+              onSelectAll={handleSelectAll}
+              isAllSelected={items.every((item) => item.isSelected)}
+            />
           </section>
         </div>
 

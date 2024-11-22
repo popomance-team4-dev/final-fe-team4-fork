@@ -2,11 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
+import TTSMainContents from '@/components/section/contents/TTSMainContents';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSOptionsSidebar';
-import { TableContents } from '@/components/tables/common/TableContents';
-import { Button } from '@/components/ui/button';
 import jisuImage from '@/images/avatar/jisu.jpg';
 interface TTSItem {
   id: string;
@@ -140,36 +139,30 @@ const TTSPage = () => {
           <div className="h-[71px]">
             <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
           </div>
-          <div className="h-[580px] mt-6 overflow-hidden">
-            <TableContents
-              items={items}
-              isAllSelected={isAllSelected}
-              onSelectAll={handleSelectAll}
-              onSelectionChange={handleSelectionChange}
-              onTextChange={handleTextChange}
-              onDelete={handleDelete}
-              onAdd={() => {
-                setItems((prev) => [
-                  ...prev,
-                  {
-                    id: String(Date.now()),
-                    text: '',
-                    isSelected: false,
-                    speed: 1.0,
-                    volume: 60,
-                    pitch: 4.0,
-                  },
-                ]);
-              }}
-              onRegenerateItem={handleRegenerateItem}
-              onDownloadItem={handleDownloadItem}
-              onPlay={(id) => console.log('재생:', id)}
-            />
-          </div>
-
-          <div className="mt-6 text-center">
-            <Button>TTS 생성</Button>
-          </div>
+          <TTSMainContents
+            items={items}
+            isAllSelected={isAllSelected}
+            onSelectAll={handleSelectAll}
+            onSelectionChange={handleSelectionChange}
+            onTextChange={handleTextChange}
+            onDelete={handleDelete}
+            onAdd={() => {
+              setItems((prev) => [
+                ...prev,
+                {
+                  id: String(Date.now()),
+                  text: '',
+                  isSelected: false,
+                  speed: 1.0,
+                  volume: 60,
+                  pitch: 4.0,
+                },
+              ]);
+            }}
+            onRegenerateItem={handleRegenerateItem}
+            onDownloadItem={handleDownloadItem}
+            onPlay={(id) => console.log('재생:', id)}
+          />
         </section>
 
         {/* Right Sidebar */}

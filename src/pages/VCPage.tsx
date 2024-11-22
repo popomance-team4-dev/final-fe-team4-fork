@@ -1,11 +1,9 @@
 import { useCallback, useState } from 'react';
 
 import { AudioPlayer } from '@/components/feature/AudioPlayer';
-import FileUploadAlert, { ALERT_MESSAGES } from '@/components/guide/FileUploadPopup';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
+import VCMainContents from '@/components/section/contents/VCMainContents';
 import VCOptionsSidebar from '@/components/section/sidebar/VCOptionsSidebar';
-import { TableContents } from '@/components/tables/common/TableContents';
-import { Button } from '@/components/ui/button';
 
 interface VCItem {
   id: string;
@@ -90,33 +88,18 @@ const VCPage = () => {
               />
             </div>
 
-            {/* 팝업 창 */}
-            <div className="flex relative">
-              {showAlert && (
-                <FileUploadAlert
-                  message={ALERT_MESSAGES.VC_UPLOAD_REQUIRED}
-                  onClose={() => setShowAlert(false)}
-                />
-              )}
-            </div>
-
-            <div className="h-[580px] mt-6 overflow-hidden">
-              <TableContents
-                items={items}
-                onSelectionChange={handleSelectionChange}
-                onTextChange={handleTextChange}
-                onDelete={handleDelete}
-                onAdd={handleAdd}
-                onPlay={handlePlay}
-                onSelectAll={handleSelectAll}
-                isAllSelected={items.every((item) => item.isSelected)}
-                type="VC"
-              />
-            </div>
-
-            <div className="mt-6 text-center">
-              <Button>VC 생성</Button>
-            </div>
+            <VCMainContents
+              items={items}
+              showAlert={showAlert}
+              onCloseAlert={() => setShowAlert(false)}
+              onSelectionChange={handleSelectionChange}
+              onTextChange={handleTextChange}
+              onDelete={handleDelete}
+              onAdd={handleAdd}
+              onPlay={handlePlay}
+              onSelectAll={handleSelectAll}
+              isAllSelected={items.every((item) => item.isSelected)}
+            />
           </section>
         </div>
 

@@ -125,4 +125,4 @@ const TTSTableGrid: React.FC<TTSTableGridProps> = ({ items }) => {
   );
 };
 
-export { TTSGridItem as TTSGridItem, TTSTableGrid };
+export { TTSGridItem, TTSTableGrid };

@@ -117,8 +117,11 @@ const TTSOptionsSidebar: React.FC = () => {
 
       {/* 언어 선택 */}
       <div className="mb-8">
-        <label className="block text-sm font-bold mb-2">언어</label>
+        <label htmlFor="language" className="block text-sm font-bold mb-2">
+          언어
+        </label>
         <Select
+          id="language"
           value={selectedLanguage}
           onValueChange={setSelectedLanguage}
           items={languageOptions}
@@ -130,6 +133,7 @@ const TTSOptionsSidebar: React.FC = () => {
       <div className="mb-8">
         <label className="block text-sm font-bold mb-2">목소리</label>
         <Select
+          id="voice"
           value={selectedVoice}
           onValueChange={setSelectedVoice}
           items={voiceOptions}
@@ -139,8 +143,15 @@ const TTSOptionsSidebar: React.FC = () => {
 
       {/* 스타일 선택 */}
       <div>
-        <label className="block text-sm font-bold mb-2">스타일</label>
-        <Select value={selectedStyle} onValueChange={setSelectedStyle} items={styleOptions} />
+        <label htmlFor="voice-style" className="block text-sm font-bold mb-2">
+          스타일
+        </label>
+        <Select
+          id="voice-style"
+          value={selectedStyle}
+          onValueChange={setSelectedStyle}
+          items={styleOptions}
+        />
       </div>
 
       <hr className="my-8" />

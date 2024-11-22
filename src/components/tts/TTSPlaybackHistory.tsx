@@ -63,7 +63,10 @@ const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ id }) => {
       </div>
       <div className="mb-3 w-full mr-2">
         {historyItems.map((historyItem) => (
-          <div className="flex items-center px-4 py-2 mt-3 mb-1 h-15 rounded-lg bg-white">
+          <div
+            key={historyItem.id}
+            className="flex items-center px-4 py-2 mt-3 mb-1 h-15 rounded-lg bg-white"
+          >
             <Checkbox className="mx-4" />
             <AudioPlayer audioUrl={''} mode={PlayerMode.MINI} className="flex-1" />
             <div className="flex gap-6 ml-auto items-center">

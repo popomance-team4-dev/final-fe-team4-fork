@@ -23,34 +23,33 @@ interface HistoryTableItem {
 }
 
 interface HistoryTableProps {
-  items: HistoryTableItem[];
-  onPlay: (id: string) => void;
-  onPause: (id: string) => void;
-  currentPlayingId?: string;
+  readonly items: HistoryTableItem[];
+  readonly onPlay: (id: string) => void;
+  readonly onPause: (id: string) => void;
+  readonly currentPlayingId?: string;
 }
+const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
+  const variantMap = {
+    진행: 'progress',
+    대기중: 'waiting',
+    실패: 'failed',
+    완료: 'completed',
+  } as const;
+
+  return (
+    <div className="flex justify-start">
+      <Badge variant={variantMap[status]}>
+        <TbCircleFilled className="w-2 h-2 mr-2" />
+        {status}
+      </Badge>
+    </div>
+  );
+};
 
 export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: HistoryTableProps) {
   const AudioBadge = (type: 'VC' | 'TTS' | 'CONCAT') => {
     const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
     return <Badge variant={variant}>{type}</Badge>;
-  };
-
-  const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
-    const variantMap = {
-      진행: 'progress',
-      대기중: 'waiting',
-      실패: 'failed',
-      완료: 'completed',
-    } as const;
-
-    return (
-      <div className="flex justify-start">
-        <Badge variant={variantMap[status]}>
-          <TbCircleFilled className="w-2 h-2 mr-2" />
-          {status}
-        </Badge>
-      </div>
-    );
   };
 
   return (

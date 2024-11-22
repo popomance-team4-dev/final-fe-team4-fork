@@ -14,6 +14,10 @@ import {
 } from 'react-icons/tb';
 
 import { cn } from '@/lib/utils';
+interface TTSPlaybackHistoryButtonProps {
+  onClick?: () => void;
+  isActive?: boolean;
+}
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode;
   label: string;
@@ -146,13 +150,8 @@ export function DownloadButton({ onClick }: { onClick?: () => void }) {
     />
   );
 }
-export function TTSPlaybackHistoryButton({
-  onClick,
-  isActive,
-}: {
-  onClick?: () => void;
-  isActive: boolean;
-}) {
+
+export function TTSPlaybackHistoryButton({ onClick, isActive }: TTSPlaybackHistoryButtonProps) {
   return (
     <IconButton
       icon={<TbHistory />}

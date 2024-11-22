@@ -49,13 +49,15 @@ const AudioHistoryDialog = () => {
             checked={isAllSelected}
             onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
           />
-          <div
+          <button
             onClick={handleDelete}
             className="flex items-center gap-1 px-2 py-1 text-gray-700 hover:cursor-pointer"
+            role="button"
+            aria-label="선택된 항목 삭제"
           >
             <TbTrash className="w-5 h-5" />
             <span className="text-body2">삭제</span>
-          </div>
+          </button>
         </div>
 
         {/* History List */}

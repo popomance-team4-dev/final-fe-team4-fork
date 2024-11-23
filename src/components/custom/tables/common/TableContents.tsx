@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { TableFooter } from './TableFooter';
 import { TableHeader } from './TableHeader';
 
-interface TableItem {
+interface TableContentsItem {
   id: string;
   text: string;
   isSelected: boolean;
@@ -20,7 +20,7 @@ interface TableItem {
 }
 
 interface TableContentsProps {
-  items: TableItem[];
+  items: TableContentsItem[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;

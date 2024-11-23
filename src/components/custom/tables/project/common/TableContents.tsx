@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 
-import { TableListView } from '@/components/custom/tables/common/TableListView';
-import { TTSTableGridView } from '@/components/custom/tables/tts/TTSTableGridView';
+import { TableListView } from '@/components/custom/tables/project/common/TableListView';
+import { TTSTableGridView } from '@/components/custom/tables/project/tts/TTSTableGridView';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';

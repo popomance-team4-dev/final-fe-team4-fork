@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface HistoryTableItem {
+interface RecentExportTableItem {
   id: string;
   order: string;
   projectName: string;
@@ -22,8 +22,8 @@ interface HistoryTableItem {
   createdAt: string;
 }
 
-interface HistoryTableProps {
-  readonly items: HistoryTableItem[];
+interface RecentExportTableProps {
+  readonly items: RecentExportTableItem[];
   readonly onPlay: (id: string) => void;
   readonly onPause: (id: string) => void;
   readonly currentPlayingId?: string;
@@ -46,7 +46,12 @@ const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
   );
 };
 
-export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: HistoryTableProps) {
+export function RecentExportTable({
+  items,
+  onPlay,
+  onPause,
+  currentPlayingId,
+}: RecentExportTableProps) {
   const AudioBadge = (type: 'VC' | 'TTS' | 'CONCAT') => {
     const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
     return <Badge variant={variant}>{type}</Badge>;

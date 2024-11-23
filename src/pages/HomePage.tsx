@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import HomePopup from '@/components/custom/guide/HomePopup';
-import { HistoryTable } from '@/components/custom/tables/home/HistoryTable';
+import { RecentExportTable } from '@/components/custom/tables/history/RecentExportTable';
 import RecentProject from '@/components/section/contents/RecontProject';
 import MainHeader from '@/components/section/header/MainHeader';
 import jisuImage from '@/images/avatar/jisu.jpg';
@@ -84,7 +84,7 @@ const HomePage = () => {
       {/* 최근 프로젝트 영역 */}
       <RecentProject />
       {/* 최근 내보내기 영역 */}
-      <HistoryTable
+      <RecentExportTable
         items={historyItems}
         onPlay={handlePlay}
         onPause={handlePause}

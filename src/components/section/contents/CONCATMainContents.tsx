@@ -1,5 +1,5 @@
 import FileUploadAlert, { ALERT_MESSAGES } from '@/components/custom/guide/FileUploadPopup';
-import { TableContents } from '@/components/custom/tables/common/TableContents';
+import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import { Button } from '@/components/ui/button';
 
 interface CONCATItem {

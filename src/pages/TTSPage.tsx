@@ -107,7 +107,7 @@ const TTSPage = () => {
 
   return (
     <PageLayout
-      variant="main"
+      variant="project"
       header={
         <FileProgressHeader
           name="김바타"

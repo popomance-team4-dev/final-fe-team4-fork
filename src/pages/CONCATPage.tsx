@@ -17,17 +17,7 @@ interface CONCATItem {
 
 const CONCATPage = () => {
   const [showAlert, setShowAlert] = useState(true);
-  const [items, setItems] = useState<CONCATItem[]>([
-    {
-      id: '1',
-      text: '',
-      isSelected: false,
-      speed: 1.0,
-      volume: 1.0,
-      pitch: 1.0,
-      fileName: 'sample1.wav',
-    },
-  ]);
+  const [items, setItems] = useState<CONCATItem[]>([]);
 
   const handleSelectionChange = (id: string) => {
     setItems((prev) =>

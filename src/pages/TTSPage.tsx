@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
@@ -65,19 +65,6 @@ const TTSPage = () => {
   ]);
 
   const [items, setItems] = useState<TTSItem[]>([]);
-
-  useEffect(() => {
-    setItems([
-      {
-        id: String(Date.now()),
-        text: '',
-        isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
-      },
-    ]);
-  }, []);
 
   const handleDeleteCompleted = useCallback(() => {
     setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));

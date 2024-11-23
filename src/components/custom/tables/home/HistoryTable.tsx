@@ -53,7 +53,7 @@ export function HistoryTable({ items, onPlay, onPause, currentPlayingId }: Histo
   };
 
   return (
-    <div className="px-6 pt-6 h-auto">
+    <div className="pt-6 h-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <h3 className="text-h3">최근 내보내기</h3>
         <p className="text-black text-body2 flex items-center gap-1 cursor-pointer">

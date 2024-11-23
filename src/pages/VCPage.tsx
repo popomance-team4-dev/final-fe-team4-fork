@@ -4,6 +4,7 @@ import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
 import VCMainContents from '@/components/section/contents/VCMainContents';
 import VCOptionsSidebar from '@/components/section/sidebar/VCSidebar';
+import PageLayout from '@/layouts/PageLayout';
 
 interface VCItem {
   id: string;
@@ -56,54 +57,31 @@ const VCPage = () => {
   }, [items]);
 
   return (
-    <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="h-[92px] ml-6 border-b">
-        <div className="pt-3">
-          <h1 className="text-[14px] font-bold mb-2">My work status</h1>
-          <div className="relative">{/* work status Dropdown */}</div>
-        </div>
-      </header>
-
-      <div className="flex flex-1 h-full ml-6 border-b">
-        <div className="flex flex-col w-full">
-          {/* Main1 */}
-          <section className="flex-1 py-6 pr-6 flex flex-col">
-            <div className="h-[71px]">
-              <ProjectTitle
-                type="VC"
-                projectTitle="프로젝트 1"
-                onSave={() => console.log('저장')}
-                onClose={() => console.log('닫기')}
-              />
-            </div>
-
-            <VCMainContents
-              items={items}
-              showAlert={showAlert}
-              onCloseAlert={() => setShowAlert(false)}
-              onSelectionChange={handleSelectionChange}
-              onTextChange={handleTextChange}
-              onDelete={handleDelete}
-              onAdd={handleAdd}
-              onPlay={handlePlay}
-              onSelectAll={handleSelectAll}
-              isAllSelected={items.every((item) => item.isSelected)}
-            />
-          </section>
-        </div>
-
-        {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0">
-          <VCOptionsSidebar />
-        </aside>
-      </div>
-
-      {/* Playback */}
-      <section className="h-[92px] px-6">
-        <AudioPlayer audioUrl={''} />
-      </section>
-    </div>
+    <PageLayout
+      variant="project"
+      header={<></>} // FileProgressDropDown
+      sidebar={<VCOptionsSidebar />}
+      footer={<AudioPlayer audioUrl={''} />}
+    >
+      <ProjectTitle
+        type="VC"
+        projectTitle="프로젝트 1"
+        onSave={() => console.log('저장')}
+        onClose={() => console.log('닫기')}
+      />
+      <VCMainContents
+        items={items}
+        showAlert={showAlert}
+        onCloseAlert={() => setShowAlert(false)}
+        onSelectionChange={handleSelectionChange}
+        onTextChange={handleTextChange}
+        onDelete={handleDelete}
+        onAdd={handleAdd}
+        onPlay={handlePlay}
+        onSelectAll={handleSelectAll}
+        isAllSelected={items.every((item) => item.isSelected)}
+      />
+    </PageLayout>
   );
 };
 

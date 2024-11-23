@@ -7,6 +7,7 @@ import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import jisuImage from '@/images/avatar/jisu.jpg';
+import PageLayout from '@/layouts/PageLayout';
 interface TTSItem {
   id: string;
   text: string;
@@ -105,9 +106,9 @@ const TTSPage = () => {
   }, []);
 
   return (
-    <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="h-[92px] ml-6 border-b">
+    <PageLayout
+      variant="main"
+      header={
         <FileProgressHeader
           name="김바타"
           email="aipark@aipark.ai"
@@ -118,14 +119,12 @@ const TTSPage = () => {
           onMyPage={() => console.log('마이페이지')}
           onSignout={() => console.log('로그아웃')}
         />
-      </header>
-
-      <div className="flex flex-1 h-[839px] ml-6 border-b">
-        {/* Main1 */}
-        <section className="flex-1 py-6 pr-6 flex flex-col">
-          <div className="h-[71px]">
-            <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
-          </div>
+      }
+      sidebar={<TTSOptionsSidebar />}
+      footer={<AudioFooter audioUrl="/sample.mp3" />}
+      children={
+        <>
+          <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
           <TTSMainContents
             items={items}
             isAllSelected={isAllSelected}
@@ -150,19 +149,9 @@ const TTSPage = () => {
             onDownloadItem={handleDownloadItem}
             onPlay={(id) => console.log('재생:', id)}
           />
-        </section>
-
-        {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0">
-          <TTSOptionsSidebar />
-        </aside>
-      </div>
-
-      {/* Playback */}
-      <section className="h-[92px] px-6">
-        <AudioFooter audioUrl="/sample.mp3" />
-      </section>
-    </div>
+        </>
+      }
+    />
   );
 };
 

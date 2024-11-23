@@ -5,6 +5,7 @@ import { HistoryTable } from '@/components/custom/tables/home/HistoryTable';
 import RecentProject from '@/components/section/contents/RecontProject';
 import MainHeader from '@/components/section/header/MainHeader';
 import jisuImage from '@/images/avatar/jisu.jpg';
+import PageLayout from '@/layouts/PageLayout';
 
 const HomePage = () => {
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
@@ -66,8 +67,9 @@ const HomePage = () => {
   const handlePause = () => setCurrentPlayingId(undefined);
 
   return (
-    <div>
-      <div className="h-[92px] ml-6 border-b">
+    <PageLayout
+      variant="main"
+      header={
         <MainHeader
           name="김바타"
           email="aipark@aipark.ai"
@@ -75,32 +77,20 @@ const HomePage = () => {
           onMyPage={() => console.log('마이페이지')}
           onSignout={() => console.log('로그아웃')}
         />
-      </div>
-
-      <div className="px-6">
-        {/* 팝업 창 */}
-        <HomePopup />
-      </div>
-
-      <div>
-        {/* 최근 프로젝트 영역 */}
-        <div>
-          <RecentProject />
-        </div>
-      </div>
-
-      <div>
-        {/* 최근 내보내기 영역 */}
-        <div>
-          <HistoryTable
-            items={historyItems}
-            onPlay={handlePlay}
-            onPause={handlePause}
-            currentPlayingId={currentPlayingId}
-          />
-        </div>
-      </div>
-    </div>
+      }
+    >
+      {/* 팝업 창 */}
+      <HomePopup />
+      {/* 최근 프로젝트 영역 */}
+      <RecentProject />
+      {/* 최근 내보내기 영역 */}
+      <HistoryTable
+        items={historyItems}
+        onPlay={handlePlay}
+        onPause={handlePause}
+        currentPlayingId={currentPlayingId}
+      />
+    </PageLayout>
   );
 };
 

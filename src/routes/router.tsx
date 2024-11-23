@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
-import NavbarLayout from '@/layouts/NavSidebarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
@@ -46,30 +45,24 @@ const router = createBrowserRouter([
         path: PATH.ERROR,
         element: <ErrorPage />,
       },
-      // 네비바o, TTS, Concat, VC 라우트
+      // 그 외 모든 페이지들
       {
-        path: '/',
-        element: <NavbarLayout />,
-        children: [
-          {
-            path: PATH.HOME,
-            element: <HomePage />,
-          },
-          {
-            path: PATH.TTS,
-            element: <TTSPage />,
-          },
-          {
-            path: PATH.CONCAT,
-            element: <CONCATPage />,
-          },
-          {
-            path: PATH.VC,
-            element: <VCPage />,
-          },
-        ],
+        path: PATH.HOME,
+        element: <HomePage />,
       },
-      // 와일드카드 404 에러 페이지
+      {
+        path: PATH.TTS,
+        element: <TTSPage />,
+      },
+      {
+        path: PATH.CONCAT,
+        element: <CONCATPage />,
+      },
+      {
+        path: PATH.VC,
+        element: <VCPage />,
+      },
+      // 404 에러 페이지
       {
         path: '*',
         element: <ErrorPage />,

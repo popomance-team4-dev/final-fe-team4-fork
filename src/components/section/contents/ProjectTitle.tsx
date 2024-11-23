@@ -32,7 +32,7 @@ const ProjectTitle = ({ type, projectTitle, onSave, onClose }: ProjectTitleProps
   };
 
   return (
-    <div className="flex flex-col h-full mx-1">
+    <div className="flex flex-col h-[71px] mx-1">
       <div className="flex items-center gap-2 mb-2">
         <Breadcrumb>
           <BreadcrumbList>

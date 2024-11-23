@@ -17,7 +17,7 @@
     "mockdown": "node ./mock/mockdown.cjs",
     "chromatic": "chromatic",
     "orval": "orval --config ./orval.config.cjs",
-    "api-docs": "widdershins  --search false ./docs/openapi.json  --language_tabs 'shell:Shell' 'javascript:JavaScript' -o ./docs/api.md "
+    "api-docs": "widdershins  --search false ./openapi.json  --language_tabs 'shell:Shell' 'javascript:JavaScript' -o ./docs/api.md "
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

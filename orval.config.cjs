@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-undef
 module.exports = {
   api: {
-    input: './docs/openapi.json',
+    input: './openapi.json',
     output: {
       mode: 'split',
       target: './src/api',

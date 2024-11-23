@@ -15,17 +15,17 @@ import {
 
 import { cn } from '@/lib/utils';
 interface TTSPlaybackHistoryButtonProps {
-  onClick?: () => void;
-  isActive?: boolean;
+  readonly onClick?: () => void;
+  readonly isActive?: boolean;
 }
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: React.ReactNode;
-  label: string;
-  asChild?: boolean;
-  iconBgColor?: string;
-  iconColor?: string;
-  textColor?: string;
-  width?: string;
+  readonly icon: React.ReactNode;
+  readonly label: string;
+  readonly asChild?: boolean;
+  readonly iconBgColor?: string;
+  readonly iconColor?: string;
+  readonly textColor?: string;
+  readonly width?: string;
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
@@ -95,7 +95,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 );
 IconButton.displayName = 'IconButton';
 
-export function UploadTextButton({ onClick }: { onClick?: () => void }) {
+export function UploadTextButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbUpload />}
@@ -109,7 +109,7 @@ export function UploadTextButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function UploadAudioButton({ onClick }: { onClick?: () => void }) {
+export function UploadAudioButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbUpload />}
@@ -123,7 +123,7 @@ export function UploadAudioButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function SaveButton({ onClick }: { onClick?: () => void }) {
+export function SaveButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbDeviceFloppy />}
@@ -137,7 +137,7 @@ export function SaveButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function RecreateButton({ onClick }: { onClick?: () => void }) {
+export function RecreateButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbReload />}
@@ -151,7 +151,7 @@ export function RecreateButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function DownloadButton({ onClick }: { onClick?: () => void }) {
+export function DownloadButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbDownload />}
@@ -182,7 +182,7 @@ export function TTSPlaybackHistoryButton({ onClick, isActive }: TTSPlaybackHisto
   );
 }
 
-export function ApplySelectionButton({ onClick }: { onClick?: () => void }) {
+export function ApplySelectionButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbStack />}
@@ -194,7 +194,7 @@ export function ApplySelectionButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function ApplyAllButton({ onClick }: { onClick?: () => void }) {
+export function ApplyAllButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbStack2 />}
@@ -206,7 +206,7 @@ export function ApplyAllButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function ResetChangesButton({ onClick }: { onClick?: () => void }) {
+export function ResetChangesButton({ onClick }: { readonly onClick?: () => void }) {
   return (
     <IconButton
       icon={<TbRefresh />}

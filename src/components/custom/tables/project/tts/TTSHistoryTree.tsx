@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { cn } from '@/lib/utils';
-
 interface HistoryBranchProps {
   isFirst?: boolean;
   branchColor?: string;

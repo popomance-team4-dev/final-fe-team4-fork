@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import MainContents from '@/components/section/contents/MainContents';
-import ProjectTitle from '@/components/section/contents/ProjectTitle';
+import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
@@ -144,7 +144,7 @@ const TTSPage = () => {
       children={
         <>
           <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
-          <MainContents
+          <ProjectMainContents
             type="TTS"
             items={items}
             isAllSelected={isAllSelected}

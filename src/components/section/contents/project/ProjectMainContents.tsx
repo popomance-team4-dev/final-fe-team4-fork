@@ -2,7 +2,7 @@ import FileUploadAlert, { ALERT_MESSAGES } from '@/components/custom/guide/FileU
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import { Button } from '@/components/ui/button';
 
-interface MainContentsItem {
+interface ProjectMainContentsItem {
   id: string;
   text: string;
   isSelected: boolean;
@@ -12,9 +12,9 @@ interface MainContentsItem {
   pitch?: number;
 }
 
-interface MainContentsProps {
+interface ProjectMainContentsProps {
   type: 'TTS' | 'VC' | 'CONCAT';
-  items: MainContentsItem[];
+  items: ProjectMainContentsItem[];
   isAllSelected: boolean;
   showAlert?: boolean;
   onCloseAlert?: () => void;
@@ -28,7 +28,7 @@ interface MainContentsProps {
   onPlay: (id: string) => void;
 }
 
-const MainContents = ({
+const ProjectMainContents = ({
   type,
   items,
   isAllSelected,
@@ -42,7 +42,7 @@ const MainContents = ({
   onRegenerateItem,
   onDownloadItem,
   onPlay,
-}: MainContentsProps) => {
+}: ProjectMainContentsProps) => {
   const getAlertMessage = () => {
     switch (type) {
       case 'VC':
@@ -87,4 +87,4 @@ const MainContents = ({
   );
 };
 
-export default MainContents;
+export default ProjectMainContents;

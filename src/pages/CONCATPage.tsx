@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
-import MainContents from '@/components/section/contents/MainContents';
-import ProjectTitle from '@/components/section/contents/ProjectTitle';
+import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATSidebar';
 import PageLayout from '@/layouts/PageLayout';
 
@@ -69,7 +69,7 @@ const CONCATPage = () => {
         onSave={() => console.log('저장')}
         onClose={() => console.log('닫기')}
       />
-      <MainContents
+      <ProjectMainContents
         type="CONCAT"
         items={items}
         showAlert={showAlert}

@@ -17,9 +17,9 @@ interface TTSTableGridViewItemProps {
   text: string;
   audioUrl: string;
   isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
   onPlay: () => void;
   onRegenerate: () => void;
   onDownload: () => void;
@@ -64,21 +64,27 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
               />
 
               <div className="flex gap-5">
-                <SoundStatus
-                  type={UNIT_SOUND_STATUS_TYPES.SPEED}
-                  value={item.speed}
-                  showLabel={true}
-                />
-                <SoundStatus
-                  type={UNIT_SOUND_STATUS_TYPES.VOLUME}
-                  value={item.volume}
-                  showLabel={true}
-                />
-                <SoundStatus
-                  type={UNIT_SOUND_STATUS_TYPES.PITCH}
-                  value={item.pitch}
-                  showLabel={true}
-                />
+                {item.speed !== undefined && (
+                  <SoundStatus
+                    type={UNIT_SOUND_STATUS_TYPES.SPEED}
+                    value={item.speed}
+                    showLabel={true}
+                  />
+                )}
+                {item.volume !== undefined && (
+                  <SoundStatus
+                    type={UNIT_SOUND_STATUS_TYPES.VOLUME}
+                    value={item.volume}
+                    showLabel={true}
+                  />
+                )}
+                {item.pitch !== undefined && (
+                  <SoundStatus
+                    type={UNIT_SOUND_STATUS_TYPES.PITCH}
+                    value={item.pitch}
+                    showLabel={true}
+                  />
+                )}
               </div>
             </div>
 

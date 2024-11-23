@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react';
 
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
+import MainContents from '@/components/section/contents/MainContents';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
-import TTSMainContents from '@/components/section/contents/TTSMainContents';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
+
 interface TTSItem {
   id: string;
   text: string;
@@ -105,6 +106,24 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
+  const handleAdd = useCallback(() => {
+    setItems((prev) => [
+      ...prev,
+      {
+        id: String(Date.now()),
+        text: '',
+        isSelected: false,
+        speed: 1.0,
+        volume: 60,
+        pitch: 4.0,
+      },
+    ]);
+  }, []);
+
+  const handlePlay = useCallback((id: string) => {
+    console.log('재생:', id);
+  }, []);
+
   return (
     <PageLayout
       variant="project"
@@ -125,29 +144,18 @@ const TTSPage = () => {
       children={
         <>
           <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
-          <TTSMainContents
+          <MainContents
+            type="TTS"
             items={items}
             isAllSelected={isAllSelected}
             onSelectAll={handleSelectAll}
             onSelectionChange={handleSelectionChange}
             onTextChange={handleTextChange}
             onDelete={handleDelete}
-            onAdd={() => {
-              setItems((prev) => [
-                ...prev,
-                {
-                  id: String(Date.now()),
-                  text: '',
-                  isSelected: false,
-                  speed: 1.0,
-                  volume: 60,
-                  pitch: 4.0,
-                },
-              ]);
-            }}
+            onAdd={handleAdd}
             onRegenerateItem={handleRegenerateItem}
             onDownloadItem={handleDownloadItem}
-            onPlay={(id) => console.log('재생:', id)}
+            onPlay={handlePlay}
           />
         </>
       }

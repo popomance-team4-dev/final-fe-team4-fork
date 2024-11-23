@@ -14,9 +14,9 @@ interface TableContentsItem {
   id: string;
   text: string;
   isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
   fileName?: string;
 }
 

@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
+import MainContents from '@/components/section/contents/MainContents';
 import ProjectTitle from '@/components/section/contents/ProjectTitle';
-import VCMainContents from '@/components/section/contents/VCMainContents';
 import VCOptionsSidebar from '@/components/section/sidebar/VCSidebar';
 import PageLayout from '@/layouts/PageLayout';
 
@@ -69,7 +69,8 @@ const VCPage = () => {
         onSave={() => console.log('저장')}
         onClose={() => console.log('닫기')}
       />
-      <VCMainContents
+      <MainContents
+        type="VC"
         items={items}
         showAlert={showAlert}
         onCloseAlert={() => setShowAlert(false)}

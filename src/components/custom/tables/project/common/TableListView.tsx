@@ -8,13 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
-interface AudioParams {
-  speed: number;
-  volume: number;
-  pitch: number;
-}
-
-interface ListRowProps extends AudioParams {
+interface ListRowProps {
   id: string;
   text: string;
   isSelected: boolean;
@@ -23,6 +17,9 @@ interface ListRowProps extends AudioParams {
   onTextChange: (id: string, newText: string) => void;
   type?: 'TTS' | 'VC' | 'CONCAT';
   fileName?: string;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
 }
 
 const ListRow: React.FC<ListRowProps> = ({
@@ -71,9 +68,19 @@ const ListRow: React.FC<ListRowProps> = ({
             rows={1}
           />
           <div className="flex gap-6">
-            <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
-            <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
-            <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
+            {type === 'TTS' && (
+              <div className="flex items-center gap-4">
+                {speed !== undefined && (
+                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
+                )}
+                {volume !== undefined && (
+                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
+                )}
+                {pitch !== undefined && (
+                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
+                )}
+              </div>
+            )}
             <div className="flex w-11 justify-center items-center">
               <TbHistory
                 className={cn(

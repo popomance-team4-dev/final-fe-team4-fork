@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { TableListView } from '@/components/custom/tables/common/TableListView';
 import { TTSTableGridView } from '@/components/custom/tables/tts/TTSTableGridView';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
 
 import { TableFooter } from './TableFooter';
@@ -132,7 +133,11 @@ export const TableContents: React.FC<TableContentsProps> = ({
         type={type}
       />
       <div className={cn('flex-1 min-h-0', !isListView && 'mb-4.5')}>
-        {isListView ? (
+        {items.length === 0 ? (
+          <div className="h-full flex items-center justify-center">
+            <img src={TableUploadMessage} alt="Empty table message" />
+          </div>
+        ) : isListView ? (
           <div className="h-full relative">
             <div className="absolute inset-x-0 bottom-0 top-0">
               <ScrollArea className="h-full">

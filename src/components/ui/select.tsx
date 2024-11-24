@@ -15,15 +15,16 @@ interface SelectProps extends React.ComponentProps<typeof SelectPrimitive.Root> 
   items?: SelectItemType[];
   icon?: React.ReactNode;
   className?: string;
+  id?: string;
 }
 
 const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
-  ({ placeholder, items = [], icon, className, ...props }, ref) => {
+  ({ placeholder, items = [], icon, className, id, ...props }, ref) => {
     const defaultValue = items.length > 0 ? items[0].value : '';
 
     return (
       <SelectPrimitive.Root {...props} defaultValue={defaultValue}>
-        <SelectTrigger ref={ref} icon={icon} className={className}>
+        <SelectTrigger id={id} ref={ref} icon={icon} className={className}>
           <SelectValue placeholder={placeholder || items[0]?.label || 'Select...'} />
         </SelectTrigger>
         <SelectContent>

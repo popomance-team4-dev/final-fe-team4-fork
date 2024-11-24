@@ -21,8 +21,6 @@ export const signupFormSchema = z
 
     name: z.string().min(1, { message: SIGNUP_VALIDATION.REQUIRED.NAME }),
 
-    birth_date: z.string(),
-
     phone: z
       .string()
       .min(1, { message: SIGNUP_VALIDATION.REQUIRED.PHONE })
@@ -43,7 +41,6 @@ export const SignupFormRequest = (formData: SignupFormData): SignupRequest => {
     email: formData.email,
     pwd: formData.password,
     name: formData.name,
-    birth_date: formData.birth_date,
     phone_number: formData.phone,
     tou: formData.terms.length === 3 ? 'Y' : 'N',
     is_deleted: false,

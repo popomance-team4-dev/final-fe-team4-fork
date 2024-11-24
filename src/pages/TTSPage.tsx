@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-import { FileProgressItem } from '@/components/dropdowns/FileProgressDropdown';
-import AudioFooter from '@/components/footer/AudioFooter';
-import { FileProgressHeader } from '@/components/header/FileProgressHeader';
-import ProjectTitle from '@/components/section/ProjectTitle';
-import TTSOptionsSidebar from '@/components/sidebar/TTSOptionsSidebar';
-import { TTSTable } from '@/components/tts/TTSTable';
-import { Button } from '@/components/ui/button';
+import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
+import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
+import AudioFooter from '@/components/section/footer/AudioFooter';
+import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
+import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import jisuImage from '@/images/avatar/jisu.jpg';
+import PageLayout from '@/layouts/PageLayout';
+
 interface TTSItem {
   id: string;
   text: string;
@@ -67,19 +68,6 @@ const TTSPage = () => {
 
   const [items, setItems] = useState<TTSItem[]>([]);
 
-  useEffect(() => {
-    setItems([
-      {
-        id: String(Date.now()),
-        text: '',
-        isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
-      },
-    ]);
-  }, []);
-
   const handleDeleteCompleted = useCallback(() => {
     setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
   }, []);
@@ -118,10 +106,28 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
+  const handleAdd = useCallback(() => {
+    setItems((prev) => [
+      ...prev,
+      {
+        id: String(Date.now()),
+        text: '',
+        isSelected: false,
+        speed: 1.0,
+        volume: 60,
+        pitch: 4.0,
+      },
+    ]);
+  }, []);
+
+  const handlePlay = useCallback((id: string) => {
+    console.log('재생:', id);
+  }, []);
+
   return (
-    <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="h-[92px] ml-6 border-b">
+    <PageLayout
+      variant="project"
+      header={
         <FileProgressHeader
           name="김바타"
           email="aipark@aipark.ai"
@@ -132,57 +138,28 @@ const TTSPage = () => {
           onMyPage={() => console.log('마이페이지')}
           onSignout={() => console.log('로그아웃')}
         />
-      </header>
-
-      <div className="flex flex-1 h-[839px] ml-6 border-b">
-        {/* Main1 */}
-        <section className="flex-1 py-6 pr-6 flex flex-col">
-          <div className="h-[71px]">
-            <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
-          </div>
-          <div className="h-[580px] mt-6 overflow-hidden">
-            <TTSTable
-              items={items}
-              isAllSelected={isAllSelected}
-              onSelectAll={handleSelectAll}
-              onSelectionChange={handleSelectionChange}
-              onTextChange={handleTextChange}
-              onDelete={handleDelete}
-              onAdd={() => {
-                setItems((prev) => [
-                  ...prev,
-                  {
-                    id: String(Date.now()),
-                    text: '',
-                    isSelected: false,
-                    speed: 1.0,
-                    volume: 60,
-                    pitch: 4.0,
-                  },
-                ]);
-              }}
-              onRegenerateItem={handleRegenerateItem}
-              onDownloadItem={handleDownloadItem}
-              onPlay={(id) => console.log('재생:', id)}
-            />
-          </div>
-
-          <div className="mt-6 text-center">
-            <Button>TTS 생성</Button>
-          </div>
-        </section>
-
-        {/* Right Sidebar */}
-        <aside className="w-[276px] flex-shrink-0">
-          <TTSOptionsSidebar />
-        </aside>
-      </div>
-
-      {/* Playback */}
-      <section className="h-[92px] px-6">
-        <AudioFooter audioUrl="/sample.mp3" />
-      </section>
-    </div>
+      }
+      sidebar={<TTSOptionsSidebar />}
+      footer={<AudioFooter audioUrl="/sample.mp3" />}
+      children={
+        <>
+          <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
+          <ProjectMainContents
+            type="TTS"
+            items={items}
+            isAllSelected={isAllSelected}
+            onSelectAll={handleSelectAll}
+            onSelectionChange={handleSelectionChange}
+            onTextChange={handleTextChange}
+            onDelete={handleDelete}
+            onAdd={handleAdd}
+            onRegenerateItem={handleRegenerateItem}
+            onDownloadItem={handleDownloadItem}
+            onPlay={handlePlay}
+          />
+        </>
+      }
+    />
   );
 };
 

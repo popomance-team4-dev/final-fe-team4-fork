@@ -1,26 +1,23 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
-import NavbarLayout from '@/layouts/NavSidebarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
+import HomePage from '@/pages/HomePage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
 import VCPage from '@/pages/VCPage';
-import WorkspacePage from '@/pages/WorkspacePage';
 
 const PATH = {
   HOME: '/',
   SIGNIN: '/signin',
   SIGNUP: '/signup',
-  WORKSPACE: '/workspace',
   ACCOUNT_RECOVERY: '/account-recovery',
   TTS: '/tts',
-  CONCAT: '/concat',
   VC: '/vc',
-  EXAMPLE: '/example',
+  CONCAT: '/concat',
   ERROR: '/error',
 } as const;
 
@@ -48,30 +45,24 @@ const router = createBrowserRouter([
         path: PATH.ERROR,
         element: <ErrorPage />,
       },
-      // 네비바o, TTS, Concat, VC 라우트
+      // 그 외 모든 페이지들
       {
-        path: '/',
-        element: <NavbarLayout />,
-        children: [
-          {
-            path: PATH.WORKSPACE,
-            element: <WorkspacePage />,
-          },
-          {
-            path: PATH.TTS,
-            element: <TTSPage />,
-          },
-          {
-            path: PATH.CONCAT,
-            element: <CONCATPage />,
-          },
-          {
-            path: PATH.VC,
-            element: <VCPage />,
-          },
-        ],
+        path: PATH.HOME,
+        element: <HomePage />,
       },
-      // 와일드카드 404 에러 페이지
+      {
+        path: PATH.TTS,
+        element: <TTSPage />,
+      },
+      {
+        path: PATH.CONCAT,
+        element: <CONCATPage />,
+      },
+      {
+        path: PATH.VC,
+        element: <VCPage />,
+      },
+      // 404 에러 페이지
       {
         path: '*',
         element: <ErrorPage />,

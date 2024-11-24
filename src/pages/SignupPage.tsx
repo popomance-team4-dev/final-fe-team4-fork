@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import SignupForm from '@/components/forms/SignupForm';
+import SignupForm from '@/components/custom/forms/SignupForm';
 import SigninLogo from '@/images/signin-logo.svg';
 
 const SignupPage = () => {

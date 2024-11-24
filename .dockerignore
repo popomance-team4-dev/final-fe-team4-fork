@@ -3,3 +3,7 @@ dist/
 amplify/
 .vscode/
 .github/
+docs/
+.env
+.github/
+

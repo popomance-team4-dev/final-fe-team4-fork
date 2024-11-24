@@ -3,11 +3,11 @@ import { TbHistory } from 'react-icons/tb';
 
 import AudioHistoryDialog from '@/components/custom/dialogs/AudioHistoryDialog';
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Jennie from '@/images/avatar/jennie.png';
 import { cn } from '@/lib/utils';
 
@@ -45,21 +45,16 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
 
         {/* Dialog Trigger */}
         <Dialog>
-          <TooltipProvider>
-            <Tooltip>
-              <DialogTrigger asChild>
-                <TooltipTrigger asChild>
-                  <button
-                    className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    aria-label="History"
-                  >
-                    <TbHistory className="w-7 h-7 text-black" />
-                  </button>
-                </TooltipTrigger>
-              </DialogTrigger>
-              <TooltipContent className="history-icon">전체 음성 생성 내역</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <DialogTrigger asChild>
+            <TooltipWrapper content="전체 음성 생성 내역" className="history-icon">
+              <button
+                className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="History"
+              >
+                <TbHistory className="w-7 h-7 text-black" />
+              </button>
+            </TooltipWrapper>
+          </DialogTrigger>
 
           {/* Dialog Content */}
           <AudioHistoryDialog />

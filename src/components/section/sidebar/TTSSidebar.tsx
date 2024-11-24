@@ -7,9 +7,9 @@ import {
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/feature/StateController';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Ian from '@/images/avatar/ian.jpg';
 import Jennie from '@/images/avatar/jennie.png';
 import Jisu from '@/images/avatar/jisu.jpg';
@@ -197,38 +197,23 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <ApplySelectionButton />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent sideOffset={10}>선택한 텍스트에 TTS 설정 적용하기</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <TooltipWrapper content="선택한 텍스트에 TTS 설정 적용하기">
+          <div>
+            <ApplySelectionButton />
+          </div>
+        </TooltipWrapper>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <ApplyAllButton />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent sideOffset={10}>모든 텍스트에 TTS 설정 적용하기</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <TooltipWrapper content="모든 텍스트에 TTS 설정 적용하기">
+          <div>
+            <ApplyAllButton />
+          </div>
+        </TooltipWrapper>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <ResetChangesButton />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent sideOffset={10}> TTS 설정 변경사항 초기화하기</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <TooltipWrapper content="TTS 설정 변경사항 초기화하기">
+          <div>
+            <ResetChangesButton />
+          </div>
+        </TooltipWrapper>
       </div>
     </aside>
   );

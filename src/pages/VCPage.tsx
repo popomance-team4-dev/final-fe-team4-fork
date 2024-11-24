@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
 import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
-import VCOptionsSidebar from '@/components/section/sidebar/VCSidebar';
+import VCSidebar from '@/components/section/sidebar/VCSidebar';
 import PageLayout from '@/layouts/PageLayout';
 
 interface VCItem {
@@ -60,7 +60,7 @@ const VCPage = () => {
     <PageLayout
       variant="project"
       header={<></>} // FileProgressDropDown
-      sidebar={<VCOptionsSidebar />}
+      sidebar={<VCSidebar />}
       footer={<AudioPlayer audioUrl={''} />}
     >
       <ProjectTitle

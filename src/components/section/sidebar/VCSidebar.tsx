@@ -6,7 +6,7 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
-import VCselectTabs from '@/components/custom/tabs/VCSidebarTabs';
+import VCSidebarTabs from '@/components/custom/tabs/VCSidebarTabs';
 import { Switch } from '@/components/ui/switch';
 const VCSidebar: React.FC = () => {
   const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
@@ -30,7 +30,7 @@ const VCSidebar: React.FC = () => {
           />
         </div>
         <div className="mb-6">
-          <VCselectTabs />
+          <VCSidebarTabs />
         </div>
         <div className="mt-auto space-y-2">
           <ApplySelectionButton />

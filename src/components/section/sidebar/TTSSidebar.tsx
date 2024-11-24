@@ -9,6 +9,7 @@ import {
 import { StateController } from '@/components/custom/feature/StateController';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Ian from '@/images/avatar/ian.jpg';
 import Jennie from '@/images/avatar/jennie.png';
 import Jisu from '@/images/avatar/jisu.jpg';
@@ -196,9 +197,38 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <ApplySelectionButton />
-        <ApplyAllButton />
-        <ResetChangesButton />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <ApplySelectionButton />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={10}>선택한 텍스트에 TTS 설정 적용하기</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <ApplyAllButton />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={10}>모든 텍스트에 TTS 설정 적용하기</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <ResetChangesButton />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={10}> TTS 설정 변경사항 초기화하기</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </aside>
   );

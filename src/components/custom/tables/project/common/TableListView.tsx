@@ -142,9 +142,9 @@ export const TableListView: React.FC<TableListViewProps> = ({
           <div className="w-4 ml-2 mr-2" />
           <div className="ml-6">텍스트</div>
           <div className="flex gap-8">
-            <div className="w-[64px] text-center">속도</div>
-            <div className="w-[64px] text-center">볼륨</div>
-            <div className="w-[64px] text-center">피치</div>
+            <div className="w-[56px] text-center">속도</div>
+            <div className="w-[60px] text-center">볼륨</div>
+            <div className="w-[60px] text-center">피치</div>
             <div className="text-center mr-3">내역</div>
           </div>
         </div>

@@ -1,44 +1,56 @@
 import { useCallback, useMemo } from 'react';
 
-import { ProjectMainContentsItem } from '@/components/section/contents/project/ProjectMainContents';
+export interface TableItem {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
+  fileName?: string;
+}
 
 interface UseTableItemsProps {
-  items: ProjectMainContentsItem[];
+  items: TableItem[];
   onPlay: (id: string) => void;
-  onDelete?: (id: string) => void;
-  onSelectionChange?: (id: string, isSelected: boolean) => void;
-  onTextChange?: (id: string, text: string) => void;
+  onRegenerateItem?: (id: string) => void;
+  onDownloadItem?: (id: string) => void;
+  onSelectionChange: (id: string) => void;
+  onTextChange: (id: string, text: string) => void;
 }
 
 export const useTableItems = ({
   items,
   onPlay,
-  onDelete,
+  onRegenerateItem,
+  onDownloadItem,
   onSelectionChange,
   onTextChange,
 }: UseTableItemsProps) => {
+  const selectedCount = useMemo(() => items.filter((item) => item.isSelected).length, [items]);
+
   const handleRegenerate = useCallback(
     (itemId?: string) => {
       const selectedItems = items.filter((item) => item.isSelected);
       if (itemId) {
-        onDelete?.(itemId);
+        onRegenerateItem?.(itemId);
       } else if (selectedItems.length > 0) {
-        selectedItems.forEach((item) => onDelete?.(item.id));
+        selectedItems.forEach((item) => onRegenerateItem?.(item.id));
       }
     },
-    [items, onDelete]
+    [items, onRegenerateItem]
   );
 
   const handleDownload = useCallback(
     (itemId?: string) => {
       const selectedItems = items.filter((item) => item.isSelected);
       if (itemId) {
-        onDelete?.(itemId);
+        onDownloadItem?.(itemId);
       } else if (selectedItems.length > 0) {
-        selectedItems.forEach((item) => onDelete?.(item.id));
+        selectedItems.forEach((item) => onDownloadItem?.(item.id));
       }
     },
-    [items, onDelete]
+    [items, onDownloadItem]
   );
 
   const listItems = useMemo(
@@ -51,8 +63,8 @@ export const useTableItems = ({
         speed: item.speed,
         volume: item.volume,
         pitch: item.pitch,
-        onSelectionChange: (id: string) => onSelectionChange?.(id, !item.isSelected),
-        onTextChange: (id: string, newText: string) => onTextChange?.(id, newText),
+        onSelectionChange,
+        onTextChange,
       })),
     [items, onPlay, onSelectionChange, onTextChange]
   );
@@ -70,19 +82,17 @@ export const useTableItems = ({
         onPlay: () => onPlay(item.id),
         onRegenerate: () => handleRegenerate(item.id),
         onDownload: () => handleDownload(item.id),
-        onSelectionChange: (id: string) => onSelectionChange?.(id, !item.isSelected),
-        onTextChange: (id: string, newText: string) => onTextChange?.(id, newText),
+        onSelectionChange,
+        onTextChange,
       })),
     [items, onPlay, handleRegenerate, handleDownload, onSelectionChange, onTextChange]
   );
 
-  const selectedCount = useMemo(() => items.filter((item) => item.isSelected).length, [items]);
-
   return {
+    selectedCount,
     handleRegenerate,
     handleDownload,
     listItems,
     gridItems,
-    selectedCount,
   };
 };

@@ -10,7 +10,7 @@ import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/featur
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { TTS_TOOLTIPS } from '@/constants/tooltips';
+import { TTS_TOOLTIP } from '@/constants/tooltips';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -91,19 +91,19 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
             </div>
 
             <div className="flex items-center space-x-6 mr-2">
-              <TooltipWrapper content={TTS_TOOLTIPS.REGENERATE_SELECTED}>
+              <TooltipWrapper content={TTS_TOOLTIP.REGENERATE_SELECTED}>
                 <div>
                   <RecreateButton onClick={item.onRegenerate} />
                 </div>
               </TooltipWrapper>
 
-              <TooltipWrapper content={TTS_TOOLTIPS.DOWNLOAD_AUDIO}>
+              <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
                 <div>
                   <DownloadButton onClick={item.onDownload} />
                 </div>
               </TooltipWrapper>
 
-              <TooltipWrapper content={TTS_TOOLTIPS.VIEW_HISTORY}>
+              <TooltipWrapper content={TTS_TOOLTIP.VIEW_HISTORY}>
                 <div>
                   <TTSPlaybackHistoryButton
                     onClick={() => {

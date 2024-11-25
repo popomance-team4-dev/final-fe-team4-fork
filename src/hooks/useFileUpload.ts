@@ -24,6 +24,9 @@ export const useFileUpload = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const validateFile = (file: File) => {
+    if (file.size === 0) {
+      throw new Error('빈 파일은 업로드할 수 없습니다!');
+    }
     if (file.size > maxSizeInMB * 1024 * 1024) {
       throw new Error(`파일 크기는 ${maxSizeInMB}MB 까지만 업로드 가능합니다!`);
     }
@@ -34,13 +37,24 @@ export const useFileUpload = ({
 
   const handleFiles = async (files: FileList | null) => {
     if (!files?.length) return;
+    if (Array.from(files).some((file) => file.size === 0)) return;
     setIsLoading(true);
 
     try {
       const fileArray = Array.from(files);
       fileArray.forEach(validateFile);
 
-      const texts = await Promise.all(fileArray.map((file) => file.text()));
+      const texts: string[] = [];
+      const audios: File[] = [];
+
+      for (const file of fileArray) {
+        if (file.type === ALLOWED_FILE_TYPES.TEXT) {
+          const text = await file.text();
+          texts.push(text);
+        } else if (file.type === ALLOWED_FILE_TYPES.WAV || file.type === ALLOWED_FILE_TYPES.MP3) {
+          audios.push(file);
+        }
+      }
 
       onSuccess(texts);
     } catch (error) {

@@ -6,11 +6,12 @@ import { useEffect, useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { FILE_CONSTANTS } from '@/constants/messages';
+import { useFileUpload } from '@/hooks/useFileUpload';
 import { useTableItems } from '@/hooks/useTableItems';
-import { useTextFileUpload } from '@/hooks/useTextFileUpload';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
 import { TableItem } from '@/types/table';
+import { textSplitter } from '@/utils/textSpliter';
 
 import { TTSTableGridView } from '../tts/TTSTableGridView';
 import { TableFooter } from './TableFooter';
@@ -50,8 +51,11 @@ export const TableContents: React.FC<TableContentsProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | null>(null);
 
-  const { handleFileChange, isLoading } = useTextFileUpload({
-    onFileUpload: (sentences) => {
+  const { handleFiles: handleFileChange, isLoading } = useFileUpload({
+    maxSizeInMB: 5,
+    allowedTypes: ['text/plain'],
+    onSuccess: (texts) => {
+      const sentences = texts.flatMap((text) => textSplitter(text));
       const newItems = sentences.map((text) => ({
         id: crypto.randomUUID(),
         text,

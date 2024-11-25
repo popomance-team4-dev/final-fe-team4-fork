@@ -1,12 +1,14 @@
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TableItem, useTableItems } from '@/hooks/useTableItems';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
+import { ERROR_MESSAGES, validateTextFile } from '@/utils/fileValidator';
 import { parseText } from '@/utils/textParser';
 
 import { TTSTableGridView } from '../tts/TTSTableGridView';
@@ -45,6 +47,16 @@ export const TableContents: React.FC<TableContentsProps> = ({
 }) => {
   const [isListView, setIsListView] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const { selectedCount, handleRegenerate, handleDownload, listItems, gridItems } = useTableItems({
     items,
@@ -85,6 +97,14 @@ export const TableContents: React.FC<TableContentsProps> = ({
 
   const handleFileUpload = async (files: FileList | null) => {
     if (!files) return;
+    setError(null);
+
+    // 파일 타입 검증
+    const invalidFiles = Array.from(files).filter((file) => !validateTextFile(file));
+    if (invalidFiles.length > 0) {
+      setError(ERROR_MESSAGES.INVALID_FILE_TYPE);
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -104,6 +124,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
 
       onAdd(newItems);
     } catch (error) {
+      setError(ERROR_MESSAGES.FILE_UPLOAD_FAILED);
       console.error('파일 처리 중 오류 발생:', error);
     } finally {
       setIsLoading(false);
@@ -111,55 +132,65 @@ export const TableContents: React.FC<TableContentsProps> = ({
   };
 
   return (
-    <div
-      className={cn(
-        'flex flex-col h-[580px]',
-        isListView ? 'bg-white border rounded-md overflow-hidden' : 'bg-transparent'
+    <>
+      {error && (
+        <Alert
+          variant="destructive"
+          className="fixed left-1/2 top-4 -translate-x-1/2 z-50 w-auto max-w-[400px] shadow-lg bg-white"
+        >
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
-    >
-      <TableHeader
-        onDelete={onDelete}
-        onAdd={onAdd}
-        onSelectAll={onSelectAll}
-        isAllSelected={isAllSelected}
-        isListView={isListView}
-        onViewChange={setIsListView}
-        onFileUpload={handleFileUpload}
-        isLoading={isLoading}
-        itemCount={items.length}
-        type={type}
-      />
-      <div className="flex-1 min-h-0">
-        {items.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center gap-12">
-            <img src={TableUploadMessage} alt="Empty table message" />
-          </div>
-        ) : (
-          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <SortableContext items={items} strategy={verticalListSortingStrategy}>
-              <ScrollArea className={cn('h-full', !isListView && 'mt-3')}>
-                {isListView ? (
-                  <TableListView
-                    rows={listItems}
-                    onSelectionChange={onSelectionChange}
-                    onTextChange={onTextChange}
-                    type={type}
-                  />
-                ) : (
-                  <TTSTableGridView items={gridItems} />
-                )}
-              </ScrollArea>
-            </SortableContext>
-          </DndContext>
+      <div
+        className={cn(
+          'flex flex-col h-[580px]',
+          isListView ? 'bg-white border rounded-md overflow-hidden' : 'bg-transparent'
         )}
+      >
+        <TableHeader
+          onDelete={onDelete}
+          onAdd={onAdd}
+          onSelectAll={onSelectAll}
+          isAllSelected={isAllSelected}
+          isListView={isListView}
+          onViewChange={setIsListView}
+          itemCount={items.length}
+          type={type}
+          onFileUpload={handleFileUpload}
+          isLoading={isLoading}
+        />
+        <div className="flex-1 min-h-0">
+          {items.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center gap-12">
+              <img src={TableUploadMessage} alt="Empty table message" />
+            </div>
+          ) : (
+            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+              <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                <ScrollArea className={cn('h-full', !isListView && 'mt-3')}>
+                  {isListView ? (
+                    <TableListView
+                      rows={listItems}
+                      onSelectionChange={onSelectionChange}
+                      onTextChange={onTextChange}
+                      type={type}
+                    />
+                  ) : (
+                    <TTSTableGridView items={gridItems} />
+                  )}
+                </ScrollArea>
+              </SortableContext>
+            </DndContext>
+          )}
+        </div>
+        <TableFooter
+          selectedCount={selectedCount}
+          onRegenerate={() => handleRegenerate()}
+          onDownload={() => handleDownload()}
+          isListView={isListView}
+          type={type}
+        />
       </div>
-      <TableFooter
-        selectedCount={selectedCount}
-        onRegenerate={() => handleRegenerate()}
-        onDownload={() => handleDownload()}
-        isListView={isListView}
-        type={type}
-      />
-    </div>
+    </>
   );
 };

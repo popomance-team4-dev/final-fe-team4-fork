@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { DownloadButton, RecreateButton } from '@/components/custom/buttons/IconButton';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
+import { TTS_TOOLTIP } from '@/constants/tooltips';
 import { cn } from '@/lib/utils';
 
 interface TableFooterProps {
@@ -27,13 +28,13 @@ export const TableFooter: React.FC<TableFooterProps> = ({
       {isListView && (
         <div className="flex items-center space-x-6 mr-2">
           {type === 'TTS' && (
-            <TooltipWrapper content="선택한 텍스트 재생성하기">
+            <TooltipWrapper content={TTS_TOOLTIP.REGENERATE_SELECTED}>
               <div>
                 <RecreateButton onClick={onRegenerate} />
               </div>
             </TooltipWrapper>
           )}
-          <TooltipWrapper content="선택한 음성 파일 다운로드">
+          <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
             <div>
               <DownloadButton onClick={onDownload} />
             </div>

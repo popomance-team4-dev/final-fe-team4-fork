@@ -9,6 +9,7 @@ import {
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import VCSidebarTabs from '@/components/custom/tabs/VCSidebarTabs';
 import { Switch } from '@/components/ui/switch';
+import { VC_TOOLTIP } from '@/constants/tooltips';
 
 const VCSidebar: React.FC = () => {
   const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
@@ -36,19 +37,19 @@ const VCSidebar: React.FC = () => {
           <VCSidebarTabs />
         </div>
         <div className="mt-auto space-y-2">
-          <TooltipWrapper content="선택한 항목에 VC 설정 적용하기">
+          <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
             <div>
               <ApplySelectionButton />
             </div>
           </TooltipWrapper>
 
-          <TooltipWrapper content="모든 항목에 VC 설정 적용하기">
+          <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
             <div>
               <ApplyAllButton />
             </div>
           </TooltipWrapper>
 
-          <TooltipWrapper content="VC 설정 변경사항 초기화하기">
+          <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
             <div>
               <ResetChangesButton />
             </div>

@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { AUDIO_FOOTER_TOOLTIP } from '@/constants/tooltips';
 import Jennie from '@/images/avatar/jennie.png';
 import { cn } from '@/lib/utils';
 
@@ -46,7 +47,7 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
         {/* Dialog Trigger */}
         <Dialog>
           <DialogTrigger asChild>
-            <TooltipWrapper content="전체 음성 생성 내역" className="history-icon">
+            <TooltipWrapper content={AUDIO_FOOTER_TOOLTIP.FULL_HISTORY} className="history-icon">
               <button
                 className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-full transition-colors"
                 aria-label="History"

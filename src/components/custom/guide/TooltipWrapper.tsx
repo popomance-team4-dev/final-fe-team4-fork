@@ -12,7 +12,7 @@ interface TooltipWrapperProps {
 
 const TooltipWrapper = ({ content, children, className, sideOffset = 16 }: TooltipWrapperProps) => {
   return (
-    <TooltipPrimitive.Provider>
+    <TooltipPrimitive.Provider delayDuration={150}>
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Content

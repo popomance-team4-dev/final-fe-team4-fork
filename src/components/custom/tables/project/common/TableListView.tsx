@@ -145,7 +145,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
   const renderHeader = () => {
     if (type === 'TTS') {
       return (
-        <div className="grid grid-cols-[auto,auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+        <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
           <div className="w-6" />
           <div className="w-4 ml-2 mr-2" />
           <div className="w-4 ml-2 mr-2" />
@@ -161,7 +161,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
     }
 
     return (
-      <div className="grid grid-cols-[auto,auto,auto,200px,1fr] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,auto,200px,1fr] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
         <div className="w-6" />
         <div className="w-4 ml-2 mr-2" />
         <div className="w-4 ml-2 mr-2" />
@@ -172,7 +172,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
   };
 
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full mx-auto relative">
       {renderHeader()}
       {rows.map((row) => (
         <SortableRow

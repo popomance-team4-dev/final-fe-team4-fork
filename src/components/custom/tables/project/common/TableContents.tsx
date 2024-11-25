@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 
 import { UploadTextButton } from '@/components/custom/buttons/IconButton';
+import { ProjectMainContentsItem } from '@/components/section/contents/project/ProjectMainContents';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
@@ -14,29 +15,19 @@ import { TableFooter } from './TableFooter';
 import { TableHeader } from './TableHeader';
 import { TableListView } from './TableListView';
 
-interface TableContentsItem {
-  id: string;
-  text: string;
-  isSelected: boolean;
-  speed?: number;
-  volume?: number;
-  pitch?: number;
-  fileName?: string;
-}
-
 interface TableContentsProps {
-  items: TableContentsItem[];
+  items: ProjectMainContentsItem[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
-  onAdd: (newItems?: TableContentsItem[]) => void;
+  onAdd: (newItems?: ProjectMainContentsItem[]) => void;
   onRegenerateItem?: (id: string) => void;
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;
   onSelectAll?: () => void;
   isAllSelected?: boolean;
   type?: 'TTS' | 'VC' | 'CONCAT';
-  onReorder?: (items: TableContentsItem[]) => void;
+  onReorder?: (items: ProjectMainContentsItem[]) => void;
 }
 
 export const TableContents: React.FC<TableContentsProps> = ({
@@ -119,7 +110,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
 
       const sentences = texts.flatMap((text) => parseText(text));
 
-      const newItems = sentences.map((text) => ({
+      const newItems: ProjectMainContentsItem[] = sentences.map((text) => ({
         id: crypto.randomUUID(),
         text,
         isSelected: false,
@@ -128,7 +119,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
         pitch: 4.0,
       }));
 
-      onAdd(newItems);
+      onAdd?.(newItems);
     } catch (error) {
       console.error('파일 처리 중 오류 발생:', error);
     } finally {

@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
 
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectMainContents, {
+  ProjectMainContentsItem,
+} from '@/components/section/contents/project/ProjectMainContents';
 import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
@@ -106,9 +108,9 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
-  const handleAdd = useCallback((newItems?: TTSItem[]) => {
-    if (newItems) {
-      setItems((prev) => [...prev, ...newItems]);
+  const handleAdd = useCallback((newItems?: ProjectMainContentsItem[]) => {
+    if (newItems && newItems.length > 0) {
+      setItems((prev) => [...prev, ...newItems] as TTSItem[]);
     } else {
       setItems((prev) => [
         ...prev,

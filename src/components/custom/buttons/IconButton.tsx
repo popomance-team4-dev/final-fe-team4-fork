@@ -186,7 +186,7 @@ export function ApplySelectionButton({
   isActive,
 }: {
   readonly onClick?: () => void;
-  readonly isActive: boolean;
+  readonly isActive?: boolean;
 }) {
   return (
     <IconButton
@@ -205,7 +205,7 @@ export function ApplyAllButton({
   isActive,
 }: {
   readonly onClick?: () => void;
-  readonly isActive: boolean;
+  readonly isActive?: boolean;
 }) {
   return (
     <IconButton
@@ -224,7 +224,7 @@ export function ResetChangesButton({
   isActive,
 }: {
   readonly onClick?: () => void;
-  readonly isActive: boolean;
+  readonly isActive?: boolean;
 }) {
   return (
     <IconButton

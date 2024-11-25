@@ -27,3 +27,8 @@ export const SIGNUP_VALIDATION_PATTERNS = {
   PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/,
   PHONE: /^\d{3}-\d{4}-\d{4}$/,
 } as const;
+
+export const FILE_CONSTANTS = {
+  MAX_FILE_SIZE: 1024 * 1024, // 1MB
+  ERROR_TIMEOUT: 3000, // 3초
+} as const;

@@ -5,13 +5,12 @@ import { useEffect, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ERROR_MESSAGES } from '@/constants/messages';
+import { FILE_CONSTANTS } from '@/constants/messages';
 import { useTableItems } from '@/hooks/useTableItems';
+import { useTextFileUpload } from '@/hooks/useTextFileUpload';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
 import { TableItem } from '@/types/table';
-import { validateTextFile } from '@/utils/fileValidator';
-import { parseText } from '@/utils/textParser';
 
 import { TTSTableGridView } from '../tts/TTSTableGridView';
 import { TableFooter } from './TableFooter';
@@ -48,17 +47,23 @@ export const TableContents: React.FC<TableContentsProps> = ({
   onReorder,
 }) => {
   const [isListView, setIsListView] = React.useState(true);
-  const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorTimeoutId, setErrorTimeoutId] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  const { handleFileChange, isLoading } = useTextFileUpload({
+    onFileUpload: (sentences) => {
+      const newItems = sentences.map((text) => ({
+        id: crypto.randomUUID(),
+        text,
+        isSelected: false,
+        speed: 1.0,
+        volume: 60,
+        pitch: 4.0,
+      }));
+      onAdd(newItems);
+    },
+    onError: setError,
+  });
 
   const { selectedCount, handleRegenerate, handleDownload, listItems, gridItems } = useTableItems({
     items,
@@ -83,63 +88,41 @@ export const TableContents: React.FC<TableContentsProps> = ({
     }
   }, [items.length, isAllSelected, onSelectAll]);
 
+  useEffect(() => {
+    if (error) {
+      if (errorTimeoutId) {
+        window.clearTimeout(errorTimeoutId);
+      }
+
+      const timeoutId = window.setTimeout(() => {
+        setError(null);
+      }, FILE_CONSTANTS.ERROR_TIMEOUT);
+      setErrorTimeoutId(timeoutId);
+
+      return () => {
+        if (timeoutId) {
+          window.clearTimeout(timeoutId);
+        }
+      };
+    }
+  }, [error, errorTimeoutId]);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newItems = arrayMove(items, oldIndex, newIndex);
-        onReorder?.(newItems);
-      }
+    if (!over || active.id === over.id) {
+      return;
     }
-  };
 
-  const handleFileUpload = async (files: FileList | null) => {
-    if (!files) return;
-    setError(null);
+    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const newIndex = items.findIndex((item) => item.id === over.id);
 
-    try {
-      // 파일 타입 검증
-      const invalidFiles = Array.from(files).filter((file) => {
-        try {
-          return !validateTextFile(file);
-        } catch (error) {
-          if (error instanceof Error) {
-            setError(error.message);
-          }
-          return true;
-        }
-      });
-
-      if (invalidFiles.length > 0) {
-        return;
-      }
-
-      setIsLoading(true);
-      const filePromises = Array.from(files).map((file) => file.text());
-      const texts = await Promise.all(filePromises);
-
-      const sentences = texts.flatMap((text) => parseText(text));
-
-      const newItems = sentences.map((text) => ({
-        id: crypto.randomUUID(),
-        text,
-        isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
-      }));
-
-      onAdd(newItems);
-    } catch (error) {
-      setError(ERROR_MESSAGES.FILE_UPLOAD_FAILED);
-      console.error('파일 처리 중 오류 발생:', error);
-    } finally {
-      setIsLoading(false);
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
     }
+
+    const newItems = arrayMove(items, oldIndex, newIndex);
+    onReorder?.(newItems);
   };
 
   return (
@@ -167,7 +150,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
           onViewChange={setIsListView}
           itemCount={items.length}
           type={type}
-          onFileUpload={handleFileUpload}
+          onFileUpload={handleFileChange}
           isLoading={isLoading}
         />
         <div className="flex-1 min-h-0">

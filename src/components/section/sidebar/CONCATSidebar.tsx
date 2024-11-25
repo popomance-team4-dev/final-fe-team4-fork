@@ -7,6 +7,7 @@ import {
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/feature/StateController';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 
 const CONCATSidebar: React.FC = () => {
   const [silenceAfterSentence, setSilenceAfterSentence] = useState(0); // 문장 뒤 무음 추가
@@ -57,9 +58,23 @@ const CONCATSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="absolute bottom-0 flex flex-col gap-4 mb-[100px] ">
-        <ApplySelectionButton />
-        <ApplyAllButton />
-        <ResetChangesButton />
+        <TooltipWrapper content="선택한 항목에 CONCAT 설정 적용하기">
+          <div>
+            <ApplySelectionButton />
+          </div>
+        </TooltipWrapper>
+
+        <TooltipWrapper content="모든 항목에 CONCAT 설정 적용하기">
+          <div>
+            <ApplyAllButton />
+          </div>
+        </TooltipWrapper>
+
+        <TooltipWrapper content="CONCAT 설정 변경사항 초기화하기">
+          <div>
+            <ResetChangesButton />
+          </div>
+        </TooltipWrapper>
       </div>
     </aside>
   );

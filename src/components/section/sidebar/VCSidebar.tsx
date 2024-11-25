@@ -6,10 +6,13 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import VCSidebarTabs from '@/components/custom/tabs/VCSidebarTabs';
 import { Switch } from '@/components/ui/switch';
+
 const VCSidebar: React.FC = () => {
   const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
+
   return (
     <aside className="w-[276px] min-h-full border-l border-gray-200 bg-background">
       <div className="flex flex-col h-full p-6">
@@ -33,12 +36,27 @@ const VCSidebar: React.FC = () => {
           <VCSidebarTabs />
         </div>
         <div className="mt-auto space-y-2">
-          <ApplySelectionButton />
-          <ApplyAllButton />
-          <ResetChangesButton />
+          <TooltipWrapper content="선택한 항목에 VC 설정 적용하기">
+            <div>
+              <ApplySelectionButton />
+            </div>
+          </TooltipWrapper>
+
+          <TooltipWrapper content="모든 항목에 VC 설정 적용하기">
+            <div>
+              <ApplyAllButton />
+            </div>
+          </TooltipWrapper>
+
+          <TooltipWrapper content="VC 설정 변경사항 초기화하기">
+            <div>
+              <ResetChangesButton />
+            </div>
+          </TooltipWrapper>
         </div>
       </div>
     </aside>
   );
 };
+
 export default VCSidebar;

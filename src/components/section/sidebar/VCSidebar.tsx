@@ -6,10 +6,14 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
-import VCselectTabs from '@/components/custom/tabs/VCSidebarTabs';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
+import VCSidebarTabs from '@/components/custom/tabs/VCSidebarTabs';
 import { Switch } from '@/components/ui/switch';
+import { VC_TOOLTIP } from '@/constants/tooltips';
+
 const VCSidebar: React.FC = () => {
   const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
+
   return (
     <aside className="w-[276px] min-h-full border-l border-gray-200 bg-background">
       <div className="flex flex-col h-full p-6">
@@ -30,15 +34,30 @@ const VCSidebar: React.FC = () => {
           />
         </div>
         <div className="mb-6">
-          <VCselectTabs />
+          <VCSidebarTabs />
         </div>
         <div className="mt-auto space-y-2">
-          <ApplySelectionButton />
-          <ApplyAllButton />
-          <ResetChangesButton />
+          <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
+            <div>
+              <ApplySelectionButton />
+            </div>
+          </TooltipWrapper>
+
+          <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
+            <div>
+              <ApplyAllButton />
+            </div>
+          </TooltipWrapper>
+
+          <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
+            <div>
+              <ResetChangesButton />
+            </div>
+          </TooltipWrapper>
         </div>
       </div>
     </aside>
   );
 };
+
 export default VCSidebar;

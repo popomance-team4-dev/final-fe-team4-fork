@@ -7,8 +7,10 @@ import {
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/feature/StateController';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
+import { TTS_TOOLTIP } from '@/constants/tooltips';
 import Ian from '@/images/avatar/ian.jpg';
 import Jennie from '@/images/avatar/jennie.png';
 import Jisu from '@/images/avatar/jisu.jpg';
@@ -196,9 +198,23 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <ApplySelectionButton />
-        <ApplyAllButton />
-        <ResetChangesButton />
+        <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
+          <div>
+            <ApplySelectionButton />
+          </div>
+        </TooltipWrapper>
+
+        <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
+          <div>
+            <ApplyAllButton />
+          </div>
+        </TooltipWrapper>
+
+        <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
+          <div>
+            <ResetChangesButton />
+          </div>
+        </TooltipWrapper>
       </div>
     </aside>
   );

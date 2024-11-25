@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
@@ -22,7 +24,7 @@ interface ListRowProps {
   pitch?: number;
 }
 
-const ListRow: React.FC<ListRowProps> = ({
+const SortableRow: React.FC<ListRowProps> = ({
   id,
   text,
   isSelected,
@@ -35,21 +37,27 @@ const ListRow: React.FC<ListRowProps> = ({
   type = 'TTS',
   fileName,
 }) => {
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onTextChange(id, e.target.value);
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
   };
+
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-
   if (type === 'TTS') {
     return (
-      <>
-        <div className="flex items-center px-4 py-2 border-b">
+      <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none">
+        <div className="flex items-center px-4 py-2 border-b group bg-white cursor-grab active:cursor-grabbing">
           <Checkbox
             checked={isSelected}
             onCheckedChange={() => onSelectionChange(id)}
@@ -59,7 +67,7 @@ const ListRow: React.FC<ListRowProps> = ({
           <Textarea
             value={text}
             onChange={(e) => {
-              handleTextChange(e);
+              onTextChange(id, e.target.value);
               handleTextAreaResize(e.target);
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
@@ -68,19 +76,17 @@ const ListRow: React.FC<ListRowProps> = ({
             rows={1}
           />
           <div className="flex gap-6">
-            {type === 'TTS' && (
-              <div className="flex items-center gap-4">
-                {speed !== undefined && (
-                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
-                )}
-                {volume !== undefined && (
-                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
-                )}
-                {pitch !== undefined && (
-                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
-                )}
-              </div>
-            )}
+            <div className="flex items-center gap-4">
+              {speed !== undefined && (
+                <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
+              )}
+              {volume !== undefined && (
+                <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
+              )}
+              {pitch !== undefined && (
+                <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
+              )}
+            </div>
             <div className="flex w-11 justify-center items-center">
               <TbHistory
                 className={cn(
@@ -93,36 +99,38 @@ const ListRow: React.FC<ListRowProps> = ({
           </div>
         </div>
         {isHistoryOpen && <TTSPlaybackHistory id={id} />}
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-[auto,auto,200px,1fr] px-4 py-2 border-b items-center">
-      <Checkbox
-        checked={isSelected}
-        onCheckedChange={() => onSelectionChange(id)}
-        className="ml-2 mr-2"
-      />
-      <PlayButton onClick={onPlay} className="mx-2 w-5 h-5" />
-      <div className="ml-4 truncate">{fileName || `${id}.wav`}</div>
-      <Textarea
-        value={text}
-        onChange={(e) => {
-          handleTextChange(e);
-          handleTextAreaResize(e.target);
-        }}
-        onInput={(e) => handleTextAreaResize(e.currentTarget)}
-        placeholder="텍스트를 입력하세요."
-        className="flex-1 min-h-[40px] border-0 overflow-hidden w-full"
-        rows={1}
-      />
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none">
+      <div className="grid grid-cols-[auto,auto,200px,1fr] px-4 py-2 border-b items-center group bg-white cursor-grab active:cursor-grabbing">
+        <Checkbox
+          checked={isSelected}
+          onCheckedChange={() => onSelectionChange(id)}
+          className="ml-2 mr-2"
+        />
+        <PlayButton onClick={onPlay} className="mx-2 w-5 h-5" />
+        <div className="ml-4 truncate">{fileName || `${id}.wav`}</div>
+        <Textarea
+          value={text}
+          onChange={(e) => {
+            onTextChange(id, e.target.value);
+            handleTextAreaResize(e.target);
+          }}
+          onInput={(e) => handleTextAreaResize(e.currentTarget)}
+          placeholder="텍스트를 입력하세요."
+          className="flex-1 min-h-[40px] border-0 overflow-hidden w-full"
+          rows={1}
+        />
+      </div>
     </div>
   );
 };
 
 interface TableListViewProps {
-  rows: Omit<ListRowProps, 'onTextChange'>[];
+  rows: ListRowProps[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   type?: 'TTS' | 'VC' | 'CONCAT';
@@ -137,7 +145,8 @@ export const TableListView: React.FC<TableListViewProps> = ({
   const renderHeader = () => {
     if (type === 'TTS') {
       return (
-        <div className="grid grid-cols-[auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+        <div className="grid grid-cols-[auto,auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+          <div className="w-6" />
           <div className="w-4 ml-2 mr-2" />
           <div className="w-4 ml-2 mr-2" />
           <div className="ml-6">텍스트</div>
@@ -152,7 +161,8 @@ export const TableListView: React.FC<TableListViewProps> = ({
     }
 
     return (
-      <div className="grid grid-cols-[auto,auto,200px,1fr] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="grid grid-cols-[auto,auto,auto,200px,1fr] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+        <div className="w-6" />
         <div className="w-4 ml-2 mr-2" />
         <div className="w-4 ml-2 mr-2" />
         <div className="ml-6">파일명</div>
@@ -165,7 +175,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
     <div className="w-full mx-auto">
       {renderHeader()}
       {rows.map((row) => (
-        <ListRow
+        <SortableRow
           key={row.id}
           {...row}
           onSelectionChange={onSelectionChange}

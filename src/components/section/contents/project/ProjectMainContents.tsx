@@ -2,7 +2,7 @@ import FileUploadAlert, { ALERT_MESSAGES } from '@/components/custom/guide/FileU
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import { Button } from '@/components/ui/button';
 
-interface ProjectMainContentsItem {
+export interface ProjectMainContentsItem {
   id: string;
   text: string;
   isSelected: boolean;
@@ -26,6 +26,7 @@ interface ProjectMainContentsProps {
   onRegenerateItem?: (id: string) => void;
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;
+  onReorder?: (newItems: ProjectMainContentsItem[]) => void;
 }
 
 const ProjectMainContents = ({
@@ -42,6 +43,7 @@ const ProjectMainContents = ({
   onRegenerateItem,
   onDownloadItem,
   onPlay,
+  onReorder,
 }: ProjectMainContentsProps) => {
   const getAlertMessage = () => {
     switch (type) {
@@ -76,6 +78,7 @@ const ProjectMainContents = ({
           onRegenerateItem={onRegenerateItem}
           onDownloadItem={onDownloadItem}
           onPlay={onPlay}
+          onReorder={onReorder}
           type={type === 'TTS' ? undefined : type}
         />
       </div>

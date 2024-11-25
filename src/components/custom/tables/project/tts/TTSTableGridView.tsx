@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import React, { useState } from 'react';
 
 import {
@@ -14,7 +16,7 @@ import { TTS_TOOLTIP } from '@/constants/tooltips';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
-interface TTSTableGridViewItemProps {
+interface TTSGridItemProps {
   id: string;
   text: string;
   audioUrl: string;
@@ -29,61 +31,61 @@ interface TTSTableGridViewItemProps {
   onTextChange: (id: string, newText: string) => void;
 }
 
-interface TTSGridItemProps {
-  item: TTSTableGridViewItemProps;
-}
+const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: props.id,
+  });
 
-interface TTSTableGridViewProps {
-  items: TTSTableGridViewItemProps[];
-}
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
-const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  // TTS 음원 재생성 히스토리 내역 토글
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <div
-          key={item.id}
-          className={`p-4 rounded-md bg-white transition-colors ${
-            item.isSelected
-              ? 'border border-primary shadow-[inset_0px_0px_5px_2px_rgba(59,130,246,0.2)]'
-              : 'border'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-1">
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <div
+        className={`bg-white rounded-md border p-4 group cursor-grab active:cursor-grabbing ${
+          props.isSelected
+            ? 'border border-primary shadow-[inset_0px_0px_5px_2px_rgba(59,130,246,0.2)]'
+            : 'border'
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between flex-1">
             <div className="flex items-center gap-5">
               <Checkbox
-                checked={item.isSelected}
-                onCheckedChange={() => item.onSelectionChange(item.id)}
+                checked={props.isSelected}
+                onCheckedChange={() => props.onSelectionChange(props.id)}
                 className="ml-2 mr-4"
               />
 
               <div className="flex gap-5">
-                {item.speed !== undefined && (
+                {props.speed !== undefined && (
                   <SoundStatus
                     type={UNIT_SOUND_STATUS_TYPES.SPEED}
-                    value={item.speed}
+                    value={props.speed}
                     showLabel={true}
                   />
                 )}
-                {item.volume !== undefined && (
+                {props.volume !== undefined && (
                   <SoundStatus
                     type={UNIT_SOUND_STATUS_TYPES.VOLUME}
-                    value={item.volume}
+                    value={props.volume}
                     showLabel={true}
                   />
                 )}
-                {item.pitch !== undefined && (
+                {props.pitch !== undefined && (
                   <SoundStatus
                     type={UNIT_SOUND_STATUS_TYPES.PITCH}
-                    value={item.pitch}
+                    value={props.pitch}
                     showLabel={true}
                   />
                 )}
@@ -93,13 +95,13 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
             <div className="flex items-center space-x-6 mr-2">
               <TooltipWrapper content={TTS_TOOLTIP.REGENERATE_SELECTED}>
                 <div>
-                  <RecreateButton onClick={item.onRegenerate} />
+                  <RecreateButton onClick={props.onRegenerate} />
                 </div>
               </TooltipWrapper>
 
               <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
                 <div>
-                  <DownloadButton onClick={item.onDownload} />
+                  <DownloadButton onClick={props.onDownload} />
                 </div>
               </TooltipWrapper>
 
@@ -115,11 +117,13 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
               </TooltipWrapper>
             </div>
           </div>
+        </div>
 
+        <div className="mt-4">
           <Textarea
-            value={item.text}
+            value={props.text}
             onChange={(e) => {
-              item.onTextChange(item.id, e.target.value);
+              props.onTextChange(props.id, e.target.value);
               handleTextAreaResize(e.target);
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
@@ -128,23 +132,25 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
             rows={1}
           />
           <div className="w-3/5 mb-5">
-            <AudioPlayer audioUrl={item.audioUrl} className="px-6 py-3" />
+            <AudioPlayer audioUrl={props.audioUrl} className="px-6 py-3" />
           </div>
-          <div className="-mx-4 -my-4">{isHistoryOpen && <TTSPlaybackHistory id={'id'} />}</div>
         </div>
+        {isHistoryOpen && <TTSPlaybackHistory id={props.id} />}
       </div>
     </div>
   );
 };
 
-const TTSTableGridView: React.FC<TTSTableGridViewProps> = ({ items }) => {
+interface TTSTableGridViewProps {
+  items: TTSGridItemProps[];
+}
+
+export const TTSTableGridView: React.FC<TTSTableGridViewProps> = ({ items }) => {
   return (
     <div className="flex flex-col gap-4">
       {items.map((item) => (
-        <TTSGridItem key={item.id} item={item} />
+        <SortableGridItem key={item.id} {...item} />
       ))}
     </div>
   );
 };
-
-export { TTSGridItem as TTSGridItem, TTSTableGridView };

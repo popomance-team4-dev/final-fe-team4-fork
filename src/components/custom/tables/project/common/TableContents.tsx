@@ -1,16 +1,18 @@
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 
 import { UploadTextButton } from '@/components/custom/buttons/IconButton';
-import { TableListView } from '@/components/custom/tables/project/common/TableListView';
-import { TTSTableGridView } from '@/components/custom/tables/project/tts/TTSTableGridView';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useTextFileUpload } from '@/hooks/useTextFileUpload';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
+import { parseText } from '@/utils/textParser';
 
+import { TTSTableGridView } from '../tts/TTSTableGridView';
 import { TableFooter } from './TableFooter';
 import { TableHeader } from './TableHeader';
+import { TableListView } from './TableListView';
 
 interface TableContentsItem {
   id: string;
@@ -34,6 +36,7 @@ interface TableContentsProps {
   onSelectAll?: () => void;
   isAllSelected?: boolean;
   type?: 'TTS' | 'VC' | 'CONCAT';
+  onReorder?: (items: TableContentsItem[]) => void;
 }
 
 export const TableContents: React.FC<TableContentsProps> = ({
@@ -48,15 +51,39 @@ export const TableContents: React.FC<TableContentsProps> = ({
   onSelectAll,
   isAllSelected,
   type,
+  onReorder,
 }) => {
   const selectedCount = items.filter((item) => item.isSelected).length;
   const [isListView, setIsListView] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   useEffect(() => {
     if (items.length === 0 && isAllSelected) {
       onSelectAll?.();
     }
   }, [items.length, isAllSelected, onSelectAll]);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        onReorder?.(newItems);
+      }
+    }
+  };
 
   const handleRegenerate = useCallback(
     (itemId?: string) => {
@@ -81,6 +108,33 @@ export const TableContents: React.FC<TableContentsProps> = ({
     },
     [items, onDownloadItem]
   );
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files) return;
+
+    setIsLoading(true);
+    try {
+      const filePromises = Array.from(files).map((file) => file.text());
+      const texts = await Promise.all(filePromises);
+
+      const sentences = texts.flatMap((text) => parseText(text));
+
+      const newItems = sentences.map((text) => ({
+        id: crypto.randomUUID(),
+        text,
+        isSelected: false,
+        speed: 1.0,
+        volume: 60,
+        pitch: 4.0,
+      }));
+
+      onAdd(newItems);
+    } catch (error) {
+      console.error('파일 처리 중 오류 발생:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const listItems = React.useMemo(
     () =>
@@ -117,28 +171,6 @@ export const TableContents: React.FC<TableContentsProps> = ({
     [items, onPlay, handleRegenerate, handleDownload, onSelectionChange, onTextChange]
   );
 
-  const handleUploadSuccess = (texts: string[]) => {
-    const newItems = texts.map((text) => ({
-      id: crypto.randomUUID(),
-      text,
-      isSelected: false,
-      speed: 1.0,
-      volume: 60,
-      pitch: 4.0,
-    }));
-
-    onAdd(newItems);
-  };
-
-  const handleUploadError = (error: string) => {
-    console.error('파일 업로드 실패:', error);
-  };
-
-  const { handleFileUpload, isLoading } = useTextFileUpload({
-    onUploadSuccess: handleUploadSuccess,
-    onError: handleUploadError,
-  });
-
   return (
     <div
       className={cn(
@@ -156,7 +188,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
         itemCount={items.length}
         type={type}
       />
-      <div className={cn('flex-1 min-h-0', !isListView && 'mb-4.5')}>
+      <div className="flex-1 min-h-0">
         {items.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center gap-12">
             <img src={TableUploadMessage} alt="Empty table message" />
@@ -166,11 +198,9 @@ export const TableContents: React.FC<TableContentsProps> = ({
                   const input = document.createElement('input');
                   input.type = 'file';
                   input.accept = '.txt';
+                  input.multiple = true;
                   input.onchange = (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) {
-                      handleFileUpload(file);
-                    }
+                    handleFileUpload((e.target as HTMLInputElement).files);
                   };
                   input.click();
                 }}
@@ -178,23 +208,23 @@ export const TableContents: React.FC<TableContentsProps> = ({
               />
             )}
           </div>
-        ) : isListView ? (
-          <div className="h-full relative">
-            <div className="absolute inset-x-0 bottom-0 top-0">
-              <ScrollArea className="h-full">
-                <TableListView
-                  rows={listItems}
-                  onSelectionChange={onSelectionChange}
-                  onTextChange={onTextChange}
-                  type={type}
-                />
-              </ScrollArea>
-            </div>
-          </div>
         ) : (
-          <ScrollArea className="h-full mt-3">
-            <TTSTableGridView items={gridItems} />
-          </ScrollArea>
+          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+              <ScrollArea className={cn('h-full', !isListView && 'mt-3')}>
+                {isListView ? (
+                  <TableListView
+                    rows={listItems}
+                    onSelectionChange={onSelectionChange}
+                    onTextChange={onTextChange}
+                    type={type}
+                  />
+                ) : (
+                  <TTSTableGridView items={gridItems} />
+                )}
+              </ScrollArea>
+            </SortableContext>
+          </DndContext>
         )}
       </div>
       <TableFooter

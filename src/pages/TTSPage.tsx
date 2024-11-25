@@ -128,6 +128,10 @@ const TTSPage = () => {
     console.log('재생:', id);
   }, []);
 
+  const handleReorder = useCallback((newItems: TTSItem[]) => {
+    setItems(newItems);
+  }, []);
+
   return (
     <PageLayout
       variant="project"
@@ -160,6 +164,7 @@ const TTSPage = () => {
             onRegenerateItem={handleRegenerateItem}
             onDownloadItem={handleDownloadItem}
             onPlay={handlePlay}
+            onReorder={handleReorder}
           />
         </>
       }

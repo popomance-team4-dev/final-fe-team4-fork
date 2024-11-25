@@ -7,8 +7,10 @@ import {
 } from '@/components/custom/buttons/IconButton';
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+import { TTS_TOOLTIP } from '@/constants/tooltips';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -89,15 +91,28 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
             </div>
 
             <div className="flex items-center space-x-6 mr-2">
-              <RecreateButton onClick={item.onRegenerate} />
-              <DownloadButton onClick={item.onDownload} />
-              <TTSPlaybackHistoryButton
-                onClick={() => {
-                  item.onDownload();
-                  setIsHistoryOpen(!isHistoryOpen);
-                }}
-                isActive={isHistoryOpen}
-              />
+              <TooltipWrapper content={TTS_TOOLTIP.REGENERATE_SELECTED}>
+                <div>
+                  <RecreateButton onClick={item.onRegenerate} />
+                </div>
+              </TooltipWrapper>
+
+              <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
+                <div>
+                  <DownloadButton onClick={item.onDownload} />
+                </div>
+              </TooltipWrapper>
+
+              <TooltipWrapper content={TTS_TOOLTIP.VIEW_HISTORY}>
+                <div>
+                  <TTSPlaybackHistoryButton
+                    onClick={() => {
+                      setIsHistoryOpen(!isHistoryOpen);
+                    }}
+                    isActive={isHistoryOpen}
+                  />
+                </div>
+              </TooltipWrapper>
             </div>
           </div>
 

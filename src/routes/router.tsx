@@ -6,6 +6,7 @@ import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
 import HomePage from '@/pages/HomePage';
 import ProjectsPage from '@/pages/ProjectsPage';
+import MyPage from '@/pages/MyPage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
@@ -21,6 +22,7 @@ const PATH = {
   VC: '/vc',
   CONCAT: '/concat',
   ERROR: '/error',
+  MYPAGE: '/mypage',
 } as const;
 
 const router = createBrowserRouter([
@@ -67,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: PATH.VC,
         element: <VCPage />,
+      },
+      {
+        path: PATH.MYPAGE,
+        element: <MyPage />,
       },
       // 404 에러 페이지
       {

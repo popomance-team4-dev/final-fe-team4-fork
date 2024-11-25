@@ -1,46 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { TbFileMusic } from 'react-icons/tb';
 
-import KeBob from '@/components/custom/dropdowns/KebabMenu';
+import KebabMenu from '@/components/custom/dropdowns/KebabMenu';
 import FileUploadBox from '@/components/custom/feature/FileUploadBox';
 import Pagination from '@/components/ui/pagination';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-interface VCSidebarTabs {
+interface VoiceFile {
   id: string;
   name: string;
   size: number;
   isEditing?: boolean;
 }
-
-const dummyFiles: VCSidebarTabs[] = Array.from({ length: 8 }, (_, i) => ({
+const dummyFiles: VoiceFile[] = Array.from({ length: 8 }, (_, i) => ({
   id: `file-${i + 1}`,
   name: `샘플 보이스 ${i + 1}.wav`,
   size: 104.2 * 1024 * 1024,
 }));
-
 const VCSidebarTabs = () => {
-  const [activeFile, setActiveFile] = useState<VCSidebarTabs | null>(null);
-  const [files, setFiles] = useState<VCSidebarTabs[]>(dummyFiles);
+  const [activeFile, setActiveFile] = useState<VoiceFile | null>(null);
+  const [files, setFiles] = useState<VoiceFile[]>(dummyFiles);
   const [currentPage, setCurrentPage] = useState(1);
   const filesPerPage = 4;
   const formatFileSize = (size: number) => {
     const sizeInMB = size / (1024 * 1024);
     return sizeInMB < 0.1 ? '0.1' : sizeInMB.toFixed(1);
   };
-
-  const handleFileUpload = (newFile: VCSidebarTabs) => {
+  const handleFileUpload = (newFile: VoiceFile) => {
     setFiles((prev) => {
       const isDuplicate = prev.some((file) => file.name === newFile.name);
       if (isDuplicate) return prev;
       return [newFile, ...prev];
     });
   };
-
-  const handleFileSelect = (file: VCSidebarTabs) => {
+  const handleFileSelect = (file: VoiceFile) => {
     setActiveFile(file);
   };
-
   const handleStartRename = (fileId: string) => {
     setFiles(
       files.map((file) => ({
@@ -49,7 +43,6 @@ const VCSidebarTabs = () => {
       }))
     );
   };
-
   const handleRename = (fileId: string, event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       const newName = (event.target as HTMLInputElement).value;
@@ -65,7 +58,6 @@ const VCSidebarTabs = () => {
       }
     }
   };
-
   const handleDelete = (fileId: string) => {
     setFiles(files.filter((file) => file.id !== fileId));
     if (activeFile?.id === fileId) {
@@ -79,7 +71,7 @@ const VCSidebarTabs = () => {
   }, [files.length]);
   const totalPages = Math.ceil(files.length / filesPerPage);
   const currentFiles = files.slice((currentPage - 1) * filesPerPage, currentPage * filesPerPage);
-  const FileListItem = ({ file }: { file: VCSidebarTabs }) => (
+  const FileListItem = ({ file }: { file: VoiceFile }) => (
     <div
       className={`flex items-center justify-between h-[61px] px-3
         border-b border-gray-300 bg-background cursor-pointer
@@ -107,7 +99,10 @@ const VCSidebarTabs = () => {
           <div className="text-[11px] text-muted-foreground">{formatFileSize(file.size)} MB</div>
         </div>
       </div>
-      <KeBob onRename={() => handleStartRename(file.id)} onDelete={() => handleDelete(file.id)} />
+      <KebabMenu
+        onRename={() => handleStartRename(file.id)}
+        onDelete={() => handleDelete(file.id)}
+      />
     </div>
   );
   return (

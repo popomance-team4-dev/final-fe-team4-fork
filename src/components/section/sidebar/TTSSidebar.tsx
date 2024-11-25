@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
 import {
@@ -7,8 +7,10 @@ import {
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/feature/StateController';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
+import { TTS_TOOLTIP } from '@/constants/tooltips';
 import Ian from '@/images/avatar/ian.jpg';
 import Jennie from '@/images/avatar/jennie.png';
 import Jisu from '@/images/avatar/jisu.jpg';
@@ -104,12 +106,23 @@ const styleOptions: SelectItemType[] = [
 ];
 
 const TTSSidebar: React.FC = () => {
-  const [speed, setSpeed] = useState(1.0);
-  const [volume, setVolume] = useState(60);
-  const [pitch, setPitch] = useState(4.0);
-  const [selectedLanguage, setSelectedLanguage] = useState(languageOptions[0].value);
-  const [selectedVoice, setSelectedVoice] = useState(voiceOptions[0].value);
-  const [selectedStyle, setSelectedStyle] = useState(styleOptions[0].value);
+  const [speed, setSpeed] = useState(0);
+  const [volume, setVolume] = useState(0);
+  const [pitch, setPitch] = useState(0);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedVoice, setSelectedVoice] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('');
+
+  const isActive = useMemo(() => {
+    return (
+      speed !== 0 &&
+      volume !== 0 &&
+      pitch !== 0 &&
+      selectedLanguage !== '' &&
+      selectedVoice !== '' &&
+      selectedStyle !== ''
+    );
+  }, [speed, volume, pitch, selectedLanguage, selectedVoice, selectedStyle]);
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -126,6 +139,7 @@ const TTSSidebar: React.FC = () => {
           onValueChange={setSelectedLanguage}
           items={languageOptions}
           icon={<TbWorld className="h-5 w-5" />}
+          placeholder="-"
         />
       </div>
 
@@ -138,6 +152,7 @@ const TTSSidebar: React.FC = () => {
           onValueChange={setSelectedVoice}
           items={voiceOptions}
           icon={voiceOptions.find((voice) => voice.value === selectedVoice)?.icon || null}
+          placeholder="-"
         />
       </div>
 
@@ -151,6 +166,7 @@ const TTSSidebar: React.FC = () => {
           value={selectedStyle}
           onValueChange={setSelectedStyle}
           items={styleOptions}
+          placeholder="-"
         />
       </div>
 
@@ -196,9 +212,22 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <ApplySelectionButton />
-        <ApplyAllButton />
-        <ResetChangesButton />
+        <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
+          <div>
+            <ApplySelectionButton isActive={isActive} />
+          </div>
+        </TooltipWrapper>
+
+        <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
+          <div>
+            <ApplyAllButton isActive={isActive} />
+          </div>
+        </TooltipWrapper>
+        <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
+          <div>
+            <ResetChangesButton isActive={isActive} />
+          </div>
+        </TooltipWrapper>
       </div>
     </aside>
   );

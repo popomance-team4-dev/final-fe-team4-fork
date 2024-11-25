@@ -3,7 +3,7 @@ import { TbTrash, TbX } from 'react-icons/tb';
 
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DialogClose, DialogContent, DialogPortal } from '@/components/ui/dialog';
+import { DialogClose, DialogContent, DialogPortal, DialogTitle } from '@/components/ui/dialog';
 
 const AudioHistoryDialog = () => {
   const [selectedItems, setSelectedItems] = React.useState<number[]>([]);
@@ -39,7 +39,7 @@ const AudioHistoryDialog = () => {
       <DialogContent className="p-0 w-[789px]">
         {/* Header */}
         <div className="flex items-center p-6 border-b gap-3">
-          <h2 className="text-body1 pl-9">전체 음성 생성 내역</h2>
+          <DialogTitle className="text-body1 pl-9">전체 음성 생성 내역</DialogTitle>
           <span className="text-body1 text-gray-700">{audioHistory.length}</span>
         </div>
 

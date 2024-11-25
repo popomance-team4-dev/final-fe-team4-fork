@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
@@ -56,7 +56,6 @@ const SortableRow: React.FC<ListRowProps> = ({
   };
 
   const [historyItems, setHistoryItems] = useState<IHistoryItem[]>([]);
-  const [isHistoryViewEnabled, setHistoryViewEnabled] = useState(false);
 
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
@@ -66,21 +65,8 @@ const SortableRow: React.FC<ListRowProps> = ({
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   // useEffect(() => {
-  //   // Dummy data for history items 백엔드 로직이 들어갈 자라
-  //   const dummyHistoryItems: IHistoryItem[] = [
-  //     { id: '1', text: 'Sample text 1', speed: 1, volume: 1, pitch: 1 },
-  //     { id: '2', text: 'Sample text 2', speed: 1.2, volume: 0.8, pitch: 1.1 },
-  //   ];
-  //   setHistoryItems(dummyHistoryItems);
+  //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출
   // }, []);
-
-  useEffect(() => {
-    if (historyItems.length > 0) {
-      setHistoryViewEnabled(true);
-    } else {
-      setHistoryViewEnabled(false);
-    }
-  }, [historyItems.length]);
 
   // 음원 히스토리 내역 삭제
   const handleDelete = (id: string) => {
@@ -125,7 +111,7 @@ const SortableRow: React.FC<ListRowProps> = ({
                 className={cn(
                   'w-6 h-6 text-gray-700 cursor-pointer hover:text-blue-700',
                   isHistoryOpen && 'text-blue-700',
-                  isHistoryViewEnabled ||
+                  historyItems.length > 0 ||
                     'pointer-events-none text-gray-700 opacity-50 cursor-not-allowed'
                 )}
                 onClick={() => setIsHistoryOpen(!isHistoryOpen)}
@@ -133,7 +119,7 @@ const SortableRow: React.FC<ListRowProps> = ({
             </div>
           </div>
         </div>
-        {isHistoryOpen && isHistoryViewEnabled && (
+        {isHistoryOpen && historyItems.length > 0 && (
           <TTSPlaybackHistory historyItems={historyItems} handleDelete={handleDelete} />
         )}
       </div>

@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   DownloadButton,
@@ -44,21 +44,15 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
     id: props.id,
   });
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [isHistoryViewEnabled, setHistoryViewEnabled] = useState(false);
   const [historyItems, setHistoryItems] = useState<IHistoryItem[]>([]);
-
-  useEffect(() => {
-    if (historyItems.length > 0) {
-      setHistoryViewEnabled(true);
-      console.log(true);
-    } else {
-      setHistoryViewEnabled(false);
-    }
-  }, [historyItems.length]);
 
   const handleDelete = (id: string) => {
     setHistoryItems((prev) => prev.filter((item) => item.id !== id));
   };
+
+  // useEffect(() => {
+  //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출
+  // }, []);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -134,7 +128,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
                       setIsHistoryOpen(!isHistoryOpen);
                     }}
                     isActive={isHistoryOpen}
-                    isHistoryViewEnabled={isHistoryViewEnabled}
+                    isHistoryViewEnabled={historyItems.length > 0}
                   />
                 </div>
               </TooltipWrapper>
@@ -158,7 +152,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
             <AudioPlayer audioUrl={props.audioUrl} className="px-6 py-3" />
           </div>
         </div>
-        {isHistoryOpen && isHistoryViewEnabled && (
+        {isHistoryOpen && historyItems.length > 0 && (
           <TTSPlaybackHistory historyItems={historyItems} handleDelete={handleDelete} />
         )}
       </div>

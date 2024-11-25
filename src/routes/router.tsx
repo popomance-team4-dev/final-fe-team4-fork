@@ -16,8 +16,9 @@ const PATH = {
   HOME: '/',
   SIGNIN: '/signin',
   SIGNUP: '/signup',
-  ACCOUNT_RECOVERY: '/account-recovery',
   PROJECTS: '/projects',
+  ACCOUNT_RECOVERY_ID: '/find-id',
+  ACCOUNT_RECOVERY_PW: '/find-pw',
   TTS: '/tts',
   VC: '/vc',
   CONCAT: '/concat',
@@ -41,8 +42,12 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
-        path: PATH.ACCOUNT_RECOVERY,
-        element: <AccountRecoveryPage />,
+        path: PATH.ACCOUNT_RECOVERY_ID,
+        element: <AccountRecoveryPage type="ID" />,
+      },
+      {
+        path: PATH.ACCOUNT_RECOVERY_PW,
+        element: <AccountRecoveryPage type="PW" />,
       },
       // 특정 에러 페이지 경로
       {

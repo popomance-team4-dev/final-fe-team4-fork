@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 
+import { UploadTextButton } from '@/components/custom/buttons/IconButton';
 import { TableListView } from '@/components/custom/tables/project/common/TableListView';
 import { TTSTableGridView } from '@/components/custom/tables/project/tts/TTSTableGridView';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -134,8 +135,9 @@ export const TableContents: React.FC<TableContentsProps> = ({
       />
       <div className={cn('flex-1 min-h-0', !isListView && 'mb-4.5')}>
         {items.length === 0 ? (
-          <div className="h-full flex items-center justify-center">
+          <div className="h-full flex flex-col items-center justify-center gap-12">
             <img src={TableUploadMessage} alt="Empty table message" />
+            {!type && <UploadTextButton />}
           </div>
         ) : isListView ? (
           <div className="h-full relative">

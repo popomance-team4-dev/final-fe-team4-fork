@@ -3,7 +3,6 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 
-import { UploadTextButton } from '@/components/custom/buttons/IconButton';
 import { ProjectMainContentsItem } from '@/components/section/contents/project/ProjectMainContents';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import TableUploadMessage from '@/images/table-upload-message.svg';
@@ -178,26 +177,13 @@ export const TableContents: React.FC<TableContentsProps> = ({
         onViewChange={setIsListView}
         itemCount={items.length}
         type={type}
+        onFileUpload={handleFileUpload}
+        isLoading={isLoading}
       />
       <div className="flex-1 min-h-0">
         {items.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center gap-12">
             <img src={TableUploadMessage} alt="Empty table message" />
-            {!type && (
-              <UploadTextButton
-                onClick={() => {
-                  const input = document.createElement('input');
-                  input.type = 'file';
-                  input.accept = '.txt';
-                  input.multiple = true;
-                  input.onchange = (e) => {
-                    handleFileUpload((e.target as HTMLInputElement).files);
-                  };
-                  input.click();
-                }}
-                isLoading={isLoading}
-              />
-            )}
           </div>
         ) : (
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>

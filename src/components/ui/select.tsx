@@ -21,7 +21,6 @@ interface SelectProps extends React.ComponentProps<typeof SelectPrimitive.Root> 
 
 const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
   ({ placeholder, items = [], icon, className, value, id, ...props }, ref) => {
-    console.log(value);
     return (
       <SelectPrimitive.Root {...props} value={value}>
         <SelectTrigger id={id} ref={ref} icon={value ? icon : ''} className={className}>
@@ -48,7 +47,6 @@ interface SelectValueProps extends React.ComponentPropsWithoutRef<typeof SelectP
 const SelectGroup = SelectPrimitive.Group;
 const SelectValue = React.forwardRef<HTMLButtonElement, SelectValueProps>(
   ({ placeholder, value, ...props }, ref) => {
-    console.log(placeholder);
     return (
       <SelectPrimitive.Value ref={ref} placeholder={value ? undefined : placeholder} {...props} />
     );

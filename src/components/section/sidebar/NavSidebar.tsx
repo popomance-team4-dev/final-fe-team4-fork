@@ -88,8 +88,8 @@ export function NavSidebar() {
           </div>
           <div className="flex flex-col w-full gap-3">
             <SidebarButton icon={TbSmartHome} label="홈" />
-            <SidebarButton icon={TbFolders} label="프로젝트" />
-            <SidebarButton icon={TbFolderShare} label="내보내기" />
+            <SidebarButton icon={TbFolders} label={isExpanded ? '프로젝트 목록' : '프로젝트'} />
+            <SidebarButton icon={TbFolderShare} label={isExpanded ? '히스토리 목록' : '히스토리'} />
           </div>
         </div>
         <Separator className="my-4" />

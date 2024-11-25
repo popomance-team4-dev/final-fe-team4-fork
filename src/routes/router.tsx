@@ -5,6 +5,7 @@ import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
 import HomePage from '@/pages/HomePage';
+import ProjectsPage from '@/pages/ProjectsPage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
@@ -15,6 +16,7 @@ const PATH = {
   SIGNIN: '/signin',
   SIGNUP: '/signup',
   ACCOUNT_RECOVERY: '/account-recovery',
+  PROJECTS: '/projects',
   TTS: '/tts',
   VC: '/vc',
   CONCAT: '/concat',
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: PATH.HOME,
         element: <HomePage />,
+      },
+      {
+        path: PATH.PROJECTS,
+        element: <ProjectsPage />,
       },
       {
         path: PATH.TTS,

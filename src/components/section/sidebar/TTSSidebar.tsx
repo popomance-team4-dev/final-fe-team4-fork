@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
 import {
@@ -112,17 +112,85 @@ const TTSSidebar: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('');
+  const [isAllConfigUpdated, setIsModified] = useState(false);
+  const [enableReset, setEnableReset] = useState(false);
 
-  const isActive = useMemo(() => {
-    return (
-      speed !== 0 &&
-      volume !== 0 &&
-      pitch !== 0 &&
-      selectedLanguage !== '' &&
-      selectedVoice !== '' &&
-      selectedStyle !== ''
+  const [initialSettings] = useState({
+    speed: 0,
+    volume: 0,
+    pitch: 0,
+    language: '',
+    voice: '',
+    style: '',
+  });
+
+  const checkIfModified = () => {
+    setIsModified(
+      speed !== initialSettings.speed &&
+        volume !== initialSettings.volume &&
+        pitch !== initialSettings.pitch &&
+        selectedLanguage !== initialSettings.language &&
+        selectedVoice !== initialSettings.voice &&
+        selectedStyle !== initialSettings.style
     );
-  }, [speed, volume, pitch, selectedLanguage, selectedVoice, selectedStyle]);
+  };
+
+  const checkCanReset = () => {
+    setEnableReset(
+      speed !== initialSettings.speed ||
+        volume !== initialSettings.volume ||
+        pitch !== initialSettings.pitch ||
+        selectedLanguage !== initialSettings.language ||
+        selectedVoice !== initialSettings.voice ||
+        selectedStyle !== initialSettings.style
+    );
+  };
+
+  const handleSpeedChange = (value: number) => {
+    setSpeed(value);
+    checkIfModified();
+    checkCanReset();
+  };
+
+  const handleVolumeChange = (value: number) => {
+    setVolume(value);
+    checkIfModified();
+    checkCanReset();
+  };
+
+  const handlePitchChange = (value: number) => {
+    setPitch(value);
+    checkIfModified();
+    checkCanReset();
+  };
+
+  const handleLanguageChange = (value: string) => {
+    setSelectedLanguage(value);
+    checkIfModified();
+    checkCanReset();
+  };
+
+  const handleVoiceChange = (value: string) => {
+    setSelectedVoice(value);
+    checkIfModified();
+    checkCanReset();
+  };
+
+  const handleStyleChange = (value: string) => {
+    setSelectedStyle(value);
+    checkIfModified();
+    checkCanReset();
+  };
+
+  const handleReset = () => {
+    setSpeed(0);
+    setVolume(0);
+    setPitch(0);
+    setSelectedLanguage('');
+    setSelectedVoice('');
+    setSelectedStyle('');
+    setIsModified(false);
+  };
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -136,7 +204,7 @@ const TTSSidebar: React.FC = () => {
         <Select
           id="language"
           value={selectedLanguage}
-          onValueChange={setSelectedLanguage}
+          onValueChange={handleLanguageChange}
           items={languageOptions}
           icon={<TbWorld className="h-5 w-5" />}
           placeholder="-"
@@ -149,7 +217,7 @@ const TTSSidebar: React.FC = () => {
         <Select
           id="voice"
           value={selectedVoice}
-          onValueChange={setSelectedVoice}
+          onValueChange={handleVoiceChange}
           items={voiceOptions}
           icon={voiceOptions.find((voice) => voice.value === selectedVoice)?.icon || null}
           placeholder="-"
@@ -164,7 +232,7 @@ const TTSSidebar: React.FC = () => {
         <Select
           id="voice-style"
           value={selectedStyle}
-          onValueChange={setSelectedStyle}
+          onValueChange={handleStyleChange}
           items={styleOptions}
           placeholder="-"
         />
@@ -181,7 +249,7 @@ const TTSSidebar: React.FC = () => {
           min={0.5}
           max={2.0}
           step={0.1}
-          onChange={setSpeed}
+          onChange={handleSpeedChange}
         />
       </div>
       {/* 볼륨 */}
@@ -193,7 +261,7 @@ const TTSSidebar: React.FC = () => {
           min={0}
           max={100}
           step={1}
-          onChange={setVolume}
+          onChange={handleVolumeChange}
         />
       </div>
 
@@ -206,7 +274,7 @@ const TTSSidebar: React.FC = () => {
           min={0}
           max={10}
           step={0.1}
-          onChange={setPitch}
+          onChange={handlePitchChange}
         />
       </div>
 
@@ -214,18 +282,29 @@ const TTSSidebar: React.FC = () => {
       <div className="flex flex-col gap-4">
         <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
           <div>
-            <ApplySelectionButton isActive={isActive} />
+            <ApplySelectionButton
+              className={
+                isAllConfigUpdated ? '' : `pointer-events-none opacity-50 cursor-not-allowed`
+              }
+            />
           </div>
         </TooltipWrapper>
 
         <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
           <div>
-            <ApplyAllButton isActive={isActive} />
+            <ApplyAllButton
+              className={
+                isAllConfigUpdated ? '' : `pointer-events-none opacity-50 cursor-not-allowed`
+              }
+            />
           </div>
         </TooltipWrapper>
         <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
           <div>
-            <ResetChangesButton isActive={isActive} />
+            <ResetChangesButton
+              onClick={handleReset}
+              className={enableReset ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+            />
           </div>
         </TooltipWrapper>
       </div>

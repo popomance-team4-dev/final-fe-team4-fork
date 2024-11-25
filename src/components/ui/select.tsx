@@ -22,7 +22,7 @@ interface SelectProps extends React.ComponentProps<typeof SelectPrimitive.Root> 
 const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
   ({ placeholder, items = [], icon, className, value, id, ...props }, ref) => {
     return (
-      <SelectPrimitive.Root {...props}>
+      <SelectPrimitive.Root {...props} value={value}>
         <SelectTrigger id={id} ref={ref} icon={value ? icon : ''} className={className}>
           <SelectValue placeholder={placeholder || '-'} />
         </SelectTrigger>

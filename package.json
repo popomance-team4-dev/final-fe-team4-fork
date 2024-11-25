@@ -13,8 +13,6 @@
     "docker": "vite build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "mockup": "node ./mock/mockup.cjs",
-    "mockdown": "node ./mock/mockdown.cjs",
     "chromatic": "chromatic",
     "orval": "orval --config ./orval.config.cjs",
     "api-docs": "widdershins  --search false ./openapi.json  --language_tabs 'shell:Shell' 'javascript:JavaScript' -o ./docs/api.md "
@@ -94,7 +92,6 @@
     "eslint-plugin-storybook": "^0.11.0",
     "globals": "^15.11.0",
     "lefthook": "^1.8.2",
-    "mockserver-client": "^5.15.0",
     "orval": "^7.3.0",
     "postcss": "^8.4.47",
     "prettier": "3.3.3",

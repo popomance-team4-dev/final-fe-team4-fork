@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 import ProjectMainContents, {
@@ -80,21 +80,21 @@ const TTSPage = () => {
     );
   }, []);
 
-  const isAllSelected = items.every((item) => item.isSelected);
+  const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     setItems((prev) => prev.map((item) => ({ ...item, isSelected: !isAllSelected })));
-  };
+  }, [isAllSelected]);
 
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = useCallback((id: string) => {
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, isSelected: !item.isSelected } : item))
     );
-  };
+  }, []);
 
-  const handleTextChange = (id: string, newText: string) => {
+  const handleTextChange = useCallback((id: string, newText: string) => {
     setItems((prev) => prev.map((item) => (item.id === id ? { ...item, text: newText } : item)));
-  };
+  }, []);
 
   const handleDelete = useCallback(() => {
     setItems((prevItems) => prevItems.filter((item) => !item.isSelected));

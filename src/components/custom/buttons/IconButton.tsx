@@ -189,10 +189,10 @@ export function TTSPlaybackHistoryButton({ onClick, isActive }: TTSPlaybackHisto
 }
 export function ApplySelectionButton({
   onClick,
-  isActive,
+  className,
 }: {
   readonly onClick?: () => void;
-  readonly isActive?: boolean;
+  readonly className?: string;
 }) {
   return (
     <IconButton
@@ -201,17 +201,17 @@ export function ApplySelectionButton({
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}
-      className={isActive ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+      className={className}
     />
   );
 }
 
 export function ApplyAllButton({
   onClick,
-  isActive,
+  className,
 }: {
   readonly onClick?: () => void;
-  readonly isActive?: boolean;
+  readonly className?: string;
 }) {
   return (
     <IconButton
@@ -220,17 +220,17 @@ export function ApplyAllButton({
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}
-      className={isActive ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+      className={className}
     />
   );
 }
 
 export function ResetChangesButton({
   onClick,
-  isActive,
+  className,
 }: {
   readonly onClick?: () => void;
-  readonly isActive?: boolean;
+  readonly className?: string;
 }) {
   return (
     <IconButton
@@ -239,7 +239,7 @@ export function ResetChangesButton({
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}
-      className={isActive ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+      className={className}
     />
   );
 }

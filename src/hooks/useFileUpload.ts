@@ -8,19 +8,19 @@ export const ALLOWED_FILE_TYPES = {
 
 export type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[keyof typeof ALLOWED_FILE_TYPES];
 
-interface UseFileUploadProps {
+interface UseFileUploadProps<T> {
   maxSizeInMB: number;
   allowedTypes: AllowedFileType[];
-  onSuccess: (texts: string[]) => void;
+  onSuccess: (files: T[]) => void;
   onError: (error: string) => void;
 }
 
-export const useFileUpload = ({
+export const useFileUpload = <T extends string | File>({
   maxSizeInMB,
   allowedTypes,
   onSuccess,
   onError,
-}: UseFileUploadProps) => {
+}: UseFileUploadProps<T>) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateFile = (file: File) => {
@@ -44,19 +44,18 @@ export const useFileUpload = ({
       const fileArray = Array.from(files);
       fileArray.forEach(validateFile);
 
-      const texts: string[] = [];
-      const audios: File[] = [];
+      const result: T[] = [];
 
       for (const file of fileArray) {
         if (file.type === ALLOWED_FILE_TYPES.TEXT) {
           const text = await file.text();
-          texts.push(text);
+          result.push(text as T);
         } else if (file.type === ALLOWED_FILE_TYPES.WAV || file.type === ALLOWED_FILE_TYPES.MP3) {
-          audios.push(file);
+          result.push(file as T);
         }
       }
 
-      onSuccess(texts);
+      onSuccess(result);
     } catch (error) {
       onError(error instanceof Error ? error.message : 'File upload failed');
     } finally {

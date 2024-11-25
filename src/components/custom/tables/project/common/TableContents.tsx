@@ -51,7 +51,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | null>(null);
 
-  const { handleFiles: handleFileChange, isLoading } = useFileUpload({
+  const { handleFiles: handleFileChange, isLoading } = useFileUpload<string>({
     maxSizeInMB: 5,
     allowedTypes: ['text/plain'],
     onSuccess: (texts) => {

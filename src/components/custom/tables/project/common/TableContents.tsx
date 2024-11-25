@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TableItem, useTableItems } from '@/hooks/useTableItems';
+import { ERROR_MESSAGES } from '@/constants/messages';
+import { useTableItems } from '@/hooks/useTableItems';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
-import { ERROR_MESSAGES, validateTextFile } from '@/utils/fileValidator';
+import { TableItem } from '@/types/table';
+import { validateTextFile } from '@/utils/fileValidator';
 import { parseText } from '@/utils/textParser';
 
 import { TTSTableGridView } from '../tts/TTSTableGridView';
@@ -53,7 +55,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
     if (error) {
       const timer = setTimeout(() => {
         setError(null);
-      }, 2000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [error]);
@@ -99,15 +101,24 @@ export const TableContents: React.FC<TableContentsProps> = ({
     if (!files) return;
     setError(null);
 
-    // 파일 타입 검증
-    const invalidFiles = Array.from(files).filter((file) => !validateTextFile(file));
-    if (invalidFiles.length > 0) {
-      setError(ERROR_MESSAGES.INVALID_FILE_TYPE);
-      return;
-    }
-
-    setIsLoading(true);
     try {
+      // 파일 타입 검증
+      const invalidFiles = Array.from(files).filter((file) => {
+        try {
+          return !validateTextFile(file);
+        } catch (error) {
+          if (error instanceof Error) {
+            setError(error.message);
+          }
+          return true;
+        }
+      });
+
+      if (invalidFiles.length > 0) {
+        return;
+      }
+
+      setIsLoading(true);
       const filePromises = Array.from(files).map((file) => file.text());
       const texts = await Promise.all(filePromises);
 
@@ -136,9 +147,9 @@ export const TableContents: React.FC<TableContentsProps> = ({
       {error && (
         <Alert
           variant="destructive"
-          className="fixed left-1/2 top-4 -translate-x-1/2 z-50 w-auto max-w-[400px] shadow-lg bg-white"
+          className="fixed left-1/2 top-8 -translate-x-1/2 transform z-[9999] w-auto min-w-[300px] max-w-[400px] shadow-lg bg-white border border-red-200"
         >
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription className="text-sm font-medium">{error}</AlertDescription>
         </Alert>
       )}
       <div

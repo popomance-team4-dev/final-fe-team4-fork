@@ -1,14 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-export interface TableItem {
-  id: string;
-  text: string;
-  isSelected: boolean;
-  speed?: number;
-  volume?: number;
-  pitch?: number;
-  fileName?: string;
-}
+import { TableItem } from '@/types/table';
 
 interface UseTableItemsProps {
   items: TableItem[];

@@ -4,16 +4,19 @@ import { validateTextFile } from '@/utils/fileValidation';
 import { parseText } from '@/utils/textParser';
 
 interface UseTextFileUploadProps {
-  onUploadSuccess: (texts: string[]) => void;
+  onFileUpload: (texts: string[]) => void;
   onError: (error: string) => void;
 }
 
-export const useTextFileUpload = ({ onUploadSuccess, onError }: UseTextFileUploadProps) => {
+export const useTextFileUpload = ({ onFileUpload, onError }: UseTextFileUploadProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleFileUpload = async (file: File) => {
+  const handleFileChange = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
     try {
       setIsLoading(true);
+      const file = files[0];
       validateTextFile(file);
 
       const text = await file.text();
@@ -23,7 +26,7 @@ export const useTextFileUpload = ({ onUploadSuccess, onError }: UseTextFileUploa
         throw new Error('처리할 수 있는 텍스트가 없습니다.');
       }
 
-      onUploadSuccess(sentences);
+      onFileUpload(sentences);
     } catch (error) {
       onError(error instanceof Error ? error.message : '파일 처리 중 오류가 발생했습니다.');
     } finally {
@@ -32,7 +35,7 @@ export const useTextFileUpload = ({ onUploadSuccess, onError }: UseTextFileUploa
   };
 
   return {
-    handleFileUpload,
+    handleFileChange,
     isLoading,
   };
 };

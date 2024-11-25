@@ -7,9 +7,9 @@ import {
 } from '@/components/custom/buttons/IconButton';
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -90,43 +90,28 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
             </div>
 
             <div className="flex items-center space-x-6 mr-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div>
-                      <RecreateButton onClick={item.onRegenerate} />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent sideOffset={10}>선택한 텍스트 재생성하기</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <TooltipWrapper content="선택한 텍스트 재생성하기">
+                <div>
+                  <RecreateButton onClick={item.onRegenerate} />
+                </div>
+              </TooltipWrapper>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div>
-                      <DownloadButton onClick={item.onDownload} />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent sideOffset={10}>선택한 음성 파일 다운로드</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <TooltipWrapper content="선택한 음성 파일 다운로드">
+                <div>
+                  <DownloadButton onClick={item.onDownload} />
+                </div>
+              </TooltipWrapper>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div>
-                      <TTSPlaybackHistoryButton
-                        onClick={() => {
-                          setIsHistoryOpen(!isHistoryOpen);
-                        }}
-                        isActive={isHistoryOpen}
-                      />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent sideOffset={10}>음성 생성 기록 및 히스토리 보기</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <TooltipWrapper content="음성 생성 기록 및 히스토리 보기">
+                <div>
+                  <TTSPlaybackHistoryButton
+                    onClick={() => {
+                      setIsHistoryOpen(!isHistoryOpen);
+                    }}
+                    isActive={isHistoryOpen}
+                  />
+                </div>
+              </TooltipWrapper>
             </div>
           </div>
 

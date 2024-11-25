@@ -13,9 +13,9 @@ interface TTSItem {
   id: string;
   text: string;
   isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
 }
 
 const TTSPage = () => {
@@ -106,18 +106,22 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
-  const handleAdd = useCallback(() => {
-    setItems((prev) => [
-      ...prev,
-      {
-        id: String(Date.now()),
-        text: '',
-        isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
-      },
-    ]);
+  const handleAdd = useCallback((newItems?: TTSItem[]) => {
+    if (newItems) {
+      setItems((prev) => [...prev, ...newItems]);
+    } else {
+      setItems((prev) => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          text: '',
+          isSelected: false,
+          speed: 1.0,
+          volume: 60,
+          pitch: 4.0,
+        },
+      ]);
+    }
   }, []);
 
   const handlePlay = useCallback((id: string) => {

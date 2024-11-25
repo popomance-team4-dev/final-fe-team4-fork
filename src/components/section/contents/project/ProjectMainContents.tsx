@@ -22,7 +22,7 @@ interface ProjectMainContentsProps {
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
-  onAdd: () => void;
+  onAdd: (newItems?: ProjectMainContentsItem[]) => void;
   onRegenerateItem?: (id: string) => void;
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;

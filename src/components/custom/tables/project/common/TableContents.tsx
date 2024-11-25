@@ -5,6 +5,7 @@ import { UploadTextButton } from '@/components/custom/buttons/IconButton';
 import { TableListView } from '@/components/custom/tables/project/common/TableListView';
 import { TTSTableGridView } from '@/components/custom/tables/project/tts/TTSTableGridView';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTextFileUpload } from '@/hooks/useTextFileUpload';
 import TableUploadMessage from '@/images/table-upload-message.svg';
 import { cn } from '@/lib/utils';
 
@@ -26,7 +27,7 @@ interface TableContentsProps {
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
-  onAdd: () => void;
+  onAdd: (newItems?: TableContentsItem[]) => void;
   onRegenerateItem?: (id: string) => void;
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;
@@ -116,6 +117,28 @@ export const TableContents: React.FC<TableContentsProps> = ({
     [items, onPlay, handleRegenerate, handleDownload, onSelectionChange, onTextChange]
   );
 
+  const handleUploadSuccess = (texts: string[]) => {
+    const newItems = texts.map((text) => ({
+      id: crypto.randomUUID(),
+      text,
+      isSelected: false,
+      speed: 1.0,
+      volume: 60,
+      pitch: 4.0,
+    }));
+
+    onAdd(newItems);
+  };
+
+  const handleUploadError = (error: string) => {
+    console.error('파일 업로드 실패:', error);
+  };
+
+  const { handleFileUpload, isLoading } = useTextFileUpload({
+    onUploadSuccess: handleUploadSuccess,
+    onError: handleUploadError,
+  });
+
   return (
     <div
       className={cn(
@@ -137,7 +160,23 @@ export const TableContents: React.FC<TableContentsProps> = ({
         {items.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center gap-12">
             <img src={TableUploadMessage} alt="Empty table message" />
-            {!type && <UploadTextButton />}
+            {!type && (
+              <UploadTextButton
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = '.txt';
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      handleFileUpload(file);
+                    }
+                  };
+                  input.click();
+                }}
+                isLoading={isLoading}
+              />
+            )}
           </div>
         ) : isListView ? (
           <div className="h-full relative">

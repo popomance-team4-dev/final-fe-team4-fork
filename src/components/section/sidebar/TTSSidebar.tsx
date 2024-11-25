@@ -109,9 +109,9 @@ const TTSSidebar: React.FC = () => {
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(60);
   const [pitch, setPitch] = useState(4.0);
-  const [selectedLanguage, setSelectedLanguage] = useState(languageOptions[0].value);
-  const [selectedVoice, setSelectedVoice] = useState(voiceOptions[0].value);
-  const [selectedStyle, setSelectedStyle] = useState(styleOptions[0].value);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedVoice, setSelectedVoice] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('');
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -128,6 +128,7 @@ const TTSSidebar: React.FC = () => {
           onValueChange={setSelectedLanguage}
           items={languageOptions}
           icon={<TbWorld className="h-5 w-5" />}
+          placeholder="-"
         />
       </div>
 
@@ -140,6 +141,7 @@ const TTSSidebar: React.FC = () => {
           onValueChange={setSelectedVoice}
           items={voiceOptions}
           icon={voiceOptions.find((voice) => voice.value === selectedVoice)?.icon || null}
+          placeholder="-"
         />
       </div>
 
@@ -153,6 +155,7 @@ const TTSSidebar: React.FC = () => {
           value={selectedStyle}
           onValueChange={setSelectedStyle}
           items={styleOptions}
+          placeholder="-"
         />
       </div>
 

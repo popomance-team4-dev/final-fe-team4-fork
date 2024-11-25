@@ -181,8 +181,13 @@ export function TTSPlaybackHistoryButton({ onClick, isActive }: TTSPlaybackHisto
     />
   );
 }
-
-export function ApplySelectionButton({ onClick }: { readonly onClick?: () => void }) {
+export function ApplySelectionButton({
+  onClick,
+  isActive,
+}: {
+  readonly onClick?: () => void;
+  readonly isActive?: boolean;
+}) {
   return (
     <IconButton
       icon={<TbStack />}
@@ -190,11 +195,18 @@ export function ApplySelectionButton({ onClick }: { readonly onClick?: () => voi
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}
+      className={isActive ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
     />
   );
 }
 
-export function ApplyAllButton({ onClick }: { readonly onClick?: () => void }) {
+export function ApplyAllButton({
+  onClick,
+  isActive,
+}: {
+  readonly onClick?: () => void;
+  readonly isActive?: boolean;
+}) {
   return (
     <IconButton
       icon={<TbStack2 />}
@@ -202,11 +214,18 @@ export function ApplyAllButton({ onClick }: { readonly onClick?: () => void }) {
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}
+      className={isActive ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
     />
   );
 }
 
-export function ResetChangesButton({ onClick }: { readonly onClick?: () => void }) {
+export function ResetChangesButton({
+  onClick,
+  isActive,
+}: {
+  readonly onClick?: () => void;
+  readonly isActive?: boolean;
+}) {
   return (
     <IconButton
       icon={<TbRefresh />}
@@ -214,6 +233,7 @@ export function ResetChangesButton({ onClick }: { readonly onClick?: () => void 
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}
+      className={isActive ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
     />
   );
 }

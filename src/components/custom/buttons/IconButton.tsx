@@ -97,7 +97,12 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 );
 IconButton.displayName = 'IconButton';
 
-export function UploadTextButton({ onClick }: { readonly onClick?: () => void }) {
+interface UploadTextButtonProps {
+  onClick?: () => void;
+  isLoading?: boolean;
+}
+
+export const UploadTextButton: React.FC<UploadTextButtonProps> = ({ onClick, isLoading }) => {
   return (
     <IconButton
       icon={<TbUpload />}
@@ -107,9 +112,10 @@ export function UploadTextButton({ onClick }: { readonly onClick?: () => void })
       textColor="text-gray-800"
       width="167px"
       onClick={onClick}
+      disabled={isLoading}
     />
   );
-}
+};
 
 export function UploadAudioButton({ onClick }: { readonly onClick?: () => void }) {
   return (

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SIGNUP_VALIDATION, SIGNUP_VALIDATION_PATTERNS } from '@/constants/validation';
+import { SIGNUP_VALIDATION, SIGNUP_VALIDATION_PATTERNS } from '@/constants/messages';
 import type { SignupFormData, SignupRequest } from '@/types/signup';
 
 // 회원가입 폼 유효성 검사 스키마 정의

@@ -16,6 +16,8 @@ interface TableHeaderProps {
   onViewChange: (isListView: boolean) => void;
   itemCount: number;
   type?: 'TTS' | 'VC' | 'CONCAT';
+  onFileUpload: (files: FileList | null) => void;
+  isLoading?: boolean;
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -27,6 +29,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   onViewChange,
   itemCount,
   type = 'TTS',
+  onFileUpload,
+  isLoading,
 }) => (
   <div className={cn('flex flex-col bg-white', !isListView ? 'rounded-md border' : 'border-b')}>
     <div className="flex items-center justify-between px-6 py-3">
@@ -50,14 +54,26 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
           </>
         )}
       </div>
-      {type === 'TTS' ? (
-        <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
-      ) : (
-        <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4">
+        <UploadTextButton
+          onClick={() => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt';
+            input.multiple = true;
+            input.onchange = (e) => {
+              onFileUpload((e.target as HTMLInputElement).files);
+            };
+            input.click();
+          }}
+          isLoading={isLoading}
+        />
+        {type === 'TTS' ? (
+          <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
+        ) : (
           <UploadAudioButton />
-          <UploadTextButton />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   </div>
 );

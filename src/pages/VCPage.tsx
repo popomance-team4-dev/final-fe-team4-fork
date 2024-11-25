@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
 
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
-import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectMainContents, {
+  ProjectMainContentsItem,
+} from '@/components/section/contents/project/ProjectMainContents';
 import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import VCSidebar from '@/components/section/sidebar/VCSidebar';
 import PageLayout from '@/layouts/PageLayout';
@@ -56,6 +58,10 @@ const VCPage = () => {
     setItems((prev) => prev.map((item) => ({ ...item, isSelected: !isAllSelected })));
   }, [items]);
 
+  const handleReorder = useCallback((newItems: ProjectMainContentsItem[]) => {
+    setItems(newItems as VCItem[]);
+  }, []);
+
   return (
     <PageLayout
       variant="project"
@@ -81,6 +87,7 @@ const VCPage = () => {
         onPlay={handlePlay}
         onSelectAll={handleSelectAll}
         isAllSelected={items.every((item) => item.isSelected)}
+        onReorder={handleReorder}
       />
     </PageLayout>
   );

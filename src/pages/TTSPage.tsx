@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectMainContents, {
+  ProjectMainContentsItem,
+} from '@/components/section/contents/project/ProjectMainContents';
 import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
@@ -13,9 +15,9 @@ interface TTSItem {
   id: string;
   text: string;
   isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
 }
 
 const TTSPage = () => {
@@ -106,22 +108,30 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
-  const handleAdd = useCallback(() => {
-    setItems((prev) => [
-      ...prev,
-      {
-        id: String(Date.now()),
-        text: '',
-        isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
-      },
-    ]);
+  const handleAdd = useCallback((newItems?: ProjectMainContentsItem[]) => {
+    if (newItems && newItems.length > 0) {
+      setItems((prev) => [...prev, ...newItems] as TTSItem[]);
+    } else {
+      setItems((prev) => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          text: '',
+          isSelected: false,
+          speed: 1.0,
+          volume: 60,
+          pitch: 4.0,
+        },
+      ]);
+    }
   }, []);
 
   const handlePlay = useCallback((id: string) => {
     console.log('재생:', id);
+  }, []);
+
+  const handleReorder = useCallback((newItems: TTSItem[]) => {
+    setItems(newItems);
   }, []);
 
   return (
@@ -156,6 +166,7 @@ const TTSPage = () => {
             onRegenerateItem={handleRegenerateItem}
             onDownloadItem={handleDownloadItem}
             onPlay={handlePlay}
+            onReorder={handleReorder}
           />
         </>
       }

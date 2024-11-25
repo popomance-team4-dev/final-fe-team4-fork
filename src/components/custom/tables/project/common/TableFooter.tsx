@@ -20,7 +20,7 @@ export const TableFooter: React.FC<TableFooterProps> = ({
   isListView,
   type = 'TTS',
 }) => (
-  <div className={cn('bg-white', !isListView && 'rounded-md border mt-4')}>
+  <div className={cn('bg-white', !isListView && 'rounded-md border mt-8')}>
     <div
       className={`flex items-center justify-between px-4 ${isListView ? 'py-4 border-t' : 'h-[40px]'}`}
     >

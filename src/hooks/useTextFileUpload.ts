@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { validateTextFile } from '@/utils/fileValidation';
+import { validateTextFile } from '@/utils/fileValidator';
 import { parseText } from '@/utils/textParser';
 
 interface UseTextFileUploadProps {

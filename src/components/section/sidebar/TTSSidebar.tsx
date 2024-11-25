@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { ReactNode } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
 import {
@@ -17,11 +17,12 @@ import Jisu from '@/images/avatar/jisu.jpg';
 import Lisa from '@/images/avatar/lisa.jpg';
 import Rose from '@/images/avatar/rose.jpg';
 import Ryan from '@/images/avatar/ryan.jpg';
+import { useTTSStore } from '@/stores/tts.store';
 
 type SelectItemType = {
   value: string;
   label: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
 };
 
 const voiceOptions: SelectItemType[] = [
@@ -106,91 +107,18 @@ const styleOptions: SelectItemType[] = [
 ];
 
 const TTSSidebar: React.FC = () => {
-  const [speed, setSpeed] = useState(0);
-  const [volume, setVolume] = useState(0);
-  const [pitch, setPitch] = useState(0);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [selectedVoice, setSelectedVoice] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState('');
-  const [isAllConfigUpdated, setIsModified] = useState(false);
-  const [enableReset, setEnableReset] = useState(false);
-
-  const [initialSettings] = useState({
-    speed: 0,
-    volume: 0,
-    pitch: 0,
-    language: '',
-    voice: '',
-    style: '',
-  });
-
-  const checkIfModified = () => {
-    setIsModified(
-      speed !== initialSettings.speed &&
-        volume !== initialSettings.volume &&
-        pitch !== initialSettings.pitch &&
-        selectedLanguage !== initialSettings.language &&
-        selectedVoice !== initialSettings.voice &&
-        selectedStyle !== initialSettings.style
-    );
-  };
-
-  const checkCanReset = () => {
-    setEnableReset(
-      speed !== initialSettings.speed ||
-        volume !== initialSettings.volume ||
-        pitch !== initialSettings.pitch ||
-        selectedLanguage !== initialSettings.language ||
-        selectedVoice !== initialSettings.voice ||
-        selectedStyle !== initialSettings.style
-    );
-  };
-
-  const handleSpeedChange = (value: number) => {
-    setSpeed(value);
-    checkIfModified();
-    checkCanReset();
-  };
-
-  const handleVolumeChange = (value: number) => {
-    setVolume(value);
-    checkIfModified();
-    checkCanReset();
-  };
-
-  const handlePitchChange = (value: number) => {
-    setPitch(value);
-    checkIfModified();
-    checkCanReset();
-  };
-
-  const handleLanguageChange = (value: string) => {
-    setSelectedLanguage(value);
-    checkIfModified();
-    checkCanReset();
-  };
-
-  const handleVoiceChange = (value: string) => {
-    setSelectedVoice(value);
-    checkIfModified();
-    checkCanReset();
-  };
-
-  const handleStyleChange = (value: string) => {
-    setSelectedStyle(value);
-    checkIfModified();
-    checkCanReset();
-  };
-
-  const handleReset = () => {
-    setSpeed(0);
-    setVolume(0);
-    setPitch(0);
-    setSelectedLanguage('');
-    setSelectedVoice('');
-    setSelectedStyle('');
-    setIsModified(false);
-  };
+  const {
+    speed,
+    volume,
+    pitch,
+    language,
+    voice,
+    style,
+    setField,
+    reset,
+    isModified,
+    isAllConfigured,
+  } = useTTSStore();
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -203,8 +131,8 @@ const TTSSidebar: React.FC = () => {
         </label>
         <Select
           id="language"
-          value={selectedLanguage}
-          onValueChange={handleLanguageChange}
+          value={language}
+          onValueChange={(value) => setField('language', value)}
           items={languageOptions}
           icon={<TbWorld className="h-5 w-5" />}
           placeholder="-"
@@ -216,10 +144,10 @@ const TTSSidebar: React.FC = () => {
         <label className="block text-sm font-bold mb-2">목소리</label>
         <Select
           id="voice"
-          value={selectedVoice}
-          onValueChange={handleVoiceChange}
+          value={voice}
+          onValueChange={(value) => setField('voice', value)}
           items={voiceOptions}
-          icon={voiceOptions.find((voice) => voice.value === selectedVoice)?.icon || null}
+          icon={voiceOptions.find((voiceOption) => voiceOption.value === voice)?.icon || null}
           placeholder="-"
         />
       </div>
@@ -231,8 +159,8 @@ const TTSSidebar: React.FC = () => {
         </label>
         <Select
           id="voice-style"
-          value={selectedStyle}
-          onValueChange={handleStyleChange}
+          value={style}
+          onValueChange={(value) => setField('style', value)}
           items={styleOptions}
           placeholder="-"
         />
@@ -249,7 +177,7 @@ const TTSSidebar: React.FC = () => {
           min={0.5}
           max={2.0}
           step={0.1}
-          onChange={handleSpeedChange}
+          onChange={(value) => setField('speed', value)}
         />
       </div>
       {/* 볼륨 */}
@@ -261,7 +189,7 @@ const TTSSidebar: React.FC = () => {
           min={0}
           max={100}
           step={1}
-          onChange={handleVolumeChange}
+          onChange={(value) => setField('volume', value)}
         />
       </div>
 
@@ -274,7 +202,7 @@ const TTSSidebar: React.FC = () => {
           min={0}
           max={10}
           step={0.1}
-          onChange={handlePitchChange}
+          onChange={(value) => setField('pitch', value)}
         />
       </div>
 
@@ -283,9 +211,7 @@ const TTSSidebar: React.FC = () => {
         <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
           <div>
             <ApplySelectionButton
-              className={
-                isAllConfigUpdated ? '' : `pointer-events-none opacity-50 cursor-not-allowed`
-              }
+              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
             />
           </div>
         </TooltipWrapper>
@@ -293,17 +219,15 @@ const TTSSidebar: React.FC = () => {
         <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
           <div>
             <ApplyAllButton
-              className={
-                isAllConfigUpdated ? '' : `pointer-events-none opacity-50 cursor-not-allowed`
-              }
+              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
             />
           </div>
         </TooltipWrapper>
         <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
           <div>
             <ResetChangesButton
-              onClick={handleReset}
-              className={enableReset ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+              onClick={reset}
+              className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
             />
           </div>
         </TooltipWrapper>

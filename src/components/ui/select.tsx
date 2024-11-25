@@ -24,7 +24,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
     return (
       <SelectPrimitive.Root {...props} value={value}>
         <SelectTrigger id={id} ref={ref} icon={value ? icon : ''} className={className}>
-          <SelectValue placeholder={placeholder || '-'} value={value} />
+          <SelectValue placeholder={placeholder || '-'} />
         </SelectTrigger>
         <SelectContent>
           {items.map((item) => (
@@ -39,20 +39,8 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
 );
 Select.displayName = 'Select';
 
-interface SelectValueProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value> {
-  placeholder?: string;
-  value?: string;
-}
-
 const SelectGroup = SelectPrimitive.Group;
-const SelectValue = React.forwardRef<HTMLButtonElement, SelectValueProps>(
-  ({ placeholder, value, ...props }, ref) => {
-    return (
-      <SelectPrimitive.Value ref={ref} placeholder={value ? undefined : placeholder} {...props} />
-    );
-  }
-);
-SelectValue.displayName = SelectPrimitive.Value.displayName;
+const SelectValue = SelectPrimitive.Value;
 
 interface SelectTriggerProps
   extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {

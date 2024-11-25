@@ -1,12 +1,15 @@
 import { useState } from 'react';
 
-import { ProjectListTable } from '@/components/custom/tables/history/ProjectListTable';
+import {
+  ProjectListTable,
+  ProjectListTableItem,
+} from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
 import MainHeader from '@/components/section/header/MainHeader';
 import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
 
-const dummyData = [
+const dummyData: ProjectListTableItem[] = [
   {
     id: '1',
     order: '1',

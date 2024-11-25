@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface ProjectListTableItem {
+export interface ProjectListTableItem {
   id: string;
   order: string;
   projectName: string;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
@@ -22,6 +22,14 @@ interface ListRowProps {
   pitch?: number;
 }
 
+interface IHistoryItem {
+  id: string;
+  text: string;
+  speed: number;
+  volume: number;
+  pitch: number;
+}
+
 const ListRow: React.FC<ListRowProps> = ({
   id,
   text,
@@ -35,6 +43,10 @@ const ListRow: React.FC<ListRowProps> = ({
   type = 'TTS',
   fileName,
 }) => {
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [historyItems, setHistoryItems] = useState<IHistoryItem[]>([]);
+  const [isHistoryViewEnabled, setHistoryViewEnabled] = useState(false);
+
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onTextChange(id, e.target.value);
   };
@@ -44,7 +56,27 @@ const ListRow: React.FC<ListRowProps> = ({
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  // useEffect(() => {
+  //   // Dummy data for history items 백엔드 로직이 들어갈 자라
+  //   const dummyHistoryItems: IHistoryItem[] = [
+  //     { id: '1', text: 'Sample text 1', speed: 1, volume: 1, pitch: 1 },
+  //     { id: '2', text: 'Sample text 2', speed: 1.2, volume: 0.8, pitch: 1.1 },
+  //   ];
+  //   setHistoryItems(dummyHistoryItems);
+  // }, []);
+
+  useEffect(() => {
+    if (historyItems.length > 0) {
+      setHistoryViewEnabled(true);
+    } else {
+      setHistoryViewEnabled(false);
+    }
+  }, [historyItems.length]);
+
+  // 음원 히스토리 내역 삭제
+  const handleDelete = (id: string) => {
+    setHistoryItems((prev) => prev.filter((item) => item.id !== id));
+  };
 
   if (type === 'TTS') {
     return (
@@ -85,14 +117,18 @@ const ListRow: React.FC<ListRowProps> = ({
               <TbHistory
                 className={cn(
                   'w-6 h-6 text-gray-700 cursor-pointer hover:text-blue-700',
-                  isHistoryOpen && 'text-blue-700'
+                  isHistoryOpen && 'text-blue-700',
+                  isHistoryViewEnabled ||
+                    'pointer-events-none text-gray-700 opacity-50 cursor-not-allowed'
                 )}
                 onClick={() => setIsHistoryOpen(!isHistoryOpen)}
               />
             </div>
           </div>
         </div>
-        {isHistoryOpen && <TTSPlaybackHistory id={id} />}
+        {isHistoryOpen && isHistoryViewEnabled && (
+          <TTSPlaybackHistory historyItems={historyItems} handleDelete={handleDelete} />
+        )}
       </>
     );
   }

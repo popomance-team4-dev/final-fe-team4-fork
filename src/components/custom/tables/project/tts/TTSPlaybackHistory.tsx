@@ -1,5 +1,4 @@
 import { Checkbox } from '@radix-ui/react-checkbox';
-import { useEffect, useMemo, useState } from 'react';
 import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer, PlayerMode } from '@/components/custom/feature/AudioPlayer';
@@ -8,55 +7,19 @@ import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/featur
 import HistoryTree from './TTSHistoryTree';
 
 interface TTSPlaybackHistoryProps {
-  id: string;
+  historyItems: IHistoryItem[];
+  handleDelete: (id: string) => void;
 }
 
-const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ id }) => {
-  console.log(id);
+interface IHistoryItem {
+  id: string;
+  text: string;
+  speed: number;
+  volume: number;
+  pitch: number;
+}
 
-  // 가짜 TTS 재생성성히스토리 데이터들임, 백엔드 연결 이후 삭제 필요
-  const fakeHistoryItems = useMemo(
-    () => [
-      {
-        id: '1',
-        text: '안녕하세요. 반갑습니다.',
-        speed: 1.0,
-        volume: 60.0,
-        pitch: 4.0,
-      },
-      {
-        id: '2',
-        text: '안녕하세요. 반갑습니다.',
-        speed: 1.0,
-        volume: 60.0,
-        pitch: 4.0,
-      },
-      {
-        id: '3',
-        text: '안녕하세요. 반갑습니다.',
-        speed: 1.0,
-        volume: 60.0,
-        pitch: 4.0,
-      },
-    ],
-    []
-  );
-
-  // 음원 히스토리 내역들
-  const [historyItems, setHistoryItems] = useState([...fakeHistoryItems]);
-
-  // 음원 히스토리 내역을 fetch 이후 초기화
-  useEffect(() => {
-    // 히스토리 내역을 백엔드에서 가져오는 로직이 있어야됨
-    // const historyItems = await fetchHistoryItems(id);
-    setHistoryItems([...fakeHistoryItems]);
-  }, []);
-
-  // 음원 히스토리 내역 삭제
-  const handleDelete = (id: string) => {
-    setHistoryItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
+const TTSPlaybackHistory: React.FC<TTSPlaybackHistoryProps> = ({ historyItems, handleDelete }) => {
   return (
     <div className="flex bg-gray-50">
       <div>

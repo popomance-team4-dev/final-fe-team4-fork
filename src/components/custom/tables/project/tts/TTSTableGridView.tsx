@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   DownloadButton,
@@ -37,14 +37,50 @@ interface TTSTableGridViewProps {
   items: TTSTableGridViewItemProps[];
 }
 
+interface IHistoryItem {
+  id: string;
+  text: string;
+  speed: number;
+  volume: number;
+  pitch: number;
+}
+
 const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  // TTS 음원 재생성 히스토리 내역 토글
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false); // TTS 음원 재생성 히스토리 내역 토글
+  const [historyItems, setHistoryItems] = useState<IHistoryItem[]>([
+    { id: '1', text: 'Sample text 1', speed: 1, volume: 1, pitch: 1 },
+    { id: '2', text: 'Sample text 2', speed: 1.2, volume: 0.8, pitch: 1.1 },
+  ]);
+
+  // useEffect(() => {
+  //   // Dummy data for history items 백엔드 로직이 들어갈 자라
+  //   const dummyHistoryItems: IHistoryItem[] = [
+  //     { id: '1', text: 'Sample text 1', speed: 1, volume: 1, pitch: 1 },
+  //     { id: '2', text: 'Sample text 2', speed: 1.2, volume: 0.8, pitch: 1.1 },
+  //   ];
+  //   setHistoryItems(dummyHistoryItems);
+  // }, []);
+
+  const [isHistoryViewEnabled, setHistoryViewEnabled] = useState(false);
+
+  useEffect(() => {
+    if (historyItems.length > 0) {
+      setHistoryViewEnabled(true);
+      console.log(true);
+    } else {
+      setHistoryViewEnabled(false);
+    }
+  }, [historyItems.length]);
+
+  // 음원 히스토리 내역 삭제
+  const handleDelete = (id: string) => {
+    setHistoryItems((prev) => prev.filter((item) => item.id !== id));
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -110,12 +146,12 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
                       setIsHistoryOpen(!isHistoryOpen);
                     }}
                     isActive={isHistoryOpen}
+                    isHistoryViewEnabled={isHistoryViewEnabled}
                   />
                 </div>
               </TooltipWrapper>
             </div>
           </div>
-
           <Textarea
             value={item.text}
             onChange={(e) => {
@@ -130,7 +166,11 @@ const TTSGridItem: React.FC<TTSGridItemProps> = ({ item }) => {
           <div className="w-3/5 mb-5">
             <AudioPlayer audioUrl={item.audioUrl} className="px-6 py-3" />
           </div>
-          <div className="-mx-4 -my-4">{isHistoryOpen && <TTSPlaybackHistory id={'id'} />}</div>
+          <div className="-mx-4 -my-4">
+            {isHistoryOpen && isHistoryViewEnabled && (
+              <TTSPlaybackHistory historyItems={historyItems} handleDelete={handleDelete} />
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   DownloadButton,
@@ -13,6 +13,7 @@ import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { TTS_TOOLTIP } from '@/constants/tooltips';
+import { usePlaybackHistory } from '@/hooks/usePlaybackHistory';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -43,12 +44,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: props.id,
   });
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [historyItems, setHistoryItems] = useState<InterfaceHistoryItem[]>([]);
-
-  const handleDelete = (id: string) => {
-    setHistoryItems((prev) => prev.filter((item) => item.id !== id));
-  };
+  const { historyItems, isHistoryOpen, setIsHistoryOpen, handleDelete } = usePlaybackHistory();
 
   // useEffect(() => {
   //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출

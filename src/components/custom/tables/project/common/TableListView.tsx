@@ -1,14 +1,13 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useState } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
 import TTSPlaybackHistory from '@/components/custom/tables/project/tts/TTSPlaybackHistory';
-import { InterfaceHistoryItem } from '@/components/custom/tables/project/tts/TTSTableGridView';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+import { usePlaybackHistory } from '@/hooks/usePlaybackHistory';
 import { cn } from '@/lib/utils';
 
 interface ListRowProps {
@@ -48,23 +47,16 @@ const SortableRow: React.FC<ListRowProps> = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const [historyItems, setHistoryItems] = useState<InterfaceHistoryItem[]>([]);
+  const { historyItems, isHistoryOpen, setIsHistoryOpen, handleDelete } = usePlaybackHistory();
 
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-
   // useEffect(() => {
   //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출
   // }, []);
-
-  // 음원 히스토리 내역 삭제
-  const handleDelete = (id: string) => {
-    setHistoryItems((prev) => prev.filter((item) => item.id !== id));
-  };
 
   if (type === 'TTS') {
     return (

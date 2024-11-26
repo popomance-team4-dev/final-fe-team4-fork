@@ -1,5 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
+import { ttsLoad } from '@/api/aIParkAPI';
+import { TTSDetailDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { saveTTSProject } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 import ProjectMainContents, {
   ProjectMainContentsItem,
@@ -69,6 +73,86 @@ const TTSPage = () => {
   ]);
 
   const [items, setItems] = useState<TTSItem[]>([]);
+  const [projectId, setProjectId] = useState<number | null>(null);
+
+  // TTS 상태 저장을 위한 상태 관리
+  const location = useLocation();
+  const initialState: TTSSaveDto = location.state || {
+    projectId: null,
+    projectName: '',
+    voiceStyleId: 9,
+    fullScript: '',
+    globalSpeed: 1.0,
+    globalPitch: 0.5,
+    globalVolume: 0.8,
+    ttsDetails: [],
+  };
+  const [projectData, setProjectData] = useState<TTSSaveDto>(initialState);
+
+  // TTS 상태 로드
+  const fetchTTSState = useCallback(async (id: number) => {
+    try {
+      // ttsLoad 호출
+      const response = await ttsLoad(id);
+
+      if (response.data?.success && response.data.data) {
+        const { ttsProject, ttsDetails } = response.data.data;
+
+        setProjectId(ttsProject.id); // 프로젝트 ID 설정
+        setProjectData((prev) => ({
+          ...prev,
+          projectId: ttsProject.id,
+          projectName: ttsProject.projectName,
+        }));
+
+        const loadedItems = ttsDetails.map((detail: TTSDetailDto) => ({
+          id: String(detail.id),
+          text: detail.unitScript || '',
+          isSelected: false,
+          speed: detail.unitSpeed || 1.0,
+          volume: detail.unitVolume || 50,
+          pitch: detail.unitPitch || 1.0,
+        }));
+        setItems(loadedItems);
+      } else {
+        console.error('TTS 상태 로드 실패:', response.data?.message);
+      }
+    } catch (error) {
+      console.error('TTS 상태 로드 중 오류:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (projectId) {
+      fetchTTSState(projectId);
+    }
+  }, [projectId, fetchTTSState]);
+
+  // 프로젝트 저장
+  const handleSaveProject = useCallback(async () => {
+    try {
+      const response = await saveTTSProject({
+        ...projectData, // 항상 최신 상태를 가져옴
+      });
+      if (response) {
+        console.log('프로젝트 저장 성공:', response);
+        setProjectData((prev) => ({
+          ...prev,
+          projectId: response.data.ttsProject.id, // 서버 응답 데이터 반영
+        }));
+      }
+    } catch (error) {
+      console.error('프로젝트 저장 오류:', error);
+    }
+  }, [projectData]);
+
+  // 프로젝트 이름 변경 핸들러
+  const handleProjectNameChange = (newName: string) => {
+    setProjectData((prev) => ({
+      ...prev,
+      projectName: newName,
+    }));
+  };
 
   const handleDeleteCompleted = useCallback(() => {
     setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
@@ -153,7 +237,12 @@ const TTSPage = () => {
       footer={<AudioFooter audioUrl="/sample.mp3" />}
       children={
         <>
-          <ProjectTitle type="TTS" projectTitle="프로젝트 1" onSave={() => console.log('저장')} />
+          <ProjectTitle
+            type="TTS"
+            projectTitle={projectData.projectName || '새 프로젝트'}
+            onProjectNameChange={handleProjectNameChange} // 이름 변경 핸들러 추가
+            onSave={handleSaveProject}
+          />
           <ProjectMainContents
             type="TTS"
             items={items}

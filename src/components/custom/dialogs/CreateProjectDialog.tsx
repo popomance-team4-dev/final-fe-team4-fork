@@ -1,4 +1,5 @@
 import { TbFileDatabase, TbFileMusic, TbFileTypography } from 'react-icons/tb';
+import { useNavigate } from 'react-router-dom';
 
 import { DialogContent } from '@/components/ui/dialog';
 
@@ -14,6 +15,7 @@ const features = [
     ),
     icon: TbFileTypography,
     bgColor: 'bg-green-50',
+    route: '/tts', // TTS 경로 추가
   },
   {
     title: 'Voice Conversion',
@@ -26,6 +28,7 @@ const features = [
     ),
     icon: TbFileMusic,
     bgColor: 'bg-pink-50',
+    route: '/vc',
   },
   {
     title: 'Concat',
@@ -38,10 +41,30 @@ const features = [
     ),
     icon: TbFileDatabase,
     bgColor: 'bg-yellow-50',
+    route: '/concat',
   },
 ];
 
 const CreateProjectDialogContent = () => {
+  const navigate = useNavigate(); // useNavigate로 이동 기능 정의
+
+  // 프로젝트 생성 핸들러
+  const handleNewProject = (route: string) => {
+    const initialProjectData = {
+      projectId: null,
+      projectName: '새 프로젝트',
+      voiceStyleId: 9,
+      fullScript: '',
+      globalSpeed: 1.0,
+      globalPitch: 0.5,
+      globalVolume: 0.8,
+      ttsDetails: [],
+    };
+
+    // 선택한 경로로 초기 데이터를 전달하며 이동
+    navigate(route, { state: initialProjectData });
+  };
+
   return (
     <DialogContent className="max-w-[1168px] max-h-[673px]">
       <h2 className="py-[76px] text-h2 text-black flex justify-center">
@@ -52,6 +75,7 @@ const CreateProjectDialogContent = () => {
           <div
             key={index}
             className="w-[344px] p-6 border rounded-lg shadow-sm cursor-pointer hover:shadow-lg transition-shadow duration-300"
+            onClick={() => handleNewProject(feature.route)} // 클릭 핸들러 추가
           >
             <div
               className={`mt-9 w-[72px] h-[72px] ${feature.bgColor} flex items-center justify-center rounded-md mx-auto mb-6`}

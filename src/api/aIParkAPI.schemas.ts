@@ -198,6 +198,17 @@ export interface ConcatSaveDto {
   projectName?: string;
 }
 
+export interface TTSProject {
+  id: number;
+  projectName: string;
+  apiStatus: string;
+  fullScript: string;
+  globalPitch: number;
+  globalSpeed: number;
+  globalVolume: number;
+  voiceStyleId: number | null;
+}
+
 export interface TTSDetailDto {
   id?: number;
   isDeleted?: boolean;
@@ -221,10 +232,16 @@ export interface TTSSaveDto {
   ttsDetails?: TTSDetailDto[];
 }
 
-export interface ResponseDto {
+export interface TTSSpecificResponse {
+  ttsProject: TTSProject;
+  ttsDetails: TTSDetailDto[];
+}
+
+export interface ResponseDto<T = unknown> {
   code?: number;
   message?: string;
   success?: boolean;
+  data?: T; // 제네릭으로 데이터를 확장 가능하도록 설계
 }
 
 export type AudioFileDtoAudioType =

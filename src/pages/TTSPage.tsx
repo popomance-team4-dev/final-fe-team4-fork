@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { ttsLoad } from '@/api/aIParkAPI';
 import { TTSDetailDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
 import { saveTTSProject } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
+import ProjectMainContents, {
+  ProjectMainContentsItem,
+} from '@/components/section/contents/project/ProjectMainContents';
 import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
@@ -17,9 +19,9 @@ interface TTSItem {
   id: string;
   text: string;
   isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
 }
 
 const TTSPage = () => {
@@ -159,21 +161,21 @@ const TTSPage = () => {
     );
   }, []);
 
-  const isAllSelected = items.every((item) => item.isSelected);
+  const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     setItems((prev) => prev.map((item) => ({ ...item, isSelected: !isAllSelected })));
-  };
+  }, [isAllSelected]);
 
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = useCallback((id: string) => {
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, isSelected: !item.isSelected } : item))
     );
-  };
+  }, []);
 
-  const handleTextChange = (id: string, newText: string) => {
+  const handleTextChange = useCallback((id: string, newText: string) => {
     setItems((prev) => prev.map((item) => (item.id === id ? { ...item, text: newText } : item)));
-  };
+  }, []);
 
   const handleDelete = useCallback(() => {
     setItems((prevItems) => prevItems.filter((item) => !item.isSelected));
@@ -187,22 +189,30 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
-  const handleAdd = useCallback(() => {
-    setItems((prev) => [
-      ...prev,
-      {
-        id: String(Date.now()),
-        text: '',
-        isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
-      },
-    ]);
+  const handleAdd = useCallback((newItems?: ProjectMainContentsItem[]) => {
+    if (newItems && newItems.length > 0) {
+      setItems((prev) => [...prev, ...newItems] as TTSItem[]);
+    } else {
+      setItems((prev) => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          text: '',
+          isSelected: false,
+          speed: 1.0,
+          volume: 60,
+          pitch: 4.0,
+        },
+      ]);
+    }
   }, []);
 
   const handlePlay = useCallback((id: string) => {
     console.log('재생:', id);
+  }, []);
+
+  const handleReorder = useCallback((newItems: TTSItem[]) => {
+    setItems(newItems);
   }, []);
 
   return (
@@ -242,6 +252,7 @@ const TTSPage = () => {
             onRegenerateItem={handleRegenerateItem}
             onDownloadItem={handleDownloadItem}
             onPlay={handlePlay}
+            onReorder={handleReorder}
           />
         </>
       }

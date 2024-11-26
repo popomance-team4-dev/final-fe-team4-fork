@@ -8,9 +8,11 @@ import {
   TbLayoutSidebar,
   TbSmartHome,
 } from 'react-icons/tb';
-import { useNavigate } from 'react-router-dom';
 
+// import { useNavigate } from 'react-router-dom';
+import CreateProjectDialog from '@/components/custom/dialogs/CreateProjectDialog';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import logofull from '@/images/logo-full.png';
 import logomini from '@/images/logo-mini.png';
@@ -20,17 +22,17 @@ interface NavSidebarButtonProps {
   label: string;
 }
 
-// 초기 프로젝트 데이터를 정의
-const initialProjectData = {
-  projectId: null,
-  projectName: '새 프로젝트',
-  voiceStyleId: 9,
-  fullScript: '',
-  globalSpeed: 1.0,
-  globalPitch: 0.5,
-  globalVolume: 0.8,
-  ttsDetails: [],
-};
+// // 초기 프로젝트 데이터를 정의
+// const initialProjectData = {
+//   projectId: null,
+//   projectName: '새 프로젝트',
+//   voiceStyleId: 9,
+//   fullScript: '',
+//   globalSpeed: 1.0,
+//   globalPitch: 0.5,
+//   globalVolume: 0.8,
+//   ttsDetails: [],
+// };
 
 const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
@@ -55,12 +57,12 @@ const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
 
 export function NavSidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const navigate = useNavigate(); // 페이지 이동을 위해 사용
+  // const navigate = useNavigate(); // 페이지 이동을 위해 사용
 
-  const handleNewProject = () => {
-    // 새 프로젝트 생성 시 초기 상태를 전달하며 TTS 페이지로 이동
-    navigate('/tts', { state: initialProjectData });
-  };
+  // const handleNewProject = () => {
+  //   // 새 프로젝트 생성 시 초기 상태를 전달하며 TTS 페이지로 이동
+  //   navigate('/tts', { state: initialProjectData });
+  // };
 
   return (
     <div
@@ -90,9 +92,16 @@ export function NavSidebar() {
 
       {/* <Separator className="mb-6" /> */}
 
-      <Button size="icon" icon className="mt-6" onClick={handleNewProject}>
-        새 프로젝트 생성
-      </Button>
+      {/* Dialog for Create Project */}
+      <Dialog>
+        {/* Dialog Trigger */}
+        <DialogTrigger asChild>
+          <Button size="icon" icon className="mt-6">
+            새 프로젝트 생성
+          </Button>
+        </DialogTrigger>
+        <CreateProjectDialog />
+      </Dialog>
 
       <div className="scrollArea py-6">
         <div className="flex flex-col w-full text-black text-body2">

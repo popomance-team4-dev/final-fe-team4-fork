@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { ReactNode } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
 import {
@@ -17,11 +17,12 @@ import Jisu from '@/images/avatar/jisu.jpg';
 import Lisa from '@/images/avatar/lisa.jpg';
 import Rose from '@/images/avatar/rose.jpg';
 import Ryan from '@/images/avatar/ryan.jpg';
+import { useTTSStore } from '@/stores/tts.store';
 
 type SelectItemType = {
   value: string;
   label: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
 };
 
 const voiceOptions: SelectItemType[] = [
@@ -106,23 +107,18 @@ const styleOptions: SelectItemType[] = [
 ];
 
 const TTSSidebar: React.FC = () => {
-  const [speed, setSpeed] = useState(0);
-  const [volume, setVolume] = useState(0);
-  const [pitch, setPitch] = useState(0);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [selectedVoice, setSelectedVoice] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState('');
-
-  const isActive = useMemo(() => {
-    return (
-      speed !== 0 &&
-      volume !== 0 &&
-      pitch !== 0 &&
-      selectedLanguage !== '' &&
-      selectedVoice !== '' &&
-      selectedStyle !== ''
-    );
-  }, [speed, volume, pitch, selectedLanguage, selectedVoice, selectedStyle]);
+  const {
+    speed,
+    volume,
+    pitch,
+    language,
+    voice,
+    style,
+    setField,
+    reset,
+    isModified,
+    isAllConfigured,
+  } = useTTSStore();
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -135,8 +131,8 @@ const TTSSidebar: React.FC = () => {
         </label>
         <Select
           id="language"
-          value={selectedLanguage}
-          onValueChange={setSelectedLanguage}
+          value={language}
+          onValueChange={(value) => setField('language', value)}
           items={languageOptions}
           icon={<TbWorld className="h-5 w-5" />}
           placeholder="-"
@@ -148,10 +144,10 @@ const TTSSidebar: React.FC = () => {
         <label className="block text-sm font-bold mb-2">목소리</label>
         <Select
           id="voice"
-          value={selectedVoice}
-          onValueChange={setSelectedVoice}
+          value={voice}
+          onValueChange={(value) => setField('voice', value)}
           items={voiceOptions}
-          icon={voiceOptions.find((voice) => voice.value === selectedVoice)?.icon || null}
+          icon={voiceOptions.find((voiceOption) => voiceOption.value === voice)?.icon || null}
           placeholder="-"
         />
       </div>
@@ -163,8 +159,8 @@ const TTSSidebar: React.FC = () => {
         </label>
         <Select
           id="voice-style"
-          value={selectedStyle}
-          onValueChange={setSelectedStyle}
+          value={style}
+          onValueChange={(value) => setField('style', value)}
           items={styleOptions}
           placeholder="-"
         />
@@ -181,7 +177,7 @@ const TTSSidebar: React.FC = () => {
           min={0.5}
           max={2.0}
           step={0.1}
-          onChange={setSpeed}
+          onChange={(value) => setField('speed', value)}
         />
       </div>
       {/* 볼륨 */}
@@ -193,7 +189,7 @@ const TTSSidebar: React.FC = () => {
           min={0}
           max={100}
           step={1}
-          onChange={setVolume}
+          onChange={(value) => setField('volume', value)}
         />
       </div>
 
@@ -206,7 +202,7 @@ const TTSSidebar: React.FC = () => {
           min={0}
           max={10}
           step={0.1}
-          onChange={setPitch}
+          onChange={(value) => setField('pitch', value)}
         />
       </div>
 
@@ -214,18 +210,25 @@ const TTSSidebar: React.FC = () => {
       <div className="flex flex-col gap-4">
         <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
           <div>
-            <ApplySelectionButton isActive={isActive} />
+            <ApplySelectionButton
+              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+            />
           </div>
         </TooltipWrapper>
 
         <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
           <div>
-            <ApplyAllButton isActive={isActive} />
+            <ApplyAllButton
+              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+            />
           </div>
         </TooltipWrapper>
         <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
           <div>
-            <ResetChangesButton isActive={isActive} />
+            <ResetChangesButton
+              onClick={reset}
+              className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+            />
           </div>
         </TooltipWrapper>
       </div>

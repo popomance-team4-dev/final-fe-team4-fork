@@ -9,7 +9,6 @@ import {
   TbSmartHome,
 } from 'react-icons/tb';
 
-// import { useNavigate } from 'react-router-dom';
 import CreateProjectDialog from '@/components/custom/dialogs/CreateProjectDialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
@@ -21,18 +20,6 @@ interface NavSidebarButtonProps {
   icon: React.ElementType;
   label: string;
 }
-
-// // 초기 프로젝트 데이터를 정의
-// const initialProjectData = {
-//   projectId: null,
-//   projectName: '새 프로젝트',
-//   voiceStyleId: 9,
-//   fullScript: '',
-//   globalSpeed: 1.0,
-//   globalPitch: 0.5,
-//   globalVolume: 0.8,
-//   ttsDetails: [],
-// };
 
 const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
   return (
@@ -57,12 +44,6 @@ const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
 
 export function NavSidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
-  // const navigate = useNavigate(); // 페이지 이동을 위해 사용
-
-  // const handleNewProject = () => {
-  //   // 새 프로젝트 생성 시 초기 상태를 전달하며 TTS 페이지로 이동
-  //   navigate('/tts', { state: initialProjectData });
-  // };
 
   return (
     <div

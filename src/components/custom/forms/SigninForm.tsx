@@ -1,9 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
-
 const SigninForm = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-[432px] h-[600px] flex-shrink-0 rounded-xl border border-gray-300 bg-white flex flex-col">
       <div className="mt-[56px] mb-[80px] flex justify-center">
@@ -44,6 +46,7 @@ const SigninForm = () => {
           <div className="flex gap-2">
             <button
               type="button"
+              onClick={() => navigate('/find-id')}
               className="text-gray-400 font-medium leading-6 hover:text-gray-700"
             >
               아이디 찾기
@@ -51,6 +54,7 @@ const SigninForm = () => {
             <span className="text-gray-100">|</span>
             <button
               type="button"
+              onClick={() => navigate('/find-pw')}
               className="text-gray-400 font-medium leading-6 hover:text-gray-700"
             >
               비밀번호 찾기
@@ -59,8 +63,10 @@ const SigninForm = () => {
         </div>
 
         <div className="mt-[36px] space-y-4">
-          <Button>로그인</Button>
-          <Button variant="secondary">회원가입</Button>
+          <Button onClick={() => navigate('/')}>로그인</Button>
+          <Button variant="secondary" onClick={() => navigate('/signup')}>
+            회원가입
+          </Button>
         </div>
       </form>
     </div>

@@ -31,7 +31,7 @@ interface TTSGridItemProps {
   onTextChange: (id: string, newText: string) => void;
 }
 
-interface IHistoryItem {
+export interface InterfaceHistoryItem {
   id: string;
   text: string;
   speed: number;
@@ -44,7 +44,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
     id: props.id,
   });
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [historyItems, setHistoryItems] = useState<IHistoryItem[]>([]);
+  const [historyItems, setHistoryItems] = useState<InterfaceHistoryItem[]>([]);
 
   const handleDelete = (id: string) => {
     setHistoryItems((prev) => prev.filter((item) => item.id !== id));

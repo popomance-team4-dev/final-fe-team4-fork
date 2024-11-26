@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   DownloadButton,
@@ -13,6 +13,7 @@ import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { TTS_TOOLTIP } from '@/constants/tooltips';
+import { usePlaybackHistory } from '@/hooks/usePlaybackHistory';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -31,10 +32,23 @@ interface TTSGridItemProps {
   onTextChange: (id: string, newText: string) => void;
 }
 
+export interface InterfaceHistoryItem {
+  id: string;
+  text: string;
+  speed: number;
+  volume: number;
+  pitch: number;
+}
+
 const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: props.id,
   });
+  const { historyItems, isHistoryOpen, setIsHistoryOpen, handleDelete } = usePlaybackHistory();
+
+  // useEffect(() => {
+  //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출
+  // }, []);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -46,8 +60,6 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
     element.style.height = 'auto';
     element.style.height = `${element.scrollHeight}px`;
   };
-
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
@@ -112,6 +124,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
                       setIsHistoryOpen(!isHistoryOpen);
                     }}
                     isActive={isHistoryOpen}
+                    isHistoryViewEnabled={historyItems.length > 0}
                   />
                 </div>
               </TooltipWrapper>
@@ -135,7 +148,9 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
             <AudioPlayer audioUrl={props.audioUrl} className="px-6 py-3" />
           </div>
         </div>
-        {isHistoryOpen && <TTSPlaybackHistory id={props.id} />}
+        {isHistoryOpen && historyItems.length > 0 && (
+          <TTSPlaybackHistory historyItems={historyItems} handleDelete={handleDelete} />
+        )}
       </div>
     </div>
   );

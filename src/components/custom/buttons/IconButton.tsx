@@ -17,6 +17,8 @@ import { cn } from '@/lib/utils';
 interface TTSPlaybackHistoryButtonProps {
   readonly onClick?: () => void;
   readonly isActive?: boolean;
+  readonly className?: string;
+  readonly isHistoryViewEnabled: boolean;
 }
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   readonly icon: React.ReactNode;
@@ -171,19 +173,27 @@ export function DownloadButton({ onClick }: { readonly onClick?: () => void }) {
   );
 }
 
-export function TTSPlaybackHistoryButton({ onClick, isActive }: TTSPlaybackHistoryButtonProps) {
+export function TTSPlaybackHistoryButton({
+  onClick,
+  isActive,
+  isHistoryViewEnabled,
+}: TTSPlaybackHistoryButtonProps) {
   return (
     <IconButton
       icon={<TbHistory />}
       label="내역"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-500"
-      textColor={`text-gray-800 group-hover/tts:text-blue-500 ${isActive ? 'text-blue-500' : ''}`}
+      textColor={`text-gray-800`}
       width="78px"
       onClick={onClick}
-      className={`hover:bg-blue-50 border border-transparent hover:border-blue-500 group/tts
-        ${isActive ? 'border-blue-500 bg-blue-50' : ''}
-        `}
+      className={cn(
+        `border border-transparent group/tts`,
+        isActive ? 'border-blue-500 bg-blue-50 text-blue-500 ' : '',
+        isHistoryViewEnabled
+          ? ''
+          : 'bg-gray-50 opacity-50 cursor-not-allowed pointer-events-none  border-transparent '
+      )}
     />
   );
 }

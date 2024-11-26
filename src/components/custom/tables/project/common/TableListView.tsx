@@ -6,6 +6,7 @@ import { TbHistory } from 'react-icons/tb';
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
 import TTSPlaybackHistory from '@/components/custom/tables/project/tts/TTSPlaybackHistory';
+import { InterfaceHistoryItem } from '@/components/custom/tables/project/tts/TTSTableGridView';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -22,14 +23,6 @@ interface ListRowProps {
   speed?: number;
   volume?: number;
   pitch?: number;
-}
-
-interface IHistoryItem {
-  id: string;
-  text: string;
-  speed: number;
-  volume: number;
-  pitch: number;
 }
 
 const SortableRow: React.FC<ListRowProps> = ({
@@ -55,7 +48,7 @@ const SortableRow: React.FC<ListRowProps> = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const [historyItems, setHistoryItems] = useState<IHistoryItem[]>([]);
+  const [historyItems, setHistoryItems] = useState<InterfaceHistoryItem[]>([]);
 
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';

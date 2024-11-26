@@ -9,7 +9,9 @@ import {
   TbSmartHome,
 } from 'react-icons/tb';
 
+import CreateProjectDialog from '@/components/custom/dialogs/CreateProjectDialog';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import logofull from '@/images/logo-full.png';
 import logomini from '@/images/logo-mini.png';
@@ -71,9 +73,16 @@ export function NavSidebar() {
 
       {/* <Separator className="mb-6" /> */}
 
-      <Button size="icon" icon className="mt-6">
-        새 프로젝트 생성
-      </Button>
+      {/* Dialog for Create Project */}
+      <Dialog>
+        {/* Dialog Trigger */}
+        <DialogTrigger asChild>
+          <Button size="icon" icon className="mt-6">
+            새 프로젝트 생성
+          </Button>
+        </DialogTrigger>
+        <CreateProjectDialog />
+      </Dialog>
 
       <div className="scrollArea py-6">
         <div className="flex flex-col w-full text-black text-body2">

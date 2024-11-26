@@ -40,4 +40,5 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
   reset: () => set(initialState),
   isModified: false,
   isAllConfigured: false,
+  loadProject: (data: Partial<TTSStore>) => set((state) => ({ ...state, ...data })),
 }));

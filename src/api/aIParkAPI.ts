@@ -24,6 +24,7 @@ import type {
   SaveVCProjectBody,
   TestFailParams,
   TTSSaveDto,
+  TTSSpecificResponse,
   UploadConcatBody,
   UploadConcatParams,
   UploadFiles1Body,
@@ -252,7 +253,10 @@ export const vcLoad = (projectId: number) => {
  * @summary TTS 상태 로드
  */
 export const ttsLoad = (projectId: number) => {
-  return customInstance<ResponseDto>({ url: `/tts/${projectId}`, method: 'GET' });
+  return customInstance<ResponseDto<TTSSpecificResponse>>({
+    url: `/tts/${projectId}`,
+    method: 'GET',
+  });
 };
 
 export const testSuccess = () => {

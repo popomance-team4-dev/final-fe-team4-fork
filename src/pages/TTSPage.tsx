@@ -92,10 +92,13 @@ const TTSPage = () => {
   // TTS 상태 로드
   const fetchTTSState = useCallback(async (id: number) => {
     try {
+      // ttsLoad 호출
       const response = await ttsLoad(id);
-      if (response.data?.success) {
-        const { ttsProject, ttsDetails } = response.data;
-        setProjectId(ttsProject.id);
+
+      if (response.data?.success && response.data.data) {
+        const { ttsProject, ttsDetails } = response.data.data;
+
+        setProjectId(ttsProject.id); // 프로젝트 ID 설정
         setProjectData((prev) => ({
           ...prev,
           projectId: ttsProject.id,

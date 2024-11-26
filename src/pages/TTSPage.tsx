@@ -73,6 +73,20 @@ const TTSPage = () => {
   const [items, setItems] = useState<TTSItem[]>([]);
   const [projectId, setProjectId] = useState<number | null>(null);
 
+  // TTS 상태 저장을 위한 상태 관리
+  const location = useLocation();
+  const initialState: TTSSaveDto = location.state || {
+    projectId: null,
+    projectName: '',
+    voiceStyleId: 9,
+    fullScript: '',
+    globalSpeed: 1.0,
+    globalPitch: 0.5,
+    globalVolume: 0.8,
+    ttsDetails: [],
+  };
+  const [projectData, setProjectData] = useState<TTSSaveDto>(initialState);
+
   // TTS 상태 로드
   const fetchTTSState = useCallback(async (id: number) => {
     try {
@@ -80,6 +94,11 @@ const TTSPage = () => {
       if (response.data?.success) {
         const { ttsProject, ttsDetails } = response.data;
         setProjectId(ttsProject.id);
+        setProjectData((prev) => ({
+          ...prev,
+          projectId: ttsProject.id,
+          projectName: ttsProject.projectName,
+        }));
 
         const loadedItems = ttsDetails.map((detail: TTSDetailDto) => ({
           id: String(detail.id),
@@ -104,31 +123,31 @@ const TTSPage = () => {
     }
   }, [projectId, fetchTTSState]);
 
-  // TTS 상태 저장
-  const location = useLocation();
-  const initialState: TTSSaveDto = location.state || {
-    projectId: null,
-    projectName: '',
-    voiceStyleId: 9,
-    fullScript: '',
-    globalSpeed: 1.0,
-    globalPitch: 0.5,
-    globalVolume: 0.8,
-    ttsDetails: [],
-  };
-
-  const [projectData] = useState<TTSSaveDto>(initialState);
-
+  // 프로젝트 저장
   const handleSaveProject = useCallback(async () => {
     try {
-      const response = await saveTTSProject(projectData);
+      const response = await saveTTSProject({
+        ...projectData, // 항상 최신 상태를 가져옴
+      });
       if (response) {
         console.log('프로젝트 저장 성공:', response);
+        setProjectData((prev) => ({
+          ...prev,
+          projectId: response.data.ttsProject.id, // 서버 응답 데이터 반영
+        }));
       }
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);
     }
   }, [projectData]);
+
+  // 프로젝트 이름 변경 핸들러
+  const handleProjectNameChange = (newName: string) => {
+    setProjectData((prev) => ({
+      ...prev,
+      projectName: newName,
+    }));
+  };
 
   const handleDeleteCompleted = useCallback(() => {
     setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
@@ -208,6 +227,7 @@ const TTSPage = () => {
           <ProjectTitle
             type="TTS"
             projectTitle={projectData.projectName || '새 프로젝트'}
+            onProjectNameChange={handleProjectNameChange} // 이름 변경 핸들러 추가
             onSave={handleSaveProject}
           />
           <ProjectMainContents

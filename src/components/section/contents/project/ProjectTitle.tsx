@@ -18,16 +18,24 @@ export interface ProjectTitleProps {
   projectTitle: string;
   onSave?: () => void;
   onClose?: () => void;
+  onProjectNameChange?: (newName: string) => void; // 추가
 }
 
-const ProjectTitle = ({ type, projectTitle, onSave, onClose }: ProjectTitleProps) => {
+const ProjectTitle = ({
+  type,
+  projectTitle,
+  onSave,
+  onClose,
+  onProjectNameChange,
+}: ProjectTitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(projectTitle);
 
+  // 입력 완료 시 상태 업데이트
   const handleSubmit = () => {
     setIsEditing(false);
-    if (title !== projectTitle && onSave) {
-      onSave();
+    if (title !== projectTitle && onProjectNameChange) {
+      onProjectNameChange(title); // 부모 컴포넌트로 이름 전달
     }
   };
 

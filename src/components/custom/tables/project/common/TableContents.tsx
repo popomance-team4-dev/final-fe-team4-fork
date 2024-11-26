@@ -49,7 +49,6 @@ export const TableContents: React.FC<TableContentsProps> = ({
 }) => {
   const [isListView, setIsListView] = React.useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [errorTimeoutId, setErrorTimeoutId] = useState<number | null>(null);
 
   const { handleFiles: handleFileChange, isLoading } = useFileUpload<string>({
     maxSizeInMB: 5,
@@ -94,22 +93,15 @@ export const TableContents: React.FC<TableContentsProps> = ({
 
   useEffect(() => {
     if (error) {
-      if (errorTimeoutId) {
-        window.clearTimeout(errorTimeoutId);
-      }
-
-      const timeoutId = window.setTimeout(() => {
+      const timer = window.setTimeout(() => {
         setError(null);
       }, FILE_CONSTANTS.ERROR_TIMEOUT);
-      setErrorTimeoutId(timeoutId);
 
       return () => {
-        if (timeoutId) {
-          window.clearTimeout(timeoutId);
-        }
+        window.clearTimeout(timer);
       };
     }
-  }, [error, errorTimeoutId]);
+  }, [error]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;

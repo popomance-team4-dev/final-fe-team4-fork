@@ -8,6 +8,12 @@ export const ALLOWED_FILE_TYPES = {
 
 export type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[keyof typeof ALLOWED_FILE_TYPES];
 
+const FILE_TYPES_TO_KOREAN = {
+  'text/plain': '텍스트(.txt)',
+  'audio/wav': '오디오(.wav)',
+  'audio/mp3': '오디오(.mp3)',
+};
+
 interface UseFileUploadProps<T> {
   maxSizeInMB: number;
   allowedTypes: AllowedFileType[];
@@ -28,10 +34,10 @@ export const useFileUpload = <T extends string | File>({
       throw new Error('빈 파일은 업로드할 수 없습니다!');
     }
     if (file.size > maxSizeInMB * 1024 * 1024) {
-      throw new Error(`파일 크기는 ${maxSizeInMB}MB 까지만 업로드 가능합니다!`);
+      throw new Error(`파일 크기는 ${maxSizeInMB}MB를 초과할 수 없습니다.`);
     }
     if (!allowedTypes.includes(file.type as AllowedFileType)) {
-      throw new Error(`Invalid file type. Allowed: ${allowedTypes.join(', ')}`);
+      throw new Error(`${FILE_TYPES_TO_KOREAN[allowedTypes[0]]} 파일만 업로드할 수 있습니다.`);
     }
   };
 

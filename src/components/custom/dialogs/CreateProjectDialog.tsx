@@ -47,7 +47,7 @@ const CreateProjectDialogContent = () => {
       <h2 className="py-[76px] text-h2 text-black flex justify-center">
         새 프로젝트 작업을 시작해 보세요!
       </h2>
-      <div className="flex justify-center gap-8 mt-10 mb-14">
+      <div className="flex justify-center gap-6 mt-10 mb-14">
         {features.map((feature, index) => (
           <div
             key={index}

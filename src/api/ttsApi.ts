@@ -11,11 +11,11 @@ export const saveTTSProject = async (data: TTSSaveDto) => {
     console.log('서버 응답:', response);
 
     // 성공 여부 확인
-    if (response?.success) {
-      console.log('TTS 프로젝트 저장 성공:', response);
-      return response;
+    if (response.data?.success) {
+      console.log('TTS 프로젝트 저장 성공:', response.data);
+      return response.data;
     } else {
-      console.error('TTS 프로젝트 저장 실패:', response?.message || '응답 데이터 없음');
+      console.error('TTS 프로젝트 저장 실패:', response.data?.message || '응답 데이터 없음');
       return null;
     }
   } catch (error) {

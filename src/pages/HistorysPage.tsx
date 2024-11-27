@@ -117,15 +117,15 @@ const HistorysPage = () => {
       }
     >
       <div className="py-6">
-        <h2 className="text-h2 text-black mb-2">내보내기 내역</h2>
+        <h2 className="text-h2 text-black mb-2">히스토리 내역</h2>
         <p className="text-body2 text-black">
-          저장된 내보내기 기록을 조회하고 파일을 편리하게 다운로드할 수 있어요.
+          저장된 히스토리 기록을 조회하고 파일을 편리하게 다운로드할 수 있어요.
         </p>
       </div>
       <div className="mt-2 border rounded-md">
         {/* 컨트롤 패널 */}
         <TableToolbar
-          title="모든 내보내기 내역"
+          title="모든 히스토리 내역"
           count={dummyData.length}
           selectedItemsCount={selectedItems.length}
           onDelete={handleDelete}

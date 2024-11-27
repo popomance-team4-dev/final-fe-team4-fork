@@ -4,6 +4,7 @@ import Layout from '@/layouts/Layout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
 import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
+import HistorysPage from '@/pages/HistorysPage';
 import HomePage from '@/pages/HomePage';
 import MyPage from '@/pages/MyPage';
 import ProjectsPage from '@/pages/ProjectsPage';
@@ -17,6 +18,7 @@ const PATH = {
   SIGNIN: '/signin',
   SIGNUP: '/signup',
   PROJECTS: '/projects',
+  HISTORYS: '/Historys',
   ACCOUNT_RECOVERY_ID: '/find-id',
   ACCOUNT_RECOVERY_PW: '/find-pw',
   TTS: '/tts',
@@ -62,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: PATH.PROJECTS,
         element: <ProjectsPage />,
+      },
+      {
+        path: PATH.HISTORYS,
+        element: <HistorysPage />,
       },
       {
         path: PATH.TTS,

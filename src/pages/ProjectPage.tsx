@@ -65,14 +65,14 @@ const ProjectPage = () => {
         description="내 프로젝트를 빠르게 조회하고 관리해 보세요."
       />
       <MainContents
-        type="RECENT"
+        type="PROJECT"
         items={getCurrentPageItems().map((item) => ({
           ...item,
           text: item.content,
           isSelected: selectedItems.includes(item.id),
         }))}
         isAllSelected={isAllSelected}
-        onSelectAll={() => handleSelectAll(true)}
+        onSelectAll={(checked) => handleSelectAll(checked)}
         onSelectionChange={(id) => handleSelectionChange(id, !selectedItems.includes(id))}
         onDelete={handleDelete}
         onAdd={() => {}}

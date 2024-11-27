@@ -72,7 +72,7 @@ const HistoryPage = () => {
           isSelected: selectedItems.includes(item.id),
         }))}
         isAllSelected={isAllSelected}
-        onSelectAll={() => handleSelectAll(true)}
+        onSelectAll={(checked) => handleSelectAll(checked)}
         onSelectionChange={(id) => handleSelectionChange(id, !selectedItems.includes(id))}
         onDelete={handleDelete}
         onAdd={() => {}}

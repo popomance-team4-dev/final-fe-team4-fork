@@ -21,7 +21,7 @@ interface MainContentsProps {
   isAllSelected: boolean;
   showAlert?: boolean;
   onCloseAlert?: () => void;
-  onSelectAll: () => void;
+  onSelectAll: (checked: boolean) => void;
   onSelectionChange: (id: string) => void;
   onTextChange?: (id: string, newText: string) => void;
   onDelete: () => void;
@@ -138,7 +138,7 @@ const MainContents = ({
           <TableContents
             items={items}
             isAllSelected={isAllSelected}
-            onSelectAll={onSelectAll}
+            onSelectAll={() => onSelectAll(true)}
             onSelectionChange={onSelectionChange}
             onTextChange={onTextChange!}
             onDelete={onDelete}

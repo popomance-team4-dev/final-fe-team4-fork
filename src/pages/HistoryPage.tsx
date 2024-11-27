@@ -1,5 +1,4 @@
-import { ProjectListTable } from '@/components/custom/tables/history/ProjectListTable';
-import TableToolbar from '@/components/custom/tables/history/TableToolbar';
+import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
@@ -9,7 +8,7 @@ import { useTableSelection } from '@/hooks/useTableSelection';
 import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
 
-const ProjectsPage = () => {
+const HistoryPage = () => {
   const { currentPage, setCurrentPage, getCurrentPageItems, totalPages } = usePagination({
     data: dummyData,
     itemsPerPage: 8,
@@ -62,36 +61,30 @@ const ProjectsPage = () => {
     >
       <Title
         variant="recent"
-        title="프로젝트 목록"
-        description="내 프로젝트를 빠르게 조회하고 관리해 보세요."
+        title="히스토리 내역"
+        description="저장된 히스토리 기록을 조회하고 파일을 편리하게 다운로드할 수 있어요."
       />
-      <div className="mt-2 border rounded-md">
-        {/* 컨트롤 패널 */}
-        <TableToolbar
-          title="모든 프로젝트"
-          count={dummyData.length}
-          selectedItemsCount={selectedItems.length}
-          onDelete={handleDelete}
-          onSearch={handleSearch}
-          onFilter={handleFilter}
-        />
-
-        {/* 테이블 */}
-        <div>
-          <ProjectListTable
-            onPlay={handlePlay}
-            onPause={handlePause}
-            itemCount={getCurrentPageItems().length}
-            isAllSelected={isAllSelected}
-            onSelectAll={handleSelectAll}
-            selectedItems={selectedItems}
-            onSelectionChange={handleSelectionChange}
-            items={getCurrentPageItems()}
-          />
-        </div>
-      </div>
+      <MainContents
+        type="RECENT"
+        items={getCurrentPageItems().map((item) => ({
+          ...item,
+          text: item.content,
+          isSelected: selectedItems.includes(item.id),
+        }))}
+        isAllSelected={isAllSelected}
+        onSelectAll={() => handleSelectAll(true)}
+        onSelectionChange={(id) => handleSelectionChange(id, !selectedItems.includes(id))}
+        onDelete={handleDelete}
+        onAdd={() => {}}
+        onPlay={handlePlay}
+        onPause={handlePause}
+        itemCount={getCurrentPageItems().length}
+        selectedItemsCount={selectedItems.length}
+        onSearch={handleSearch}
+        onFilter={handleFilter}
+      />
     </PageLayout>
   );
 };
 
-export default ProjectsPage;
+export default HistoryPage;

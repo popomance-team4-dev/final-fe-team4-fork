@@ -23,7 +23,9 @@ const PaginationFooter: React.FC<PaginationFooterProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  if (totalPages <= 1) return null;
+  if (totalPages <= 1) {
+    return null;
+  }
 
   const renderPageNumbers = () => {
     const items = [];

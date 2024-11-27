@@ -8,6 +8,7 @@ import {
   TbLayoutSidebar,
   TbSmartHome,
 } from 'react-icons/tb';
+import { useNavigate } from 'react-router-dom';
 
 import CreateProjectDialog from '@/components/custom/dialogs/CreateProjectDialog';
 import { Button } from '@/components/ui/button';
@@ -15,15 +16,18 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import logofull from '@/images/logo-full.png';
 import logomini from '@/images/logo-mini.png';
-
 interface NavSidebarButtonProps {
   icon: React.ElementType;
   label: string;
+  onClick?: () => void;
 }
 
-const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
+const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label, onClick }) => {
   return (
-    <div className="flex flex-col group-[.expanded]/navbar:justify-start justify-center py-2 w-full group-[.expanded]/navbar:w-48 items-center px-2 rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:flex-row group/sidebarButton">
+    <div
+      onClick={onClick}
+      className="flex flex-col group-[.expanded]/navbar:justify-start justify-center py-2 w-full group-[.expanded]/navbar:w-48 items-center px-2 rounded-lg cursor-pointer hover:bg-gray-50 group-[.expanded]/navbar:flex-row group/sidebarButton"
+    >
       <Icon className="min-w-6 h-6 text-black group-hover/sidebarButton:text-primary" />
       <span
         className="ml-2.5 text-black overflow-hidden whitespace-nowrap   
@@ -44,7 +48,7 @@ const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label }) => {
 
 export function NavSidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <div
       className={`flex h-screen w-[104px] flex-col border-r bg-white px-6 group/navbar ${isExpanded ? 'expanded w-[244px]' : ''}`}
@@ -96,9 +100,17 @@ export function NavSidebar() {
             </h2>
           </div>
           <div className="flex flex-col w-full gap-3">
-            <SidebarButton icon={TbSmartHome} label="홈" />
-            <SidebarButton icon={TbFolders} label={isExpanded ? '프로젝트 목록' : '프로젝트'} />
-            <SidebarButton icon={TbFolderShare} label={isExpanded ? '히스토리 내역' : '히스토리'} />
+            <SidebarButton icon={TbSmartHome} label="홈" onClick={() => navigate('/')} />
+            <SidebarButton
+              icon={TbFolders}
+              label={isExpanded ? '프로젝트 목록' : '프로젝트'}
+              onClick={() => navigate('/projects')}
+            />
+            <SidebarButton
+              icon={TbFolderShare}
+              label={isExpanded ? '히스토리 내역' : '히스토리'}
+              onClick={() => navigate('/Historys')}
+            />
           </div>
         </div>
         <Separator className="my-4" />

@@ -5,6 +5,7 @@ import {
   ProjectListTableItem,
 } from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
+import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
 import jisuImage from '@/images/avatar/jisu.jpg';
@@ -289,10 +290,11 @@ const ProjectsPage = () => {
         />
       }
     >
-      <div className="py-6">
-        <h2 className="text-h2 text-black mb-2">프로젝트 목록</h2>
-        <p className="text-body2 text-black">내 프로젝트를 빠르게 조회하고 관리해 보세요.</p>
-      </div>
+      <ProjectTitle
+        variant="recent"
+        title="프로젝트 목록"
+        description="내 프로젝트를 빠르게 조회하고 관리해 보세요."
+      />
       <div className="mt-2 border rounded-md">
         {/* 컨트롤 패널 */}
         <TableToolbar

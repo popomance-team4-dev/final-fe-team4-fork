@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { HistoryListTable } from '@/components/custom/tables/history/HistoryListTable';
 import { ProjectListTableItem } from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
+import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
 import jisuImage from '@/images/avatar/jisu.jpg';
@@ -287,12 +288,11 @@ const HistorysPage = () => {
         />
       }
     >
-      <div className="py-6">
-        <h2 className="text-h2 text-black mb-2">히스토리 내역</h2>
-        <p className="text-body2 text-black">
-          저장된 히스토리 기록을 조회하고 파일을 편리하게 다운로드할 수 있어요.
-        </p>
-      </div>
+      <ProjectTitle
+        variant="recent"
+        title="히스토리 내역"
+        description="저장된 히스토리 기록을 조회하고 파일을 편리하게 다운로드할 수 있어요."
+      />
       <div className="mt-2 border rounded-md">
         {/* 컨트롤 패널 */}
         <TableToolbar

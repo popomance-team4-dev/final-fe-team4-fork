@@ -1,13 +1,13 @@
-# addReviewers: true
+addReviewers: true
 
-# reviewers:
-#   - nakyeonko3
-#   - love1ace
-#   - ssumanlife
-#   - haruyam15
+reviewers:
+  - nakyeonko3
+  - sjgaru-dev
+  - miniseung 
+  - dyeongg 
 
 addAssignees: author
-# numberOfReviewers: 2
+numberOfReviewers: 0
 
 skipKeywords:
   - wip

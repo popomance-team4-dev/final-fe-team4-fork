@@ -5,10 +5,8 @@ import { ttsLoad } from '@/api/aIParkAPI';
 import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
 import { saveTTSProject } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import ProjectMainContents, {
-  ProjectMainContentsItem,
-} from '@/components/section/contents/project/ProjectMainContents';
-import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
+import MainContents, { MainContentsItem } from '@/components/section/contents/MainContents';
+import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
@@ -194,7 +192,7 @@ const TTSPage = () => {
     console.log('다운로드 항목:', id);
   }, []);
 
-  const handleAdd = useCallback((newItems?: ProjectMainContentsItem[]) => {
+  const handleAdd = useCallback((newItems?: MainContentsItem[]) => {
     if (newItems && newItems.length > 0) {
       setItems((prev) => [...prev, ...newItems] as TTSItem[]);
     } else {
@@ -239,13 +237,13 @@ const TTSPage = () => {
       footer={<AudioFooter audioUrl="/sample.mp3" />}
       children={
         <>
-          <ProjectTitle
+          <Title
             type="TTS"
             projectTitle={projectData.projectName || '새 프로젝트'}
             onProjectNameChange={handleProjectNameChange} // 이름 변경 핸들러 추가
             onSave={handleSaveProject}
           />
-          <ProjectMainContents
+          <MainContents
             type="TTS"
             items={items}
             isAllSelected={isAllSelected}

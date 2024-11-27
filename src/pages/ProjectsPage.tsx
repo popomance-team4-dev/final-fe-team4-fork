@@ -1,6 +1,6 @@
 import { ProjectListTable } from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
-import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
+import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
 import { dummyData } from '@/constants/dummy';
@@ -60,7 +60,7 @@ const ProjectsPage = () => {
         />
       }
     >
-      <ProjectTitle
+      <Title
         variant="recent"
         title="프로젝트 목록"
         description="내 프로젝트를 빠르게 조회하고 관리해 보세요."

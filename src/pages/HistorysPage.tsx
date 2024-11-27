@@ -1,6 +1,6 @@
 import { HistoryListTable } from '@/components/custom/tables/history/HistoryListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
-import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
+import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
 import { dummyData } from '@/constants/dummy';
@@ -60,7 +60,7 @@ const HistorysPage = () => {
         />
       }
     >
-      <ProjectTitle
+      <Title
         variant="recent"
         title="히스토리 내역"
         description="저장된 히스토리 기록을 조회하고 파일을 편리하게 다운로드할 수 있어요."

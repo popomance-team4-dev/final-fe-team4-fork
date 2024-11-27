@@ -2,7 +2,7 @@ import FileUploadAlert, { ALERT_MESSAGES } from '@/components/custom/guide/FileU
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import { Button } from '@/components/ui/button';
 
-export interface ProjectMainContentsItem {
+export interface MainContentsItem {
   id: string;
   text: string;
   isSelected: boolean;
@@ -12,9 +12,9 @@ export interface ProjectMainContentsItem {
   pitch?: number;
 }
 
-interface ProjectMainContentsProps {
+interface MainContentsProps {
   type: 'TTS' | 'VC' | 'CONCAT';
-  items: ProjectMainContentsItem[];
+  items: MainContentsItem[];
   isAllSelected: boolean;
   showAlert?: boolean;
   onCloseAlert?: () => void;
@@ -22,14 +22,14 @@ interface ProjectMainContentsProps {
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
-  onAdd: (newItems?: ProjectMainContentsItem[]) => void;
+  onAdd: (newItems?: MainContentsItem[]) => void;
   onRegenerateItem?: (id: string) => void;
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;
-  onReorder?: (newItems: ProjectMainContentsItem[]) => void;
+  onReorder?: (newItems: MainContentsItem[]) => void;
 }
 
-const ProjectMainContents = ({
+const MainContents = ({
   type,
   items,
   isAllSelected,
@@ -44,7 +44,7 @@ const ProjectMainContents = ({
   onDownloadItem,
   onPlay,
   onReorder,
-}: ProjectMainContentsProps) => {
+}: MainContentsProps) => {
   const getAlertMessage = () => {
     switch (type) {
       case 'VC':
@@ -90,4 +90,4 @@ const ProjectMainContents = ({
   );
 };
 
-export default ProjectMainContents;
+export default MainContents;

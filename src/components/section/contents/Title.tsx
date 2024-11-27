@@ -13,8 +13,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-export interface ProjectTitleProps {
-  variant?: 'default' | 'recent';
+export interface TitleProps {
+  variant?: 'project' | 'recent';
   type?: 'TTS' | 'VC' | 'CONCAT';
   projectTitle?: string;
   title?: string;
@@ -24,8 +24,8 @@ export interface ProjectTitleProps {
   onProjectNameChange?: (newName: string) => void;
 }
 
-const ProjectTitle = ({
-  variant = 'default',
+const Title = ({
+  variant = 'project',
   type,
   projectTitle = '',
   title,
@@ -33,7 +33,7 @@ const ProjectTitle = ({
   onSave,
   onClose,
   onProjectNameChange,
-}: ProjectTitleProps) => {
+}: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(projectTitle);
 
@@ -126,4 +126,4 @@ const ProjectTitle = ({
   );
 };
 
-export default ProjectTitle;
+export default Title;

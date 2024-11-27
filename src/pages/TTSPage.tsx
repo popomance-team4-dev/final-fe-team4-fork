@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { ttsLoad } from '@/api/aIParkAPI';
-import { TTSDetailDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
 import { saveTTSProject } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 import ProjectMainContents, {
@@ -92,20 +92,20 @@ const TTSPage = () => {
   // TTS 상태 로드
   const fetchTTSState = useCallback(async (id: number) => {
     try {
-      // ttsLoad 호출
       const response = await ttsLoad(id);
-
       if (response.data?.success && response.data.data) {
         const { ttsProject, ttsDetails } = response.data.data;
 
-        setProjectId(ttsProject.id); // 프로젝트 ID 설정
+        // projectId 업데이트
+        setProjectId(ttsProject.id);
+
         setProjectData((prev) => ({
           ...prev,
           projectId: ttsProject.id,
           projectName: ttsProject.projectName,
         }));
 
-        const loadedItems = ttsDetails.map((detail: TTSDetailDto) => ({
+        const loadedItems = ttsDetails.map((detail) => ({
           id: String(detail.id),
           text: detail.unitScript || '',
           isSelected: false,
@@ -114,8 +114,6 @@ const TTSPage = () => {
           pitch: detail.unitPitch || 1.0,
         }));
         setItems(loadedItems);
-      } else {
-        console.error('TTS 상태 로드 실패:', response.data?.message);
       }
     } catch (error) {
       console.error('TTS 상태 로드 중 오류:', error);
@@ -134,12 +132,16 @@ const TTSPage = () => {
       const response = await saveTTSProject({
         ...projectData, // 항상 최신 상태를 가져옴
       });
+
       if (response) {
         console.log('프로젝트 저장 성공:', response);
+
+        // 저장된 프로젝트 ID 업데이트
         setProjectData((prev) => ({
           ...prev,
-          projectId: response.data.ttsProject.id, // 서버 응답 데이터 반영
+          projectId: response.ttsProject.id,
         }));
+        console.log('업데이트된 projectId:', response.ttsProject.id);
       }
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);

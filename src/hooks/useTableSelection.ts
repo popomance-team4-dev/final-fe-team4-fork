@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface UseTableSelectionProps<T> {
   getCurrentPageItems: () => T[];
+  onPageChange?: number;
 }
 
 interface UseTableSelectionReturn {
@@ -15,9 +16,15 @@ interface UseTableSelectionReturn {
 
 export const useTableSelection = <T extends { id: string }>({
   getCurrentPageItems,
+  onPageChange,
 }: UseTableSelectionProps<T>): UseTableSelectionReturn => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
+
+  useEffect(() => {
+    setSelectedItems([]);
+    setIsAllSelected(false);
+  }, [onPageChange]);
 
   const handleSelectAll = (checked: boolean) => {
     const currentPageItems = getCurrentPageItems();

@@ -17,6 +17,7 @@ const ProjectPage = () => {
   const { selectedItems, isAllSelected, handleSelectAll, handleSelectionChange } =
     useTableSelection({
       getCurrentPageItems,
+      onPageChange: currentPage,
     });
 
   const handlePlay = (id: string) => {

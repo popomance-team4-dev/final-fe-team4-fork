@@ -1,4 +1,4 @@
-import { TbChevronLeft, TbChevronRight, TbUpload } from 'react-icons/tb';
+import { TbChevronLeft, TbChevronRight, TbMicrophone, TbUpload } from 'react-icons/tb';
 
 import { RadioGroup } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -104,9 +104,15 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[260px] border-2 border-dashed rounded-lg p-4">
-      <TbUpload className="w-8 h-8 mb-2 text-muted-foreground" />
-      <p className="text-sm text-muted-foreground mb-4">WAV, MP3 파일 지원 (최대 10MB)</p>
+    <div className="flex flex-col items-center justify-center h-[300px] border border-gray-200 rounded-lg bg-white">
+      <div className="flex flex-col items-center gap-1 mb-6">
+        <div className="p-3 rounded-full bg-gray-50 mb-2">
+          <TbMicrophone className="w-6 h-6 text-primary" />
+        </div>
+        <h3 className="text-sm font-medium">음성 파일을 업로드하세요</h3>
+        <p className="text-xs text-muted-foreground">WAV, MP3 파일 지원 (최대 10MB)</p>
+      </div>
+
       <input
         type="file"
         id="voice-upload"
@@ -116,9 +122,10 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
       />
       <label
         htmlFor="voice-upload"
-        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2 cursor-pointer"
+        className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-100 h-9 px-4 py-2 cursor-pointer"
       >
-        음성 파일 선택하기
+        <TbUpload className="w-4 h-4" />
+        파일 업로드
       </label>
     </div>
   );

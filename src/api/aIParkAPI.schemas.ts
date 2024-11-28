@@ -210,7 +210,7 @@ export interface TTSProject {
 }
 
 export interface TTSDetailDto {
-  id?: number;
+  id: number | null;
   isDeleted?: boolean;
   unitPitch?: number;
   unitScript?: string;
@@ -227,7 +227,7 @@ export interface TTSSaveDto {
   globalVoiceStyleId?: number;
   globalVolume?: number;
   memberId?: number;
-  projectId?: number;
+  projectId: number | null;
   projectName?: string;
   ttsDetails?: TTSDetailDto[];
 }

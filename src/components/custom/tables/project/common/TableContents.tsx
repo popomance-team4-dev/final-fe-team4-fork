@@ -59,9 +59,6 @@ export const TableContents: React.FC<TableContentsProps> = ({
         id: crypto.randomUUID(),
         text,
         isSelected: false,
-        speed: 1.0,
-        volume: 60,
-        pitch: 4.0,
       }));
       onAdd(newItems);
     },

@@ -1,13 +1,10 @@
 import { TbChevronLeft, TbChevronRight, TbUpload } from 'react-icons/tb';
 
 import { RadioGroup } from '@/components/ui/radio-group';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePagination } from '@/hooks/usePagination';
 
 import VoiceCard from '../cards/VoiceCard';
-
-const ITEMS_PER_PAGE = 4;
 
 interface TargetVoice {
   id: string;
@@ -25,6 +22,74 @@ interface VoiceSelectionProps {
   onVoiceUpload: (file: File) => void;
 }
 
+interface VoiceListProps {
+  voices: TargetVoice[];
+  selectedVoice: string;
+  onVoiceSelect: (id: string) => void;
+}
+
+const PresetVoiceList = ({ voices, selectedVoice, onVoiceSelect }: VoiceListProps) => {
+  const { currentPage, setCurrentPage, getCurrentPageItems, totalPages } = usePagination({
+    data: voices,
+    itemsPerPage: 4,
+  });
+
+  const currentVoices = getCurrentPageItems();
+
+  const handlePrevPage = () => {
+    setCurrentPage(Math.max(currentPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(Math.min(currentPage + 1, totalPages));
+  };
+
+  return (
+    <div>
+      <div className="h-[300px] mb-8">
+        <RadioGroup value={selectedVoice} onValueChange={onVoiceSelect}>
+          {currentVoices.map((voice) => (
+            <VoiceCard
+              key={voice.id}
+              voice={voice}
+              isSelected={selectedVoice === voice.id}
+              onSelect={() => onVoiceSelect(voice.id)}
+            />
+          ))}
+        </RadioGroup>
+      </div>
+
+      <div className="flex items-center justify-between px-4">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className={`h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-gray-50 transition-colors ${
+            currentPage === 1
+              ? 'opacity-50 cursor-not-allowed text-muted-foreground'
+              : 'text-foreground'
+          }`}
+        >
+          <TbChevronLeft className="w-4 h-4" />
+        </button>
+        <span className="text-sm font-medium text-muted-foreground">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-gray-50 transition-colors ${
+            currentPage === totalPages
+              ? 'opacity-50 cursor-not-allowed text-muted-foreground'
+              : 'text-foreground'
+          }`}
+        >
+          <TbChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -39,7 +104,7 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[200px] border-2 border-dashed rounded-lg p-4">
+    <div className="flex flex-col items-center justify-center h-[260px] border-2 border-dashed rounded-lg p-4">
       <TbUpload className="w-8 h-8 mb-2 text-muted-foreground" />
       <p className="text-sm text-muted-foreground mb-4">WAV, MP3 파일 지원 (최대 10MB)</p>
       <input
@@ -59,76 +124,6 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
   );
 };
 
-const PresetVoiceList = ({
-  voices,
-  selectedVoice,
-  onVoiceSelect,
-}: {
-  voices: TargetVoice[];
-  selectedVoice: string;
-  onVoiceSelect: (id: string) => void;
-}) => {
-  const { currentPage, setCurrentPage, getCurrentPageItems, totalPages } = usePagination({
-    data: voices,
-    itemsPerPage: ITEMS_PER_PAGE,
-  });
-
-  const currentVoices = getCurrentPageItems();
-
-  const handlePrevPage = () => {
-    setCurrentPage(Math.max(currentPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage(Math.min(currentPage + 1, totalPages));
-  };
-
-  return (
-    <div>
-      <div className="min-h-[260px] mb-2">
-        <RadioGroup value={selectedVoice} onValueChange={onVoiceSelect}>
-          {currentVoices.map((voice) => (
-            <VoiceCard
-              key={voice.id}
-              voice={voice}
-              isSelected={selectedVoice === voice.id}
-              onSelect={() => onVoiceSelect(voice.id)}
-            />
-          ))}
-        </RadioGroup>
-      </div>
-
-      <div className="flex items-center justify-between px-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className={`h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-secondary transition-colors ${
-            currentPage === 1
-              ? 'opacity-50 cursor-not-allowed text-muted-foreground'
-              : 'text-foreground'
-          }`}
-        >
-          <TbChevronLeft className="w-4 h-4" />
-        </button>
-        <span className="text-sm font-medium text-muted-foreground">
-          {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className={`h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-secondary transition-colors ${
-            currentPage === totalPages
-              ? 'opacity-50 cursor-not-allowed text-muted-foreground'
-              : 'text-foreground'
-          }`}
-        >
-          <TbChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  );
-};
-
 const VoiceSelection = ({
   presetVoices,
   customVoices,
@@ -138,7 +133,7 @@ const VoiceSelection = ({
 }: VoiceSelectionProps) => {
   return (
     <Tabs defaultValue="preset" className="w-full">
-      <TabsList className="w-full mb-4">
+      <TabsList className="w-full mb-3">
         <TabsTrigger value="preset" className="flex-1">
           프리셋
         </TabsTrigger>
@@ -157,24 +152,15 @@ const VoiceSelection = ({
         </TabsContent>
 
         <TabsContent value="custom">
-          <ScrollArea className="h-full">
-            <div>
-              {customVoices.length > 0 ? (
-                <RadioGroup value={selectedVoice} onValueChange={onVoiceSelect}>
-                  {customVoices.map((voice) => (
-                    <VoiceCard
-                      key={voice.id}
-                      voice={voice}
-                      isSelected={selectedVoice === voice.id}
-                      onSelect={() => onVoiceSelect(voice.id)}
-                    />
-                  ))}
-                </RadioGroup>
-              ) : (
-                <CustomVoiceUpload onUpload={onVoiceUpload} />
-              )}
-            </div>
-          </ScrollArea>
+          {customVoices.length > 0 ? (
+            <PresetVoiceList
+              voices={customVoices}
+              selectedVoice={selectedVoice}
+              onVoiceSelect={onVoiceSelect}
+            />
+          ) : (
+            <CustomVoiceUpload onUpload={onVoiceUpload} />
+          )}
         </TabsContent>
       </div>
     </Tabs>

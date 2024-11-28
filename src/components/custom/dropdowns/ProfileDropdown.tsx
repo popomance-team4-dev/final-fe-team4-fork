@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TbChevronDown, TbChevronUp, TbLogout, TbUser } from 'react-icons/tb';
 
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,24 +14,23 @@ import { cn } from '@/lib/utils';
 interface ProfileDropdownProps {
   name: string;
   email: string;
-  // imageUrl?: string;
+  imageUrl?: string;
   onMyPage?: () => void;
   onSignout?: () => void;
   className?: string;
 }
 
 const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
-  // ({ name, email, onMyPage, imageUrl, onSignout, className }, ref) => {
-  ({ name, email, onMyPage, onSignout, className }, ref) => {
+  ({ name, email, onMyPage, imageUrl, onSignout, className }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     return (
       <div ref={ref} className={cn('flex items-center', className)}>
         <div className="flex items-center gap-2">
-          {/* <Avatar className="w-9 h-9">
+          <Avatar className="w-9 h-9">
             <AvatarImage src={imageUrl} alt={name} />
             <AvatarFallback>{name[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar> */}
+          </Avatar>
           <div className="flex flex-col items-start mr-2">
             <span className="text-gray-900 font-bold text-sm">{name}</span>
             <span className="text-gray-700 text-xs">{email}</span>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { TbSettings } from 'react-icons/tb';
 
 import {
@@ -6,11 +6,45 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
-import FileUploadBox from '@/components/custom/feature/FileUploadBox';
+import VoiceSelection from '@/components/custom/feature/VoiceSelection';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
+import { Label } from '@/components/ui/label';
+import { PRESET_VOICES } from '@/constants/dummy';
 import { VC_TOOLTIP } from '@/constants/tooltips';
 
-const VCSidebar: React.FC = () => {
+interface TargetVoice {
+  id: string;
+  name: string;
+  description: string;
+  avatarUrl: string;
+  type: 'preset' | 'custom';
+}
+
+interface VCSidebarProps {
+  selectedVoice: string;
+  onVoiceSelect: (voice: string) => void;
+  onApplyConversion: () => void;
+}
+
+const VCSidebar: React.FC<VCSidebarProps> = ({
+  selectedVoice,
+  onVoiceSelect,
+  onApplyConversion,
+}) => {
+  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
+
+  const handleVoiceUpload = (file: File) => {
+    const newVoice: TargetVoice = {
+      id: `custom-${crypto.randomUUID()}`,
+      name: file.name.split('.')[0],
+      description: '내가 업로드한 목소리',
+      avatarUrl: '',
+      type: 'custom',
+    };
+
+    setCustomVoices((prev) => [...prev, newVoice]);
+  };
+
   return (
     <aside className="w-[276px] min-h-full border-l border-gray-200 bg-background">
       <div className="flex flex-col h-full p-6">
@@ -20,30 +54,42 @@ const VCSidebar: React.FC = () => {
             VC 옵션 설정
           </h2>
         </div>
-        <div className="mb-6">
-          <h2 className="text-foreground font-pretendard text-sm font-bold leading-5 mb-2">
-            목소리
-          </h2>
-          <FileUploadBox />
+
+        <div>
+          <Label className="text-sm font-bold mb-4 block">타겟 보이스</Label>
+          <VoiceSelection
+            presetVoices={PRESET_VOICES}
+            customVoices={customVoices}
+            selectedVoice={selectedVoice}
+            onVoiceSelect={onVoiceSelect}
+            onVoiceUpload={handleVoiceUpload}
+          />
         </div>
-        <div className="flex flex-col gap-4 mt-[13px]">
-          <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
-            <div>
-              <ApplySelectionButton />
-            </div>
-          </TooltipWrapper>
 
-          <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
-            <div>
-              <ApplyAllButton />
-            </div>
-          </TooltipWrapper>
-
-          <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
-            <div>
-              <ResetChangesButton />
-            </div>
-          </TooltipWrapper>
+        <div className="mt-8">
+          <div className="flex flex-col gap-4">
+            <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
+              <div>
+                <ApplySelectionButton
+                  onClick={onApplyConversion}
+                  className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
+                />
+              </div>
+            </TooltipWrapper>
+            <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
+              <div>
+                <ApplyAllButton
+                  onClick={onApplyConversion}
+                  className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
+                />
+              </div>
+            </TooltipWrapper>
+            <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
+              <div>
+                <ResetChangesButton />
+              </div>
+            </TooltipWrapper>
+          </div>
         </div>
       </div>
     </aside>

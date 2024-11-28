@@ -4,20 +4,44 @@ import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import MainContents, { MainContentsItem } from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import VCSidebar from '@/components/section/sidebar/VCSidebar';
+import { ALLOWED_FILE_TYPES, useFileUpload } from '@/hooks/useFileUpload';
 import PageLayout from '@/layouts/PageLayout';
 
-interface VCItem {
-  id: string;
-  text: string;
-  isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
+interface VCItem extends MainContentsItem {
   fileName: string;
+  status: '대기중' | '완료' | '실패' | '진행';
 }
 
 const VCPage = () => {
   const [items, setItems] = useState<VCItem[]>([]);
+  const [selectedTargetVoice, setSelectedTargetVoice] = useState<string>('');
+
+  // 오디오 파일 업로드
+  const { handleFiles: handleAudioUpload } = useFileUpload<File>({
+    maxSizeInMB: 10,
+    allowedTypes: [ALLOWED_FILE_TYPES.WAV, ALLOWED_FILE_TYPES.MP3],
+    onSuccess: (files) => {
+      const newItems = files.map((file) => ({
+        id: crypto.randomUUID(),
+        text: '',
+        isSelected: false,
+        fileName: file.name,
+        status: '대기중' as const,
+      }));
+      setItems((prev) => [...prev, ...newItems]);
+    },
+  });
+
+  // // 텍스트 파일 업로드
+  // const { handleFiles: handleTextUpload } = useFileUpload<string>({
+  //   maxSizeInMB: 5,
+  //   allowedTypes: [ALLOWED_FILE_TYPES.TEXT],
+  //   onSuccess: (texts) => {
+  //     setItems((prev) =>
+  //       prev.map((item) => (item.isSelected ? { ...item, text: texts[0] || '' } : item))
+  //     );
+  //   },
+  // });
 
   const handleSelectionChange = (id: string) => {
     setItems((prev) =>
@@ -34,17 +58,18 @@ const VCPage = () => {
   }, []);
 
   const handleAdd = useCallback(() => {
-    const newItem: VCItem = {
-      id: `${items.length + 1}`,
-      text: '',
-      isSelected: false,
-      speed: 1.0,
-      volume: 1.0,
-      pitch: 1.0,
-      fileName: `new_file_${items.length + 1}.wav`,
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'audio/*';
+    input.multiple = true;
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (files) {
+        handleAudioUpload(files);
+      }
     };
-    setItems((prev) => [...prev, newItem]);
-  }, [items.length]);
+    input.click();
+  }, [handleAudioUpload]);
 
   const handlePlay = useCallback((id: string) => {
     console.log('Play item:', id);
@@ -55,15 +80,34 @@ const VCPage = () => {
     setItems((prev) => prev.map((item) => ({ ...item, isSelected: !isAllSelected })));
   }, [items]);
 
-  const handleReorder = useCallback((newItems: MainContentsItem[]) => {
-    setItems(newItems as VCItem[]);
-  }, []);
+  const handleVoiceConversion = useCallback(() => {
+    if (!selectedTargetVoice) return;
+
+    setItems((prev) => prev.map((item) => (item.isSelected ? { ...item, status: '진행' } : item)));
+    // API 호출 및 변환 처리
+  }, [selectedTargetVoice]);
+
+  const mainContentItems: MainContentsItem[] = items.map(
+    ({ id, text, isSelected, status, fileName }) => ({
+      id,
+      text,
+      isSelected,
+      status,
+      fileName,
+    })
+  );
 
   return (
     <PageLayout
       variant="project"
-      header={<></>} // FileProgressDropDown
-      sidebar={<VCSidebar />}
+      header={<></>}
+      sidebar={
+        <VCSidebar
+          selectedVoice={selectedTargetVoice}
+          onVoiceSelect={setSelectedTargetVoice}
+          onApplyConversion={handleVoiceConversion}
+        />
+      }
       footer={<AudioPlayer audioUrl={''} />}
     >
       <Title
@@ -74,7 +118,7 @@ const VCPage = () => {
       />
       <MainContents
         type="VC"
-        items={items}
+        items={mainContentItems}
         onSelectionChange={handleSelectionChange}
         onTextChange={handleTextChange}
         onDelete={handleDelete}
@@ -82,7 +126,6 @@ const VCPage = () => {
         onPlay={handlePlay}
         onSelectAll={handleSelectAll}
         isAllSelected={items.every((item) => item.isSelected)}
-        onReorder={handleReorder}
       />
     </PageLayout>
   );

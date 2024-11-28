@@ -45,6 +45,33 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
     setCustomVoices((prev) => [...prev, newVoice]);
   };
 
+  const handleVoiceDelete = (id: string) => {
+    setCustomVoices((prev) => prev.filter((voice) => voice.id !== id));
+  };
+
+  const handleVoiceEdit = (id: string, type: 'name' | 'description') => {
+    const voice = customVoices.find((v) => v.id === id);
+    if (!voice) return;
+
+    const newValue = prompt(
+      type === 'name' ? '새로운 파일명을 입력하세요' : '새로운 설명을 입력하세요',
+      type === 'name' ? voice.name : voice.description
+    );
+
+    if (newValue === null) return;
+
+    setCustomVoices((prev) =>
+      prev.map((v) =>
+        v.id === id
+          ? {
+              ...v,
+              [type]: newValue,
+            }
+          : v
+      )
+    );
+  };
+
   return (
     <aside className="w-[276px] min-h-full border-l border-gray-200 bg-background">
       <div className="flex flex-col h-full p-6">
@@ -63,6 +90,8 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
             selectedVoice={selectedVoice}
             onVoiceSelect={onVoiceSelect}
             onVoiceUpload={handleVoiceUpload}
+            onVoiceDelete={handleVoiceDelete}
+            onVoiceEdit={handleVoiceEdit}
           />
         </div>
 

@@ -20,15 +20,25 @@ interface VoiceSelectionProps {
   selectedVoice: string;
   onVoiceSelect: (id: string) => void;
   onVoiceUpload: (file: File) => void;
+  onVoiceDelete?: (id: string) => void;
+  onVoiceEdit?: (id: string, type: 'name' | 'description') => void;
 }
 
 interface VoiceListProps {
   voices: TargetVoice[];
   selectedVoice: string;
   onVoiceSelect: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string, type: 'name' | 'description') => void;
 }
 
-const PresetVoiceList = ({ voices, selectedVoice, onVoiceSelect }: VoiceListProps) => {
+const PresetVoiceList = ({
+  voices,
+  selectedVoice,
+  onVoiceSelect,
+  onDelete,
+  onEdit,
+}: VoiceListProps) => {
   const { currentPage, setCurrentPage, getCurrentPageItems, totalPages } = usePagination({
     data: voices,
     itemsPerPage: 4,
@@ -54,6 +64,8 @@ const PresetVoiceList = ({ voices, selectedVoice, onVoiceSelect }: VoiceListProp
               voice={voice}
               isSelected={selectedVoice === voice.id}
               onSelect={() => onVoiceSelect(voice.id)}
+              onDelete={onDelete && (() => onDelete(voice.id))}
+              onEdit={onEdit && ((type) => onEdit(voice.id, type))}
             />
           ))}
         </RadioGroup>
@@ -137,6 +149,8 @@ const VoiceSelection = ({
   selectedVoice,
   onVoiceSelect,
   onVoiceUpload,
+  onVoiceDelete,
+  onVoiceEdit,
 }: VoiceSelectionProps) => {
   return (
     <Tabs defaultValue="preset" className="w-full">
@@ -164,6 +178,8 @@ const VoiceSelection = ({
               voices={customVoices}
               selectedVoice={selectedVoice}
               onVoiceSelect={onVoiceSelect}
+              onDelete={onVoiceDelete}
+              onEdit={onVoiceEdit}
             />
           ) : (
             <CustomVoiceUpload onUpload={onVoiceUpload} />

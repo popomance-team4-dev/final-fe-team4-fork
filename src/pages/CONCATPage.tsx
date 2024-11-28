@@ -17,7 +17,6 @@ interface CONCATItem {
 }
 
 const CONCATPage = () => {
-  const [showAlert, setShowAlert] = useState(true);
   const [items, setItems] = useState<CONCATItem[]>([]);
 
   const handleSelectionChange = (id: string) => {
@@ -72,8 +71,6 @@ const CONCATPage = () => {
       <MainContents
         type="CONCAT"
         items={items}
-        showAlert={showAlert}
-        onCloseAlert={() => setShowAlert(false)}
         onSelectionChange={handleSelectionChange}
         onTextChange={handleTextChange}
         onDelete={handleDelete}

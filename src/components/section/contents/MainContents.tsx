@@ -1,4 +1,3 @@
-import FileUploadAlert, { ALERT_MESSAGES } from '@/components/custom/guide/FileUploadPopup';
 import { HistoryListTable } from '@/components/custom/tables/history/HistoryListTable';
 import { ProjectListTable } from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
@@ -19,8 +18,6 @@ interface MainContentsProps {
   type: 'TTS' | 'VC' | 'CONCAT' | 'RECENT' | 'PROJECT';
   items: MainContentsItem[];
   isAllSelected: boolean;
-  showAlert?: boolean;
-  onCloseAlert?: () => void;
   onSelectAll: (checked: boolean) => void;
   onSelectionChange: (id: string) => void;
   onTextChange?: (id: string, newText: string) => void;
@@ -42,8 +39,6 @@ const MainContents = ({
   type,
   items,
   isAllSelected,
-  showAlert,
-  onCloseAlert,
   onSelectAll,
   onSelectionChange,
   onTextChange,
@@ -60,17 +55,6 @@ const MainContents = ({
   onSearch,
   onFilter,
 }: MainContentsProps) => {
-  const getAlertMessage = () => {
-    switch (type) {
-      case 'VC':
-        return ALERT_MESSAGES.VC_UPLOAD_REQUIRED;
-      case 'CONCAT':
-        return ALERT_MESSAGES.CONCAT_UPLOAD_REQUIRED;
-      default:
-        return '';
-    }
-  };
-
   const getButtonText = () => `${type} 생성`;
 
   const renderTable = () => {
@@ -129,11 +113,6 @@ const MainContents = ({
 
     return (
       <>
-        {showAlert && (
-          <div className="flex relative">
-            <FileUploadAlert message={getAlertMessage()} onClose={onCloseAlert!} />
-          </div>
-        )}
         <div className={`h-[580px] mt-6 overflow-hidden`}>
           <TableContents
             items={items}

@@ -4,10 +4,21 @@ import { useNavigate } from 'react-router-dom';
 
 import HomeCard from '@/components/custom/cards/HomeCard';
 import HomePopupBg from '@/images/home-popup-bg.svg';
+import { useProjectStore } from '@/stores/project.store';
 
 const HomePopup = () => {
   const [isVisible, setIsVisible] = useState(true);
   const navigate = useNavigate();
+  const addProject = useProjectStore((state) => state.addProject);
+
+  const handleNewProject = (type: 'TTS' | 'VC' | 'CONCAT', route: string) => {
+    addProject({
+      name: '새 프로젝트',
+      type: type,
+    });
+
+    navigate(route);
+  };
 
   if (!isVisible) {
     return null;
@@ -40,19 +51,19 @@ const HomePopup = () => {
           title="Text to Speech"
           description1="텍스트 파일 업로드로"
           description2="다양한 스타일의 음성 생성"
-          onClick={() => navigate('/tts')}
+          onClick={() => handleNewProject('TTS', '/tts')}
         />
         <HomeCard
           title="Voice Conversion"
           description1="다양한 음성 샘플을 사용하여"
           description2="원하는 음색으로 변환"
-          onClick={() => navigate('/vc')}
+          onClick={() => handleNewProject('VC', '/vc')}
         />
         <HomeCard
           title="Concat"
           description1="다양한 오디오 파일을"
           description2="하나로 연결"
-          onClick={() => navigate('/concat')}
+          onClick={() => handleNewProject('CONCAT', '/concat')}
         />
       </div>
     </div>

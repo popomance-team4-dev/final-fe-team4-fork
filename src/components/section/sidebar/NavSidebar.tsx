@@ -16,6 +16,8 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import logofull from '@/images/logo-full.png';
 import logomini from '@/images/logo-mini.png';
+import { useProjectStore } from '@/stores/project.store';
+
 interface NavSidebarButtonProps {
   icon: React.ElementType;
   label: string;
@@ -49,6 +51,21 @@ const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label, onClick }
 export function NavSidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
+  const projects = useProjectStore((state) => state.projects);
+
+  const getProjectIcon = (type: string) => {
+    switch (type) {
+      case 'TTS':
+        return TbFileTypography;
+      case 'VC':
+        return TbFileMusic;
+      case 'CONCAT':
+        return TbFileDatabase;
+      default:
+        return TbFileTypography;
+    }
+  };
+
   return (
     <div
       className={`flex h-screen w-[104px] flex-col border-r bg-white px-6 group/navbar ${isExpanded ? 'expanded w-[244px]' : ''}`}
@@ -124,9 +141,17 @@ export function NavSidebar() {
           </h2>
         </div>
         <div className="flex flex-col w-full gap-3">
-          <SidebarButton icon={TbFileTypography} label="TTS" />
+          {/* <SidebarButton icon={TbFileTypography} label="TTS" />
           <SidebarButton icon={TbFileMusic} label="VC" />
-          <SidebarButton icon={TbFileDatabase} label="CONCAT" />
+          <SidebarButton icon={TbFileDatabase} label="CONCAT" /> */}
+          {projects.map((project) => (
+            <SidebarButton
+              key={project.id}
+              icon={getProjectIcon(project.type)}
+              label={project.name}
+              onClick={() => navigate(`/${project.type.toLowerCase()}`)}
+            />
+          ))}
         </div>
       </div>
       <div className="mt-auto h-[93px]">

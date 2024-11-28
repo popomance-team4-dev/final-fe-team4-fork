@@ -6,14 +6,11 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
+import FileUploadBox from '@/components/custom/feature/FileUploadBox';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
-import VCSidebarTabs from '@/components/custom/tabs/VCSidebarTabs';
-import { Switch } from '@/components/ui/switch';
 import { VC_TOOLTIP } from '@/constants/tooltips';
 
 const VCSidebar: React.FC = () => {
-  const [isNoiseReductionEnabled, setIsNoiseReductionEnabled] = React.useState(false);
-
   return (
     <aside className="w-[276px] min-h-full border-l border-gray-200 bg-background">
       <div className="flex flex-col h-full p-6">
@@ -23,18 +20,11 @@ const VCSidebar: React.FC = () => {
             VC 옵션 설정
           </h2>
         </div>
-        <div className="flex items-center justify-between mb-8">
-          <span className="text-foreground font-pretendard text-sm font-bold leading-5">
-            배경소음 없애기
-          </span>
-          <Switch
-            className="h-6"
-            checked={isNoiseReductionEnabled}
-            onCheckedChange={setIsNoiseReductionEnabled}
-          />
-        </div>
         <div className="mb-6">
-          <VCSidebarTabs />
+          <h2 className="text-foreground font-pretendard text-sm font-bold leading-5 mb-2">
+            목소리
+          </h2>
+          <FileUploadBox />
         </div>
         <div className="mt-auto space-y-2">
           <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>

@@ -26,7 +26,7 @@ const VCSidebar: React.FC = () => {
           </h2>
           <FileUploadBox />
         </div>
-        <div className="mt-auto space-y-2">
+        <div className="flex flex-col gap-4 mt-[13px]">
           <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
             <div>
               <ApplySelectionButton />

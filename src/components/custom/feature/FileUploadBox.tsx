@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { TbFileMusic, TbFolderPlus } from 'react-icons/tb';
 
 import KebabMenu from '@/components/custom/dropdowns/KebabMenu';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
@@ -263,11 +264,11 @@ const FileUploadBox: React.FC<FileUploadBoxProps> = ({
           onChange={handleFileSelect}
         />
       </div>
-      <div className="border-t border-gray-300 max-h-[300px] overflow-y-auto">
+      <ScrollArea className="border-t border-gray-300 h-[300px]">
         {files.map((file) => (
           <FileListItem key={file.id} file={file} />
         ))}
-      </div>
+      </ScrollArea>
     </div>
   );
 };

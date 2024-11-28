@@ -36,8 +36,8 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
   const handleVoiceUpload = (file: File) => {
     const newVoice: TargetVoice = {
       id: `custom-${crypto.randomUUID()}`,
-      name: file.name.split('.')[0],
-      description: '내가 업로드한 목소리',
+      name: file.name,
+      description: '',
       avatarUrl: '',
       type: 'custom',
     };
@@ -49,23 +49,13 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
     setCustomVoices((prev) => prev.filter((voice) => voice.id !== id));
   };
 
-  const handleVoiceEdit = (id: string, type: 'name' | 'description') => {
-    const voice = customVoices.find((v) => v.id === id);
-    if (!voice) return;
-
-    const newValue = prompt(
-      type === 'name' ? '새로운 파일명을 입력하세요' : '새로운 설명을 입력하세요',
-      type === 'name' ? voice.name : voice.description
-    );
-
-    if (newValue === null) return;
-
+  const handleVoiceEdit = (newName: string) => {
     setCustomVoices((prev) =>
       prev.map((v) =>
-        v.id === id
+        v.id === selectedVoice
           ? {
               ...v,
-              [type]: newValue,
+              name: newName,
             }
           : v
       )

@@ -21,7 +21,7 @@ interface VoiceSelectionProps {
   onVoiceSelect: (id: string) => void;
   onVoiceUpload: (file: File) => void;
   onVoiceDelete?: (id: string) => void;
-  onVoiceEdit?: (id: string, type: 'name' | 'description') => void;
+  onVoiceEdit?: (newName: string) => void;
 }
 
 interface VoiceListProps {
@@ -29,7 +29,7 @@ interface VoiceListProps {
   selectedVoice: string;
   onVoiceSelect: (id: string) => void;
   onDelete?: (id: string) => void;
-  onEdit?: (id: string, type: 'name' | 'description') => void;
+  onEdit?: (newName: string) => void;
 }
 
 const PresetVoiceList = ({
@@ -44,28 +44,18 @@ const PresetVoiceList = ({
     itemsPerPage: 4,
   });
 
-  const currentVoices = getCurrentPageItems();
-
-  const handlePrevPage = () => {
-    setCurrentPage(Math.max(currentPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage(Math.min(currentPage + 1, totalPages));
-  };
-
   return (
     <div>
       <div className="h-[300px] mb-8">
         <RadioGroup value={selectedVoice} onValueChange={onVoiceSelect}>
-          {currentVoices.map((voice) => (
+          {getCurrentPageItems().map((voice) => (
             <VoiceCard
               key={voice.id}
               voice={voice}
               isSelected={selectedVoice === voice.id}
               onSelect={() => onVoiceSelect(voice.id)}
               onDelete={onDelete && (() => onDelete(voice.id))}
-              onEdit={onEdit && ((type) => onEdit(voice.id, type))}
+              onEdit={onEdit}
             />
           ))}
         </RadioGroup>
@@ -73,7 +63,7 @@ const PresetVoiceList = ({
 
       <div className="flex items-center justify-between px-4">
         <button
-          onClick={handlePrevPage}
+          onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
           disabled={currentPage === 1}
           className={`h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-gray-50 transition-colors ${
             currentPage === 1
@@ -87,7 +77,7 @@ const PresetVoiceList = ({
           {currentPage} / {totalPages}
         </span>
         <button
-          onClick={handleNextPage}
+          onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
           disabled={currentPage === totalPages}
           className={`h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-gray-50 transition-colors ${
             currentPage === totalPages
@@ -134,7 +124,7 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
       />
       <label
         htmlFor="voice-upload"
-        className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-100 h-9 px-4 py-2 cursor-pointer"
+        className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-50 h-9 px-4 py-2 cursor-pointer"
       >
         <TbUpload className="w-4 h-4" />
         파일 업로드

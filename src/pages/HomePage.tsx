@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import HomePopup from '@/components/custom/guide/HomePopup';
 import { RecentExportTable } from '@/components/custom/tables/history/RecentExportTable';
-import RecentProject from '@/components/section/contents/home/RecontProject';
+import RecentProject from '@/components/section/contents/RecontProject';
 import MainHeader from '@/components/section/header/MainHeader';
 import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';

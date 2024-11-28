@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { TbHistory } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
+import { AudioPlayer, PlayerMode } from '@/components/custom/feature/AudioPlayer';
 import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
 import TTSPlaybackHistory from '@/components/custom/tables/project/tts/TTSPlaybackHistory';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -14,7 +15,7 @@ interface ListRowProps {
   id: string;
   text: string;
   isSelected: boolean;
-  onPlay: () => void;
+  onPlay: (id: string) => void;
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   type?: 'TTS' | 'VC' | 'CONCAT';
@@ -22,6 +23,8 @@ interface ListRowProps {
   speed?: number;
   volume?: number;
   pitch?: number;
+  convertedAudioUrl?: string;
+  status?: '대기중' | '완료' | '실패' | '진행';
 }
 
 const SortableRow: React.FC<ListRowProps> = ({
@@ -36,6 +39,8 @@ const SortableRow: React.FC<ListRowProps> = ({
   onTextChange,
   type = 'TTS',
   fileName,
+  convertedAudioUrl,
+  status,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
@@ -67,7 +72,13 @@ const SortableRow: React.FC<ListRowProps> = ({
             onCheckedChange={() => onSelectionChange(id)}
             className="ml-2 mr-2"
           />
-          <PlayButton onClick={onPlay} className="ml-2 mr-2 w-5 h-5" />
+          <PlayButton
+            onClick={(e) => {
+              e.preventDefault();
+              onPlay(id);
+            }}
+            className="ml-2 mr-2 w-5 h-5"
+          />
           <Textarea
             value={text}
             onChange={(e) => {
@@ -113,25 +124,40 @@ const SortableRow: React.FC<ListRowProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none">
-      <div className="grid grid-cols-[auto,auto,200px,1fr] px-4 py-2 border-b items-center group bg-white cursor-grab active:cursor-grabbing">
-        <Checkbox
-          checked={isSelected}
-          onCheckedChange={() => onSelectionChange(id)}
-          className="ml-2 mr-2"
-        />
-        <PlayButton onClick={onPlay} className="mx-2 w-5 h-5" />
-        <div className="ml-4 truncate">{fileName || `${id}.wav`}</div>
-        <Textarea
-          value={text}
-          onChange={(e) => {
-            onTextChange(id, e.target.value);
-            handleTextAreaResize(e.target);
-          }}
-          onInput={(e) => handleTextAreaResize(e.currentTarget)}
-          placeholder="텍스트를 입력하세요."
-          className="flex-1 min-h-[40px] border-0 overflow-hidden w-full"
-          rows={1}
-        />
+      <div className="flex flex-col px-4 py-2 border-b bg-white">
+        <div className="grid grid-cols-[auto,auto,200px,1fr] items-center group cursor-grab active:cursor-grabbing">
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={() => onSelectionChange(id)}
+            className="ml-2 mr-2"
+          />
+          <div className="flex items-center gap-2">
+            <PlayButton onClick={() => onPlay(id)} className="mx-2 w-5 h-5" />
+          </div>
+          <div className="ml-4 truncate">{fileName}</div>
+          <Textarea
+            value={text}
+            onChange={(e) => {
+              onTextChange(id, e.target.value);
+              handleTextAreaResize(e.target);
+            }}
+            onInput={(e) => handleTextAreaResize(e.currentTarget)}
+            placeholder="텍스트를 입력하세요."
+            className="flex-1 min-h-[40px] border-0 overflow-hidden w-full"
+            rows={1}
+          />
+        </div>
+        {status === '완료' && (
+          <div className="mt-2 ml-[76px]">
+            <div className="flex items-center gap-2 mb-2">
+              <PlayButton onClick={() => onPlay(`${id}-converted`)} className="w-5 h-5" />
+              <span className="text-sm text-gray-500">변환됨</span>
+            </div>
+            {convertedAudioUrl && (
+              <AudioPlayer audioUrl={convertedAudioUrl} className="w-3/5" mode={PlayerMode.MINI} />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

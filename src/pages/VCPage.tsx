@@ -10,6 +10,8 @@ import PageLayout from '@/layouts/PageLayout';
 interface VCItem extends MainContentsItem {
   fileName: string;
   status: '대기중' | '완료' | '실패' | '진행';
+  originalAudioUrl?: string;
+  convertedAudioUrl?: string;
 }
 
 const VCPage = () => {
@@ -27,21 +29,27 @@ const VCPage = () => {
         isSelected: false,
         fileName: file.name,
         status: '대기중' as const,
+        originalAudioUrl: URL.createObjectURL(file),
       }));
       setItems((prev) => [...prev, ...newItems]);
     },
   });
 
-  // // 텍스트 파일 업로드
-  // const { handleFiles: handleTextUpload } = useFileUpload<string>({
-  //   maxSizeInMB: 5,
-  //   allowedTypes: [ALLOWED_FILE_TYPES.TEXT],
-  //   onSuccess: (texts) => {
-  //     setItems((prev) =>
-  //       prev.map((item) => (item.isSelected ? { ...item, text: texts[0] || '' } : item))
-  //     );
-  //   },
-  // });
+  // 텍스트 파일 업로드
+  const { handleFiles: handleTextUpload } = useFileUpload<string>({
+    maxSizeInMB: 5,
+    allowedTypes: [ALLOWED_FILE_TYPES.TEXT],
+    onSuccess: (texts) => {
+      setItems((prev) =>
+        prev.map((item) => (item.isSelected ? { ...item, text: texts[0] || '' } : item))
+      );
+    },
+  });
+
+  // 텍스트 파일 업로드 핸들러
+  const handleFileUpload = (files: FileList | null) => {
+    if (files) handleTextUpload(files);
+  };
 
   const handleSelectionChange = (id: string) => {
     setItems((prev) =>
@@ -87,14 +95,19 @@ const VCPage = () => {
     // API 호출 및 변환 처리
   }, [selectedTargetVoice]);
 
+  // 컴포넌트 최상위 레벨이 아닌 useMemo나 렌더링 직전에 변환
   const mainContentItems: MainContentsItem[] = items.map(
-    ({ id, text, isSelected, status, fileName }) => ({
-      id,
-      text,
-      isSelected,
-      status,
-      fileName,
-    })
+    ({ id, text, isSelected, status, fileName, originalAudioUrl }) => {
+      const item = {
+        id,
+        text,
+        isSelected,
+        status,
+        fileName,
+        originalAudioUrl,
+      };
+      return item;
+    }
   );
 
   return (
@@ -126,6 +139,7 @@ const VCPage = () => {
         onPlay={handlePlay}
         onSelectAll={handleSelectAll}
         isAllSelected={items.every((item) => item.isSelected)}
+        onFileUpload={handleFileUpload}
       />
     </PageLayout>
   );

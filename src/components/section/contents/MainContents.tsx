@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import { ProjectListTableItem, TableItem } from '@/types/table';
 
 export interface MainContentsItem extends TableItem {
+  status?: '대기중' | '완료' | '실패' | '진행';
+  fileName?: string;
+  originalAudioUrl?: string;
+  convertedAudioUrl?: string;
   order?: string;
   projectName?: string;
   content?: string;
   type?: 'VC' | 'TTS' | 'CONCAT';
-  status?: '진행' | '대기중' | '실패' | '완료';
   createdAt?: string;
 }
 
@@ -33,6 +36,7 @@ interface MainContentsProps {
   selectedItemsCount?: number;
   onSearch?: (searchTerm: string) => void;
   onFilter?: () => void;
+  onFileUpload?: (files: FileList | null) => void;
 }
 
 const MainContents = ({
@@ -54,6 +58,7 @@ const MainContents = ({
   selectedItemsCount,
   onSearch,
   onFilter,
+  onFileUpload,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
 
@@ -127,6 +132,7 @@ const MainContents = ({
             onPlay={onPlay}
             onReorder={onReorder}
             type={type === 'TTS' ? undefined : type}
+            onFileUpload={onFileUpload}
           />
         </div>
         <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>

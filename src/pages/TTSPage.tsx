@@ -3,8 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ttsLoad } from '@/api/aIParkAPI';
 import { saveTTSProject } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import ProjectMainContents from '@/components/section/contents/project/ProjectMainContents';
-import ProjectTitle from '@/components/section/contents/project/ProjectTitle';
+import MainContents from '@/components/section/contents/MainContents';
+import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
@@ -169,13 +169,13 @@ const TTSPage = () => {
       footer={<AudioFooter audioUrl="/sample.mp3" />}
       children={
         <>
-          <ProjectTitle
+          <Title
             type="TTS"
             projectTitle={projectData.projectName ?? '새 프로젝트'}
             onProjectNameChange={updateProjectName} // 이름 변경 핸들러 추가
             onSave={handleSaveProject}
           />
-          <ProjectMainContents
+          <MainContents
             type="TTS"
             items={items}
             isAllSelected={isAllSelected}

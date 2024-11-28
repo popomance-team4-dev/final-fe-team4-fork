@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
-import { ProjectMainContentsItem } from '@/components/section/contents/project/ProjectMainContents';
+import { TableItem } from '@/types/table';
 
 export interface TTSItem {
   id: string;
@@ -45,7 +45,7 @@ interface TTSStore {
 
   // 테이블 액션
   setItems: (items: TTSItem[]) => void;
-  addItems: (newItems?: ProjectMainContentsItem[]) => void;
+  addItems: (newItems?: TableItem[]) => void;
   updateItem: (id: string, updates: Partial<TTSItem>) => void;
   deleteSelectedItems: () => void;
   toggleSelection: (id: string) => void;
@@ -63,7 +63,7 @@ interface TTSStore {
   applyToSelected: () => void;
   applyToAll: () => void;
 
-  handleReorder: (items: ProjectMainContentsItem[]) => void;
+  handleReorder: (items: TableItem[]) => void;
 }
 
 const initialProjectData: TTSSaveDto = {
@@ -225,7 +225,7 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
       })),
     })),
 
-  handleReorder: (newItems: ProjectMainContentsItem[]) => {
+  handleReorder: (newItems: TableItem[]) => {
     const convertedItems: TTSItem[] = newItems.map((item) => ({
       id: item.id,
       text: item.text,

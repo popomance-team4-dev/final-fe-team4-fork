@@ -58,7 +58,7 @@ const CONCATSidebar: React.FC = () => {
       </div>
 
       {/* 적용 버튼들 */}
-      <div className="absolute bottom-0 flex flex-col gap-4 mb-[100px] ">
+      <div className="absolute bottom-0 flex flex-col gap-4 mb-[82px] ">
         <TooltipWrapper content={CONCAT_TOOLTIP.APPLY_SELECTED}>
           <div>
             <ApplySelectionButton />

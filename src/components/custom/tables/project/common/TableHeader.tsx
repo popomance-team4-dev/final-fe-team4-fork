@@ -55,23 +55,25 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
         )}
       </div>
       <div className="flex items-center gap-4">
-        <UploadTextButton
-          onClick={() => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.txt';
-            input.multiple = true;
-            input.onchange = (e) => {
-              onFileUpload((e.target as HTMLInputElement).files);
-            };
-            input.click();
-          }}
-          isLoading={isLoading}
-        />
+        {(type === 'VC' || type === 'TTS' || type === 'CONCAT') && (
+          <UploadTextButton
+            onClick={() => {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.txt';
+              input.multiple = true;
+              input.onchange = (e) => {
+                onFileUpload((e.target as HTMLInputElement).files);
+              };
+              input.click();
+            }}
+            isLoading={isLoading}
+          />
+        )}
         {type === 'TTS' ? (
           <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
         ) : (
-          <UploadAudioButton />
+          <UploadAudioButton onClick={onAdd} />
         )}
       </div>
     </div>

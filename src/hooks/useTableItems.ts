@@ -3,7 +3,12 @@ import { useCallback, useMemo } from 'react';
 import { TableItem } from '@/types/table';
 
 interface UseTableItemsProps {
-  items: TableItem[];
+  items: (TableItem & {
+    status?: '대기중' | '완료' | '실패' | '진행';
+    originalAudioUrl?: string;
+    convertedAudioUrl?: string;
+    type?: 'TTS' | 'VC' | 'CONCAT';
+  })[];
   onPlay: (id: string) => void;
   onRegenerateItem?: (id: string) => void;
   onDownloadItem?: (id: string) => void;
@@ -45,21 +50,22 @@ export const useTableItems = ({
     [items, onDownloadItem]
   );
 
-  const listItems = useMemo(
-    () =>
-      items.map((item) => ({
-        id: item.id,
-        text: item.text,
-        isSelected: item.isSelected,
-        onPlay: () => onPlay(item.id),
-        speed: item.speed,
-        volume: item.volume,
-        pitch: item.pitch,
-        onSelectionChange,
-        onTextChange,
-      })),
-    [items, onPlay, onSelectionChange, onTextChange]
-  );
+  const listItems = items.map((item) => ({
+    id: item.id,
+    text: item.text,
+    isSelected: item.isSelected,
+    fileName: item.fileName,
+    status: item.status,
+    originalAudioUrl: item.originalAudioUrl,
+    convertedAudioUrl: item.convertedAudioUrl,
+    onPlay: () => onPlay(item.id),
+    onSelectionChange: () => onSelectionChange(item.id),
+    onTextChange: (text: string) => onTextChange(item.id, text),
+    type: item.type,
+    speed: item.speed ?? 1,
+    volume: item.volume ?? 1,
+    pitch: item.pitch ?? 1,
+  }));
 
   const gridItems = useMemo(
     () =>

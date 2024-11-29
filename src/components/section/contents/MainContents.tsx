@@ -1,4 +1,3 @@
-import FileUploadAlert, { ALERT_MESSAGES } from '@/components/custom/guide/FileUploadPopup';
 import { HistoryListTable } from '@/components/custom/tables/history/HistoryListTable';
 import { ProjectListTable } from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
@@ -7,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import { ProjectListTableItem, TableItem } from '@/types/table';
 
 export interface MainContentsItem extends TableItem {
+  status?: '대기중' | '완료' | '실패' | '진행';
+  fileName?: string;
+  originalAudioUrl?: string;
+  convertedAudioUrl?: string;
   order?: string;
   projectName?: string;
   content?: string;
   type?: 'VC' | 'TTS' | 'CONCAT';
-  status?: '진행' | '대기중' | '실패' | '완료';
   createdAt?: string;
 }
 
@@ -19,8 +21,6 @@ interface MainContentsProps {
   type: 'TTS' | 'VC' | 'CONCAT' | 'RECENT' | 'PROJECT';
   items: MainContentsItem[];
   isAllSelected: boolean;
-  showAlert?: boolean;
-  onCloseAlert?: () => void;
   onSelectAll: (checked: boolean) => void;
   onSelectionChange: (id: string) => void;
   onTextChange?: (id: string, newText: string) => void;
@@ -36,14 +36,13 @@ interface MainContentsProps {
   selectedItemsCount?: number;
   onSearch?: (searchTerm: string) => void;
   onFilter?: () => void;
+  onFileUpload?: (files: FileList | null) => void;
 }
 
 const MainContents = ({
   type,
   items,
   isAllSelected,
-  showAlert,
-  onCloseAlert,
   onSelectAll,
   onSelectionChange,
   onTextChange,
@@ -59,18 +58,8 @@ const MainContents = ({
   selectedItemsCount,
   onSearch,
   onFilter,
+  onFileUpload,
 }: MainContentsProps) => {
-  const getAlertMessage = () => {
-    switch (type) {
-      case 'VC':
-        return ALERT_MESSAGES.VC_UPLOAD_REQUIRED;
-      case 'CONCAT':
-        return ALERT_MESSAGES.CONCAT_UPLOAD_REQUIRED;
-      default:
-        return '';
-    }
-  };
-
   const getButtonText = () => `${type} 생성`;
 
   const renderTable = () => {
@@ -129,11 +118,6 @@ const MainContents = ({
 
     return (
       <>
-        {showAlert && (
-          <div className="flex relative">
-            <FileUploadAlert message={getAlertMessage()} onClose={onCloseAlert!} />
-          </div>
-        )}
         <div className={`h-[580px] mt-6 overflow-hidden`}>
           <TableContents
             items={items}
@@ -148,6 +132,7 @@ const MainContents = ({
             onPlay={onPlay}
             onReorder={onReorder}
             type={type === 'TTS' ? undefined : type}
+            onFileUpload={onFileUpload}
           />
         </div>
         <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>

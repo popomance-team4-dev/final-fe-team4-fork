@@ -17,4 +17,14 @@ export interface ProjectListTableItem {
   type: 'VC' | 'TTS' | 'CONCAT';
   status: '진행' | '대기중' | '실패' | '완료';
   createdAt: string;
+  speed?: number;
+  volume?: number;
+  pitch?: number;
+}
+
+export interface VCItem extends TableItem {
+  fileName: string;
+  status: '대기중' | '완료' | '실패' | '진행';
+  originalAudioUrl?: string;
+  convertedAudioUrl?: string;
 }

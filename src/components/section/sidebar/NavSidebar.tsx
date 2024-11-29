@@ -121,12 +121,12 @@ export function NavSidebar() {
             <SidebarButton
               icon={TbFolders}
               label={isExpanded ? '프로젝트 목록' : '프로젝트'}
-              onClick={() => navigate('/projects')}
+              onClick={() => navigate('/project')}
             />
             <SidebarButton
               icon={TbFolderShare}
               label={isExpanded ? '히스토리 내역' : '히스토리'}
-              onClick={() => navigate('/Historys')}
+              onClick={() => navigate('/History')}
             />
           </div>
         </div>
@@ -144,11 +144,11 @@ export function NavSidebar() {
           {/* <SidebarButton icon={TbFileTypography} label="TTS" />
           <SidebarButton icon={TbFileMusic} label="VC" />
           <SidebarButton icon={TbFileDatabase} label="CONCAT" /> */}
-          {projects.map((project) => (
+          {projects.slice(0, 5).map((project) => (
             <SidebarButton
               key={project.id}
               icon={getProjectIcon(project.type)}
-              label={project.name}
+              label={isExpanded ? `${project.type} ${project.name}` : project.type}
               onClick={() => navigate(`/${project.type.toLowerCase()}`)}
             />
           ))}

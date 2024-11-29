@@ -83,7 +83,7 @@ const RecentProject = () => {
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <h3 className="text-h3">최근 프로젝트</h3>
         <p
-          onClick={() => navigate('/projects')}
+          onClick={() => navigate('/project')}
           className="text-black text-body2 flex items-center gap-1 cursor-pointer"
         >
           전체보기

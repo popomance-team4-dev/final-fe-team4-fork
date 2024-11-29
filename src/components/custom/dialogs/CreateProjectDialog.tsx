@@ -50,7 +50,7 @@ const features = [
 const CreateProjectDialogContent = () => {
   const navigate = useNavigate(); // useNavigate로 이동 기능 정의
   const addProject = useProjectStore((state) => state.addProject);
-  const [projectName, setProjectName] = useState('새 프로젝트');
+  const [projectName] = useState('새 프로젝트');
 
   // 프로젝트 생성 핸들러
   const handleNewProject = (type: 'TTS' | 'VC' | 'CONCAT', route: string) => {
@@ -58,19 +58,9 @@ const CreateProjectDialogContent = () => {
       name: projectName,
       type: type,
     });
-    const initialProjectData = {
-      projectId: null,
-      projectName: setProjectName('새 프로젝트'),
-      voiceStyleId: 9,
-      fullScript: '',
-      globalSpeed: 1.0,
-      globalPitch: 0.5,
-      globalVolume: 0.8,
-      ttsDetails: [],
-    };
 
-    // 선택한 경로로 초기 데이터를 전달하며 이동
-    navigate(route, { state: initialProjectData });
+    // 선택한 경로로 이동
+    navigate(route);
   };
 
   return (

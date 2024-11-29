@@ -10,4 +10,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  // server: {
+  //   proxy: {
+  //     '/tts': {
+  //       target: 'https://mock.popomance.kr',
+  //       changeOrigin: true,
+  //       secure: false, // HTTPS 설정 무시 (필요 시)
+  //     },
+  //   },
+  // },
 });

@@ -3,6 +3,8 @@ name: 'Chromatic'
 on:
   pull_request:
     types: [opened]
+    paths:
+      - 'src/stories/**'
 
 permissions:
   contents: read

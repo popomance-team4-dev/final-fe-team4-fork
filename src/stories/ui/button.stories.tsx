@@ -96,12 +96,12 @@ import { Button } from '@/components/ui/button';
 <Button size="sm">작은 버튼</Button>
 \`\`\`
 
-#### mid (middle)
+#### md (middle)
 - 너비: 196px
 - 패딩: 좌우 19px, 상하 12px
 - 글자: 16px, 굵게
 \`\`\`tsx
-<Button size="mid">중간 버튼</Button>
+<Button size="md">중간 버튼</Button>
 \`\`\`
 
 #### lg (large)
@@ -165,7 +165,7 @@ import { Button } from '@/components/ui/button';
 
 #### 아이콘이 있는 중간 크기 버튼
 \`\`\`tsx
-<Button variant="default" size="mid" icon>
+<Button variant="default" size="md" icon>
  새로 만들기
 </Button>
 \`\`\`
@@ -201,7 +201,7 @@ import { Button } from '@/components/ui/button';
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'mid', 'lg', 'icon'],
+      options: ['default', 'sm', 'md', 'lg', 'icon'],
     },
     icon: {
       control: 'boolean',
@@ -250,7 +250,7 @@ export const WithIcon: Story = {
   args: {
     children: '새로 만들기',
     icon: true,
-    size: 'mid',
+    size: 'md',
   },
 };
 

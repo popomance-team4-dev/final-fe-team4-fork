@@ -5,8 +5,6 @@ COPY package*.json ./
 
 RUN sed -i 's/"prepare": "lefthook install"/"prepare": ""/' package.json
 RUN npm ci
-RUN sed -i 's/"prepare": ""/"prepare": "lefthook install"/' package.json
-
 COPY . .
 RUN npm run docker
 

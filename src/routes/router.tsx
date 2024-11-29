@@ -1,27 +1,31 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
-import NavbarLayout from '@/layouts/NavbarLayout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import CONCATPage from '@/pages/ConcatPage';
+import CONCATPage from '@/pages/CONCATPage';
 import ErrorPage from '@/pages/ErrorPage';
+import HistoryPage from '@/pages/HistoryPage';
+import HomePage from '@/pages/HomePage';
+import MyPage from '@/pages/MyPage';
+import ProjectPage from '@/pages/ProjectPage';
 import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
 import VCPage from '@/pages/VCPage';
-import WorkspacePage from '@/pages/WorkspacePage';
 
 const PATH = {
   HOME: '/',
   SIGNIN: '/signin',
   SIGNUP: '/signup',
-  WORKSPACE: '/workspace',
-  ACCOUNT_RECOVERY: '/account-recovery',
+  PROJECT: '/project',
+  HISTORY: '/history',
+  ACCOUNT_RECOVERY_ID: '/find-id',
+  ACCOUNT_RECOVERY_PW: '/find-pw',
   TTS: '/tts',
-  CONCAT: '/concat',
   VC: '/vc',
-  EXAMPLE: '/example',
+  CONCAT: '/concat',
   ERROR: '/error',
+  MYPAGE: '/mypage',
 } as const;
 
 const router = createBrowserRouter([
@@ -40,38 +44,48 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
-        path: PATH.ACCOUNT_RECOVERY,
-        element: <AccountRecoveryPage />,
+        path: PATH.ACCOUNT_RECOVERY_ID,
+        element: <AccountRecoveryPage type="ID" />,
+      },
+      {
+        path: PATH.ACCOUNT_RECOVERY_PW,
+        element: <AccountRecoveryPage type="PW" />,
       },
       // 특정 에러 페이지 경로
       {
         path: PATH.ERROR,
         element: <ErrorPage />,
       },
-      // 네비바o, TTS, Concat, VC 라우트
+      // 그 외 모든 페이지들
       {
-        path: '/',
-        element: <NavbarLayout />,
-        children: [
-          {
-            path: PATH.WORKSPACE,
-            element: <WorkspacePage />,
-          },
-          {
-            path: PATH.TTS,
-            element: <TTSPage />,
-          },
-          {
-            path: PATH.CONCAT,
-            element: <CONCATPage />,
-          },
-          {
-            path: PATH.VC,
-            element: <VCPage />,
-          },
-        ],
+        path: PATH.HOME,
+        element: <HomePage />,
       },
-      // 와일드카드 404 에러 페이지
+      {
+        path: PATH.PROJECT,
+        element: <ProjectPage />,
+      },
+      {
+        path: PATH.HISTORY,
+        element: <HistoryPage />,
+      },
+      {
+        path: PATH.TTS,
+        element: <TTSPage />,
+      },
+      {
+        path: PATH.CONCAT,
+        element: <CONCATPage />,
+      },
+      {
+        path: PATH.VC,
+        element: <VCPage />,
+      },
+      {
+        path: PATH.MYPAGE,
+        element: <MyPage />,
+      },
+      // 404 에러 페이지
       {
         path: '*',
         element: <ErrorPage />,

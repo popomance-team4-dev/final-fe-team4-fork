@@ -2,8 +2,8 @@ name: Docker EC2 Deploy
 
 on:
   workflow_dispatch:
-  push:
-    branches: main
+  # push:
+    # branches: main
 
 jobs:
   docker:
@@ -53,12 +53,21 @@ jobs:
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "☑️ 프론트엔드 배포가 성공적으로 완료되었습니다.  [ 바로가기 ](http://popomance.kr/)"
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ":ballot_box_with_check: 프론트엔드 배포가 성공적으로 완료되었습니다. <http://popomance.kr|바로가기>"
+                }
+              }
+            ]
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Slack - Failure
         if: failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{
-            "text": ":x: 프론트엔드 배포 중 오류가 발생했습니다."
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+          # curl -X POST -H 'Content-type: application/json' --data '{
+          #   "text": ":x: 프론트엔드 배포 중 오류가 발생했습니다."
+          # }' ${{ secrets.SLACK_WEBHOOK_URL }}
+          

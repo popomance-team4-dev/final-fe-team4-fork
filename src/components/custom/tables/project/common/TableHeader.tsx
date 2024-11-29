@@ -55,7 +55,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
         )}
       </div>
       <div className="flex items-center gap-4">
-        {type === 'VC' && (
+        {(type === 'VC' || type === 'TTS' || type === 'CONCAT') && (
           <UploadTextButton
             onClick={() => {
               const input = document.createElement('input');

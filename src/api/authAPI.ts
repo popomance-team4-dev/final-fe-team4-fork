@@ -21,7 +21,7 @@ export const login = async (email: string, pwd: string) => {
 
     // 오류 메시지 처리
     const errorMessage =
-      error.response?.data?.message || '로그인 요청에 실패했습니다. 다시 시도해주세요.';
+      (error as any).response?.data?.message || '로그인 요청에 실패했습니다. 다시 시도해주세요.';
     throw new Error(errorMessage);
   }
 };

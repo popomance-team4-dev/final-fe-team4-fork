@@ -1,18 +1,48 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { login } from '@/api/authAPI';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
+import { useAuthStore } from '@/stores/authStore';
 const SigninForm = () => {
   const navigate = useNavigate();
+  const { setUser } = useAuthStore(); // Zustand 스토어에서 setUser 가져오기
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const userData = await login(email, password); // login 함수에서 data를 반환
+      console.log('로그인 성공:', userData);
+
+      // Zustand 상태 업데이트
+      setUser({
+        id: userData.data.id,
+        email: userData.data.email,
+        name: userData.data.name,
+      });
+
+      // 메인 페이지로 이동
+      navigate('/');
+    } catch (error: any) {
+      console.error('로그인 실패:', error);
+      setErrorMessage(error.response?.data?.message || '로그인 실패. 다시 시도해주세요.');
+    }
+  };
+
   return (
     <div className="w-[432px] h-[600px] flex-shrink-0 rounded-xl border border-gray-300 bg-white flex flex-col">
       <div className="mt-[56px] mb-[80px] flex justify-center">
         <img src={Logo} alt="AIPark Logo" className="w-[132px] h-[36px] flex-shrink-0" />
       </div>
 
-      <form className="flex flex-col px-[36px]">
+      <form className="flex flex-col px-[36px]" onSubmit={handleLogin}>
         <label className="self-stretch text-black text-base font-medium leading-6 font-pretendard">
           이메일 (아이디)
         </label>
@@ -20,6 +50,8 @@ const SigninForm = () => {
           variant="signin"
           type="email"
           placeholder="aipark@aipark.ai"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"
         />
 
@@ -30,6 +62,8 @@ const SigninForm = () => {
           variant="signin"
           type="password"
           placeholder="8자 이상의 비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"
         />
 
@@ -63,11 +97,15 @@ const SigninForm = () => {
         </div>
 
         <div className="mt-[36px] space-y-4">
-          <Button onClick={() => navigate('/')}>로그인</Button>
+          <Button type="submit">로그인</Button>
           <Button variant="secondary" onClick={() => navigate('/signup')}>
             회원가입
           </Button>
         </div>
+        {/* 에러 메시지 */}
+        {errorMessage && (
+          <p className="mt-4 text-red-500 text-sm font-medium text-center">{errorMessage}</p>
+        )}
       </form>
     </div>
   );

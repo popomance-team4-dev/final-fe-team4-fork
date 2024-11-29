@@ -31,6 +31,7 @@ interface TableContentsProps {
   isAllSelected?: boolean;
   type?: 'TTS' | 'VC' | 'CONCAT';
   onReorder?: (items: TableItem[]) => void;
+  onFileUpload?: (files: FileList | null) => void;
 }
 
 export const TableContents: React.FC<TableContentsProps> = ({
@@ -46,6 +47,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
   isAllSelected,
   type,
   onReorder,
+  onFileUpload,
 }) => {
   const [isListView, setIsListView] = React.useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -143,7 +145,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
           onViewChange={setIsListView}
           itemCount={items.length}
           type={type}
-          onFileUpload={handleFileChange}
+          onFileUpload={onFileUpload || handleFileChange}
           isLoading={isLoading}
         />
         <div className="flex-1 min-h-0">

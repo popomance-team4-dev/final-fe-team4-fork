@@ -21,7 +21,9 @@ interface MainContentsProps {
   type: 'TTS' | 'VC' | 'CONCAT' | 'RECENT' | 'PROJECT';
   items: MainContentsItem[];
   isAllSelected: boolean;
-  onSelectAll: (checked: boolean) => void;
+  showAlert?: boolean;
+  onCloseAlert?: () => void;
+  onSelectAll: (checked?: boolean) => void;
   onSelectionChange: (id: string) => void;
   onTextChange?: (id: string, newText: string) => void;
   onDelete: () => void;
@@ -122,7 +124,7 @@ const MainContents = ({
           <TableContents
             items={items}
             isAllSelected={isAllSelected}
-            onSelectAll={() => onSelectAll(true)}
+            onSelectAll={onSelectAll}
             onSelectionChange={onSelectionChange}
             onTextChange={onTextChange!}
             onDelete={onDelete}

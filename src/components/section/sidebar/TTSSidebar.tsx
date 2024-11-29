@@ -118,6 +118,8 @@ const TTSSidebar: React.FC = () => {
     reset,
     isModified,
     isAllConfigured,
+    applyToSelected,
+    applyToAll,
   } = useTTSStore();
 
   return (
@@ -212,6 +214,7 @@ const TTSSidebar: React.FC = () => {
           <div>
             <ApplySelectionButton
               className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+              onClick={applyToSelected}
             />
           </div>
         </TooltipWrapper>
@@ -220,6 +223,7 @@ const TTSSidebar: React.FC = () => {
           <div>
             <ApplyAllButton
               className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+              onClick={applyToAll}
             />
           </div>
         </TooltipWrapper>

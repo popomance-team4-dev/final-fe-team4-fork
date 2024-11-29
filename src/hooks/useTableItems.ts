@@ -62,6 +62,9 @@ export const useTableItems = ({
     onSelectionChange: () => onSelectionChange(item.id),
     onTextChange: (text: string) => onTextChange(item.id, text),
     type: item.type,
+    speed: item.speed ?? 1,
+    volume: item.volume ?? 1,
+    pitch: item.pitch ?? 1,
   }));
 
   const gridItems = useMemo(

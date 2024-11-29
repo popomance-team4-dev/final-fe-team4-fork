@@ -20,9 +20,9 @@ interface ListRowProps {
   onTextChange: (id: string, newText: string) => void;
   type?: 'TTS' | 'VC' | 'CONCAT';
   fileName?: string;
-  speed?: number;
-  volume?: number;
-  pitch?: number;
+  speed: number;
+  volume: number;
+  pitch: number;
   convertedAudioUrl?: string;
   status?: '대기중' | '완료' | '실패' | '진행';
 }
@@ -92,14 +92,12 @@ const SortableRow: React.FC<ListRowProps> = ({
           />
           <div className="flex gap-6">
             <div className="flex items-center gap-4">
-              {speed !== undefined && (
-                <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed} />
-              )}
-              {volume !== undefined && (
-                <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume} />
-              )}
-              {pitch !== undefined && (
-                <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch} />
+              {type === 'TTS' && (
+                <>
+                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.SPEED} value={speed ?? 1} />
+                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.VOLUME} value={volume ?? 1} />
+                  <SoundStatus type={UNIT_SOUND_STATUS_TYPES.PITCH} value={pitch ?? 1} />
+                </>
               )}
             </div>
             <div className="flex w-11 justify-center items-center">
@@ -183,11 +181,11 @@ export const TableListView: React.FC<TableListViewProps> = ({
           <div className="w-6" />
           <div className="w-4 ml-2 mr-2" />
           <div className="w-4 ml-2 mr-2" />
-          <div className="ml-6">텍스트</div>
-          <div className="flex gap-8">
-            <div className="w-[56px] text-center">속도</div>
-            <div className="w-[60px] text-center">볼륨</div>
-            <div className="w-[60px] text-center">피치</div>
+          <div>텍스트</div>
+          <div className="flex gap-7">
+            <div className="w-[60px] text-center">속도</div>
+            <div className="w-[52px] text-center">볼륨</div>
+            <div className="w-[56px] text-center mr-2">피치</div>
             <div className="text-center mr-3">내역</div>
           </div>
         </div>

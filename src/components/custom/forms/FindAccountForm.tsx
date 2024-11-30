@@ -65,7 +65,7 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
         });
 
         if (response.data.password) {
-          setResultMessage(`임시 비밀번호는 [ ${response.data.password} ] 입니다.`);
+          setResultMessage(`비밀번호는 [ ${response.data.password} ] 입니다.`);
           setResultDialogOpen(true);
         } else {
           setError(response.data?.message || '일치하는 사용자 정보를 찾을 수 없습니다.');

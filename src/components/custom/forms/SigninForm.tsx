@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/stores/auth.store';
 const SigninForm = () => {
   const navigate = useNavigate();
   const { setUser } = useAuthStore(); // Zustand 스토어에서 setUser 가져오기

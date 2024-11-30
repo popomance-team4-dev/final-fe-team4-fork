@@ -14,26 +14,25 @@ export const FILE_TYPES_TO_KOREAN = {
 
 export type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[keyof typeof ALLOWED_FILE_TYPES];
 
-export interface FileInfo {
-  id: string;
-  name: string;
-  size: number;
-  isEditing?: boolean;
-}
-
-interface UseFileUploadProps<T> {
+interface UseFileUploadOptions<T> {
   maxSizeInMB: number;
   allowedTypes: AllowedFileType[];
-  onSuccess: (files: T[]) => void;
+  onSuccess: (result: T[]) => void;
   onError?: (error: string) => void;
+  multiple?: boolean; // 다중 파일 업로드 허용 여부
+  accept?: string; // input accept 속성
+  type?: 'audio' | 'text'; // 파일 타입에 따른 처리 구분
 }
 
-export const useFileUpload = <T extends string | File>({
+export const useFileUpload = <T>({
   maxSizeInMB,
   allowedTypes,
   onSuccess,
   onError,
-}: UseFileUploadProps<T>) => {
+  multiple = true,
+  accept,
+  type = 'audio',
+}: UseFileUploadOptions<T>) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateFile = useCallback(
@@ -64,10 +63,13 @@ export const useFileUpload = <T extends string | File>({
         const result: T[] = [];
 
         for (const file of fileArray) {
-          if (file.type === ALLOWED_FILE_TYPES.TEXT) {
+          if (type === 'text' && file.type === ALLOWED_FILE_TYPES.TEXT) {
             const text = await file.text();
             result.push(text as T);
-          } else if (file.type === ALLOWED_FILE_TYPES.WAV || file.type === ALLOWED_FILE_TYPES.MP3) {
+          } else if (
+            type === 'audio' &&
+            (file.type === ALLOWED_FILE_TYPES.WAV || file.type === ALLOWED_FILE_TYPES.MP3)
+          ) {
             result.push(file as T);
           }
         }
@@ -83,8 +85,89 @@ export const useFileUpload = <T extends string | File>({
         setIsLoading(false);
       }
     },
-    [validateFile, onSuccess, onError]
+    [validateFile, onSuccess, onError, type]
   );
 
-  return { handleFiles, isLoading };
+  const openFileDialog = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = multiple;
+    input.accept = accept || allowedTypes.join(',');
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      handleFiles(files);
+    };
+    input.click();
+  }, [multiple, accept, allowedTypes, handleFiles]);
+
+  return {
+    handleFiles,
+    openFileDialog,
+    isLoading,
+  };
+};
+
+interface AudioUploadResult {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  fileName: string;
+  status: '대기중' | '완료' | '실패' | '진행';
+  originalAudioUrl: string;
+}
+
+interface FileUploadConfig {
+  audio: {
+    maxSizeInMB: number;
+    allowedTypes: [typeof ALLOWED_FILE_TYPES.WAV, typeof ALLOWED_FILE_TYPES.MP3];
+    accept: 'audio/*';
+  };
+  text: {
+    maxSizeInMB: number;
+    allowedTypes: [typeof ALLOWED_FILE_TYPES.TEXT];
+    accept: '.txt';
+  };
+}
+
+const CONFIG: FileUploadConfig = {
+  audio: {
+    maxSizeInMB: 10,
+    allowedTypes: [ALLOWED_FILE_TYPES.WAV, ALLOWED_FILE_TYPES.MP3],
+    accept: 'audio/*',
+  },
+  text: {
+    maxSizeInMB: 5,
+    allowedTypes: [ALLOWED_FILE_TYPES.TEXT],
+    accept: '.txt',
+  },
+} as const;
+
+export const useAudioUpload = (
+  onSuccess: (items: AudioUploadResult[]) => void,
+  onError: (error: string) => void
+) => {
+  return useFileUpload<File>({
+    ...CONFIG.audio,
+    type: 'audio',
+    onSuccess: (files) => {
+      const newItems = files.map((file) => ({
+        id: crypto.randomUUID(),
+        text: '',
+        isSelected: false,
+        fileName: file.name,
+        status: '대기중' as const,
+        originalAudioUrl: URL.createObjectURL(file),
+      }));
+      onSuccess(newItems);
+    },
+    onError,
+  });
+};
+
+export const useTextUpload = (onSuccess: (texts: string[]) => void) => {
+  return useFileUpload<string>({
+    ...CONFIG.text,
+    type: 'text',
+    onSuccess,
+  });
 };

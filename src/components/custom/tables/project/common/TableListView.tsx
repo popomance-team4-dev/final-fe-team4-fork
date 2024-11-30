@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { usePlaybackHistory } from '@/hooks/usePlaybackHistory';
 import { cn } from '@/lib/utils';
+import { useVCStore } from '@/stores/vc.store';
 
 interface ListRowProps {
   id: string;
@@ -54,6 +55,8 @@ const SortableRow: React.FC<ListRowProps> = ({
   };
 
   const { historyItems, isHistoryOpen, setIsHistoryOpen, handleDelete } = usePlaybackHistory();
+  const { audioPlayer, handlePause } = useVCStore();
+  const isPlaying = audioPlayer.currentPlayingId === id;
 
   const handleTextAreaResize = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
@@ -67,6 +70,15 @@ const SortableRow: React.FC<ListRowProps> = ({
       textarea.style.height = `${textarea.scrollHeight}px`;
     });
   }, [text]);
+
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isPlaying) {
+      handlePause();
+    } else {
+      onPlay(id);
+    }
+  };
 
   if (type === 'TTS') {
     return (
@@ -82,10 +94,8 @@ const SortableRow: React.FC<ListRowProps> = ({
             <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
           </div>
           <PlayButton
-            onClick={(e) => {
-              e.preventDefault();
-              onPlay(id);
-            }}
+            isPlaying={isPlaying}
+            onClick={handlePlayClick}
             className="ml-2 mr-2 w-5 h-5"
           />
           <Textarea
@@ -143,7 +153,7 @@ const SortableRow: React.FC<ListRowProps> = ({
             <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
           </div>
           <div className="flex items-center gap-2">
-            <PlayButton onClick={() => onPlay(id)} className="mx-2 w-5 h-5" />
+            <PlayButton isPlaying={isPlaying} onClick={handlePlayClick} className="mx-2 w-5 h-5" />
           </div>
           <div className="ml-4 truncate">{fileName}</div>
           <Textarea

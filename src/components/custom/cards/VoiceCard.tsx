@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { TbDotsVertical, TbEdit, TbTrash } from 'react-icons/tb';
 
+import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ interface VoiceCardProps {
     id: string;
     name: string;
     description: string;
+    audioUrl?: string;
   };
   isSelected: boolean;
   onSelect: () => void;
@@ -23,9 +25,28 @@ interface VoiceCardProps {
   onEdit?: (newName: string) => void;
 }
 
-const VoiceCard = ({ voice, onSelect, onDelete, onEdit }: VoiceCardProps) => {
+const VoiceCard = ({ voice, isSelected, onSelect, onDelete, onEdit }: VoiceCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fileName, fileExt] = voice.name.split('.');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlay = () => {
+    if (!audioRef.current && voice.audioUrl) {
+      audioRef.current = new Audio(voice.audioUrl);
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        audioRef.current = null;
+      };
+    }
+    audioRef.current?.play();
+    setIsPlaying(true);
+  };
+
+  const handlePause = () => {
+    audioRef.current?.pause();
+    setIsPlaying(false);
+  };
 
   const handleEdit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -38,7 +59,7 @@ const VoiceCard = ({ voice, onSelect, onDelete, onEdit }: VoiceCardProps) => {
 
   return (
     <Card
-      className="mb-1 cursor-pointer border border-border"
+      className={`mb-1 cursor-pointer border ${isSelected ? 'border-primary' : 'border-border'}`}
       onClick={isEditing ? undefined : onSelect}
     >
       <CardContent className="p-3">
@@ -67,32 +88,48 @@ const VoiceCard = ({ voice, onSelect, onDelete, onEdit }: VoiceCardProps) => {
             </div>
             <div className="text-sm text-muted-foreground">{voice.description}</div>
           </div>
-          {(onDelete || onEdit) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                <button className="p-1 text-gray-800 rounded-md hover:bg-gray-100">
-                  <TbDotsVertical className="w-6 h-6" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {onEdit && (
-                  <DropdownMenuItem onClick={() => setIsEditing(true)}>
-                    <TbEdit className="w-4 h-4 mr-2" />
-                    파일명 수정
-                  </DropdownMenuItem>
-                )}
-                {onDelete && (
-                  <DropdownMenuItem
-                    onClick={onDelete}
-                    className="text-red-500 hover:!text-red-600 focus:!text-red-600"
-                  >
-                    <TbTrash className="w-4 h-4 mr-2" />
-                    삭제
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <div className="flex items-center gap-1">
+            {voice.audioUrl && (
+              <PlayButton
+                isPlaying={isPlaying}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isPlaying) {
+                    handlePause();
+                  } else {
+                    handlePlay();
+                  }
+                }}
+                className="w-5 h-5"
+              />
+            )}
+            {(onDelete || onEdit) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                  <button className="p-1 text-gray-800 rounded-md hover:bg-gray-100">
+                    <TbDotsVertical className="w-6 h-6" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {onEdit && (
+                    <DropdownMenuItem onClick={() => setIsEditing(true)}>
+                      <TbEdit className="w-4 h-4 mr-2" />
+                      파일명 수정
+                    </DropdownMenuItem>
+                  )}
+                  {onDelete && (
+                    <DropdownMenuItem
+                      onClick={onDelete}
+                      className="text-red-500 hover:!text-red-600 focus:!text-red-600"
+                    >
+                      <TbTrash className="w-4 h-4 mr-2" />
+                      삭제
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

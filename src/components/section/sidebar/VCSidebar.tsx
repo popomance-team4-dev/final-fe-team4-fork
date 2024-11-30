@@ -39,6 +39,7 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
       description: '',
       avatarUrl: '',
       type: 'custom' as const,
+      audioUrl: URL.createObjectURL(file),
     }));
 
     setCustomVoices((prev) => [...prev, ...newVoices]);

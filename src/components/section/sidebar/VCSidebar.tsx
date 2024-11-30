@@ -83,30 +83,28 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
           />
         </div>
 
-        <div className="mt-8">
-          <div className="flex flex-col gap-4">
-            <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
-              <div>
-                <ApplySelectionButton
-                  onClick={onApplyConversion}
-                  className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
-                />
-              </div>
-            </TooltipWrapper>
-            <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
-              <div>
-                <ApplyAllButton
-                  onClick={onApplyConversion}
-                  className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
-                />
-              </div>
-            </TooltipWrapper>
-            <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
-              <div>
-                <ResetChangesButton />
-              </div>
-            </TooltipWrapper>
-          </div>
+        <div className="flex flex-col gap-4">
+          <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
+            <div>
+              <ApplySelectionButton
+                onClick={onApplyConversion}
+                className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
+              />
+            </div>
+          </TooltipWrapper>
+          <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
+            <div>
+              <ApplyAllButton
+                onClick={onApplyConversion}
+                className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
+              />
+            </div>
+          </TooltipWrapper>
+          <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
+            <div>
+              <ResetChangesButton />
+            </div>
+          </TooltipWrapper>
         </div>
       </div>
     </aside>

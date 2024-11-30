@@ -44,7 +44,7 @@ const VoiceList = ({ voices, selectedVoice, onVoiceSelect, onDelete, onEdit }: V
 
   return (
     <div>
-      <div className="h-[300px] mb-8">
+      <div className="h-[292px] mb-4">
         <RadioGroup value={selectedVoice} onValueChange={onVoiceSelect}>
           {getCurrentPageItems().map((voice) => (
             <VoiceCard
@@ -133,7 +133,7 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-1 my-8">
+      <div className="flex flex-col items-center gap-1 my-[33px]">
         <div className="p-3 rounded-full bg-gray-50 mb-2">
           <TbMicrophone className="w-6 h-6 text-primary" />
         </div>
@@ -203,7 +203,7 @@ const VoiceSelection = ({
         </div>
       )}
 
-      <div className="min-h-[400px]">
+      <div className="mb-10">
         {customVoices.length > 0 ? (
           <VoiceList
             voices={customVoices}

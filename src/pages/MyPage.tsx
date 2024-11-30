@@ -7,7 +7,7 @@ const MyPage = () => {
   const defaultValues = {
     email: 'aipark@aipark.ai',
     name: '김바타',
-    phone: '010-1234-1234',
+    phoneNumber: '010-1234-1234',
   };
 
   return (

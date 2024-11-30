@@ -38,7 +38,7 @@ const VoiceCard = ({ voice, onSelect, onDelete, onEdit }: VoiceCardProps) => {
 
   return (
     <Card
-      className={`mb-1 cursor-pointer transition-colors`}
+      className="mb-1 cursor-pointer border border-border"
       onClick={isEditing ? undefined : onSelect}
     >
       <CardContent className="p-3">

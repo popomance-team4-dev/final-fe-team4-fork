@@ -183,7 +183,10 @@ const VoiceSelection = ({
     <div className="w-full">
       {customVoices.length > 0 && (
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm">내 음성 목록</h2>
+          <div className="flex items-center gap-2">
+            <TbMicrophone className="w-4 h-4 text-primary" />
+            <h2 className="text-sm">내 음성 목록</h2>
+          </div>
           <div className="flex items-center gap-2">
             <input
               type="file"

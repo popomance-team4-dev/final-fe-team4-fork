@@ -24,7 +24,7 @@ interface VoiceSelectionProps {
   customVoices: TargetVoice[];
   selectedVoice: string;
   onVoiceSelect: (id: string) => void;
-  onVoiceUpload: (file: File) => void;
+  onVoiceUpload: (files: File[]) => void;
   onVoiceDelete?: (id: string) => void;
   onVoiceEdit?: (newName: string) => void;
 }
@@ -91,16 +91,23 @@ const VoiceList = ({ voices, selectedVoice, onVoiceSelect, onDelete, onEdit }: V
   );
 };
 
-const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => {
+const CustomVoiceUpload = ({ onUpload }: { onUpload: (files: File[]) => void }) => {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const file = files[0];
-      if (file.size > 10 * 1024 * 1024) {
-        alert('파일 크기는 10MB를 초과할 수 없습니다.');
-        return;
+      const validFiles: File[] = [];
+
+      Array.from(files).forEach((file) => {
+        if (file.size > 10 * 1024 * 1024) {
+          alert(`${file.name}의 크기가 10MB를 초과합니다.`);
+          return;
+        }
+        validFiles.push(file);
+      });
+
+      if (validFiles.length > 0) {
+        onUpload(validFiles);
       }
-      onUpload(file);
     }
   };
 
@@ -147,6 +154,7 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
         id="voice-upload"
         className="hidden"
         accept="audio/*"
+        multiple
         onChange={handleFileSelect}
       />
       <label
@@ -173,9 +181,7 @@ const VoiceSelection = ({
     allowedTypes: [ALLOWED_FILE_TYPES.WAV, ALLOWED_FILE_TYPES.MP3],
     type: 'audio',
     onSuccess: (files) => {
-      if (files[0]) {
-        onVoiceUpload(files[0]);
-      }
+      onVoiceUpload(files);
     },
   });
 
@@ -193,6 +199,7 @@ const VoiceSelection = ({
               id="voice-upload-header"
               className="hidden"
               accept="audio/*"
+              multiple
               onChange={(e) => handleFiles(e.target.files)}
             />
             <label

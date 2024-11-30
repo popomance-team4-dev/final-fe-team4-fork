@@ -16,7 +16,7 @@ interface TargetVoice {
   name: string;
   description: string;
   avatarUrl: string;
-  type: 'preset' | 'custom';
+  type: 'custom';
 }
 
 interface VCSidebarProps {
@@ -32,16 +32,16 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
 }) => {
   const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
 
-  const handleVoiceUpload = (file: File) => {
-    const newVoice: TargetVoice = {
+  const handleVoiceUpload = (files: File[]) => {
+    const newVoices = files.map((file) => ({
       id: `custom-${crypto.randomUUID()}`,
       name: file.name,
       description: '',
       avatarUrl: '',
-      type: 'custom',
-    };
+      type: 'custom' as const,
+    }));
 
-    setCustomVoices((prev) => [...prev, newVoice]);
+    setCustomVoices((prev) => [...prev, ...newVoices]);
   };
 
   const handleVoiceDelete = (id: string) => {

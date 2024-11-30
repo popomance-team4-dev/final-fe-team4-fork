@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TbDotsVertical, TbEdit, TbTrash } from 'react-icons/tb';
 
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
@@ -17,8 +16,6 @@ interface VoiceCardProps {
     id: string;
     name: string;
     description: string;
-    avatarUrl: string;
-    type: 'preset' | 'custom';
   };
   isSelected: boolean;
   onSelect: () => void;
@@ -54,11 +51,6 @@ const VoiceCard = ({ voice, onSelect, onDelete, onEdit }: VoiceCardProps) => {
               if (!isEditing) onSelect();
             }}
           />
-          {voice.type === 'preset' && (
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={voice.avatarUrl} alt={voice.name} />
-            </Avatar>
-          )}
           <div className="flex-1">
             <div className="font-medium leading-none">
               {isEditing ? (
@@ -75,7 +67,7 @@ const VoiceCard = ({ voice, onSelect, onDelete, onEdit }: VoiceCardProps) => {
             </div>
             <div className="text-sm text-muted-foreground">{voice.description}</div>
           </div>
-          {voice.type === 'custom' && (onDelete || onEdit) && (
+          {(onDelete || onEdit) && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                 <button className="p-1 text-gray-800 rounded-md hover:bg-gray-100">

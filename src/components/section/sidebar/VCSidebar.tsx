@@ -9,7 +9,6 @@ import {
 import VoiceSelection from '@/components/custom/feature/VoiceSelection';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Label } from '@/components/ui/label';
-import { PRESET_VOICES } from '@/constants/dummy';
 import { VC_TOOLTIP } from '@/constants/tooltips';
 
 interface TargetVoice {
@@ -75,7 +74,6 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
         <div>
           <Label className="text-sm font-bold mb-4 block">타겟 보이스</Label>
           <VoiceSelection
-            presetVoices={PRESET_VOICES}
             customVoices={customVoices}
             selectedVoice={selectedVoice}
             onVoiceSelect={onVoiceSelect}

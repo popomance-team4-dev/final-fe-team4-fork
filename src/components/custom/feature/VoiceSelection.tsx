@@ -17,12 +17,9 @@ interface TargetVoice {
   id: string;
   name: string;
   description: string;
-  avatarUrl: string;
-  type: 'preset' | 'custom';
 }
 
 interface VoiceSelectionProps {
-  presetVoices: TargetVoice[];
   customVoices: TargetVoice[];
   selectedVoice: string;
   onVoiceSelect: (id: string) => void;
@@ -39,13 +36,7 @@ interface VoiceListProps {
   onEdit?: (newName: string) => void;
 }
 
-const PresetVoiceList = ({
-  voices,
-  selectedVoice,
-  onVoiceSelect,
-  onDelete,
-  onEdit,
-}: VoiceListProps) => {
+const VoiceList = ({ voices, selectedVoice, onVoiceSelect, onDelete, onEdit }: VoiceListProps) => {
   const { currentPage, setCurrentPage, getCurrentPageItems, totalPages } = usePagination({
     data: voices,
     itemsPerPage: 4,
@@ -114,8 +105,8 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
 
   return (
     <div className="flex flex-col items-center bg-white">
-      <div className="w-full max-w-md px-0 mb-4">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-100">
+      <div className="w-full max-w-md px-0 mb-2">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
           <ul className="space-y-3">
             {[
               {
@@ -214,7 +205,7 @@ const VoiceSelection = ({
 
       <div className="min-h-[400px]">
         {customVoices.length > 0 ? (
-          <PresetVoiceList
+          <VoiceList
             voices={customVoices}
             selectedVoice={selectedVoice}
             onVoiceSelect={onVoiceSelect}

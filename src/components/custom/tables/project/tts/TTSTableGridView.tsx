@@ -73,11 +73,18 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-between flex-1">
             <div className="flex items-center gap-5">
-              <Checkbox
-                checked={props.isSelected}
-                onCheckedChange={() => props.onSelectionChange(props.id)}
-                className="ml-2 mr-4"
-              />
+              <div className="flex items-center cursor-pointer relative">
+                <Checkbox
+                  checked={props.isSelected}
+                  onCheckedChange={() => props.onSelectionChange(props.id)}
+                  className="cursor-pointer ml-2 mr-4"
+                  id={`checkbox-grid-${props.id}`}
+                />
+                <div
+                  className="absolute inset-0"
+                  onClick={() => props.onSelectionChange(props.id)}
+                />
+              </div>
 
               <div className="flex gap-5">
                 {props.speed !== undefined && (

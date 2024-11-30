@@ -39,15 +39,20 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   <div className={cn('flex flex-col bg-white', !isListView ? 'rounded-md border' : 'border-b')}>
     <div className="flex items-center justify-between px-6 py-3">
       <div className="flex items-center space-x-4">
-        <Checkbox
-          checked={itemCount > 0 && isAllSelected}
-          onCheckedChange={onSelectAll}
-          className="mr-9"
-        />
-        <div onClick={onDelete} className="flex items-center gap-2 py-2 hover:cursor-pointer">
+        <div className="flex items-center mr-9 cursor-pointer" onClick={() => onSelectAll?.()}>
+          <Checkbox
+            checked={itemCount > 0 && isAllSelected}
+            onCheckedChange={onSelectAll}
+            className="cursor-pointer"
+          />
+        </div>
+        <button
+          onClick={onDelete}
+          className="flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-50 transition-colors"
+        >
           <TbTrash className="w-5 h-5 text-gray-400" />
           <span className="text-sm text-gray-800">삭제</span>
-        </div>
+        </button>
         {type === 'TTS' && (
           <>
             <Separator orientation="vertical" className="h-6 mr-2" />

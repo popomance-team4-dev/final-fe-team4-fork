@@ -72,11 +72,15 @@ const SortableRow: React.FC<ListRowProps> = ({
     return (
       <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none">
         <div className="flex items-center px-4 py-2 border-b group bg-white cursor-grab active:cursor-grabbing">
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={() => onSelectionChange(id)}
-            className="ml-2 mr-2"
-          />
+          <div className="flex items-center cursor-pointer relative">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={() => onSelectionChange(id)}
+              className="cursor-pointer ml-2 mr-2"
+              id={`checkbox-${id}`}
+            />
+            <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
+          </div>
           <PlayButton
             onClick={(e) => {
               e.preventDefault();
@@ -129,11 +133,15 @@ const SortableRow: React.FC<ListRowProps> = ({
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none">
       <div className="flex flex-col px-4 py-2 border-b bg-white">
         <div className="grid grid-cols-[auto,auto,200px,1fr] items-center group cursor-grab active:cursor-grabbing">
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={() => onSelectionChange(id)}
-            className="ml-2 mr-2"
-          />
+          <div className="flex items-center cursor-pointer relative">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={() => onSelectionChange(id)}
+              className="cursor-pointer ml-2 mr-2"
+              id={`checkbox-${id}`}
+            />
+            <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
+          </div>
           <div className="flex items-center gap-2">
             <PlayButton onClick={() => onPlay(id)} className="mx-2 w-5 h-5" />
           </div>
@@ -188,8 +196,8 @@ export const TableListView: React.FC<TableListViewProps> = ({
           <div className="w-4 ml-2 mr-2" />
           <div>텍스트</div>
           <div className="flex gap-7">
-            <div className="w-[60px] text-center">속도</div>
-            <div className="w-[52px] text-center">볼륨</div>
+            <div className="w-[60px] text-center mr-1">속도</div>
+            <div className="w-[52px] text-center mr-2">볼륨</div>
             <div className="w-[56px] text-center mr-2">피치</div>
             <div className="text-center mr-3">내역</div>
           </div>

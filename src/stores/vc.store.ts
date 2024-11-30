@@ -36,6 +36,10 @@ interface VCStore {
   handleFileUpload: (files: FileList | null) => void;
   handleTextChange: (id: string, newText: string) => void;
   handlePlay: (id: string) => void;
+
+  // URL 정리를 위한 메서드 추가
+  cleanupAudioUrl: (id: string) => void;
+  cleanupAllAudioUrls: () => void;
 }
 
 // useFileUpload hooks의 로직을 store에 맞게 재구현
@@ -55,27 +59,37 @@ const handleAudioUpload = (
 
   const openFileDialog = () => {
     const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'audio/*';
-    input.multiple = true;
+    const { type, accept, multiple } = {
+      type: 'file',
+      accept: 'audio/*',
+      multiple: true,
+    };
 
-    input.onchange = async (e) => {
-      const files = (e.target as HTMLInputElement).files;
-      if (!files?.length) return;
+    Object.assign(input, { type, accept, multiple });
+
+    input.onchange = async ({ target }) => {
+      const { files } = target as HTMLInputElement;
+
+      if (!files?.length) {
+        return;
+      }
 
       try {
         // 파일 타입 검증
         Array.from(files).forEach(validateAudioFile);
 
-        const newItems: VCItem[] = Array.from(files).map((file) => ({
-          id: crypto.randomUUID(),
-          fileName: file.name,
-          file,
-          text: '',
-          isSelected: false,
-          status: '대기중' as const,
-          originalAudioUrl: URL.createObjectURL(file),
-        }));
+        const newItems: VCItem[] = Array.from(files).map((file) => {
+          const { name } = file;
+          return {
+            id: crypto.randomUUID(),
+            fileName: name,
+            file,
+            text: '',
+            isSelected: false,
+            status: '대기중' as const,
+            originalAudioUrl: URL.createObjectURL(file),
+          };
+        });
 
         onSuccess(newItems);
       } catch (error) {
@@ -91,7 +105,9 @@ const handleAudioUpload = (
 
 const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
   const handleFiles = async (files: FileList | null) => {
-    if (!files?.length) return;
+    if (!files?.length) {
+      return;
+    }
 
     try {
       const texts = await Promise.all(Array.from(files).map((file) => file.text()));
@@ -140,10 +156,18 @@ export const useVCStore = create<VCStore>((set, get) => {
       set((state) => ({
         items: state.items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
       })),
-    deleteSelectedItems: () =>
+    deleteSelectedItems: () => {
+      const { items } = get();
+      // 삭제되는 아이템들의 URL 정리
+      items.forEach((item) => {
+        if (item.isSelected && item.originalAudioUrl) {
+          URL.revokeObjectURL(item.originalAudioUrl);
+        }
+      });
       set((state) => ({
         items: state.items.filter((item) => !item.isSelected),
-      })),
+      }));
+    },
     toggleSelection: (id) =>
       set((state) => ({
         items: state.items.map((item) =>
@@ -172,5 +196,22 @@ export const useVCStore = create<VCStore>((set, get) => {
     handleFileUpload: (files) => handleFiles(files),
     handleTextChange: (id, newText) => get().updateItem(id, { text: newText }),
     handlePlay: (id) => console.log('Play item:', id),
+
+    // URL 정리를 위한 메서드 추가
+    cleanupAudioUrl: (id: string) => {
+      const item = get().items.find((item) => item.id === id);
+      if (item?.originalAudioUrl) {
+        URL.revokeObjectURL(item.originalAudioUrl);
+      }
+    },
+
+    // 모든 URL 정리
+    cleanupAllAudioUrls: () => {
+      get().items.forEach((item) => {
+        if (item.originalAudioUrl) {
+          URL.revokeObjectURL(item.originalAudioUrl);
+        }
+      });
+    },
   };
 });

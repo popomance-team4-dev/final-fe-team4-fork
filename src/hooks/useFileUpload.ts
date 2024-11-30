@@ -14,14 +14,29 @@ export const FILE_TYPES_TO_KOREAN = {
 
 export type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[keyof typeof ALLOWED_FILE_TYPES];
 
+// 파일 처리 타입 정의
+type FileProcessor<T> = (file: File) => Promise<T>;
+
+// 파일 처리기 인터페이스
+interface FileProcessors {
+  audio: FileProcessor<File>;
+  text: FileProcessor<string>;
+}
+
+// 파일 타입별 처리 로직
+const fileProcessors: FileProcessors = {
+  audio: async (file: File) => file,
+  text: async (file: File) => file.text(),
+};
+
 interface UseFileUploadOptions<T> {
   maxSizeInMB: number;
   allowedTypes: AllowedFileType[];
   onSuccess: (result: T[]) => void;
   onError?: (error: string) => void;
-  multiple?: boolean; // 다중 파일 업로드 허용 여부
-  accept?: string; // input accept 속성
-  type?: 'audio' | 'text'; // 파일 타입에 따른 처리 구분
+  multiple?: boolean;
+  accept?: string;
+  type: keyof FileProcessors;
 }
 
 export const useFileUpload = <T>({
@@ -31,7 +46,7 @@ export const useFileUpload = <T>({
   onError,
   multiple = true,
   accept,
-  type = 'audio',
+  type,
 }: UseFileUploadOptions<T>) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,52 +66,57 @@ export const useFileUpload = <T>({
     [maxSizeInMB, allowedTypes]
   );
 
+  const processFiles = useCallback(
+    async (files: File[]) => {
+      const processor = fileProcessors[type] as FileProcessor<T>;
+      return Promise.all(files.map(processor));
+    },
+    [type]
+  );
+
   const handleFiles = useCallback(
     async (files: FileList | null) => {
-      if (!files?.length) return;
+      if (!files?.length) {
+        return;
+      }
+
       setIsLoading(true);
 
       try {
         const fileArray = Array.from(files);
         fileArray.forEach(validateFile);
 
-        const result: T[] = [];
-
-        for (const file of fileArray) {
-          if (type === 'text' && file.type === ALLOWED_FILE_TYPES.TEXT) {
-            const text = await file.text();
-            result.push(text as T);
-          } else if (
-            type === 'audio' &&
-            (file.type === ALLOWED_FILE_TYPES.WAV || file.type === ALLOWED_FILE_TYPES.MP3)
-          ) {
-            result.push(file as T);
-          }
-        }
-
-        onSuccess(result);
+        const result = await processFiles(fileArray);
+        onSuccess(result as T[]);
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '파일 업로드에 실패했습니다.';
         if (onError) {
-          onError(error instanceof Error ? error.message : '파일 업로드에 실패했습니다.');
+          onError(errorMessage);
         } else {
-          alert(error instanceof Error ? error.message : '파일 업로드에 실패했습니다.');
+          alert(errorMessage);
         }
       } finally {
         setIsLoading(false);
       }
     },
-    [validateFile, onSuccess, onError, type]
+    [validateFile, processFiles, onSuccess, onError]
   );
 
   const openFileDialog = useCallback(() => {
     const input = document.createElement('input');
-    input.type = 'file';
-    input.multiple = multiple;
-    input.accept = accept || allowedTypes.join(',');
-    input.onchange = (e) => {
-      const files = (e.target as HTMLInputElement).files;
+    const inputConfig = {
+      type: 'file',
+      multiple,
+      accept: accept || allowedTypes.join(','),
+    };
+
+    Object.assign(input, inputConfig);
+
+    input.onchange = ({ target }) => {
+      const { files } = target as HTMLInputElement;
       handleFiles(files);
     };
+
     input.click();
   }, [multiple, accept, allowedTypes, handleFiles]);
 
@@ -164,10 +184,14 @@ export const useAudioUpload = (
   });
 };
 
-export const useTextUpload = (onSuccess: (texts: string[]) => void) => {
+export const useTextUpload = (
+  onSuccess: (texts: string[]) => void,
+  options?: { onError?: (error: string) => void }
+) => {
   return useFileUpload<string>({
     ...CONFIG.text,
     type: 'text',
     onSuccess,
+    onError: options?.onError,
   });
 };

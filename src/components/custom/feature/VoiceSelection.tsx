@@ -171,8 +171,11 @@ const VoiceSelection = ({
   const { handleFiles, isLoading } = useFileUpload<File>({
     maxSizeInMB: 10,
     allowedTypes: [ALLOWED_FILE_TYPES.WAV, ALLOWED_FILE_TYPES.MP3],
+    type: 'audio',
     onSuccess: (files) => {
-      if (files[0]) onVoiceUpload(files[0]);
+      if (files[0]) {
+        onVoiceUpload(files[0]);
+      }
     },
   });
 

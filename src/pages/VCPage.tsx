@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
 import MainContents, { MainContentsItem } from '@/components/section/contents/MainContents';
@@ -23,7 +23,14 @@ const VCPage = () => {
     handleFileUpload,
     handleTextChange,
     handlePlay,
+    cleanupAllAudioUrls,
   } = useVCStore();
+
+  useEffect(() => {
+    return () => {
+      cleanupAllAudioUrls();
+    };
+  }, [cleanupAllAudioUrls]);
 
   const handleVoiceConversion = useCallback(() => {
     if (!selectedVoice) return;

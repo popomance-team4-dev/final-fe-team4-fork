@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
-import { TbDotsVertical, TbEdit, TbTrash } from 'react-icons/tb';
+import { TbDotsVertical, TbEdit, TbPlayerPause, TbPlayerPlay, TbTrash } from 'react-icons/tb';
 
-import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
@@ -90,8 +89,7 @@ const VoiceCard = ({ voice, isSelected, onSelect, onDelete, onEdit }: VoiceCardP
           </div>
           <div className="flex items-center gap-1">
             {voice.audioUrl && (
-              <PlayButton
-                isPlaying={isPlaying}
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
                   if (isPlaying) {
@@ -100,8 +98,14 @@ const VoiceCard = ({ voice, isSelected, onSelect, onDelete, onEdit }: VoiceCardP
                     handlePlay();
                   }
                 }}
-                className="w-5 h-5"
-              />
+                className="w-7 h-7 flex items-center justify-center hover:bg-gray-100 rounded-full"
+              >
+                {isPlaying ? (
+                  <TbPlayerPause className="w-5 h-5 text-gray-800" />
+                ) : (
+                  <TbPlayerPlay className="w-5 h-5 text-gray-800" />
+                )}
+              </button>
             )}
             {(onDelete || onEdit) && (
               <DropdownMenu>

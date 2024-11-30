@@ -153,7 +153,7 @@ const SortableRow: React.FC<ListRowProps> = ({
             <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
           </div>
           <div className="flex items-center gap-2">
-            <PlayButton isPlaying={isPlaying} onClick={handlePlayClick} className="mx-2 w-5 h-5" />
+            <PlayButton isPlaying={isPlaying} onClick={handlePlayClick} className="mx-2 w-6 h-6" />
           </div>
           <div className="ml-4 truncate">{fileName}</div>
           <Textarea
@@ -219,7 +219,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
       <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,auto,192px,1fr] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
         <div className="w-6" />
         <div className="w-4 ml-2 mr-2" />
-        <div className="w-4 ml-2 mr-2" />
+        <div className="w-4 ml-2 mr-3" />
         <div>파일명</div>
         <div>텍스트</div>
       </div>

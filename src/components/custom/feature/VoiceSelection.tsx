@@ -9,6 +9,7 @@ import {
 } from 'react-icons/tb';
 
 import { RadioGroup } from '@/components/ui/radio-group';
+import { ALLOWED_FILE_TYPES, useFileUpload } from '@/hooks/useFileUpload';
 import { usePagination } from '@/hooks/usePagination';
 
 import VoiceCard from '../cards/VoiceCard';
@@ -167,17 +168,13 @@ const VoiceSelection = ({
   onVoiceDelete,
   onVoiceEdit,
 }: VoiceSelectionProps) => {
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      if (file.size > 10 * 1024 * 1024) {
-        alert('파일 크기는 10MB를 초과할 수 없습니다.');
-        return;
-      }
-      onVoiceUpload(file);
-    }
-  };
+  const { handleFiles, isLoading } = useFileUpload<File>({
+    maxSizeInMB: 10,
+    allowedTypes: [ALLOWED_FILE_TYPES.WAV, ALLOWED_FILE_TYPES.MP3],
+    onSuccess: (files) => {
+      if (files[0]) onVoiceUpload(files[0]);
+    },
+  });
 
   return (
     <div className="w-full">
@@ -193,14 +190,14 @@ const VoiceSelection = ({
               id="voice-upload-header"
               className="hidden"
               accept="audio/*"
-              onChange={handleFileSelect}
+              onChange={(e) => handleFiles(e.target.files)}
             />
             <label
               htmlFor="voice-upload-header"
               className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-50 h-9 px-4 py-2 cursor-pointer"
             >
               <TbPlus className="w-4 h-4" />
-              파일 추가
+              {isLoading ? '업로드 중...' : '파일 추가'}
             </label>
           </div>
         </div>

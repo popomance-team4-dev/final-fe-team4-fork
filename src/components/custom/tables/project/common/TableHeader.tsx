@@ -3,8 +3,10 @@ import { TbCirclePlus, TbTrash } from 'react-icons/tb';
 
 import { UploadAudioButton, UploadTextButton } from '@/components/custom/buttons/IconButton';
 import ViewButtonGroup from '@/components/custom/buttons/ViewFilterButton';
+import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { VC_TOOLTIP } from '@/constants/tooltips';
 import { cn } from '@/lib/utils';
 
 interface TableHeaderProps {
@@ -18,6 +20,7 @@ interface TableHeaderProps {
   type?: 'TTS' | 'VC' | 'CONCAT';
   onFileUpload: (files: FileList | null) => void;
   isLoading?: boolean;
+  hasAudioFile?: boolean;
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -31,6 +34,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   type = 'TTS',
   onFileUpload,
   isLoading,
+  hasAudioFile = false,
 }) => (
   <div className={cn('flex flex-col bg-white', !isListView ? 'rounded-md border' : 'border-b')}>
     <div className="flex items-center justify-between px-6 py-3">
@@ -55,25 +59,69 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
         )}
       </div>
       <div className="flex items-center gap-4">
-        {(type === 'VC' || type === 'TTS' || type === 'CONCAT') && (
-          <UploadTextButton
-            onClick={() => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = '.txt';
-              input.multiple = true;
-              input.onchange = (e) => {
-                onFileUpload((e.target as HTMLInputElement).files);
-              };
-              input.click();
-            }}
-            isLoading={isLoading}
-          />
-        )}
-        {type === 'TTS' ? (
-          <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
+        {type === 'VC' ? (
+          <div className="flex items-center gap-4">
+            <UploadAudioButton onClick={onAdd} />
+            <div className="flex items-center gap-2">
+              <TooltipWrapper
+                content={
+                  hasAudioFile ? VC_TOOLTIP.UPLOAD_TEXT.ENABLED : VC_TOOLTIP.UPLOAD_TEXT.DISABLED
+                }
+              >
+                <div>
+                  <UploadTextButton
+                    onClick={() => {
+                      if (!hasAudioFile) return;
+                      const input = document.createElement('input');
+                      input.type = 'file';
+                      input.accept = '.txt';
+                      input.multiple = true;
+                      input.onchange = (e) => {
+                        onFileUpload((e.target as HTMLInputElement).files);
+                      };
+                      input.click();
+                    }}
+                    isLoading={isLoading}
+                    disabled={!hasAudioFile}
+                  />
+                </div>
+              </TooltipWrapper>
+            </div>
+          </div>
+        ) : type === 'TTS' ? (
+          <>
+            <UploadTextButton
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt';
+                input.multiple = true;
+                input.onchange = (e) => {
+                  onFileUpload((e.target as HTMLInputElement).files);
+                };
+                input.click();
+              }}
+              isLoading={isLoading}
+            />
+            <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
+          </>
         ) : (
-          <UploadAudioButton onClick={onAdd} />
+          <>
+            <UploadTextButton
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt';
+                input.multiple = true;
+                input.onchange = (e) => {
+                  onFileUpload((e.target as HTMLInputElement).files);
+                };
+                input.click();
+              }}
+              isLoading={isLoading}
+            />
+            <UploadAudioButton onClick={onAdd} />
+          </>
         )}
       </div>
     </div>

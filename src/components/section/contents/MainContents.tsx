@@ -39,6 +39,7 @@ interface MainContentsProps {
   onSearch?: (searchTerm: string) => void;
   onFilter?: () => void;
   onFileUpload?: (files: FileList | null) => void;
+  hasAudioFile?: boolean;
 }
 
 const MainContents = ({
@@ -61,6 +62,7 @@ const MainContents = ({
   onSearch,
   onFilter,
   onFileUpload,
+  hasAudioFile,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
 
@@ -135,6 +137,7 @@ const MainContents = ({
             onReorder={onReorder}
             type={type === 'TTS' ? undefined : type}
             onFileUpload={onFileUpload}
+            hasAudioFile={hasAudioFile}
           />
         </div>
         <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>

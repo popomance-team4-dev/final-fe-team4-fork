@@ -1,5 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useEffect } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
@@ -59,9 +60,13 @@ const SortableRow: React.FC<ListRowProps> = ({
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  // useEffect(() => {
-  //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출
-  // }, []);
+  useEffect(() => {
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach((textarea) => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
+  }, [text]);
 
   if (type === 'TTS') {
     return (
@@ -87,7 +92,7 @@ const SortableRow: React.FC<ListRowProps> = ({
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
             placeholder="텍스트를 입력하세요."
-            className="flex-1 ml-2 mr-4 min-h-[40px] border-0 overflow-hidden"
+            className="flex-1 ml-2 mr-4 min-h-[40px] border-0 overflow-visible resize-none"
             rows={1}
           />
           <div className="flex gap-6">
@@ -141,7 +146,7 @@ const SortableRow: React.FC<ListRowProps> = ({
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
             placeholder="텍스트를 입력하세요."
-            className="flex-1 min-h-[40px] border-0 overflow-hidden w-full"
+            className="flex-1 min-h-[40px] border-0 overflow-visible resize-none w-full"
             rows={1}
           />
         </div>

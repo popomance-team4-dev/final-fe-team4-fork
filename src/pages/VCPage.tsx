@@ -110,6 +110,8 @@ const VCPage = () => {
     }
   );
 
+  const hasAudioFile = items.length > 0;
+
   return (
     <PageLayout
       variant="project"
@@ -140,6 +142,7 @@ const VCPage = () => {
         onSelectAll={handleSelectAll}
         isAllSelected={items.every((item) => item.isSelected)}
         onFileUpload={handleFileUpload}
+        hasAudioFile={hasAudioFile}
       />
     </PageLayout>
   );

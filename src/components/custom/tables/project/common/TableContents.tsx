@@ -32,6 +32,7 @@ interface TableContentsProps {
   type?: 'TTS' | 'VC' | 'CONCAT';
   onReorder?: (items: TableItem[]) => void;
   onFileUpload?: (files: FileList | null) => void;
+  hasAudioFile?: boolean;
 }
 
 export const TableContents: React.FC<TableContentsProps> = ({
@@ -48,6 +49,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
   type,
   onReorder,
   onFileUpload,
+  hasAudioFile,
 }) => {
   const [isListView, setIsListView] = React.useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -147,6 +149,7 @@ export const TableContents: React.FC<TableContentsProps> = ({
           type={type}
           onFileUpload={onFileUpload || handleFileChange}
           isLoading={isLoading}
+          hasAudioFile={hasAudioFile}
         />
         <div className="flex-1 min-h-0">
           {items.length === 0 ? (

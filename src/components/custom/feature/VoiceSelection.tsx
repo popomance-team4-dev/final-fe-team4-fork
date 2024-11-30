@@ -1,7 +1,6 @@
-import { TbChevronLeft, TbChevronRight, TbMicrophone, TbUpload } from 'react-icons/tb';
+import { TbChevronLeft, TbChevronRight, TbMicrophone, TbPlus, TbUpload } from 'react-icons/tb';
 
 import { RadioGroup } from '@/components/ui/radio-group';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePagination } from '@/hooks/usePagination';
 
 import VoiceCard from '../cards/VoiceCard';
@@ -106,7 +105,7 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[300px] border border-gray-200 rounded-lg bg-white">
+    <div className="flex flex-col items-center justify-center h-[300px] bg-white">
       <div className="flex flex-col items-center gap-1 mb-6">
         <div className="p-3 rounded-full bg-gray-50 mb-2">
           <TbMicrophone className="w-6 h-6 text-primary" />
@@ -134,7 +133,6 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
 };
 
 const VoiceSelection = ({
-  presetVoices,
   customVoices,
   selectedVoice,
   onVoiceSelect,
@@ -142,41 +140,56 @@ const VoiceSelection = ({
   onVoiceDelete,
   onVoiceEdit,
 }: VoiceSelectionProps) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        alert('파일 크기는 10MB를 초과할 수 없습니다.');
+        return;
+      }
+      onVoiceUpload(file);
+    }
+  };
+
   return (
-    <Tabs defaultValue="preset" className="w-full">
-      <TabsList className="w-full mb-3">
-        <TabsTrigger value="preset" className="flex-1">
-          프리셋
-        </TabsTrigger>
-        <TabsTrigger value="custom" className="flex-1">
-          내 음성
-        </TabsTrigger>
-      </TabsList>
+    <div className="w-full">
+      {customVoices.length > 0 && (
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm">내 음성 목록</h2>
+          <div className="flex items-center gap-2">
+            <input
+              type="file"
+              id="voice-upload-header"
+              className="hidden"
+              accept="audio/*"
+              onChange={handleFileSelect}
+            />
+            <label
+              htmlFor="voice-upload-header"
+              className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-50 h-9 px-4 py-2 cursor-pointer"
+            >
+              <TbPlus className="w-4 h-4" />
+              파일 추가
+            </label>
+          </div>
+        </div>
+      )}
 
       <div className="h-[358px]">
-        <TabsContent value="preset">
+        {customVoices.length > 0 ? (
           <PresetVoiceList
-            voices={presetVoices}
+            voices={customVoices}
             selectedVoice={selectedVoice}
             onVoiceSelect={onVoiceSelect}
+            onDelete={onVoiceDelete}
+            onEdit={onVoiceEdit}
           />
-        </TabsContent>
-
-        <TabsContent value="custom">
-          {customVoices.length > 0 ? (
-            <PresetVoiceList
-              voices={customVoices}
-              selectedVoice={selectedVoice}
-              onVoiceSelect={onVoiceSelect}
-              onDelete={onVoiceDelete}
-              onEdit={onVoiceEdit}
-            />
-          ) : (
-            <CustomVoiceUpload onUpload={onVoiceUpload} />
-          )}
-        </TabsContent>
+        ) : (
+          <CustomVoiceUpload onUpload={onVoiceUpload} />
+        )}
       </div>
-    </Tabs>
+    </div>
   );
 };
 

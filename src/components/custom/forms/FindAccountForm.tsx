@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 
-import { findID, findPassword } from '@/api/findAPI';
+import { findID, findPassword } from '@/api/profileAPI';
+import { ResultDialog } from '@/components/custom/dialogs/FindResultDialog';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
 interface FindAccountProps {
@@ -54,11 +48,11 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
           phoneNumber: formData.phone,
         });
 
-        if (response.data.success && response.data.data.email) {
-          setResultMessage(`찾으시는 아이디는 ${response.data.email} 입니다.`);
+        if (response.data.email) {
+          setResultMessage(`찾으시는 아이디는 [ ${response.data.email} ] 입니다.`);
           setResultDialogOpen(true);
         } else {
-          throw new Error('일치하는 사용자 정보를 찾을 수 없습니다.');
+          throw new Error(response.data?.message || '일치하는 사용자 정보를 찾을 수 없습니다.');
         }
       } else {
         if (!formData.email || !formData.phone) {
@@ -70,19 +64,19 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
           phoneNumber: formData.phone,
         });
 
-        if (response.data.success && response.data.password) {
-          setResultMessage(`임시 비밀번호는 ${response.data.password} 입니다.`);
+        if (response.data.password) {
+          setResultMessage(`임시 비밀번호는 [ ${response.data.password} ] 입니다.`);
           setResultDialogOpen(true);
         } else {
-          throw new Error('일치하는 사용자 정보를 찾을 수 없습니다.');
+          setError(response.data?.message || '일치하는 사용자 정보를 찾을 수 없습니다.');
         }
       }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다. 다시 시도해주세요.';
+
       setError(errorMessage);
-      setResultMessage(errorMessage);
-      setResultDialogOpen(true);
+      setResultDialogOpen(false);
     }
   };
 
@@ -144,19 +138,12 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
         </Button>
       </div>
 
-      <Dialog open={resultDialogOpen} onOpenChange={setResultDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{type === 'ID' ? '아이디 찾기 결과' : '비밀번호 찾기 결과'}</DialogTitle>
-            <DialogDescription>{resultMessage}</DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setResultDialogOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ResultDialog
+        open={resultDialogOpen}
+        onOpenChange={setResultDialogOpen}
+        title={type === 'ID' ? '아이디 찾기 결과' : '비밀번호 찾기 결과'}
+        message={resultMessage}
+      />
     </>
   );
 };

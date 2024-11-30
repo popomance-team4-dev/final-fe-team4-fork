@@ -39,10 +39,11 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   <div className={cn('flex flex-col bg-white', !isListView ? 'rounded-md border' : 'border-b')}>
     <div className="flex items-center justify-between px-6 py-3">
       <div className="flex items-center space-x-4">
-        <div className="flex items-center mr-9 cursor-pointer" onClick={() => onSelectAll?.()}>
+        <div className="flex items-center mr-9">
           <Checkbox
+            id="select-all"
             checked={itemCount > 0 && isAllSelected}
-            onCheckedChange={onSelectAll}
+            onCheckedChange={() => onSelectAll?.()}
             className="cursor-pointer"
           />
         </div>

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 
-import { useAudioUpload, useTextUpload } from '@/hooks/useFileUpload';
 import { VCItem } from '@/types/table';
 
 interface Alert {
@@ -39,15 +38,79 @@ interface VCStore {
   handlePlay: (id: string) => void;
 }
 
+// useFileUpload hooks의 로직을 store에 맞게 재구현
+const handleAudioUpload = (
+  onSuccess: (items: VCItem[]) => void,
+  onError: (error: string) => void
+) => {
+  const validateAudioFile = (file: File) => {
+    const allowedTypes = ['audio/wav', 'audio/mpeg'];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('WAV, MP3 파일만 업로드할 수 있습니다.');
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error('파일 크기는 10MB를 초과할 수 없습니다.');
+    }
+  };
+
+  const openFileDialog = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'audio/*';
+    input.multiple = true;
+
+    input.onchange = async (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (!files?.length) return;
+
+      try {
+        // 파일 타입 검증
+        Array.from(files).forEach(validateAudioFile);
+
+        const newItems: VCItem[] = Array.from(files).map((file) => ({
+          id: crypto.randomUUID(),
+          fileName: file.name,
+          file,
+          text: '',
+          isSelected: false,
+          status: '대기중' as const,
+          originalAudioUrl: URL.createObjectURL(file),
+        }));
+
+        onSuccess(newItems);
+      } catch (error) {
+        onError(error instanceof Error ? error.message : '파일 업로드 중 오류가 발생했습니다.');
+      }
+    };
+
+    input.click();
+  };
+
+  return { openFileDialog };
+};
+
+const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
+  const handleFiles = async (files: FileList | null) => {
+    if (!files?.length) return;
+
+    try {
+      const texts = await Promise.all(Array.from(files).map((file) => file.text()));
+      onSuccess(texts);
+    } catch (error) {
+      console.error('텍스트 파일 처리 중 오류:', error);
+    }
+  };
+
+  return { handleFiles };
+};
+
 export const useVCStore = create<VCStore>((set, get) => {
-  // 오디오 업로드 설정
-  const { openFileDialog } = useAudioUpload(
+  const { openFileDialog } = handleAudioUpload(
     (newItems) => get().addItems(newItems),
     (error) => get().showAlert(error, 'destructive')
   );
 
-  // 텍스트 업로드 설정
-  const { handleFiles } = useTextUpload((texts) => {
+  const { handleFiles } = handleTextUpload((texts) => {
     const { items, updateItem } = get();
     items.forEach((item) => {
       if (item.isSelected) {

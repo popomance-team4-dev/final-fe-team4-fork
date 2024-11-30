@@ -194,7 +194,7 @@ const VoiceSelection = ({
             />
             <label
               htmlFor="voice-upload-header"
-              className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-50 h-9 px-4 py-2 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white border border-gray-200 hover:bg-gray-50 h-9 p-2 cursor-pointer"
             >
               <TbPlus className="w-4 h-4" />
               {isLoading ? '업로드 중...' : '파일 추가'}

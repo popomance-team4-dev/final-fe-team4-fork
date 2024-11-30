@@ -79,7 +79,7 @@ const VCPage = () => {
         onAdd={handleAdd}
         onPlay={handlePlay}
         onSelectAll={toggleSelectAll}
-        isAllSelected={items.every((item) => item.isSelected)}
+        isAllSelected={items.length > 0 && items.every((item) => item.isSelected)}
         onFileUpload={handleFileUpload}
         hasAudioFile={hasAudioFile}
       />

@@ -1,4 +1,12 @@
-import { TbChevronLeft, TbChevronRight, TbMicrophone, TbPlus, TbUpload } from 'react-icons/tb';
+import {
+  TbChevronLeft,
+  TbChevronRight,
+  TbClock,
+  TbMicrophone,
+  TbPlus,
+  TbUpload,
+  TbVolume,
+} from 'react-icons/tb';
 
 import { RadioGroup } from '@/components/ui/radio-group';
 import { usePagination } from '@/hooks/usePagination';
@@ -105,8 +113,36 @@ const CustomVoiceUpload = ({ onUpload }: { onUpload: (file: File) => void }) => 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[300px] bg-white">
-      <div className="flex flex-col items-center gap-1 mb-6">
+    <div className="flex flex-col items-center bg-white">
+      <div className="w-full max-w-md px-0 mb-4">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-100">
+          <ul className="space-y-3">
+            {[
+              {
+                icon: <TbMicrophone className="w-4 h-4" />,
+                text: '깨끗한 음질의 음성 파일을\n준비해주세요.',
+              },
+              {
+                icon: <TbVolume className="w-4 h-4" />,
+                text: '배경 소음이 없는 음성 파일을 권장합니다.',
+              },
+              {
+                icon: <TbClock className="w-4 h-4" />,
+                text: '30초 이상의 음성 파일을\n권장합니다.',
+              },
+            ].map((item, index) => (
+              <li key={index} className="flex items-center space-x-2">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-blue-100/50">
+                  {item.icon}
+                </div>
+                <span className="text-sm text-blue-800 whitespace-pre-line">{item.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center gap-1 my-8">
         <div className="p-3 rounded-full bg-gray-50 mb-2">
           <TbMicrophone className="w-6 h-6 text-primary" />
         </div>
@@ -176,7 +212,7 @@ const VoiceSelection = ({
         </div>
       )}
 
-      <div className="h-[358px]">
+      <div className="min-h-[400px]">
         {customVoices.length > 0 ? (
           <PresetVoiceList
             voices={customVoices}

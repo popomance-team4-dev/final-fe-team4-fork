@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { AudioPlayer } from '@/components/custom/feature/common/AudioPlayer';
+import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents, { MainContentsItem } from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import VCSidebar from '@/components/section/sidebar/VCSidebar';

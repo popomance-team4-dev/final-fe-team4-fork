@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
-import { AudioPlayer, PlayerMode } from '@/components/custom/feature/common/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/tts/SoundStatus';
+import { AudioPlayer, PlayerMode } from '@/components/custom/features/common/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/features/tts/SoundStatus';
 import TTSPlaybackHistory from '@/components/custom/tables/project/tts/TTSPlaybackHistory';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';

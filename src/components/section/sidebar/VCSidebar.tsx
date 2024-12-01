@@ -6,7 +6,7 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
-import VoiceSelection from '@/components/custom/feature/vc/VoiceSelection';
+import VoiceSelection from '@/components/custom/features/vc/VoiceSelection';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Label } from '@/components/ui/label';
 import { VC_TOOLTIP } from '@/constants/tooltips';

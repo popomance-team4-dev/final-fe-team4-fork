@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TbHistory } from 'react-icons/tb';
 
 import AudioHistoryDialog from '@/components/custom/dialogs/AudioHistoryDialog';
-import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
+import { AudioPlayer } from '@/components/custom/feature/common/AudioPlayer';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';

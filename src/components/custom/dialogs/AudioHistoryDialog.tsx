@@ -1,7 +1,7 @@
 import React from 'react';
 import { TbTrash, TbX } from 'react-icons/tb';
 
-import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
+import { AudioPlayer } from '@/components/custom/feature/common/AudioPlayer';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DialogClose, DialogContent, DialogPortal, DialogTitle } from '@/components/ui/dialog';
 

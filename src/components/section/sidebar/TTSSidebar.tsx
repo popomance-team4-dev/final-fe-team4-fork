@@ -6,7 +6,7 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
-import { StateController } from '@/components/custom/feature/StateController';
+import { StateController } from '@/components/custom/feature/common/StateController';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';

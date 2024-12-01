@@ -7,8 +7,8 @@ import {
   RecreateButton,
   TTSPlaybackHistoryButton,
 } from '@/components/custom/buttons/IconButton';
-import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
+import { AudioPlayer } from '@/components/custom/feature/common/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/tts/SoundStatus';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';

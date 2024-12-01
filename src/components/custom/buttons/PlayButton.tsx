@@ -27,7 +27,7 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps>(
         ref={ref}
         className={cn(
           'flex items-center justify-center',
-          'h-[27px] w-[27px] rounded-full',
+          'w-8 h-8 rounded-full',
           'bg-blue-900 hover:bg-blue-800',
           'transition-colors duration-200',
           className

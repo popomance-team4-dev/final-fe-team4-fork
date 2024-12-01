@@ -1,8 +1,8 @@
 import { Checkbox } from '@radix-ui/react-checkbox';
 import { TbX } from 'react-icons/tb';
 
-import { AudioPlayer, PlayerMode } from '@/components/custom/feature/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
+import { AudioPlayer, PlayerMode } from '@/components/custom/features/common/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/features/tts/SoundStatus';
 
 import HistoryTree from './TTSHistoryTree';
 

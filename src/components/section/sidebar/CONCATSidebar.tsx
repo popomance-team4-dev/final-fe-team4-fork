@@ -6,7 +6,7 @@ import {
   ApplySelectionButton,
   ResetChangesButton,
 } from '@/components/custom/buttons/IconButton';
-import { StateController } from '@/components/custom/feature/StateController';
+import { StateController } from '@/components/custom/features/common/StateController';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { CONCAT_TOOLTIP } from '@/constants/tooltips';
 
@@ -58,7 +58,7 @@ const CONCATSidebar: React.FC = () => {
       </div>
 
       {/* 적용 버튼들 */}
-      <div className="absolute bottom-0 flex flex-col gap-4 mb-[82px] ">
+      <div className="absolute bottom-0 flex flex-col gap-4 mb-[102px] ">
         <TooltipWrapper content={CONCAT_TOOLTIP.APPLY_SELECTED}>
           <div>
             <ApplySelectionButton />

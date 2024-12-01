@@ -7,8 +7,8 @@ import {
   RecreateButton,
   TTSPlaybackHistoryButton,
 } from '@/components/custom/buttons/IconButton';
-import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
-import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/feature/SoundStatus';
+import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
+import { SoundStatus, UNIT_SOUND_STATUS_TYPES } from '@/components/custom/features/tts/SoundStatus';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
@@ -73,11 +73,18 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-between flex-1">
             <div className="flex items-center gap-5">
-              <Checkbox
-                checked={props.isSelected}
-                onCheckedChange={() => props.onSelectionChange(props.id)}
-                className="ml-2 mr-4"
-              />
+              <div className="flex items-center cursor-pointer relative">
+                <Checkbox
+                  checked={props.isSelected}
+                  onCheckedChange={() => props.onSelectionChange(props.id)}
+                  className="cursor-pointer ml-2 mr-4"
+                  id={`checkbox-grid-${props.id}`}
+                />
+                <div
+                  className="absolute inset-0"
+                  onClick={() => props.onSelectionChange(props.id)}
+                />
+              </div>
 
               <div className="flex gap-5">
                 {props.speed !== undefined && (

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { AudioPlayer } from '@/components/custom/feature/AudioPlayer';
+import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATSidebar';

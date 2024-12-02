@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { TbSettings } from 'react-icons/tb';
 
-import {
-  ApplyAllButton,
-  ApplySelectionButton,
-  ResetChangesButton,
-} from '@/components/custom/buttons/IconButton';
+import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import VoiceSelection from '@/components/custom/features/vc/VoiceSelection';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Label } from '@/components/ui/label';
 import { VC_TOOLTIP } from '@/constants/tooltips';
+import { useVCStore } from '@/stores/vc.store';
 
 interface TargetVoice {
   id: string;
@@ -19,17 +16,9 @@ interface TargetVoice {
   type: 'custom';
 }
 
-interface VCSidebarProps {
-  selectedVoice: string;
-  onVoiceSelect: (voice: string) => void;
-  onApplyConversion: () => void;
-}
+const VCSidebar: React.FC = () => {
+  const { selectedVoice, setSelectedVoice, applyToSelected } = useVCStore();
 
-const VCSidebar: React.FC<VCSidebarProps> = ({
-  selectedVoice,
-  onVoiceSelect,
-  onApplyConversion,
-}) => {
   const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
 
   const handleVoiceUpload = (files: File[]) => {
@@ -77,7 +66,7 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
           <VoiceSelection
             customVoices={customVoices}
             selectedVoice={selectedVoice}
-            onVoiceSelect={onVoiceSelect}
+            onVoiceSelect={setSelectedVoice}
             onVoiceUpload={handleVoiceUpload}
             onVoiceDelete={handleVoiceDelete}
             onVoiceEdit={handleVoiceEdit}
@@ -85,18 +74,10 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
         </div>
 
         <div className="flex flex-col gap-4">
-          <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
+          <TooltipWrapper content={VC_TOOLTIP.APPLY}>
             <div>
-              <ApplySelectionButton
-                onClick={onApplyConversion}
-                className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
-              />
-            </div>
-          </TooltipWrapper>
-          <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
-            <div>
-              <ApplyAllButton
-                onClick={onApplyConversion}
+              <ApplyButton
+                onClick={applyToSelected}
                 className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
               />
             </div>

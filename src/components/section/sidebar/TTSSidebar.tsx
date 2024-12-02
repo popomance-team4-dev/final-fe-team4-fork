@@ -1,11 +1,7 @@
 import { ReactNode } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
-import {
-  ApplyAllButton,
-  ApplySelectionButton,
-  ResetChangesButton,
-} from '@/components/custom/buttons/IconButton';
+import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -119,7 +115,6 @@ const TTSSidebar: React.FC = () => {
     isModified,
     isAllConfigured,
     applyToSelected,
-    applyToAll,
   } = useTTSStore();
 
   return (
@@ -210,20 +205,11 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
+        <TooltipWrapper content={TTS_TOOLTIP.APPLY}>
           <div>
-            <ApplySelectionButton
-              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+            <ApplyButton
               onClick={applyToSelected}
-            />
-          </div>
-        </TooltipWrapper>
-
-        <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
-          <div>
-            <ApplyAllButton
               className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
-              onClick={applyToAll}
             />
           </div>
         </TooltipWrapper>

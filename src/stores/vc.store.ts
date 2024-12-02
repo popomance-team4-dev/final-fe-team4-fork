@@ -48,6 +48,9 @@ interface VCStore {
   // URL 정리를 위한 메서드 추가
   cleanupAudioUrl: (id: string) => void;
   cleanupAllAudioUrls: () => void;
+
+  // 적용 액션 추가
+  applyToSelected: () => void;
 }
 
 // useFileUpload hooks의 로직을 store에 맞게 재구현
@@ -285,6 +288,24 @@ export const useVCStore = create<VCStore>((set, get) => {
         if (item.originalAudioUrl) {
           URL.revokeObjectURL(item.originalAudioUrl);
         }
+      });
+    },
+
+    // 적용 액션 구현
+    applyToSelected: () => {
+      const { items, selectedVoice } = get();
+      if (!selectedVoice) return;
+
+      set({
+        items: items.map((item) =>
+          item.isSelected
+            ? {
+                ...item,
+                targetVoice: selectedVoice,
+                status: '대기중',
+              }
+            : item
+        ),
       });
     },
   };

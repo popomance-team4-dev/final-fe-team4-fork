@@ -1,6 +1,5 @@
 export const TTS_TOOLTIP = {
-  APPLY_SELECTED: '선택한 텍스트에 TTS 설정 적용하기',
-  APPLY_ALL: '모든 텍스트에 TTS 설정 적용하기',
+  APPLY: '선택한 항목에 TTS 설정 적용하기',
   RESET_SETTINGS: 'TTS 설정 변경사항 초기화하기',
   REGENERATE_SELECTED: '선택한 텍스트 재생성하기',
   DOWNLOAD_AUDIO: '선택한 음성 파일 다운로드',
@@ -8,8 +7,7 @@ export const TTS_TOOLTIP = {
 } as const;
 
 export const VC_TOOLTIP = {
-  APPLY_SELECTED: '선택한 항목에 VC 설정 적용하기',
-  APPLY_ALL: '모든 항목에 VC 설정 적용하기',
+  APPLY: '선택한 항목에 VC 설정 적용하기',
   RESET_SETTINGS: 'VC 설정 변경사항 초기화하기',
   UPLOAD_TEXT: {
     ENABLED: '선택된 오디오 파일의 설명 텍스트를 업로드합니다',
@@ -18,8 +16,7 @@ export const VC_TOOLTIP = {
 } as const;
 
 export const CONCAT_TOOLTIP = {
-  APPLY_SELECTED: '선택한 항목에 CONCAT 설정 적용하기',
-  APPLY_ALL: '모든 항목에 CONCAT 설정 적용하기',
+  APPLY: '선택한 항목에 CONCAT 설정 적용하기',
   RESET_SETTINGS: 'CONCAT 설정 변경사항 초기화하기',
 } as const;
 

@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ttsLoad } from '@/api/aIParkAPI';
-import { saveTTSProject } from '@/api/ttsApi';
+import { saveTTSProject, ttsLoad } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import MainContents from '@/components/section/contents/MainContents';
+import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
+import { Button } from '@/components/ui/button';
 import { fileProgressDummy } from '@/constants/dummy';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, useTTSStore } from '@/stores/tts.store';
-
 const TTSPage = () => {
   const {
     items,
@@ -123,20 +122,27 @@ const TTSPage = () => {
             onProjectNameChange={updateProjectName} // 이름 변경 핸들러 추가
             onSave={handleSaveProject}
           />
-          <MainContents
-            type="TTS"
-            items={items}
-            isAllSelected={isAllSelected}
-            onSelectAll={toggleSelectAll}
-            onSelectionChange={toggleSelection}
-            onTextChange={(id, text) => updateItem(id, { text })}
-            onDelete={deleteSelectedItems}
-            onAdd={addItems}
-            onRegenerateItem={(id) => console.log('재생성 항목:', id)}
-            onDownloadItem={(id) => console.log('다운로드 항목:', id)}
-            onPlay={(id) => console.log('재생:', id)}
-            onReorder={handleReorder}
-          />
+          <>
+            <div className={`h-[580px] mt-6 overflow-hidden`}>
+              <TableContents
+                items={items}
+                isAllSelected={isAllSelected}
+                onSelectAll={toggleSelectAll}
+                onSelectionChange={toggleSelection}
+                onTextChange={(id, text) => updateItem(id, { text })}
+                onDelete={deleteSelectedItems}
+                onAdd={addItems}
+                onRegenerateItem={(id) => console.log('재생성 항목:', id)}
+                onDownloadItem={(id) => console.log('다운로드 항목:', id)}
+                onPlay={(id) => console.log('재생:', id)}
+                onReorder={handleReorder}
+                type={'TTS'}
+              />
+            </div>
+            <div className={`TTS mt-12 text-center`}>
+              <Button>{'TTS 생성'}</Button>
+            </div>
+          </>
         </>
       }
     />

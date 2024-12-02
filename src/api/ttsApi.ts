@@ -1,5 +1,11 @@
-import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { ResponseDto, TTSSaveDto, TTSSpecificResponse } from '@/api/aIParkAPI.schemas';
 import { customInstance } from '@/api/axios-client';
+
+/**
+ * TTS 프로젝트를 저장합니다.
+ * @param data: TTSSaveDto
+ * @returns Promise<TTSSpecificResponse>
+ */
 
 export const saveTTSProject = async (data: TTSSaveDto) => {
   try {
@@ -20,3 +26,16 @@ export const saveTTSProject = async (data: TTSSaveDto) => {
     throw error;
   }
 };
+
+/**
+ * TTS 프로젝트 상태를 가져옵니다.
+ * @summary TTS 상태 로드
+ */
+export const ttsLoad = (projectId: number) => {
+  return customInstance<ResponseDto<TTSSpecificResponse>>({
+    url: `/tts/${projectId}`,
+    method: 'GET',
+  });
+};
+
+export type TtsLoadResult = NonNullable<Awaited<ReturnType<typeof ttsLoad>>>;

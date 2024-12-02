@@ -11,6 +11,8 @@ interface StateControllerProps {
   max?: number;
   step?: number;
   onChange?: (value: number) => void;
+  onIncrease?: () => void;
+  onDecrease?: () => void;
 }
 
 const formatValue = (value: number, unit: string) => {
@@ -21,7 +23,10 @@ const formatValue = (value: number, unit: string) => {
 };
 
 const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
-  ({ label, value, unit = '', min = 0, max = 100, step = 1, onChange }, ref) => {
+  (
+    { label, value, unit = '', min = 0, max = 100, step = 1, onChange, onIncrease, onDecrease },
+    ref
+  ) => {
     const handleSliderChange = (newValue: number[]) => {
       onChange?.(newValue[0]);
     };
@@ -29,11 +34,13 @@ const StateController = React.forwardRef<HTMLDivElement, StateControllerProps>(
     const handleDecrease = () => {
       const newValue = Math.max(min, value - step);
       onChange?.(Number(newValue.toFixed(1)));
+      onDecrease?.();
     };
 
     const handleIncrease = () => {
       const newValue = Math.min(max, value + step);
       onChange?.(Number(newValue.toFixed(1)));
+      onIncrease?.();
     };
 
     const formattedValue = formatValue(value, unit);

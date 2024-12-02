@@ -13,6 +13,9 @@ export interface AudioPlayerProps {
   audioUrl: string;
   className?: string;
   mode?: PlayerMode;
+  silentRegions?: { start: number; end: number }[];
+  onSilentRegionAdd?: (region: { start: number; end: number }) => void;
+  onRegionClick?: (index: number, duration: number) => void;
 }
 
 const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(

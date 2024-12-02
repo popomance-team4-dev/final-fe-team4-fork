@@ -17,10 +17,10 @@ export interface ProjectListTableItem {
   order: string;
   projectName: string;
   fileName: string;
-  content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  script: string;
+  projectType: 'VC' | 'TTS' | 'CONCAT';
   status: '진행' | '대기중' | '실패' | '완료';
-  createdAt: string;
+  updatedAt: string;
 }
 
 interface HistoryListTableProps {
@@ -112,14 +112,14 @@ export function HistoryListTable({
                   onPlay={() => onPlay(item.id)}
                   onPause={() => onPause(item.id)}
                 />
-                <AudioBadge type={item.type} />
+                <AudioBadge type={item.projectType} />
               </div>
             </TableCell>
 
             <TableCell className="whitespace-nowrap">{item.projectName}</TableCell>
             <TableCell className="whitespace-nowrap">{item.fileName}</TableCell>
             <TableCell className="max-w-md p-0">
-              <div className="whitespace-nowrap overflow-hidden text-ellipsis">{item.content}</div>
+              <div className="whitespace-nowrap overflow-hidden text-ellipsis">{item.script}</div>
             </TableCell>
             <TableCell>
               <div className="flex justify-center p-0 whitespace-nowrap">
@@ -136,7 +136,7 @@ export function HistoryListTable({
                 </button>
               </div>
             </TableCell>
-            <TableCell className="text-gray-700 whitespace-nowrap">{item.createdAt}</TableCell>
+            <TableCell className="text-gray-700 whitespace-nowrap">{item.updatedAt}</TableCell>
           </TableRow>
         ))}
       </TableBody>

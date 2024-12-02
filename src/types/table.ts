@@ -13,10 +13,10 @@ export interface ProjectListTableItem {
   order: string;
   projectName: string;
   fileName: string;
-  content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  script: string;
+  projectType: 'VC' | 'TTS' | 'CONCAT';
   status: '진행' | '대기중' | '실패' | '완료';
-  createdAt: string;
+  updatedAt: string;
   speed?: number;
   volume?: number;
   pitch?: number;

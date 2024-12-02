@@ -58,9 +58,15 @@ const HistoryPage = () => {
       <MainContents
         type="RECENT"
         items={getCurrentPageItems().map((item) => ({
-          ...item,
-          text: item.content,
+          id: item.id,
+          projectName: item.projectName,
+          projectType: item.projectType as 'TTS' | 'VC' | 'CONCAT',
+          fileName: item.fileName,
+          script: item.script,
+          status: item.status,
+          updatedAt: item.updatedAt,
           isSelected: selectedItems.includes(item.id),
+          text: item.projectName,
         }))}
         isAllSelected={isAllSelected}
         onSelectAll={(checked = false) => handleSelectAll(checked)}

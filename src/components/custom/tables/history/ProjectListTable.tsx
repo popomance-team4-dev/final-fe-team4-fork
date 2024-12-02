@@ -15,10 +15,10 @@ export interface ProjectListTableItem {
   order: string;
   projectName: string;
   fileName: string;
-  content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  script: string;
+  projectType: 'VC' | 'TTS' | 'CONCAT';
   status: '진행' | '대기중' | '실패' | '완료';
-  createdAt: string;
+  updatedAt: string;
 }
 
 interface ProjectListTableProps {
@@ -59,8 +59,8 @@ export function ProjectListTable({
               onCheckedChange={(checked) => onSelectAll(checked as boolean)}
             />
           </TableHead>
-          <TableHead className="pl-14 text-body3 text-black w-[100px]">목소리</TableHead>
-          <TableHead className="text-body3 text-black w-[100px]">유형</TableHead>
+
+          <TableHead className="pl-[85px] text-body3 text-black w-[100px]">유형</TableHead>
           <TableHead className="text-body3 text-black w-[150px]">프로젝트명</TableHead>
           <TableHead className="text-body3 text-black w-[300px]">내용</TableHead>
           <TableHead className="pl-6 text-body3 text-black w-[150px]">업데이트 날짜</TableHead>
@@ -82,23 +82,20 @@ export function ProjectListTable({
               />
             </TableCell>
             <TableCell className="w-[100px] text-left">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-8">
                 <PlayButton
                   isPlaying={currentPlayingId === item.id}
                   onPlay={() => onPlay(item.id)}
                   onPause={() => onPause(item.id)}
                 />
-                {item.order}
+                <AudioBadge type={item.projectType} />
               </div>
-            </TableCell>
-            <TableCell className="w-[100px]">
-              <AudioBadge type={item.type} />
             </TableCell>
             <TableCell className="text-black w-[150px] text-left ">{item.projectName}</TableCell>
             <TableCell className="max-w-[300px] truncate text-left text-black">
-              {item.content}
+              {item.script}
             </TableCell>
-            <TableCell className="pl-6 w-[150px] text-gray-500">{item.createdAt}</TableCell>
+            <TableCell className="pl-6 w-[150px] text-gray-500">{item.updatedAt}</TableCell>
           </TableRow>
         ))}
       </TableBody>

@@ -5,7 +5,6 @@ import MainHeader from '@/components/section/header/MainHeader';
 import { dummyData } from '@/constants/dummy';
 import { usePagination } from '@/hooks/usePagination';
 import { useTableSelection } from '@/hooks/useTableSelection';
-import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
 
 const HistoryPage = () => {
@@ -42,15 +41,7 @@ const HistoryPage = () => {
   return (
     <PageLayout
       variant="main"
-      header={
-        <MainHeader
-          name="김바타"
-          email="aipark@aipark.ai"
-          imageUrl={jisuImage}
-          onMyPage={() => console.log('마이페이지 이동')}
-          onSignout={() => console.log('로그아웃')}
-        />
-      }
+      header={<MainHeader />}
       footer={
         <PaginationFooter
           currentPage={currentPage}
@@ -67,9 +58,15 @@ const HistoryPage = () => {
       <MainContents
         type="RECENT"
         items={getCurrentPageItems().map((item) => ({
-          ...item,
-          text: item.content,
+          id: item.id,
+          projectName: item.projectName,
+          projectType: item.projectType as 'TTS' | 'VC' | 'CONCAT',
+          fileName: item.fileName,
+          script: item.script,
+          status: item.status,
+          updatedAt: item.updatedAt,
           isSelected: selectedItems.includes(item.id),
+          text: item.projectName,
         }))}
         isAllSelected={isAllSelected}
         onSelectAll={(checked = false) => handleSelectAll(checked)}

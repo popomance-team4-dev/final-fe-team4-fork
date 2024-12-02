@@ -20,10 +20,10 @@ const PageLayout = ({ variant, header, sidebar, footer, children }: PageLayoutPr
   if (variant === 'main') {
     return (
       <div className="flex justify-center bg-white min-h-screen">
-        <div className="flex w-full max-w-[1440px]">
+        <div className="flex w-full">
           <NavSidebar />
           <main className="flex-1 max-w-full w-full h-screen overflow-y-auto">
-            <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
+            <div className="mx-auto flex flex-col min-h-screen">
               {header && <header className="h-[92px] ml-6 border-b">{header}</header>}
               <div className="flex flex-1 h-full ml-6">
                 <div className="flex-col w-full flex">
@@ -43,13 +43,13 @@ const PageLayout = ({ variant, header, sidebar, footer, children }: PageLayoutPr
   // TTS, VC, CONCAT 페이지
   return (
     <div className="flex justify-center bg-white min-h-screen">
-      <div className="flex w-full max-w-[1440px]">
+      <div className="flex w-full">
         {/* 왼쪽 네비게이션 사이드바 */}
         <NavSidebar />
 
         {/* 메인 컨텐츠 영역 */}
         <main className="flex-1 max-w-full w-full h-screen overflow-y-auto">
-          <div className="max-w-[1400px] mx-auto flex flex-col min-h-screen">
+          <div className="mx-auto flex flex-col min-h-screen">
             {/* 헤더 영역 */}
             {header && <header className="h-[92px] ml-6 border-b">{header}</header>}
 

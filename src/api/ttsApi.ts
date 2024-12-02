@@ -8,9 +8,9 @@ export const saveTTSProject = async (data: TTSSaveDto) => {
     const response = await customInstance.post('/tts/save', data);
     console.log('서버 응답:', response.data);
 
-    if (response.data?.ttsProject) {
+    if (response.data?.data.ttsProject) {
       console.log('TTS 프로젝트 저장 성공:', response.data);
-      return response.data; // 서버 응답 데이터 반환
+      return response.data.data; // 서버 응답 데이터 반환
     } else {
       console.error('TTS 프로젝트 저장 실패: 응답 데이터 없음');
       return null;

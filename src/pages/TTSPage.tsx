@@ -10,7 +10,7 @@ import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import { Button } from '@/components/ui/button';
 import { fileProgressDummy } from '@/constants/dummy';
 import PageLayout from '@/layouts/PageLayout';
-import { ttsInitialSettings, useTTSStore } from '@/stores/tts.store';
+import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 const TTSPage = () => {
   const {
     items,
@@ -41,8 +41,9 @@ const TTSPage = () => {
             projectName: ttsProject.projectName,
           });
 
-          const loadedItems = ttsDetails.map((detail) => ({
+          const loadedItems: TTSItem[] = ttsDetails.map((detail) => ({
             id: String(detail.id),
+            enitityId: detail.id,
             text: detail.unitScript || '',
             isSelected: false,
             speed: detail.unitSpeed || ttsInitialSettings.speed,
@@ -69,12 +70,15 @@ const TTSPage = () => {
     try {
       const response = await saveTTSProject({
         ...projectData,
-        ttsDetails: items.map((item) => ({
-          id: parseInt(item.id),
+        ttsDetails: items.map((item, index) => ({
+          id: item.enitityId,
           unitScript: item.text,
           unitSpeed: item.speed,
-          unitVolume: item.volume,
+          unitVolume: item.volume * 0.01,
           unitPitch: item.pitch,
+          unitSequence: index + 1,
+          unitVoiceStyleId: null,
+          isDeleted: false,
         })),
       });
 

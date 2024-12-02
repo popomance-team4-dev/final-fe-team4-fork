@@ -5,6 +5,7 @@ import { TableItem } from '@/types/table';
 
 export interface TTSItem {
   id: string;
+  enitityId: number | null;
   text: string;
   isSelected: boolean;
   speed?: number;
@@ -66,22 +67,22 @@ interface TTSStore {
   handleReorder: (items: TableItem[]) => void;
 }
 
-const initialProjectData: TTSSaveDto = {
+const initialProjectData = {
   projectId: null,
   projectName: '새 프로젝트',
   globalVoiceStyleId: 9,
   fullScript: '',
   globalSpeed: 1.0,
-  globalPitch: 0.5,
-  globalVolume: 0.8,
+  globalPitch: 4.0,
+  globalVolume: 60,
   ttsDetails: [],
 };
 
 export const ttsInitialSettings = {
   // 사이드바 초기값
-  speed: 1.0,
-  volume: 60,
-  pitch: 4.0,
+  speed: initialProjectData.globalSpeed,
+  volume: initialProjectData.globalVolume,
+  pitch: initialProjectData.globalPitch,
   language: '',
   voice: '',
   style: '',
@@ -127,6 +128,7 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
       if (newItems && newItems.length > 0) {
         const mappedItems = newItems.map((item) => ({
           id: crypto.randomUUID(),
+          enitityId: null,
           text: item.text ?? '',
           isSelected: false,
           speed: state.speed ?? ttsInitialSettings.speed,
@@ -137,19 +139,21 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
           style: state.style ?? ttsInitialSettings.style,
         }));
         return { items: [...state.items, ...mappedItems] };
+      } else {
+        const newItem: TTSItem = {
+          id: crypto.randomUUID(),
+          enitityId: null,
+          text: '',
+          isSelected: false,
+          speed: state.speed,
+          volume: state.volume,
+          pitch: state.pitch,
+          language: state.language,
+          voice: state.voice,
+          style: state.style,
+        };
+        return { items: [...state.items, newItem] };
       }
-      const newItem: TTSItem = {
-        id: crypto.randomUUID(),
-        text: '',
-        isSelected: false,
-        speed: state.speed,
-        volume: state.volume,
-        pitch: state.pitch,
-        language: state.language,
-        voice: state.voice,
-        style: state.style,
-      };
-      return { items: [...state.items, newItem] };
     }),
 
   updateItem: (id, updates) =>
@@ -228,6 +232,7 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
   handleReorder: (newItems: TableItem[]) => {
     const convertedItems: TTSItem[] = newItems.map((item) => ({
       id: item.id,
+      enitityId: null,
       text: item.text,
       isSelected: false,
       speed: item.speed ?? ttsInitialSettings.speed,

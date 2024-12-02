@@ -211,12 +211,12 @@ export interface TTSProject {
 
 export interface TTSDetailDto {
   id: number | null;
-  isDeleted?: boolean;
+  isDeleted: boolean;
   unitPitch?: number;
   unitScript?: string;
-  unitSequence?: number;
+  unitSequence: number;
   unitSpeed?: number;
-  unitVoiceStyleId?: number;
+  unitVoiceStyleId: number | null;
   unitVolume?: number;
 }
 

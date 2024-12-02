@@ -1,10 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
+import { signup } from '@/api/authAPI';
+import { checkEmail } from '@/api/profileAPI';
 import TermsDialog from '@/components/custom/dialogs/TermsDialog';
 import TermsAgreement from '@/components/custom/features/auth/TermsAgreement';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -16,17 +27,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { TERMS } from '@/constants/terms';
 import { SignupFormData } from '@/types/signup';
-import { SignupFormRequest, signupFormSchema } from '@/utils/signupSchema';
+import { formatPhoneNumber } from '@/utils/phoneNumber';
+import { signupFormSchema } from '@/utils/signupSchema';
 
 const SignupForm = () => {
+  const navigate = useNavigate();
+  const [successDialog, setSuccessDialog] = useState(false);
+
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
       email: '',
-      password: '',
-      passwordConfirm: '',
+      pwd: '',
+      pwdConfirm: '',
       name: '',
-      phone: '',
+      phoneNumber: '',
       terms: [],
     },
   });
@@ -39,16 +54,37 @@ const SignupForm = () => {
   });
 
   const [isAllTermsFlow, setIsAllTermsFlow] = useState(false);
-
-  const onSubmit = (data: SignupFormData) => {
-    const requestData = SignupFormRequest(data);
-    console.log(requestData);
+  const onSubmit = async (data: SignupFormData) => {
+    try {
+      await signup({
+        email: data.email,
+        name: data.name,
+        pwd: data.pwd,
+        pwdConfirm: data.pwdConfirm,
+        phoneNumber: data.phoneNumber,
+        terms: data.terms.join(','),
+      });
+      setSuccessDialog(true);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : '회원가입에 실패했습니다.');
+    }
   };
 
-  const handleEmailCheck = () => {
+  const handleEmailCheck = async () => {
     const email = form.getValues('email');
-    // api 준비되면 실제 이메일 중복 체크 구현
-    console.log('이메일 중복 체크:', email);
+    try {
+      await checkEmail(email);
+      form.clearErrors('email');
+      form.setError('email', {
+        type: 'manual',
+        message: '사용 가능한 이메일입니다.',
+      });
+    } catch (error) {
+      form.setError('email', {
+        type: 'manual',
+        message: error instanceof Error ? error.message : '이메일 중복 확인에 실패했습니다.',
+      });
+    }
   };
 
   const handleOpenTerms = (type: 'service' | 'privacy', isAll: boolean = false) => {
@@ -63,11 +99,9 @@ const SignupForm = () => {
 
   const handleAgreeTerms = (type: 'service' | 'privacy') => {
     const currentTerms = form.getValues('terms') || [];
-
     if (!currentTerms.includes(type)) {
       form.setValue('terms', [...currentTerms, type], { shouldValidate: true });
     }
-
     if (isAllTermsFlow && type === 'service') {
       setTimeout(() => {
         handleOpenTerms('privacy', true);
@@ -107,7 +141,7 @@ const SignupForm = () => {
 
         <FormField
           control={form.control}
-          name="password"
+          name="pwd"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-black font-medium">
@@ -128,7 +162,7 @@ const SignupForm = () => {
 
         <FormField
           control={form.control}
-          name="passwordConfirm"
+          name="pwdConfirm"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-black font-medium">
@@ -171,17 +205,22 @@ const SignupForm = () => {
 
         <FormField
           control={form.control}
-          name="phone"
+          name="phoneNumber"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-black font-medium">
                 전화번호 <span className="text-red-500">*</span>
+                <span className="text-gray-400"> (비밀번호 찾을 때, 인증이 필요합니다.)</span>
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder="010-0000-0000"
                   className="h-[50px] placeholder:text-gray-100"
                   {...field}
+                  onChange={(e) => {
+                    const formattedNumber = formatPhoneNumber(e.target.value);
+                    field.onChange(formattedNumber);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -203,6 +242,26 @@ const SignupForm = () => {
           type={termsDialog.type}
           onAgree={handleAgreeTerms}
         />
+
+        <Dialog open={successDialog} onOpenChange={setSuccessDialog}>
+          <DialogContent className="sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle>회원가입 완료</DialogTitle>
+              <DialogDescription>회원가입이 성공적으로 완료되었습니다.</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="mt-3">
+              <Button
+                size="sm"
+                onClick={() => {
+                  setSuccessDialog(false);
+                  navigate('/signin');
+                }}
+              >
+                확인
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </form>
     </Form>
   );

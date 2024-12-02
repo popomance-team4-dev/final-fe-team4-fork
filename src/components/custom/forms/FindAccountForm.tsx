@@ -5,6 +5,7 @@ import { sendSMS, verifySMS } from '@/api/smsAPI';
 import { ResultDialog } from '@/components/custom/dialogs/FindResultDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { formatPhoneNumber } from '@/utils/phoneNumber';
 interface FindAccountProps {
   type: 'ID' | 'PW';
 }
@@ -33,24 +34,12 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'phone') {
-      const numbersOnly = value.replace(/[^0-9]/g, '');
-      const trimmedNumbers = numbersOnly.slice(0, 11);
-      let formattedPhone = '';
-      if (trimmedNumbers.length <= 3) {
-        formattedPhone = trimmedNumbers;
-      } else if (trimmedNumbers.length <= 7) {
-        formattedPhone = `${trimmedNumbers.slice(0, 3)}-${trimmedNumbers.slice(3)}`;
-      } else {
-        formattedPhone = `${trimmedNumbers.slice(0, 3)}-${trimmedNumbers.slice(3, 7)}-${trimmedNumbers.slice(7)}`;
-      }
-
       setFormData((prev) => ({
         ...prev,
-        phone: formattedPhone,
+        phone: formatPhoneNumber(value),
       }));
       return;
     }
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,

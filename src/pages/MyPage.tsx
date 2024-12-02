@@ -1,31 +1,23 @@
 import EditProfileForm from '@/components/custom/forms/EditProfileForm';
 import MainHeader from '@/components/section/header/MainHeader';
-import jisuImage from '@/images/avatar/jisu.jpg';
+import { DEFAULT_PROFILE_IMAGE } from '@/constants/images';
 import PageLayout from '@/layouts/PageLayout';
+import { useAuthStore } from '@/stores/auth.store';
 
 const MyPage = () => {
+  const { user } = useAuthStore();
+
   const defaultValues = {
-    email: 'aipark@aipark.ai',
-    name: '김바타',
-    phoneNumber: '010-1234-1234',
+    email: user?.email || '',
+    name: user?.name || '',
+    phoneNumber: user?.phoneNumber || '',
   };
 
   return (
-    <PageLayout
-      variant="main"
-      header={
-        <MainHeader
-          name="김바타"
-          email="aipark@aipark.ai"
-          imageUrl={jisuImage}
-          onMyPage={() => {}}
-          onSignout={() => console.log('로그아웃')}
-        />
-      }
-    >
+    <PageLayout variant="main" header={<MainHeader />}>
       <div className="pl-[120px] pr-8 py-8">
         <h1 className="text-2xl font-bold mb-8">마이페이지</h1>
-        <EditProfileForm defaultValues={defaultValues} avatarUrl={jisuImage} />
+        <EditProfileForm defaultValues={defaultValues} avatarUrl={DEFAULT_PROFILE_IMAGE} />
       </div>
     </PageLayout>
   );

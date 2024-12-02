@@ -1,5 +1,5 @@
 import React from 'react';
-import { TbFilter, TbSearch, TbTrash } from 'react-icons/tb';
+import { TbSearch, TbTrash } from 'react-icons/tb';
 
 import { Input } from '@/components/ui/input';
 
@@ -9,7 +9,6 @@ interface TableToolbarProps {
   selectedItemsCount: number;
   onDelete: () => void;
   onSearch: (searchTerm: string) => void;
-  onFilter: () => void;
 }
 
 const TableToolbar: React.FC<TableToolbarProps> = ({
@@ -18,7 +17,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   selectedItemsCount,
   onDelete,
   onSearch,
-  onFilter,
 }) => {
   const isDeleteDisabled = selectedItemsCount === 0;
 
@@ -51,13 +49,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
-        <button
-          onClick={onFilter}
-          className="flex items-center gap-2 px-[10px] py-2 border rounded-md text-black hover:bg-gray-50"
-        >
-          <TbFilter className="w-6 h-6" />
-          <span className="text-body4">필터</span>
-        </button>
       </div>
     </div>
   );

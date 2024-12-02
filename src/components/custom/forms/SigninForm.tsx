@@ -27,7 +27,7 @@ const SigninForm = () => {
         id: userData.data.id,
         email: userData.data.email,
         name: userData.data.name,
-        phoneNumber: userData.data.phone_number,
+        phoneNumber: userData.data.phoneNumber,
       });
 
       // 메인 페이지로 이동

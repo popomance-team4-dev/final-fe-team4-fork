@@ -267,3 +267,23 @@ export interface VCSaveDto {
   srcFiles?: AudioFileDto[];
   trgFiles?: AudioFileDto[];
 }
+
+export interface Project {
+  projectId: number;
+  projectType: string;
+  projectName: string;
+  script: string;
+  projectStatus: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface ProjectsResponse {
+  content: Project[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
+  totalPages: number;
+  totalElements: number;
+}

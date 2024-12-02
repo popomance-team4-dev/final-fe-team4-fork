@@ -15,10 +15,10 @@ export interface ProjectListTableItem {
   order: string;
   projectName: string;
   fileName: string;
-  content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  script: string;
+  projectType: 'VC' | 'TTS' | 'CONCAT';
   status: '진행' | '대기중' | '실패' | '완료';
-  createdAt: string;
+  updatedAt: string;
 }
 
 interface ProjectListTableProps {
@@ -92,13 +92,13 @@ export function ProjectListTable({
               </div>
             </TableCell>
             <TableCell className="w-[100px]">
-              <AudioBadge type={item.type} />
+              <AudioBadge type={item.projectType} />
             </TableCell>
             <TableCell className="text-black w-[150px] text-left ">{item.projectName}</TableCell>
             <TableCell className="max-w-[300px] truncate text-left text-black">
-              {item.content}
+              {item.script}
             </TableCell>
-            <TableCell className="pl-6 w-[150px] text-gray-500">{item.createdAt}</TableCell>
+            <TableCell className="pl-6 w-[150px] text-gray-500">{item.updatedAt}</TableCell>
           </TableRow>
         ))}
       </TableBody>

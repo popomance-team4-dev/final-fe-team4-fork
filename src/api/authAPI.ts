@@ -1,27 +1,37 @@
+import { AxiosError } from 'axios';
+
 import { customInstance } from './axios-client';
 
 export const login = async (email: string, pwd: string) => {
   try {
-    // 보낸 데이터 출력
-    console.log('보낸 데이터:', { email, pwd });
-
     // 서버에 로그인 요청
-    const data = await customInstance.post('/member/login', {
-      email,
-      pwd,
-    });
-
-    console.log('서버 응답 데이터:', data); // data는 이미 응답 데이터 자체
+    const data = await customInstance.post('/member/login', { email, pwd });
     return data; // 명시적으로 반환
+  } catch (error: unknown) {
+    // AxiosError 타입인지 확인
+    if (error instanceof AxiosError) {
+      const errorMessage =
+        error.response?.data?.message || '로그인 요청에 실패했습니다. 다시 시도해주세요.';
+      throw new Error(errorMessage);
+    }
 
-    // 세션 기반 인증에서는 별도로 토큰을 저장하지 않음.
-    // 서버가 세션을 설정하면 브라우저가 쿠키를 통해 자동으로 세션을 관리합니다.
+    // 일반적인 Error 타입인지 확인
+    if (error instanceof Error) {
+      throw new Error(error.message || '알 수 없는 오류가 발생했습니다.');
+    }
+
+    // 예상하지 못한 에러 처리
+    throw new Error('알 수 없는 오류가 발생했습니다.');
+  }
+};
+
+export const logout = async () => {
+  try {
+    // 서버에 로그아웃 요청
+    await customInstance.post('/member/logout');
+    console.log('로그아웃 성공');
   } catch (error) {
-    console.error('로그인 요청 실패:', error);
-
-    // 오류 메시지 처리
-    const errorMessage =
-      (error as any).response?.data?.message || '로그인 요청에 실패했습니다. 다시 시도해주세요.';
-    throw new Error(errorMessage);
+    console.error('로그아웃 요청 실패:', error);
+    throw new Error('로그아웃 요청에 실패했습니다. 다시 시도해주세요.');
   }
 };

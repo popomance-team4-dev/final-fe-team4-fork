@@ -10,6 +10,7 @@ import PageLayout from '@/layouts/PageLayout';
 const HomePage = () => {
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
   const navigate = useNavigate();
+
   const historyItems = [
     {
       id: '1',
@@ -75,7 +76,6 @@ const HomePage = () => {
           email="aipark@aipark.ai"
           imageUrl={jisuImage}
           onMyPage={() => navigate('/mypage')}
-          onSignout={() => console.log('로그아웃')}
         />
       }
     >

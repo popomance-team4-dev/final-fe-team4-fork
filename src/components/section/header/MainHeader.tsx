@@ -5,10 +5,9 @@ interface MainHeaderProps {
   email: string;
   imageUrl?: string;
   onMyPage: () => void;
-  onSignout: () => void;
 }
 
-export const MainHeader = ({ name, email, imageUrl, onMyPage, onSignout }: MainHeaderProps) => {
+export const MainHeader = ({ name, email, imageUrl, onMyPage }: MainHeaderProps) => {
   return (
     <div className="flex items-center justify-between pt-[26px]">
       <div className="space-y-2">
@@ -17,13 +16,7 @@ export const MainHeader = ({ name, email, imageUrl, onMyPage, onSignout }: MainH
         </div>
       </div>
       <div className="mr-6">
-        <ProfileDropdown
-          name={name}
-          email={email}
-          imageUrl={imageUrl}
-          onMyPage={onMyPage}
-          onSignout={onSignout}
-        />
+        <ProfileDropdown name={name} email={email} imageUrl={imageUrl} onMyPage={onMyPage} />
       </div>
     </div>
   );

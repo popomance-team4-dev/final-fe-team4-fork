@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { TbChevronDown, TbChevronUp, TbLogout, TbUser } from 'react-icons/tb';
+import { useNavigate } from 'react-router-dom';
 
+import { logout } from '@/api/authAPI';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -10,30 +12,46 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/stores/auth.store';
 
 interface ProfileDropdownProps {
-  name: string;
-  email: string;
   imageUrl?: string;
   onMyPage?: () => void;
-  onSignout?: () => void;
   className?: string;
 }
 
 const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
-  ({ name, email, onMyPage, imageUrl, onSignout, className }, ref) => {
+  ({ onMyPage, imageUrl, className }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false);
+    const navigate = useNavigate();
+    const { user } = useAuthStore();
+
+    const handleLogout = async () => {
+      try {
+        // 로그아웃 API 호출
+        await logout();
+
+        // Zustand 상태 초기화
+        useAuthStore.getState().logout(); // logout 메서드 호출
+
+        // 로그인 페이지로 이동
+        navigate('/signin');
+      } catch (error) {
+        console.error('로그아웃 실패:', error);
+        alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
+      }
+    };
 
     return (
       <div ref={ref} className={cn('flex items-center', className)}>
         <div className="flex items-center gap-2">
           <Avatar className="w-9 h-9">
-            <AvatarImage src={imageUrl} alt={name} />
-            <AvatarFallback>{name[0]?.toUpperCase()}</AvatarFallback>
+            <AvatarImage src={imageUrl} alt="User" />
+            <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start mr-2">
-            <span className="text-gray-900 font-bold text-sm">{name}</span>
-            <span className="text-gray-700 text-xs">{email}</span>
+            <span className="text-gray-900 font-bold text-sm">{user?.name || 'Anonymous'}</span>
+            <span className="text-gray-700 text-xs">{user?.email || 'No Email'}</span>
           </div>
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger className="outline-none">
@@ -50,7 +68,7 @@ const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
               <DropdownMenuSeparator />
 
               <DropdownMenuItem
-                onClick={onSignout}
+                onClick={handleLogout}
                 className="text-red-500 focus:text-red-500 px-3 py-2"
               >
                 <TbLogout className="mr-2" />

@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,9 +31,17 @@ const SigninForm = () => {
 
       // 메인 페이지로 이동
       navigate('/');
-    } catch (error: any) {
+    } catch (error: unknown) {
+      // AxiosError 타입인지 확인
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data?.message || '로그인 실패. 다시 시도해주세요.');
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message || '로그인 실패. 다시 시도해주세요.');
+      } else {
+        setErrorMessage('알 수 없는 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+
       console.error('로그인 실패:', error);
-      setErrorMessage(error.response?.data?.message || '로그인 실패. 다시 시도해주세요.');
     }
   };
 

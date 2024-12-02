@@ -78,6 +78,10 @@ const router = createBrowserRouter([
         element: <CONCATPage />,
       },
       {
+        path: `${PATH.CONCAT}/:id`, // id 파라미터를 포함한 새로운 라우트 추가
+        element: <CONCATPage />,
+      },
+      {
         path: PATH.VC,
         element: <VCPage />,
       },

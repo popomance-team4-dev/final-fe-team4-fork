@@ -28,9 +28,7 @@ const PageLayout = ({ variant, header, sidebar, footer, children }: PageLayoutPr
               <div className="flex flex-1 h-full ml-6">
                 <div className="flex-col w-full flex">
                   <section className="flex-1 flex-col pr-6">{children}</section>
-                  <div className="h-[92px] pr-6 border-t">
-                    {footer && <footer>{footer}</footer>}
-                  </div>
+                  <div className="h-[92px] pr-6">{footer && <footer>{footer}</footer>}</div>
                 </div>
               </div>
             </div>

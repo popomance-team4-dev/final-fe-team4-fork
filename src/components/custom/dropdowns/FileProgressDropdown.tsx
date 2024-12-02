@@ -152,7 +152,7 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
       </div>
 
       {isOpen && (
-        <div className="absolute w-[504px] bg-background rounded-lg border border-gray-300 mt-2 z-50">
+        <div className="absolute w-[504px] bg-background rounded-lg border border-gray-300 mt-2 z-50 shadow-md">
           {/* 필터 버튼 영역 */}
           <div className="h-10 border-b border-gray-300 flex items-center px-4">
             <div className="flex gap-2">

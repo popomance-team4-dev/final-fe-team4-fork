@@ -49,7 +49,7 @@ const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label, onClick }
 };
 
 export function NavSidebar() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();
   const projects = useProjectStore((state) => state.projects);
 
@@ -107,7 +107,7 @@ export function NavSidebar() {
 
       <div className="scrollArea py-6">
         <div className="flex flex-col w-full text-black text-body2">
-          <div>
+          {/* <div>
             <h2
               className={`pt-2 pb-3 text-overline  ${
                 isExpanded ? 'ml-2 text-left' : 'ml-0 text-center'
@@ -115,8 +115,8 @@ export function NavSidebar() {
             >
               General
             </h2>
-          </div>
-          <div className="flex flex-col w-full gap-3">
+          </div> */}
+          <div className="flex flex-col w-full gap-3 mt-4">
             <SidebarButton icon={TbSmartHome} label="홈" onClick={() => navigate('/')} />
             <SidebarButton
               icon={TbFolders}

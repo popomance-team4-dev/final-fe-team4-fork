@@ -5,7 +5,6 @@ import MainHeader from '@/components/section/header/MainHeader';
 import { dummyData } from '@/constants/dummy';
 import { usePagination } from '@/hooks/usePagination';
 import { useTableSelection } from '@/hooks/useTableSelection';
-import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
 
 const ProjectPage = () => {
@@ -43,15 +42,7 @@ const ProjectPage = () => {
   return (
     <PageLayout
       variant="main"
-      header={
-        <MainHeader
-          name="김바타"
-          email="aipark@aipark.ai"
-          imageUrl={jisuImage}
-          onMyPage={() => console.log('마이페이지 이동')}
-          onSignout={() => console.log('로그아웃')}
-        />
-      }
+      header={<MainHeader />}
       footer={
         <PaginationFooter
           currentPage={currentPage}

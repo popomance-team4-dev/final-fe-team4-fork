@@ -11,30 +11,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { DEFAULT_PROFILE_IMAGE } from '@/constants/images';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth.store';
 
 interface ProfileDropdownProps {
-  imageUrl?: string;
-  onMyPage?: () => void;
   className?: string;
 }
 
 const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
-  ({ onMyPage, imageUrl, className }, ref) => {
+  ({ className }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const navigate = useNavigate();
     const { user } = useAuthStore();
 
     const handleLogout = async () => {
       try {
-        // 로그아웃 API 호출
         await logout();
 
         // Zustand 상태 초기화
-        useAuthStore.getState().logout(); // logout 메서드 호출
+        useAuthStore.getState().logout();
 
-        // 로그인 페이지로 이동
         navigate('/signin');
       } catch (error) {
         console.error('로그아웃 실패:', error);
@@ -42,11 +39,15 @@ const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
       }
     };
 
+    const handleMyPageNavigation = () => {
+      navigate('/mypage');
+    };
+
     return (
       <div ref={ref} className={cn('flex items-center', className)}>
         <div className="flex items-center gap-2">
           <Avatar className="w-9 h-9">
-            <AvatarImage src={imageUrl} alt="User" />
+            <AvatarImage src={DEFAULT_PROFILE_IMAGE} alt="User" />
             <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start mr-2">
@@ -60,7 +61,7 @@ const ProfileDropdown = React.forwardRef<HTMLDivElement, ProfileDropdownProps>(
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[184px]" sideOffset={12}>
-              <DropdownMenuItem onClick={onMyPage} className="px-3 py-2">
+              <DropdownMenuItem onClick={handleMyPageNavigation} className="px-3 py-2">
                 <TbUser className="mr-2" />
                 <span>마이페이지</span>
               </DropdownMenuItem>

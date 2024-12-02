@@ -1,22 +1,18 @@
 import ProfileDropdown from '@/components/custom/dropdowns/ProfileDropdown';
+import { useAuthStore } from '@/stores/auth.store';
 
-interface MainHeaderProps {
-  name: string;
-  email: string;
-  imageUrl?: string;
-  onMyPage: () => void;
-}
+export const MainHeader = () => {
+  const { user } = useAuthStore();
 
-export const MainHeader = ({ name, email, imageUrl, onMyPage }: MainHeaderProps) => {
   return (
     <div className="flex items-center justify-between pt-[26px]">
       <div className="space-y-2">
         <div className="relative">
-          <p className="text-xl font-bold text-gray-900">{name}님, 반갑습니다!</p>
+          <p className="text-xl font-bold text-gray-900">{user?.name || 'User'}님, 반갑습니다!</p>
         </div>
       </div>
       <div className="mr-6">
-        <ProfileDropdown name={name} email={email} imageUrl={imageUrl} onMyPage={onMyPage} />
+        <ProfileDropdown />
       </div>
     </div>
   );

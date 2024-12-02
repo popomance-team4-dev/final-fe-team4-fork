@@ -10,7 +10,7 @@ import Logo from '@/images/logo.png';
 import { useAuthStore } from '@/stores/auth.store';
 const SigninForm = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuthStore(); // Zustand 스토어에서 setUser 가져오기
+  const { setUser } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,14 +19,15 @@ const SigninForm = () => {
     e.preventDefault();
 
     try {
-      const userData = await login(email, password); // login 함수에서 data를 반환
-      console.log('로그인 성공:', userData);
+      const userData = await login(email, password);
+      console.log('로그인 성공:', userData.data);
 
       // Zustand 상태 업데이트
       setUser({
         id: userData.data.id,
         email: userData.data.email,
         name: userData.data.name,
+        phoneNumber: userData.data.phone_number,
       });
 
       // 메인 페이지로 이동

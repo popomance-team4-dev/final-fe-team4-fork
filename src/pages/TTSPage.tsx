@@ -8,7 +8,6 @@ import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
-import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, useTTSStore } from '@/stores/tts.store';
 
@@ -155,14 +154,9 @@ const TTSPage = () => {
       variant="project"
       header={
         <FileProgressHeader
-          name="김바타"
-          email="aipark@aipark.ai"
-          imageUrl={jisuImage}
           files={progressFiles}
           onDeleteCompleted={handleDeleteCompleted}
           onRetryFailed={handleRetryFailed}
-          onMyPage={() => console.log('마이페이지')}
-          onSignout={() => console.log('로그아웃')}
         />
       }
       sidebar={<TTSOptionsSidebar />}

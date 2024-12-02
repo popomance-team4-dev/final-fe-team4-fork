@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import HomePopup from '@/components/custom/guide/HomePopup';
 import { RecentExportTable } from '@/components/custom/tables/history/RecentExportTable';
 import RecentProject from '@/components/section/contents/RecontProject';
 import MainHeader from '@/components/section/header/MainHeader';
-import jisuImage from '@/images/avatar/jisu.jpg';
 import PageLayout from '@/layouts/PageLayout';
 const HomePage = () => {
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
-  const navigate = useNavigate();
 
   const historyItems = [
     {
@@ -68,17 +65,7 @@ const HomePage = () => {
   const handlePause = () => setCurrentPlayingId(undefined);
 
   return (
-    <PageLayout
-      variant="main"
-      header={
-        <MainHeader
-          name="김바타"
-          email="aipark@aipark.ai"
-          imageUrl={jisuImage}
-          onMyPage={() => navigate('/mypage')}
-        />
-      }
-    >
+    <PageLayout variant="main" header={<MainHeader />}>
       {/* 팝업 창 */}
       <HomePopup />
       {/* 최근 프로젝트 영역 */}

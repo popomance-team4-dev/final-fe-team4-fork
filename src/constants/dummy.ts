@@ -1,3 +1,4 @@
+import { ProjectListTableItem } from '@/components/custom/tables/history/ProjectListTable';
 import Ian from '@/images/avatar/ian.jpg';
 import Jennie from '@/images/avatar/jennie.png';
 import Jisu from '@/images/avatar/jisu.jpg';
@@ -59,5 +60,18 @@ export const PRESET_VOICES = [
     description: '#전문적인 #지적인',
     avatarUrl: Ian,
     type: 'preset' as const,
+  },
+];
+
+export const dummyData: ProjectListTableItem[] = [
+  {
+    id: '1',
+    order: '1',
+    projectName: '프로젝트1 발표자료',
+    fileName: '파일1.wav',
+    script: '안녕하세요. 프로젝트1에 대한 발표를 시작해 보겠습니다.',
+    projectType: 'TTS',
+    status: '완료',
+    updatedAt: '금요일 오후 7:24',
   },
 ];

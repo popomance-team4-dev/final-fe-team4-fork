@@ -24,7 +24,6 @@ import type {
   SaveVCProjectBody,
   TestFailParams,
   TTSSaveDto,
-  TTSSpecificResponse,
   UploadConcatBody,
   UploadConcatParams,
   UploadFiles1Body,
@@ -248,17 +247,6 @@ export const vcLoad = (projectId: number) => {
   return customInstance<ResponseDto>({ url: `/vc/${projectId}`, method: 'GET' });
 };
 
-/**
- * TTS 프로젝트 상태를 가져옵니다.
- * @summary TTS 상태 로드
- */
-export const ttsLoad = (projectId: number) => {
-  return customInstance<ResponseDto<TTSSpecificResponse>>({
-    url: `/tts/${projectId}`,
-    method: 'GET',
-  });
-};
-
 export const testSuccess = () => {
   return customInstance<ResponseDto>({ url: `/test/success`, method: 'GET' });
 };
@@ -409,7 +397,7 @@ export type ConvertMultipleAudiosResult = NonNullable<
   Awaited<ReturnType<typeof convertMultipleAudios>>
 >;
 export type VcLoadResult = NonNullable<Awaited<ReturnType<typeof vcLoad>>>;
-export type TtsLoadResult = NonNullable<Awaited<ReturnType<typeof ttsLoad>>>;
+
 export type TestSuccessResult = NonNullable<Awaited<ReturnType<typeof testSuccess>>>;
 export type TestFailResult = NonNullable<Awaited<ReturnType<typeof testFail>>>;
 export type ConcatLoadResult = NonNullable<Awaited<ReturnType<typeof concatLoad>>>;

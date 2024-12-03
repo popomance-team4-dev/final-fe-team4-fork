@@ -41,8 +41,9 @@ const TTSSidebar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // 목소리 스타일 로드
-    if (!language) return;
+    if (!language) {
+      return;
+    }
     const fetchTTSVoiceOptions = async () => {
       const response = await loadVoiceStyleOptions(language);
       setVoiceStyleList(Array.from(response) || []);

@@ -43,14 +43,10 @@ export interface VoiceStyle {
   languageCode: string;
   voiceType: string;
   voiceName: string;
-  gender: 'male' | 'female'; // 리터럴 타입으로 명확하게 제한
+  gender: 'male' | 'female';
   personality: string;
   label: string;
 }
-
-// interface VoiceStyleResponse {
-//   voiceStyleDto: VoiceStyle[];
-// }
 
 const languageCodeMap = {
   female: '여성',
@@ -72,11 +68,13 @@ export const loadVoiceStyleOptions = async (language: string): Promise<voiceStyl
   try {
     const response = await customInstance({ url: `/voice-style`, method: 'GET' });
     const seen = new Set();
-    const voiceStyleList = response.data.voiceStyleDto
+    return response.data.voiceStyleDto
       .filter((v: VoiceStyle) => v.country === language)
       .map((v: VoiceStyle) => {
         const label = `#${languageCodeMap[v.gender]} #${v.personality} `;
-        if (seen.has(label)) return null;
+        if (seen.has(label)) {
+          return null;
+        }
         seen.add(label);
         return {
           value: v.id,
@@ -86,7 +84,6 @@ export const loadVoiceStyleOptions = async (language: string): Promise<voiceStyl
       })
       .filter((v: voiceStyleData | null) => v !== null)
       .sort((a: voiceStyleData) => (a!.gender === 'female' ? -1 : 1));
-    return voiceStyleList;
   } catch (error) {
     console.error('Error loading voice style options:', error);
     throw error;

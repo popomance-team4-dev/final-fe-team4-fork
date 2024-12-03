@@ -110,7 +110,12 @@ const CONCATPage = () => {
       ) : (
         <MainContents
           type="CONCAT"
-          items={items}
+          items={items.map((item) => ({
+            ...item,
+            frontSilence: item.frontSilence ?? 0,
+            backSilence: item.backSilence ?? 0,
+            endSilence: item.endSilence ?? 0,
+          }))}
           onSelectionChange={toggleSelection}
           onTextChange={handleTextChange}
           onDelete={deleteSelectedItems}

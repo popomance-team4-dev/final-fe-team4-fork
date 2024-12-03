@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TbSettings } from 'react-icons/tb';
 
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { CONCAT_TOOLTIP } from '@/constants/tooltips';
+import { useConcatStore } from '@/stores/concat.store';
 
 const CONCATSidebar: React.FC = () => {
-  const [silenceAfterSentence, setSilenceAfterSentence] = useState(0); // 문장 뒤 무음 추가
-  const [silenceAtStart, setSilenceAtStart] = useState(0); // 맨 앞 무음 추가
-  const [silenceAtEnd, setSilenceAtEnd] = useState(0); // 맨 뒤 무음 추가
+  const { silenceSettings, setSilenceSettings, applySilenceToSelected, reset } = useConcatStore();
 
   return (
     <aside className="relative w-[276px] min-h-full border-l p-6">
@@ -19,51 +18,45 @@ const CONCATSidebar: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        {/* 파일 간격 */}
-        <StateController
-          label="오디오 파일 간 무음"
-          value={silenceAfterSentence}
-          unit=""
-          min={0}
-          max={10}
-          step={0.1}
-          onChange={setSilenceAfterSentence}
-        />
-
-        {/* 맨 앞 무음 추가 */}
         <StateController
           label="맨 앞 무음 추가"
-          value={silenceAtStart}
+          value={silenceSettings.frontSilence}
           unit=""
           min={0}
           max={10}
           step={0.1}
-          onChange={setSilenceAtStart}
+          onChange={(value) => setSilenceSettings({ frontSilence: value })}
         />
-
-        {/* 맨 뒤 무음 추가 */}
         <StateController
           label="맨 뒤 무음 추가"
-          value={silenceAtEnd}
+          value={silenceSettings.backSilence}
           unit=""
           min={0}
           max={10}
           step={0.1}
-          onChange={setSilenceAtEnd}
+          onChange={(value) => setSilenceSettings({ backSilence: value })}
+        />
+        <StateController
+          label="오디오 파일 간 무음"
+          value={silenceSettings.fileSilence}
+          unit=""
+          min={0}
+          max={10}
+          step={0.1}
+          onChange={(value) => setSilenceSettings({ fileSilence: value })}
         />
       </div>
 
-      {/* 적용 버튼들 */}
-      <div className="absolute bottom-0 flex flex-col gap-4 mb-[102px] ">
+      <div className="absolute bottom-0 flex flex-col gap-4 mb-[102px]">
         <TooltipWrapper content={CONCAT_TOOLTIP.APPLY}>
           <div>
-            <ApplyButton />
+            <ApplyButton onClick={applySilenceToSelected} />
           </div>
         </TooltipWrapper>
 
         <TooltipWrapper content={CONCAT_TOOLTIP.RESET_SETTINGS}>
           <div>
-            <ResetChangesButton />
+            <ResetChangesButton onClick={reset} />
           </div>
         </TooltipWrapper>
       </div>

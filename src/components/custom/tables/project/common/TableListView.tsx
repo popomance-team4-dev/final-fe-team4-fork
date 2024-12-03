@@ -49,11 +49,10 @@ const SortableRow: React.FC<ListRowProps> = ({
   onTextChange,
   type = 'TTS',
   fileName,
-
   targetVoice,
-  frontSilence,
-  backSilence,
-  endSilence,
+  frontSilence = 0,
+  backSilence = 0,
+  endSilence = 0,
 }) => {
   console.log('TableListView - Row:', {
     id,
@@ -181,7 +180,7 @@ const SortableRow: React.FC<ListRowProps> = ({
             <Textarea
               value={text}
               onChange={(e) => onTextChange(id, e.target.value)}
-              placeholder="스크립트를 입력하세요"
+              placeholder="스크립트를 입력하세요."
               className="flex-1 min-h-[40px] border-0 overflow-visible resize-none w-full"
               rows={1}
             />

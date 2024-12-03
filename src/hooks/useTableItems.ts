@@ -9,6 +9,9 @@ interface UseTableItemsProps {
     originalAudioUrl?: string;
     convertedAudioUrl?: string;
     type?: 'TTS' | 'VC' | 'CONCAT';
+    frontSilence?: number;
+    backSilence?: number;
+    endSilence?: number;
   })[];
   onPlay: (id: string) => void;
   onRegenerateItem?: (id: string) => void;
@@ -67,6 +70,9 @@ export const useTableItems = ({
     volume: item.volume ?? 1,
     pitch: item.pitch ?? 1,
     targetVoice: item.targetVoice,
+    frontSilence: item.frontSilence ?? 0,
+    backSilence: item.backSilence ?? 0,
+    endSilence: item.endSilence ?? 0,
   }));
 
   const gridItems = useMemo(

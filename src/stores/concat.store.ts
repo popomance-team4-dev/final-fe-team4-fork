@@ -8,6 +8,9 @@ export interface ConcatItem {
   audioUrl: string;
   file?: File;
   status: '대기중' | '완료' | '실패' | '진행';
+  frontSilence?: number;
+  backSilence?: number;
+  endSilence?: number;
 }
 
 interface ConcatStore {
@@ -17,6 +20,12 @@ interface ConcatStore {
     audioElement: HTMLAudioElement | null;
     currentPlayingId: string | null;
   };
+  silenceSettings: {
+    fileSilence: number; // 오디오 파일 간 무음
+    frontSilence: number; // 맨 앞 무음
+    backSilence: number; // 맨 뒤 무음
+  };
+  isModified: boolean;
 
   // 액션
   setItems: (items: ConcatItem[]) => void;
@@ -29,6 +38,13 @@ interface ConcatStore {
   handlePause: () => void;
   setCurrentPlayingId: (id: string | null) => void;
   showAlert: (message: string, variant: 'default' | 'destructive') => void;
+  setSilenceSettings: (settings: {
+    fileSilence?: number;
+    frontSilence?: number;
+    backSilence?: number;
+  }) => void;
+  applySilenceToSelected: () => void;
+  reset: () => void;
 }
 
 export const useConcatStore = create<ConcatStore>((set, get) => ({
@@ -38,6 +54,12 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
     audioElement: null,
     currentPlayingId: null,
   },
+  silenceSettings: {
+    fileSilence: 0,
+    frontSilence: 0,
+    backSilence: 0,
+  },
+  isModified: false,
 
   // 액션
   setItems: (items) => set({ items }),
@@ -80,6 +102,9 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
         audioUrl: URL.createObjectURL(file),
         file,
         status: '대기중' as const,
+        frontSilence: 0,
+        backSilence: 0,
+        endSilence: 0,
       }));
 
       set((state) => ({
@@ -152,5 +177,42 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
 
   showAlert: (message, variant) => {
     console.log(`${variant}: ${message}`);
+  },
+
+  setSilenceSettings: (settings) =>
+    set((state) => ({
+      silenceSettings: { ...state.silenceSettings, ...settings },
+      isModified: true,
+    })),
+
+  applySilenceToSelected: () => {
+    const { items, silenceSettings, isModified } = get();
+    if (!isModified) return;
+
+    set({
+      items: items.map((item) =>
+        item.isSelected
+          ? {
+              ...item,
+              frontSilence: silenceSettings.frontSilence,
+              backSilence: silenceSettings.backSilence,
+              endSilence: silenceSettings.fileSilence,
+              status: '대기중',
+            }
+          : item
+      ),
+      isModified: false,
+    });
+  },
+
+  reset: () => {
+    set({
+      silenceSettings: {
+        fileSilence: 0,
+        frontSilence: 0,
+        backSilence: 0,
+      },
+      isModified: false,
+    });
   },
 }));

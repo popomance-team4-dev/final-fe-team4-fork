@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { Project } from '@/api/aIParkAPI.schemas';
-import { fetchProjects } from '@/api/workspaceAPI';
+import { deleteProject, fetchProjects } from '@/api/workspaceAPI';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
@@ -13,6 +13,7 @@ const ProjectPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
 
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // 선택된 항목
   const [searchKeyword, setSearchKeyword] = useState(''); // 검색 키워드 상태
@@ -21,10 +22,11 @@ const ProjectPage = () => {
   const loadProjects = useCallback(
     async (page: number) => {
       try {
-        const { content, totalPages } = await fetchProjects(page, 8, searchKeyword);
+        const { content, totalPages, totalElements } = await fetchProjects(page, 8, searchKeyword);
         console.log('로드된 프로젝트 데이터:', content);
         setProjects(content); // 프로젝트 데이터 설정
         setTotalPages(totalPages); // 총 페이지 수 설정
+        setTotalItemsCount(totalElements); // 전체 항목 수 설정
       } catch (error) {
         console.error('프로젝트 데이터를 불러오는 중 오류 발생:', error);
       }
@@ -44,9 +46,17 @@ const ProjectPage = () => {
     console.log(`${id} 재생 중지`);
   };
 
-  const handleDelete = () => {
-    console.log('선택된 항목 삭제');
-    // 삭제 로직
+  const handleDelete = async () => {
+    try {
+      await deleteProject(selectedItems); // 선택된 항목 삭제
+      alert('삭제되었습니다.');
+
+      // 현재 페이지 데이터 재로드
+      loadProjects(currentPage);
+    } catch (error) {
+      console.error('삭제 중 오류:', error); // 에러 로그 출력
+      alert('삭제 중 오류가 발생했습니다.');
+    }
   };
 
   const handleSearch = (searchTerm: string) => {
@@ -107,6 +117,7 @@ const ProjectPage = () => {
         itemCount={projects.length}
         selectedItemsCount={selectedItems.length}
         onSearch={handleSearch}
+        totalItemsCount={totalItemsCount}
       />
     </PageLayout>
   );

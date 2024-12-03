@@ -1,63 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ttsLoad } from '@/api/aIParkAPI';
-import { saveTTSProject } from '@/api/ttsApi';
+import { saveTTSProject, ttsLoad } from '@/api/ttsApi';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-import MainContents from '@/components/section/contents/MainContents';
+import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
+import { Button } from '@/components/ui/button';
+import { fileProgressDummy } from '@/constants/dummy';
 import PageLayout from '@/layouts/PageLayout';
-import { ttsInitialSettings, useTTSStore } from '@/stores/tts.store';
-
-const fileProgressDummy: FileProgressItem[] = [
-  {
-    id: 1,
-    name: 'text_001.txt',
-    status: '진행',
-    progress: 75,
-    createdAt: new Date().toISOString(), // 오늘
-  },
-  {
-    id: 2,
-    name: 'text_002.txt',
-    status: '진행',
-    progress: 82,
-    createdAt: new Date().toISOString(), // 오늘
-  },
-  {
-    id: 3,
-    name: 'text_003.txt',
-    status: '대기',
-    createdAt: new Date(Date.now() - 86400000).toISOString(), // 어제
-  },
-  {
-    id: 4,
-    name: 'text_004.txt',
-    status: '대기',
-    createdAt: new Date(Date.now() - 86400000).toISOString(), // 어제
-  },
-  {
-    id: 5,
-    name: 'text_005.txt',
-    status: '실패',
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(), // 그저께
-  },
-  {
-    id: 6,
-    name: 'text_006.txt',
-    status: '완료',
-    createdAt: new Date(Date.now() - 86400000 * 7).toISOString(), // 일주일 전
-  },
-  {
-    id: 7,
-    name: 'text_007.txt',
-    status: '완료',
-    createdAt: new Date(Date.now() - 86400000 * 31).toISOString(), // 한달 전
-  },
-];
-
+import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 const TTSPage = () => {
   const {
     items,
@@ -88,8 +41,9 @@ const TTSPage = () => {
             projectName: ttsProject.projectName,
           });
 
-          const loadedItems = ttsDetails.map((detail) => ({
+          const loadedItems: TTSItem[] = ttsDetails.map((detail) => ({
             id: String(detail.id),
+            enitityId: detail.id,
             text: detail.unitScript || '',
             isSelected: false,
             speed: detail.unitSpeed || ttsInitialSettings.speed,
@@ -116,12 +70,15 @@ const TTSPage = () => {
     try {
       const response = await saveTTSProject({
         ...projectData,
-        ttsDetails: items.map((item) => ({
-          id: parseInt(item.id),
+        ttsDetails: items.map((item, index) => ({
+          id: item.enitityId,
           unitScript: item.text,
           unitSpeed: item.speed,
-          unitVolume: item.volume,
+          unitVolume: item.volume * 0.01,
           unitPitch: item.pitch,
+          unitSequence: index + 1,
+          unitVoiceStyleId: null,
+          isDeleted: false,
         })),
       });
 
@@ -169,20 +126,27 @@ const TTSPage = () => {
             onProjectNameChange={updateProjectName} // 이름 변경 핸들러 추가
             onSave={handleSaveProject}
           />
-          <MainContents
-            type="TTS"
-            items={items}
-            isAllSelected={isAllSelected}
-            onSelectAll={toggleSelectAll}
-            onSelectionChange={toggleSelection}
-            onTextChange={(id, text) => updateItem(id, { text })}
-            onDelete={deleteSelectedItems}
-            onAdd={addItems}
-            onRegenerateItem={(id) => console.log('재생성 항목:', id)}
-            onDownloadItem={(id) => console.log('다운로드 항목:', id)}
-            onPlay={(id) => console.log('재생:', id)}
-            onReorder={handleReorder}
-          />
+          <>
+            <div className={`h-[580px] mt-6 overflow-hidden`}>
+              <TableContents
+                items={items}
+                isAllSelected={isAllSelected}
+                onSelectAll={toggleSelectAll}
+                onSelectionChange={toggleSelection}
+                onTextChange={(id, text) => updateItem(id, { text })}
+                onDelete={deleteSelectedItems}
+                onAdd={addItems}
+                onRegenerateItem={(id) => console.log('재생성 항목:', id)}
+                onDownloadItem={(id) => console.log('다운로드 항목:', id)}
+                onPlay={(id) => console.log('재생:', id)}
+                onReorder={handleReorder}
+                type={'TTS'}
+              />
+            </div>
+            <div className={`TTS mt-12 text-center`}>
+              <Button>{'TTS 생성'}</Button>
+            </div>
+          </>
         </>
       }
     />

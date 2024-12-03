@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { login } from '@/api/authAPI';
@@ -8,32 +8,33 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
 import { useAuthStore } from '@/stores/auth.store';
+
 const SigninForm = () => {
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isTemporaryPwd, setIsTemporaryPwd] = useState(false);
+  const [rememberEmail, setRememberEmail] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const userData = await login(email, password);
-      console.log('로그인 성공:', userData.data);
-
-      // Zustand 상태 업데이트
+      if (rememberEmail) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+      const userData = await login(email, password, isTemporaryPwd);
       setUser({
         id: userData.data.id,
         email: userData.data.email,
         name: userData.data.name,
         phoneNumber: userData.data.phoneNumber,
       });
-
-      // 메인 페이지로 이동
       navigate('/');
     } catch (error: unknown) {
-      // AxiosError 타입인지 확인
       if (error instanceof AxiosError) {
         setErrorMessage(error.response?.data?.message || '로그인 실패. 다시 시도해주세요.');
       } else if (error instanceof Error) {
@@ -41,10 +42,16 @@ const SigninForm = () => {
       } else {
         setErrorMessage('알 수 없는 오류가 발생했습니다. 다시 시도해주세요.');
       }
-
-      console.error('로그인 실패:', error);
     }
   };
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberEmail(true);
+    }
+  }, []);
 
   return (
     <div className="w-[432px] h-[600px] flex-shrink-0 rounded-xl border border-gray-300 bg-white flex flex-col">
@@ -65,9 +72,25 @@ const SigninForm = () => {
           className="mt-2 w-[360px] h-[50px] rounded-lg border border-gray-300 bg-white px-4 font-pretendard"
         />
 
-        <label className="mt-[20px] self-stretch text-black text-base font-medium leading-6 font-pretendard">
-          비밀번호
-        </label>
+        <div className="mt-[20px] flex items-center justify-between">
+          <label className="self-stretch text-black text-base font-medium leading-6 font-pretendard">
+            비밀번호
+          </label>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="temporary-pwd"
+              checked={isTemporaryPwd}
+              onCheckedChange={(checked) => setIsTemporaryPwd(checked as boolean)}
+              className="h-4 w-4 border-gray-100 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            />{' '}
+            <label
+              htmlFor="temporary-pwd"
+              className="text-gray-400 font-medium leading-6 select-none"
+            >
+              임시 비밀번호 사용
+            </label>
+          </div>
+        </div>
         <Input
           variant="signin"
           type="password"
@@ -81,6 +104,8 @@ const SigninForm = () => {
           <div className="flex items-center gap-2">
             <Checkbox
               id="remember"
+              checked={rememberEmail}
+              onCheckedChange={(checked) => setRememberEmail(checked as boolean)}
               className="h-4 w-4 border-gray-100 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
             />
             <label htmlFor="remember" className="text-gray-400 font-medium leading-6 select-none">
@@ -105,7 +130,6 @@ const SigninForm = () => {
             </button>
           </div>
         </div>
-
         <div className="mt-[36px] space-y-4">
           <Button type="submit">로그인</Button>
           <Button variant="secondary" onClick={() => navigate('/signup')}>

@@ -12,9 +12,9 @@ export interface MainContentsItem extends TableItem {
   convertedAudioUrl?: string;
   order?: string;
   projectName?: string;
-  content?: string;
-  type?: 'VC' | 'TTS' | 'CONCAT';
-  createdAt?: string;
+  script?: string;
+  projectType?: 'VC' | 'TTS' | 'CONCAT';
+  updatedAt?: string;
 }
 
 interface MainContentsProps {
@@ -35,6 +35,7 @@ interface MainContentsProps {
   onReorder?: (newItems: MainContentsItem[]) => void;
   currentPlayingId?: string;
   itemCount?: number;
+  totalItemsCount?: number;
   selectedItemsCount?: number;
   onSearch?: (searchTerm: string) => void;
   onFilter?: () => void;
@@ -60,34 +61,22 @@ const MainContents = ({
   itemCount,
   selectedItemsCount,
   onSearch,
-  onFilter,
   onFileUpload,
   hasAudioFile,
+  totalItemsCount,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
 
   const renderTable = () => {
     if (type === 'RECENT' || type === 'PROJECT') {
-      const tableItems: ProjectListTableItem[] = items.map((item) => ({
-        id: item.id,
-        order: item.order || '',
-        projectName: item.projectName || '',
-        fileName: item.fileName || '',
-        content: item.content || '',
-        type: item.type || 'TTS',
-        status: item.status || '대기중',
-        createdAt: item.createdAt || '',
-      }));
-
       return (
         <div className="mt-2 border rounded-md">
           <TableToolbar
             title={type === 'RECENT' ? '모든 히스토리 내역' : '모든 프로젝트'}
-            count={items.length}
+            totalItemsCount={totalItemsCount || 0}
             selectedItemsCount={selectedItemsCount || 0}
             onDelete={onDelete}
             onSearch={onSearch!}
-            onFilter={onFilter!}
           />
           <div>
             {type === 'RECENT' ? (
@@ -99,7 +88,7 @@ const MainContents = ({
                 onSelectAll={onSelectAll}
                 selectedItems={items.filter((item) => item.isSelected).map((item) => item.id)}
                 onSelectionChange={(id) => onSelectionChange(id)}
-                items={tableItems}
+                items={items as ProjectListTableItem[]}
                 currentPlayingId={currentPlayingId}
               />
             ) : (
@@ -111,7 +100,7 @@ const MainContents = ({
                 onSelectAll={onSelectAll}
                 selectedItems={items.filter((item) => item.isSelected).map((item) => item.id)}
                 onSelectionChange={(id) => onSelectionChange(id)}
-                items={tableItems}
+                items={items as ProjectListTableItem[]}
                 currentPlayingId={currentPlayingId}
               />
             )}

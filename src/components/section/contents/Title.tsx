@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbCheck, TbPencil, TbX } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 
@@ -36,6 +36,11 @@ const Title = ({
 }: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(projectTitle);
+
+  // projectTitle prop이 변경될 때마다 editTitle 업데이트
+  useEffect(() => {
+    setEditTitle(projectTitle);
+  }, [projectTitle]);
 
   const handleSubmit = () => {
     setIsEditing(false);

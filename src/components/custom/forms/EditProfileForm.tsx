@@ -1,13 +1,18 @@
 import { Separator } from '@radix-ui/react-separator';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { changePassword, changeProfile } from '@/api/profileAPI'; // Assuming you'll create this
 import { EditConfirm } from '@/components/custom/dialogs/EditProfileDialog';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuthStore } from '@/stores/auth.store';
+import { joaatHash } from '@/utils/joaatHash';
+import { formatPhoneNumber, formattedPhone } from '@/utils/phoneNumber';
 
 interface ProfileFormData {
   email: string;
@@ -20,20 +25,88 @@ interface EditProfileFormProps {
   avatarUrl: string;
 }
 
+interface PasswordFormData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const { setUser } = useAuthStore();
 
-  const form = useForm<ProfileFormData>({
-    defaultValues,
+  const profileForm = useForm<ProfileFormData>({
+    defaultValues: {
+      ...defaultValues,
+      phoneNumber: formatPhoneNumber(defaultValues.phoneNumber),
+    },
   });
 
-  const onSubmit = (data: ProfileFormData) => {
-    console.log(data);
+  const passwordForm = useForm<PasswordFormData>({
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+  });
+  const onProfileSubmit = async (data: ProfileFormData) => {
+    try {
+      setErrorMessage('');
+      const formattedData = {
+        ...data,
+        phoneNumber: formattedPhone(data.phoneNumber),
+      };
+
+      const response = await changeProfile(formattedData);
+      const updatedUserData = response.data;
+      setUser({
+        name: updatedUserData.name,
+        phoneNumber: updatedUserData.phoneNumber,
+      });
+      setIsModalOpen(true);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data?.message || '프로필 수정에 실패했습니다.');
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('알 수 없는 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  const onPasswordSubmit = async (data: PasswordFormData) => {
+    try {
+      setErrorMessage('');
+
+      if (data.newPassword !== data.confirmPassword) {
+        throw new Error('새 비밀번호가 일치하지 않습니다.');
+      }
+
+      const hashedCurrentPassword = joaatHash(data.currentPassword);
+      const hashedNewPassword = joaatHash(data.newPassword);
+
+      await changePassword({
+        currentPassword: hashedCurrentPassword,
+        newPassword: hashedNewPassword,
+        confirmPassword: hashedNewPassword,
+      });
+
+      setIsModalOpen(true);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('알 수 없는 오류가 발생했습니다.');
+      }
+    }
   };
 
   const handleConfirmSubmit = () => {
-    console.log('회원정보 수정 확인');
     setIsModalOpen(false);
   };
 
@@ -48,10 +121,13 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
         <TabsContent value="profile">
           <h2 className="text-lg font-semibold mb-4">나의 회원정보</h2>
           <Separator className="h-[1px] bg-gray-200 mb-6 w-full" />
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-6">
+          <Form {...profileForm}>
+            <form
+              onSubmit={profileForm.handleSubmit(onProfileSubmit)}
+              className="flex flex-col space-y-6"
+            >
               <FormField
-                control={form.control}
+                control={profileForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-4">
@@ -74,7 +150,6 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
                 )}
               />
               <Separator className="h-[1px]  bg-gray-200 w-full" />
-
               <div className="flex  items-center gap-4">
                 <div className="w-[240px]">
                   <FormLabel className="w-[240px] h-[58px] text-black font-medium">
@@ -92,11 +167,9 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
                   </div>
                 </div>
               </div>
-
               <Separator className="h-[1px] bg-gray-200 w-full" />
-
               <FormField
-                control={form.control}
+                control={profileForm.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-4">
@@ -114,11 +187,9 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
                   </FormItem>
                 )}
               />
-
               <Separator className="h-[1px] bg-gray-200 w-full" />
-
               <FormField
-                control={form.control}
+                control={profileForm.control}
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-4">
@@ -135,7 +206,8 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
                     </FormControl>
                   </FormItem>
                 )}
-              />
+              />{' '}
+              {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
             </form>
           </Form>
         </TabsContent>
@@ -143,48 +215,70 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
         <TabsContent value="security">
           <h2 className="text-lg font-semibold mb-4">비밀번호 설정</h2>
           <Separator className="h-[1px] bg-gray-200 mb-6 w-full" />
-          <Form {...form}>
-            <form className="flex flex-col space-y-6">
-              <FormItem className="flex items-center gap-4">
-                <FormLabel className="text-black font-medium w-[240px]">
-                  현재 비밀번호 <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="현재 비밀번호를 입력해 주세요."
-                    className="max-w-[320px] h-[50px]"
-                  />
-                </FormControl>
-              </FormItem>
-
-              <Separator className="h-[1px] bg-gray-200 w-full" />
-
-              <FormItem className="flex items-center gap-4">
-                <FormLabel className="text-black font-medium w-[240px]">
-                  새 비밀번호 <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="새 비밀번호를 입력해 주세요."
-                    className="max-w-[320px] h-[50px]"
-                  />
-                </FormControl>
-              </FormItem>
-
-              <FormItem className="flex items-center gap-4">
-                <FormLabel className="text-black font-medium w-[240px]">
-                  새 비밀번호 확인 <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="새 비밀번호를 확인해 주세요."
-                    className="max-w-[320px] h-[50px]"
-                  />
-                </FormControl>
-              </FormItem>
+          <Form {...passwordForm}>
+            <form
+              onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
+              className="flex flex-col space-y-6"
+            >
+              {' '}
+              <FormField
+                control={passwordForm.control}
+                name="currentPassword"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="text-black font-medium w-[240px]">
+                      현재 비밀번호 <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="현재 비밀번호를 입력해 주세요."
+                        className="max-w-[320px] h-[50px]"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={passwordForm.control}
+                name="newPassword"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="text-black font-medium w-[240px]">
+                      새 비밀번호 <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="새 비밀번호를 입력해 주세요."
+                        className="max-w-[320px] h-[50px]"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={passwordForm.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="text-black font-medium w-[240px]">
+                      새 비밀번호 확인 <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="새 비밀번호를 확인해 주세요."
+                        className="max-w-[320px] h-[50px]"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
             </form>
           </Form>
         </TabsContent>
@@ -195,8 +289,18 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
         <Button type="button" size="sm" variant="outline">
           취소
         </Button>
-        <Button type="submit" size="sm" onClick={() => setIsModalOpen(true)}>
-          회원정보 수정
+        <Button
+          type="submit"
+          size="sm"
+          onClick={() => {
+            if (activeTab === 'profile') {
+              profileForm.handleSubmit(onProfileSubmit)();
+            } else {
+              passwordForm.handleSubmit(onPasswordSubmit)();
+            }
+          }}
+        >
+          {activeTab === 'profile' ? '회원정보 수정' : '비밀번호 변경'}
         </Button>
       </div>
 

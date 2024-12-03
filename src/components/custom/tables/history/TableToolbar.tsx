@@ -1,24 +1,22 @@
 import React from 'react';
-import { TbFilter, TbSearch, TbTrash } from 'react-icons/tb';
+import { TbSearch, TbTrash } from 'react-icons/tb';
 
 import { Input } from '@/components/ui/input';
 
 interface TableToolbarProps {
   title: string;
-  count: number;
+  totalItemsCount: number;
   selectedItemsCount: number;
   onDelete: () => void;
   onSearch: (searchTerm: string) => void;
-  onFilter: () => void;
 }
 
 const TableToolbar: React.FC<TableToolbarProps> = ({
   title,
-  count,
+  totalItemsCount,
   selectedItemsCount,
   onDelete,
   onSearch,
-  onFilter,
 }) => {
   const isDeleteDisabled = selectedItemsCount === 0;
 
@@ -27,7 +25,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       {/* Left Section: Title and Delete Button */}
       <div className="flex items-center gap-2">
         <span className="text-body1 text-black">{title}</span>
-        <span className="text-body1 text-gray-700">{count}</span>
+        <span className="text-body1 text-gray-700">{totalItemsCount}</span>
         <button
           onClick={onDelete}
           disabled={isDeleteDisabled}
@@ -51,13 +49,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
-        <button
-          onClick={onFilter}
-          className="flex items-center gap-2 px-[10px] py-2 border rounded-md text-black hover:bg-gray-50"
-        >
-          <TbFilter className="w-6 h-6" />
-          <span className="text-body4">필터</span>
-        </button>
       </div>
     </div>
   );

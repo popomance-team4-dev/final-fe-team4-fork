@@ -11,17 +11,17 @@ export const signupFormSchema = z
       .min(1, { message: SIGNUP_VALIDATION.REQUIRED.EMAIL })
       .email({ message: SIGNUP_VALIDATION.INVALID.EMAIL }),
 
-    password: z
+    pwd: z
       .string()
       .min(8, { message: SIGNUP_VALIDATION.REQUIRED.PASSWORD })
       .max(50, { message: SIGNUP_VALIDATION.PASSWORD_MAX_LENGTH })
       .regex(SIGNUP_VALIDATION_PATTERNS.PASSWORD, { message: SIGNUP_VALIDATION.INVALID.PASSWORD }),
 
-    passwordConfirm: z.string().min(1, { message: SIGNUP_VALIDATION.REQUIRED.PASSWORD }),
+    pwdConfirm: z.string().min(1, { message: SIGNUP_VALIDATION.REQUIRED.PASSWORD }),
 
     name: z.string().min(1, { message: SIGNUP_VALIDATION.REQUIRED.NAME }),
 
-    phone: z
+    phoneNumber: z
       .string()
       .min(1, { message: SIGNUP_VALIDATION.REQUIRED.PHONE })
       .regex(SIGNUP_VALIDATION_PATTERNS.PHONE, { message: SIGNUP_VALIDATION.INVALID.PHONE }),
@@ -30,7 +30,7 @@ export const signupFormSchema = z
       message: SIGNUP_VALIDATION.TERMS_REQUIRED,
     }),
   })
-  .refine((data) => data.password === data.passwordConfirm, {
+  .refine((data) => data.pwd === data.pwdConfirm, {
     message: SIGNUP_VALIDATION.PASSWORD_MISMATCH,
     path: ['passwordConfirm'],
   });
@@ -39,9 +39,9 @@ export const signupFormSchema = z
 export const SignupFormRequest = (formData: SignupFormData): SignupRequest => {
   return {
     email: formData.email,
-    pwd: formData.password,
+    pwd: formData.pwd,
     name: formData.name,
-    phone_number: formData.phone,
+    phone_number: formData.phoneNumber,
     tou: formData.terms.length === 3 ? 'Y' : 'N',
     is_deleted: false,
   };

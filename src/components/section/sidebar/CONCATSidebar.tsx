@@ -19,9 +19,9 @@ const CONCATSidebar: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        {/* 문장 뒤 무음 추가 */}
+        {/* 파일 간격 */}
         <StateController
-          label="문장 뒤 무음 추가"
+          label="오디오 파일 간 무음"
           value={silenceAfterSentence}
           unit=""
           min={0}

@@ -143,7 +143,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
               handleTextAreaResize(e.target);
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
-            placeholder="텍스트를 입력하세요."
+            placeholder="스크립트를 입력하세요."
             className="w-3/5 min-h-[40px] overflow-hidden mb-2 border-0"
             rows={1}
           />

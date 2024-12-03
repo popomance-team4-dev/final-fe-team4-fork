@@ -30,3 +30,12 @@ export interface VCItem extends TableItem {
   targetVoice?: string;
   file?: File;
 }
+
+export interface ConcatTableItem extends TableItem {
+  audioUrl: string;
+  frontSilence: number;
+  backSilence: number;
+  duration: number;
+  fileName: string;
+  silentRegions: { start: number; end: number }[];
+}

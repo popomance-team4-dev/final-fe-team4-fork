@@ -288,14 +288,14 @@ export interface ProjectsResponse {
   totalElements: number;
 }
 
-export interface workspacesResponse {
-  data: {
-    id: number;
-    type: string;
-    name: string;
-    script?: string;
-    status?: string;
-    updatedAt: string;
-    createdAt?: string;
-  }[];
+export interface WorkspaceProject {
+  id: number;
+  type: string;
+  name: string;
+  script?: string;
+  status?: string;
+  updatedAt: string;
+  createdAt?: string;
 }
+
+export type workspacesResponse = WorkspaceProject[];

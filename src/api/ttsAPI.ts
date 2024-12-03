@@ -37,4 +37,79 @@ export const ttsLoad = (projectId: number) => {
   });
 };
 
+export interface VoiceStyle {
+  id: number;
+  country: string;
+  languageCode: string;
+  voiceType: string;
+  voiceName: string;
+  gender: 'male' | 'female'; // 리터럴 타입으로 명확하게 제한
+  personality: string;
+  label: string;
+}
+
+// interface VoiceStyleResponse {
+//   voiceStyleDto: VoiceStyle[];
+// }
+
+const languageCodeMap = {
+  female: '여성',
+  male: '남성',
+};
+
+export interface voiceStyleData {
+  value: number;
+  label: string;
+  gender: 'male' | 'female';
+}
+
+/**
+ * TTS에 적용할 음원 보이스 값들을 가져옵니다.
+ * @summary all voice
+ * @param language: string
+ */
+export const loadVoiceStyleOptions = async (language: string): Promise<voiceStyleData[]> => {
+  try {
+    const response = await customInstance({ url: `/voice-style`, method: 'GET' });
+    const seen = new Set();
+    const voiceStyleList = response.data.voiceStyleDto
+      .filter((v: VoiceStyle) => v.country === language)
+      .map((v: VoiceStyle) => {
+        const label = `#${languageCodeMap[v.gender]} #${v.personality} `;
+        if (seen.has(label)) return null;
+        seen.add(label);
+        return {
+          value: v.id,
+          label: label,
+          gender: v.gender,
+        };
+      })
+      .filter((v: voiceStyleData | null) => v !== null)
+      .sort((a: voiceStyleData) => (a!.gender === 'female' ? -1 : 1));
+    return voiceStyleList;
+  } catch (error) {
+    console.error('Error loading voice style options:', error);
+    throw error;
+  }
+};
+
+/**
+ * TTS에 적용할 가능한음원 언어 값들을 가져옵니다.
+ * @summary all voice language
+ */
+export const loadVoiceLanguageOptions = async (): Promise<ResponseDto<Set<string>>> => {
+  try {
+    const response = await customInstance({ url: `/voice-style`, method: 'GET' });
+    const countries = new Set(
+      response.data.voiceStyleDto
+        .map((v: VoiceStyle) => v.country)
+        .sort((a: string, b: string) => a.localeCompare(b, 'ko'))
+    );
+    return { ...response.data, data: countries };
+  } catch (error) {
+    console.error('Error loading voice language options:', error);
+    throw error;
+  }
+};
+
 export type TtsLoadResult = NonNullable<Awaited<ReturnType<typeof ttsLoad>>>;

@@ -36,9 +36,9 @@ export const VoiceList = ({
             <VoiceCard
               key={voice.id}
               voice={voice}
-              isSelected={selectedVoice === voice.id}
-              onSelect={() => onVoiceSelect(voice.id)}
-              onDelete={onDelete && (() => onDelete(voice.id))}
+              isSelected={selectedVoice === voice.name}
+              onSelect={() => onVoiceSelect(voice.name)}
+              onDelete={() => onDelete?.(voice.id)}
               onEdit={onEdit}
             />
           ))}

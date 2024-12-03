@@ -5,16 +5,14 @@ import { TableContents } from '@/components/custom/tables/project/common/TableCo
 import { Button } from '@/components/ui/button';
 import { ProjectListTableItem, TableItem } from '@/types/table';
 
-export interface MainContentsItem extends TableItem {
+export interface MainContentsItem {
+  id: string;
+  text: string;
+  isSelected: boolean;
   status?: '대기중' | '완료' | '실패' | '진행';
   fileName?: string;
-  originalAudioUrl?: string;
-  convertedAudioUrl?: string;
-  order?: string;
-  projectName?: string;
-  script?: string;
-  projectType?: 'VC' | 'TTS' | 'CONCAT';
-  updatedAt?: string;
+  audioUrl?: string;
+  targetVoice?: string;
 }
 
 interface MainContentsProps {
@@ -41,6 +39,7 @@ interface MainContentsProps {
   onFilter?: () => void;
   onFileUpload?: (files: FileList | null) => void;
   hasAudioFile?: boolean;
+  onGenerate?: () => Promise<void>;
 }
 
 const MainContents = ({
@@ -64,6 +63,7 @@ const MainContents = ({
   onFileUpload,
   hasAudioFile,
   totalItemsCount,
+  onGenerate,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
 
@@ -88,7 +88,7 @@ const MainContents = ({
                 onSelectAll={onSelectAll}
                 selectedItems={items.filter((item) => item.isSelected).map((item) => item.id)}
                 onSelectionChange={(id) => onSelectionChange(id)}
-                items={items as ProjectListTableItem[]}
+                items={items as unknown as ProjectListTableItem[]}
                 currentPlayingId={currentPlayingId}
               />
             ) : (
@@ -100,7 +100,7 @@ const MainContents = ({
                 onSelectAll={onSelectAll}
                 selectedItems={items.filter((item) => item.isSelected).map((item) => item.id)}
                 onSelectionChange={(id) => onSelectionChange(id)}
-                items={items as ProjectListTableItem[]}
+                items={items as unknown as ProjectListTableItem[]}
                 currentPlayingId={currentPlayingId}
               />
             )}
@@ -130,7 +130,7 @@ const MainContents = ({
           />
         </div>
         <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>
-          <Button>{getButtonText()}</Button>
+          <Button onClick={onGenerate}>{getButtonText()}</Button>
         </div>
       </>
     );

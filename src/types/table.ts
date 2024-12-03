@@ -27,4 +27,6 @@ export interface VCItem extends TableItem {
   status: '대기중' | '완료' | '실패' | '진행';
   originalAudioUrl?: string;
   convertedAudioUrl?: string;
+  targetVoice?: string;
+  file?: File;
 }

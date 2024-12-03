@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { TbSettings } from 'react-icons/tb';
 
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
@@ -8,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { VC_TOOLTIP } from '@/constants/tooltips';
 import { useVCStore } from '@/stores/vc.store';
 
-interface TargetVoice {
+export interface TargetVoice {
   id: string;
   name: string;
   description: string;
@@ -16,32 +15,43 @@ interface TargetVoice {
   type: 'custom';
 }
 
-const VCSidebar: React.FC = () => {
-  const { selectedVoice, setSelectedVoice, applyToSelected } = useVCStore();
+interface VCSidebarProps {
+  selectedVoice: string;
+  onVoiceSelect: (voice: string) => void;
+  onApplyConversion: () => Promise<void>;
+  customVoices: TargetVoice[];
+  onVoiceUpload: (voices: TargetVoice[]) => void;
+}
 
-  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
+const VCSidebar: React.FC<VCSidebarProps> = ({
+  selectedVoice,
+  onVoiceSelect,
+  customVoices,
+  onVoiceUpload,
+}) => {
+  const { showAlert, applyToSelected } = useVCStore();
 
   const handleVoiceUpload = (files: File[]) => {
     const newVoices = files.map((file) => ({
-      id: `custom-${crypto.randomUUID()}`,
+      id: file.name,
       name: file.name,
       description: '',
       avatarUrl: '',
       type: 'custom' as const,
-      audioUrl: URL.createObjectURL(file),
     }));
 
-    setCustomVoices((prev) => [...prev, ...newVoices]);
+    onVoiceUpload([...customVoices, ...newVoices]);
+    onVoiceSelect(files[0].name);
   };
 
   const handleVoiceDelete = (id: string) => {
-    setCustomVoices((prev) => prev.filter((voice) => voice.id !== id));
+    onVoiceUpload(customVoices.filter((voice) => voice.id !== id));
   };
 
   const handleVoiceEdit = (newName: string) => {
-    setCustomVoices((prev) =>
-      prev.map((v) =>
-        v.id === selectedVoice
+    onVoiceUpload(
+      customVoices.map((v) =>
+        v.name === selectedVoice
           ? {
               ...v,
               name: newName,
@@ -49,6 +59,15 @@ const VCSidebar: React.FC = () => {
           : v
       )
     );
+  };
+
+  const handleApplyClick = async () => {
+    if (!selectedVoice) {
+      showAlert('타겟 보이스를 선택해주세요.', 'destructive');
+      return;
+    }
+    applyToSelected();
+    showAlert('타겟 보이스가 적용되었습니다.', 'default');
   };
 
   return (
@@ -66,7 +85,7 @@ const VCSidebar: React.FC = () => {
           <VoiceSelection
             customVoices={customVoices}
             selectedVoice={selectedVoice}
-            onVoiceSelect={setSelectedVoice}
+            onVoiceSelect={onVoiceSelect}
             onVoiceUpload={handleVoiceUpload}
             onVoiceDelete={handleVoiceDelete}
             onVoiceEdit={handleVoiceEdit}
@@ -77,7 +96,7 @@ const VCSidebar: React.FC = () => {
           <TooltipWrapper content={VC_TOOLTIP.APPLY}>
             <div>
               <ApplyButton
-                onClick={applyToSelected}
+                onClick={handleApplyClick}
                 className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
               />
             </div>

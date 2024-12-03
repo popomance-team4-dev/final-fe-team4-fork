@@ -23,6 +23,7 @@ interface VCStore {
   };
   alert: Alert;
   audioPlayer: AudioPlayer;
+  memberId: number;
 
   // 기본 액션
   setItems: (items: VCItem[]) => void;
@@ -163,6 +164,7 @@ export const useVCStore = create<VCStore>((set, get) => {
       audioElement: null,
       currentPlayingId: null,
     },
+    memberId: 0,
 
     // 기존 액션들
     setItems: (items) => set({ items }),
@@ -217,15 +219,15 @@ export const useVCStore = create<VCStore>((set, get) => {
     handleAdd: () => openFileDialog(),
     handleFileUpload: (files) => handleFiles(files),
     handleTextChange: (id, newText) => get().updateItem(id, { text: newText }),
-    handlePlay: (id) => {
+    handlePlay: (id: string) => {
       const state = get();
       const item = state.items.find((item) => item.id === id);
+      const audioUrl = item?.convertedAudioUrl || item?.originalAudioUrl;
+      if (!audioUrl) return;
 
-      if (!item?.originalAudioUrl) return;
-
-      // 같은 오디오 재생 시도시 (일시정지 후 재생)
-      if (state.audioPlayer.audioElement && state.audioPlayer.currentPlayingId === null) {
-        state.audioPlayer.audioElement.play();
+      // 같은 오디오 재생 시도시
+      if (state.audioPlayer.currentPlayingId === id) {
+        state.audioPlayer.audioElement?.play();
         set({
           audioPlayer: {
             audioElement: state.audioPlayer.audioElement,
@@ -241,7 +243,7 @@ export const useVCStore = create<VCStore>((set, get) => {
       }
 
       // 새로운 오디오 생성
-      const audio = new Audio(item.originalAudioUrl);
+      const audio = new Audio(audioUrl);
       audio.onended = () => {
         get().setCurrentPlayingId(null);
         set({

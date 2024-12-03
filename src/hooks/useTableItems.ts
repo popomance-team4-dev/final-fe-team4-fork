@@ -5,6 +5,7 @@ import { TableItem } from '@/types/table';
 interface UseTableItemsProps {
   items: (TableItem & {
     status?: '대기중' | '완료' | '실패' | '진행';
+    targetVoice?: string;
     originalAudioUrl?: string;
     convertedAudioUrl?: string;
     type?: 'TTS' | 'VC' | 'CONCAT';
@@ -65,6 +66,7 @@ export const useTableItems = ({
     speed: item.speed ?? 1,
     volume: item.volume ?? 1,
     pitch: item.pitch ?? 1,
+    targetVoice: item.targetVoice,
   }));
 
   const gridItems = useMemo(

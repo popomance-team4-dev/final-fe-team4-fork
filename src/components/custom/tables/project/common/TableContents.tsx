@@ -19,7 +19,13 @@ import { TableHeader } from './TableHeader';
 import { TableListView } from './TableListView';
 
 interface TableContentsProps {
-  items: TableItem[];
+  items: (TableItem & {
+    status?: '대기중' | '완료' | '실패' | '진행';
+    targetVoice?: string;
+    originalAudioUrl?: string;
+    convertedAudioUrl?: string;
+    type?: 'TTS' | 'VC' | 'CONCAT';
+  })[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;

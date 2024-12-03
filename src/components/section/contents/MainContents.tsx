@@ -35,6 +35,7 @@ interface MainContentsProps {
   onReorder?: (newItems: MainContentsItem[]) => void;
   currentPlayingId?: string;
   itemCount?: number;
+  totalItemsCount?: number;
   selectedItemsCount?: number;
   onSearch?: (searchTerm: string) => void;
   onFilter?: () => void;
@@ -62,6 +63,7 @@ const MainContents = ({
   onSearch,
   onFileUpload,
   hasAudioFile,
+  totalItemsCount,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
 
@@ -71,7 +73,7 @@ const MainContents = ({
         <div className="mt-2 border rounded-md">
           <TableToolbar
             title={type === 'RECENT' ? '모든 히스토리 내역' : '모든 프로젝트'}
-            count={items.length}
+            totalItemsCount={totalItemsCount || 0}
             selectedItemsCount={selectedItemsCount || 0}
             onDelete={onDelete}
             onSearch={onSearch!}

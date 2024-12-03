@@ -2,10 +2,9 @@ import { TbSettings } from 'react-icons/tb';
 
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import VoiceSelection from '@/components/custom/features/vc/VoiceSelection';
-import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Label } from '@/components/ui/label';
-import { VC_TOOLTIP } from '@/constants/tooltips';
 import { useVCStore } from '@/stores/vc.store';
+import { VCItem } from '@/types/table';
 
 export interface TargetVoice {
   id: string;
@@ -29,7 +28,7 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
   customVoices,
   onVoiceUpload,
 }) => {
-  const { showAlert, applyToSelected } = useVCStore();
+  const { showAlert, applyToSelected, setItems, items } = useVCStore();
 
   const handleVoiceUpload = (files: File[]) => {
     const newVoices = files.map((file) => ({
@@ -66,8 +65,28 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
       showAlert('타겟 보이스를 선택해주세요.', 'destructive');
       return;
     }
+
+    const hasSelectedItems = items.some((item) => item.isSelected);
+    if (!hasSelectedItems) {
+      showAlert('적용할 원본 음성을 선택해주세요.', 'destructive');
+      return;
+    }
+
     applyToSelected();
     showAlert('타겟 보이스가 적용되었습니다.', 'default');
+  };
+
+  const handleResetClick = () => {
+    setItems((prevItems: VCItem[]) =>
+      prevItems.map(
+        (item): VCItem => ({
+          ...item,
+          targetVoice: undefined,
+          status: '대기중',
+        })
+      )
+    );
+    showAlert('변경사항이 초기화되었습니다.', 'default');
   };
 
   return (
@@ -93,19 +112,11 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
         </div>
 
         <div className="flex flex-col gap-4">
-          <TooltipWrapper content={VC_TOOLTIP.APPLY}>
-            <div>
-              <ApplyButton
-                onClick={handleApplyClick}
-                className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
-              />
-            </div>
-          </TooltipWrapper>
-          <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
-            <div>
-              <ResetChangesButton />
-            </div>
-          </TooltipWrapper>
+          <ApplyButton
+            onClick={handleApplyClick}
+            className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
+          />
+          <ResetChangesButton onClick={handleResetClick} />
         </div>
       </div>
     </aside>

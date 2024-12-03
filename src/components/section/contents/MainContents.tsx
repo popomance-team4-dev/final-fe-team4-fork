@@ -40,6 +40,7 @@ interface MainContentsProps {
   onFileUpload?: (files: FileList | null) => void;
   hasAudioFile?: boolean;
   onGenerate?: () => Promise<void>;
+  isGenerating?: boolean;
 }
 
 const MainContents = ({
@@ -64,6 +65,7 @@ const MainContents = ({
   hasAudioFile,
   totalItemsCount,
   onGenerate,
+  isGenerating,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
 
@@ -130,7 +132,9 @@ const MainContents = ({
           />
         </div>
         <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>
-          <Button onClick={onGenerate}>{getButtonText()}</Button>
+          <Button onClick={onGenerate} disabled={isGenerating}>
+            {isGenerating ? '생성 중...' : getButtonText()}
+          </Button>
         </div>
       </>
     );

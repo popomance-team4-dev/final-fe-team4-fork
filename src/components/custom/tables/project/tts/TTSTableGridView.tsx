@@ -118,11 +118,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
                 </div>
               </TooltipWrapper>
 
-              <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
-                <div>
-                  <DownloadButton onClick={props.onDownload} />
-                </div>
-              </TooltipWrapper>
+              <DownloadButton onClick={props.onDownload} />
 
               <TooltipWrapper content={TTS_TOOLTIP.VIEW_HISTORY}>
                 <div>

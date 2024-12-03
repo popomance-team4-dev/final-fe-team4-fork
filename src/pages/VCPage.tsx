@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { processVoiceConversion, VCProcessResponse, VCSaveDto } from '@/api/vcApi';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import VCSidebar, { TargetVoice } from '@/components/section/sidebar/VCSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAudioDownload } from '@/hooks/useAudioDownload';
+import { useVoiceConversion } from '@/hooks/useVoiceConversion';
 import PageLayout from '@/layouts/PageLayout';
 import { useVCStore } from '@/stores/vc.store';
 
@@ -32,118 +33,44 @@ const VCPage = () => {
 
   const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
 
-  useEffect(() => {
-    return () => {
-      cleanupAllAudioUrls();
-    };
-  }, [cleanupAllAudioUrls]);
+  // 클린업 이펙트
+  useEffect(() => cleanupAllAudioUrls, [cleanupAllAudioUrls]);
 
-  const handleApplyTargetVoice = useCallback(async () => {
-    if (!selectedVoice) return;
-
-    const updatedItems = items.map((item) => {
-      if (item.isSelected) {
-        return {
-          ...item,
-          status: '대기중' as const,
-          targetVoice: selectedVoice,
-        };
-      }
-      return item;
-    });
-    setItems(updatedItems);
-    showAlert('타겟 보이스가 적용되었습니다.', 'default');
-  }, [selectedVoice, items, setItems, showAlert]);
-
-  const handleVoiceConversion = useCallback(async () => {
-    if (!selectedVoice) return;
-    try {
-      const selectedItems = items.filter((item) => item.isSelected && item.file);
-      if (selectedItems.length === 0) {
-        showAlert('변환할 오디오를 선택해주세요.', 'destructive');
-        return;
-      }
-
-      const updatedItems = items.map((item) => {
-        if (item.isSelected) {
-          const updatedItem = {
-            ...item,
-            status: '대기중' as const,
-            targetVoice: selectedVoice,
-          };
-          console.log('Updated item:', updatedItem);
-          return updatedItem;
-        }
-        return item;
-      });
-      setItems(updatedItems);
-
-      const vcSaveDto: VCSaveDto = {
-        projectId: projectData.projectId ?? undefined,
-        projectName: projectData.projectName,
-        srcFiles: selectedItems.map((item) => ({
-          audioType: 'VC_SRC',
-          localFileName: item.fileName,
-          unitScript: item.text,
-          isChecked: true,
-        })),
-        trgFiles: [
-          {
-            audioType: 'VC_TRG',
-            localFileName: 'rico.mp3',
-            s3MemberAudioMetaId: undefined,
-          },
-        ],
-      };
-
-      const targetVoiceFile = await fetch('/rico.mp3').then((res) => res.blob());
-      const files = [
-        ...selectedItems.map((item) => item.file as File),
-        new File([targetVoiceFile], 'rico.mp3', { type: 'audio/mp3' }),
-      ];
-
-      const result = await processVoiceConversion(vcSaveDto, files, memberId);
-
-      if (result) {
-        console.log('서버 응답:', result);
-        const updatedItems = items.map((item) => {
-          const processedItem = result?.find((r: VCProcessResponse) =>
-            r.srcAudio.includes(item.fileName)
-          );
-          if (processedItem) {
-            return {
-              ...item,
-              status: '완료' as const,
-              convertedAudioUrl: processedItem.genAudios[0],
-            };
-          }
-          return item;
-        });
-        setItems(updatedItems);
-      }
-    } catch (error) {
-      console.error('음성 변환 실패:', error);
-    }
-  }, [selectedVoice, items, projectData, memberId, setItems, showAlert]);
-
-  const mainContentItems = items.map((item) => {
-    console.log('VCPage - Item:', {
-      id: item.id,
-      targetVoice: item.targetVoice,
-      status: item.status,
-    });
-    return {
-      id: item.id,
-      text: item.text,
-      isSelected: item.isSelected,
-      status: item.status,
-      fileName: item.fileName,
-      audioUrl: item.convertedAudioUrl || item.originalAudioUrl,
-      targetVoice: item.targetVoice,
-    };
+  // 음성 변환 핸들러
+  const { handleVoiceConversion, isGenerating } = useVoiceConversion({
+    items,
+    selectedVoice,
+    projectData,
+    memberId,
+    setItems,
+    showAlert,
   });
 
-  const hasAudioFile = items.length > 0;
+  // 다운로드 핸들러
+  const handleDownload = useAudioDownload({ items, showAlert });
+
+  // 메인 컨텐츠 아이템 변환
+  const mainContentItems = useMemo(
+    () =>
+      items.map((item) => ({
+        id: item.id,
+        text: item.text,
+        isSelected: item.isSelected,
+        status: item.status,
+        fileName: item.fileName,
+        audioUrl: item.convertedAudioUrl || item.originalAudioUrl,
+        targetVoice: item.targetVoice,
+      })),
+    [items]
+  );
+
+  // 현재 재생중인 오디오 URL
+  const currentAudioUrl = useMemo(() => {
+    const selectedItem = items.find(
+      (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
+    );
+    return selectedItem?.convertedAudioUrl || '';
+  }, [items]);
 
   return (
     <PageLayout
@@ -153,23 +80,12 @@ const VCPage = () => {
         <VCSidebar
           selectedVoice={selectedVoice}
           onVoiceSelect={setSelectedVoice}
-          onApplyConversion={handleApplyTargetVoice}
+          onApplyConversion={handleVoiceConversion}
           customVoices={customVoices}
           onVoiceUpload={setCustomVoices}
         />
       }
-      footer={
-        <AudioPlayer
-          audioUrl={(() => {
-            const url =
-              items.find(
-                (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
-              )?.convertedAudioUrl || '';
-            console.log('AudioPlayer URL:', url);
-            return url;
-          })()}
-        />
-      }
+      footer={<AudioPlayer audioUrl={currentAudioUrl} />}
     >
       {alert.show && (
         <div className="absolute left-1/2 -translate-x-1/2 top-6">
@@ -194,10 +110,12 @@ const VCPage = () => {
         onAdd={handleAdd}
         onPlay={handlePlay}
         onSelectAll={toggleSelectAll}
-        isAllSelected={items.length > 0 && items.every((item) => item.isSelected)}
+        isAllSelected={items.every((item) => item.isSelected)}
         onFileUpload={handleFileUpload}
-        hasAudioFile={hasAudioFile}
+        hasAudioFile={items.length > 0}
         onGenerate={handleVoiceConversion}
+        isGenerating={isGenerating}
+        onDownloadItem={handleDownload}
       />
     </PageLayout>
   );

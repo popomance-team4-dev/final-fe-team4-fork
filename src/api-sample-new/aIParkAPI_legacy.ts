@@ -9,8 +9,9 @@
 // orval를 이용해서 생성된 API 코드입니다.
 // 이 코드가 안 맞는 경우, 수정이 필요합니다.
 
+import { customInstance } from '@/api/axios-client';
+
 import type {
-  ConcatSaveDto,
   ConvertMultipleAudiosBody,
   DataResponseDto,
   DownloadGeneratedAudio1Params,
@@ -18,8 +19,6 @@ import type {
   DownloadGeneratedAudio3Params,
   DownloadGeneratedAudio4Params,
   DownloadGeneratedAudioParams,
-  ProcessVCProjectBody,
-  ProcessVCProjectParams,
   ResponseDto,
   SaveVCProjectBody,
   TestFailParams,
@@ -35,7 +34,6 @@ import type {
   UploadUnitBody,
   UploadUnitParams,
 } from './aIParkAPI.schemas';
-import { customInstance } from './axios-client';
 
 /**
  * VC 프로젝트 상태를 저장합니다.<br>- 새로운 프로젝트를 생성하거나 기존 프로젝트를 업데이트합니다.<br>- 사용자가 s3에 업로드한 오디오를 선택하면 MultipartFile의 값은 null로 보냅니다.<br>- 파일(MultipartFile)과 메타데이터(JSON)를 동시에 전송해야 합니다.
@@ -53,27 +51,6 @@ export const saveVCProject = (saveVCProjectBody: SaveVCProjectBody) => {
     method: 'POST',
     headers: { 'Content-Type': 'multipart/form-data' },
     data: formData,
-  });
-};
-
-/**
- * 소스/타겟 오디오 파일 처리 및 Voice ID 생성
- * @summary VC 프로젝트 처리
- */
-export const processVCProject = (
-  processVCProjectBody: ProcessVCProjectBody,
-  params: ProcessVCProjectParams
-) => {
-  const formData = new FormData();
-  formData.append('vcSaveDto', JSON.stringify(processVCProjectBody.vcSaveDto));
-  processVCProjectBody.files.forEach((value) => formData.append('files', value));
-
-  return customInstance<ResponseDto>({
-    url: `/vc/process`,
-    method: 'POST',
-    headers: { 'Content-Type': 'multipart/form-data' },
-    data: formData,
-    params,
   });
 };
 
@@ -189,19 +166,6 @@ export const uploadConcat = (uploadConcatBody: UploadConcatBody, params: UploadC
 };
 
 /**
- * Concat 프로젝트 상태를 저장합니다.
- * @summary Concat 상태 저장
- */
-export const concatSave = (concatSaveDto: ConcatSaveDto) => {
-  return customInstance<ResponseDto>({
-    url: `/concat/save`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: concatSaveDto,
-  });
-};
-
-/**
  * 해당 Concat 프로젝트를 삭제하고 관련된 소스, 아웃풋 오디오를 삭제합니다.
  * @summary Concat 프로젝트 삭제
  */
@@ -253,14 +217,6 @@ export const testSuccess = () => {
 
 export const testFail = (params: TestFailParams) => {
   return customInstance<ResponseDto>({ url: `/test/fail`, method: 'GET', params });
-};
-
-/**
- * Concat 프로젝트 상태를 가져옵니다.
- * @summary Concat 상태 로드
- */
-export const concatLoad = (projectId: number) => {
-  return customInstance<ResponseDto>({ url: `/concat/${projectId}`, method: 'GET' });
 };
 
 /**
@@ -378,7 +334,6 @@ export const deleteTTSDetail = (deleteTTSDetailBody: number[]) => {
 };
 
 export type SaveVCProjectResult = NonNullable<Awaited<ReturnType<typeof saveVCProject>>>;
-export type ProcessVCProjectResult = NonNullable<Awaited<ReturnType<typeof processVCProject>>>;
 export type UploadUnitResult = NonNullable<Awaited<ReturnType<typeof uploadUnit>>>;
 export type UploadUnit1Result = NonNullable<Awaited<ReturnType<typeof uploadUnit1>>>;
 export type TtsSaveResult = NonNullable<Awaited<ReturnType<typeof ttsSave>>>;
@@ -386,7 +341,6 @@ export type ConvertBatchTextsResult = NonNullable<Awaited<ReturnType<typeof conv
 export type UploadFilesResult = NonNullable<Awaited<ReturnType<typeof uploadFiles>>>;
 export type UploadFiles1Result = NonNullable<Awaited<ReturnType<typeof uploadFiles1>>>;
 export type UploadConcatResult = NonNullable<Awaited<ReturnType<typeof uploadConcat>>>;
-export type ConcatSaveResult = NonNullable<Awaited<ReturnType<typeof concatSave>>>;
 export type DeleteConcatProjectResult = NonNullable<
   Awaited<ReturnType<typeof deleteConcatProject>>
 >;
@@ -400,7 +354,6 @@ export type VcLoadResult = NonNullable<Awaited<ReturnType<typeof vcLoad>>>;
 
 export type TestSuccessResult = NonNullable<Awaited<ReturnType<typeof testSuccess>>>;
 export type TestFailResult = NonNullable<Awaited<ReturnType<typeof testFail>>>;
-export type ConcatLoadResult = NonNullable<Awaited<ReturnType<typeof concatLoad>>>;
 export type DownloadGeneratedAudioResult = NonNullable<
   Awaited<ReturnType<typeof downloadGeneratedAudio>>
 >;

@@ -10,6 +10,6 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
   }
 };
 
-export const stripPhoneNumberFormatting = (phoneNumber: string): string => {
+export const formattedPhone = (phoneNumber: string): string => {
   return phoneNumber.replace(/[^0-9]/g, '');
 };

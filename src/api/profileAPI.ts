@@ -58,3 +58,48 @@ export const findPassword = async ({ email, phoneNumber }: FindPasswordRequest) 
     throw new Error(errorMessage);
   }
 };
+
+interface Profile {
+  name: string;
+  phoneNumber: string;
+}
+
+interface Password {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export const changeProfile = async ({ name, phoneNumber }: Profile) => {
+  try {
+    const response = await customInstance.put('/member/info/update', {
+      name,
+      phoneNumber,
+    });
+    return response;
+  } catch (error) {
+    const errorMessage =
+      (error as any).response?.data?.message ||
+      '프로필 업데이트에 실패했습니다. 다시 시도해주세요.';
+    throw new Error(errorMessage);
+  }
+};
+
+export const changePassword = async ({
+  currentPassword,
+  newPassword,
+  confirmPassword,
+}: Password) => {
+  try {
+    const response = await customInstance.put('/member/password/update', {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
+    return response;
+  } catch (error) {
+    const errorMessage =
+      (error as any).response?.data?.message || '비밀번호 변경에 실패했습니다. 다시 시도해주세요.';
+    throw new Error(errorMessage);
+  }
+};

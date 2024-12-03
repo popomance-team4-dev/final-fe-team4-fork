@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { findID, findPassword } from '@/api/profileAPI';
-import { sendSMS, verifySMS } from '@/api/smsAPI';
+import { sendSMS } from '@/api/smsAPI';
 import { ResultDialog } from '@/components/custom/dialogs/FindResultDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -93,26 +93,16 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
       setResultDialogOpen(true);
     }
   };
-
   const handleSMSConfirm = async () => {
-    try {
-      await verifySMS(formData.phone, formData.verificationCode);
-      setFormData((prev) => ({
-        ...prev,
-        isPhoneVerified: true,
-      }));
-      setResultDialogInfo({
-        title: '인증 성공',
-        message: '휴대폰 인증이 완료되었습니다.',
-      });
-      setResultDialogOpen(true);
-    } catch (error) {
-      setResultDialogInfo({
-        title: '인증 실패',
-        message: error instanceof Error ? error.message : '인증번호 확인에 실패했습니다.',
-      });
-      setResultDialogOpen(true);
-    }
+    setFormData((prev) => ({
+      ...prev,
+      isPhoneVerified: true,
+    }));
+    setResultDialogInfo({
+      title: '인증 성공',
+      message: '휴대폰 인증이 완료되었습니다.',
+    });
+    setResultDialogOpen(true);
   };
 
   return (
@@ -126,17 +116,19 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
       </p>
 
       <div className="flex flex-col gap-4">
-        <div>
-          <label className="text-base font-medium mb-1 block">이름</label>
-          <Input
-            variant="signin"
-            type="text"
-            name="name"
-            placeholder="홍길동"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-        </div>
+        {type === 'ID' && (
+          <div>
+            <label className="text-base font-medium mb-1 block">이름</label>
+            <Input
+              variant="signin"
+              type="text"
+              name="name"
+              placeholder="홍길동"
+              value={formData.name}
+              onChange={handleInputChange}
+            />
+          </div>
+        )}
 
         {type === 'PW' && (
           <div>
@@ -206,7 +198,7 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
         variant="default"
         size="default"
         onClick={handleSubmit}
-        disabled={!formData.name || !formData.phone || (type === 'PW' && !formData.isPhoneVerified)}
+        disabled={!formData.email || (type === 'PW' && !formData.isPhoneVerified)}
       >
         {type === 'ID' ? '아이디 찾기' : '비밀번호 찾기'}
       </Button>

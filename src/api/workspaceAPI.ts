@@ -55,7 +55,7 @@ export const fetchRecentProjects = async (): Promise<Project[]> => {
     const response = await customInstance.get<workspacesResponse>('/workspace/project-list');
     console.log('최근 프로젝트 데이터:', response.data);
 
-    return response.data.data.map((project) => ({
+    return response.data.map((project) => ({
       projectId: project.id, // id를 projectId로 매핑
       projectType: project.type, // type을 projectType으로 매핑
       projectName: project.name, // name을 projectName으로 매핑

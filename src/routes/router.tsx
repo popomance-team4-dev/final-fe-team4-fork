@@ -87,6 +87,10 @@ const router = createBrowserRouter([
             element: <CONCATPage />,
           },
           {
+            path: `${PATH.CONCAT}/:id`,
+            element: <CONCATPage />,
+          },
+          {
             path: PATH.VC,
             element: <VCPage />,
           },

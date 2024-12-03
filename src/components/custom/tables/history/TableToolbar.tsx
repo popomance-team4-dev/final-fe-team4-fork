@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 
 interface TableToolbarProps {
   title: string;
-  count: number;
+  totalItemsCount: number;
   selectedItemsCount: number;
   onDelete: () => void;
   onSearch: (searchTerm: string) => void;
@@ -13,7 +13,7 @@ interface TableToolbarProps {
 
 const TableToolbar: React.FC<TableToolbarProps> = ({
   title,
-  count,
+  totalItemsCount,
   selectedItemsCount,
   onDelete,
   onSearch,
@@ -25,7 +25,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       {/* Left Section: Title and Delete Button */}
       <div className="flex items-center gap-2">
         <span className="text-body1 text-black">{title}</span>
-        <span className="text-body1 text-gray-700">{count}</span>
+        <span className="text-body1 text-gray-700">{totalItemsCount}</span>
         <button
           onClick={onDelete}
           disabled={isDeleteDisabled}

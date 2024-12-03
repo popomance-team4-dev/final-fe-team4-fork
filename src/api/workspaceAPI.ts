@@ -1,4 +1,4 @@
-import { Project } from '@/api/aIParkAPI.schemas';
+import { Project, workspacesResponse } from '@/api/aIParkAPI.schemas';
 import { customInstance } from '@/api/axios-client';
 
 export const fetchProjects = async (
@@ -48,5 +48,24 @@ export const deleteProject = async (projectIds: number[]) => {
   } catch (error) {
     console.error('프로젝트 삭제 실패:', error);
     throw error;
+  }
+};
+export const fetchRecentProjects = async (): Promise<Project[]> => {
+  try {
+    const response = await customInstance.get<workspacesResponse>('/workspace/project-list');
+    console.log('최근 프로젝트 데이터:', response.data);
+
+    return response.data.data.map((project) => ({
+      projectId: project.id, // id를 projectId로 매핑
+      projectType: project.type, // type을 projectType으로 매핑
+      projectName: project.name, // name을 projectName으로 매핑
+      script: project.script || '스크립트 없음', // script 기본값 처리
+      updatedAt: project.updatedAt,
+      createdAt: project.createdAt,
+      projectStatus: project.status,
+    }));
+  } catch (error) {
+    console.error('최근 프로젝트 조회 실패:', error);
+    throw new Error('최근 프로젝트 조회에 실패했습니다.');
   }
 };

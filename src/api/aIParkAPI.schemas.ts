@@ -272,10 +272,10 @@ export interface Project {
   projectId: number;
   projectType: string;
   projectName: string;
-  script: string;
-  projectStatus: string;
+  script?: string;
+  projectStatus?: string;
   updatedAt: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface ProjectsResponse {
@@ -286,4 +286,16 @@ export interface ProjectsResponse {
   };
   totalPages: number;
   totalElements: number;
+}
+
+export interface workspacesResponse {
+  data: {
+    id: number;
+    type: string;
+    name: string;
+    script?: string;
+    status?: string;
+    updatedAt: string;
+    createdAt?: string;
+  }[];
 }

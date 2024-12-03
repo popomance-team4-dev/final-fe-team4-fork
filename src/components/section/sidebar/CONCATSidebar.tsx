@@ -3,8 +3,6 @@ import { TbSettings } from 'react-icons/tb';
 
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
-import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
-import { CONCAT_TOOLTIP } from '@/constants/tooltips';
 import { useConcatStore } from '@/stores/concat.store';
 
 const CONCATSidebar: React.FC = () => {
@@ -48,17 +46,8 @@ const CONCATSidebar: React.FC = () => {
       </div>
 
       <div className="absolute bottom-0 flex flex-col gap-4 mb-[102px]">
-        <TooltipWrapper content={CONCAT_TOOLTIP.APPLY}>
-          <div>
-            <ApplyButton onClick={applySilenceToSelected} />
-          </div>
-        </TooltipWrapper>
-
-        <TooltipWrapper content={CONCAT_TOOLTIP.RESET_SETTINGS}>
-          <div>
-            <ResetChangesButton onClick={reset} />
-          </div>
-        </TooltipWrapper>
+        <ApplyButton onClick={applySilenceToSelected} />
+        <ResetChangesButton onClick={reset} />
       </div>
     </aside>
   );

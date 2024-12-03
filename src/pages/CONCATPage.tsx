@@ -90,6 +90,24 @@ const CONCATPage = () => {
     loadConcatProject();
   }, [id, setItems]);
 
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files) return;
+
+    const texts = await Promise.all(Array.from(files).map((file) => file.text()));
+
+    setItems(
+      items.map((item, index) => {
+        if (item.isSelected && texts[index]) {
+          return {
+            ...item,
+            text: texts[index],
+          };
+        }
+        return item;
+      })
+    );
+  };
+
   return (
     <PageLayout
       variant="project"
@@ -124,6 +142,7 @@ const CONCATPage = () => {
           onSelectAll={toggleSelectAll}
           isAllSelected={items.every((item: ConcatItem) => item.isSelected)}
           hasAudioFile={hasAudioFile}
+          onFileUpload={handleFileUpload}
         />
       )}
     </PageLayout>

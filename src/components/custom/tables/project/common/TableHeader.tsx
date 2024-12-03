@@ -25,6 +25,51 @@ interface TableHeaderProps {
   hasAudioFile?: boolean;
 }
 
+export const TTSTableHeader: React.FC = () => {
+  return (
+    <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="w-6" />
+      <div className="w-4 ml-2 mr-2" />
+      <div className="w-4 ml-2 mr-2" />
+      <div>텍스트</div>
+      <div className="flex gap-7">
+        <div className="w-[60px] text-center mr-1">속도</div>
+        <div className="w-[52px] text-center mr-2">볼륨</div>
+        <div className="w-[56px] text-center mr-2">피치</div>
+        <div className="text-center mr-3">내역</div>
+      </div>
+    </div>
+  );
+};
+
+export const VCTableHeader: React.FC = () => {
+  return (
+    <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,193px,1fr,202px] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="w-6" />
+      <div className="w-4 ml-2 mr-[42px]" />
+      <div>파일명</div>
+      <div>텍스트</div>
+      <div>타겟 보이스</div>
+    </div>
+  );
+};
+
+export const ConcatTableHeader: React.FC = () => {
+  return (
+    <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,193px,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="w-6" />
+      <div className="w-4 ml-2 mr-[42px]" />
+      <div>파일명</div>
+      <div>텍스트</div>
+      <div className="flex gap-7">
+        <div className="w-[60px] text-center mr-4.5">맨 앞</div>
+        <div className="w-[60px] text-center mr-4.5">맨 뒤</div>
+        <div className="w-[60px] text-center mr-5">간격</div>
+      </div>
+    </div>
+  );
+};
+
 export const TableHeader: React.FC<TableHeaderProps> = ({
   onDelete,
   onAdd,

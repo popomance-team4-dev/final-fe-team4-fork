@@ -206,13 +206,24 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
   },
 
   reset: () => {
-    set({
+    set((state) => ({
       silenceSettings: {
         fileSilence: 0,
         frontSilence: 0,
         backSilence: 0,
       },
+      items: state.items.map((item) =>
+        item.isSelected
+          ? {
+              ...item,
+              frontSilence: 0,
+              backSilence: 0,
+              endSilence: 0,
+              status: '대기중',
+            }
+          : item
+      ),
       isModified: false,
-    });
+    }));
   },
 }));

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TbClockPlus } from 'react-icons/tb';
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -34,6 +35,7 @@ const SilenceStatus = React.forwardRef<HTMLDivElement, SilenceStatusProps>(
         className={cn('flex items-center gap-2 h-7', className)}
         {...props}
       >
+        <TbClockPlus className="w-4.5 h-4.5 text-purple-900 flex-shrink-0" />
         <span className="text-sm text-purple-900">
           {showLabel ? `${label} ` : ''}
           {value.toFixed(1)}

@@ -72,6 +72,13 @@ const VCPage = () => {
     return selectedItem?.convertedAudioUrl || '';
   }, [items]);
 
+  const handleReorder = (startIndex: number, endIndex: number) => {
+    const newItems = [...items];
+    const [removed] = newItems.splice(startIndex, 1);
+    newItems.splice(endIndex, 0, removed);
+    setItems(newItems);
+  };
+
   return (
     <PageLayout
       variant="project"
@@ -116,6 +123,7 @@ const VCPage = () => {
         onGenerate={handleVoiceConversion}
         isGenerating={isGenerating}
         onDownloadItem={handleDownload}
+        onReorder={handleReorder}
       />
     </PageLayout>
   );

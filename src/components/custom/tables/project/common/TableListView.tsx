@@ -1,3 +1,5 @@
+import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
 
 import { ConcatListRow } from '../concat/ConcatListRow';
@@ -30,6 +32,7 @@ interface TableListViewProps {
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   type?: 'TTS' | 'VC' | 'CONCAT';
+  onReorder?: (startIndex: number, endIndex: number) => void;
 }
 
 export const TableListView: React.FC<TableListViewProps> = ({
@@ -37,6 +40,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
   onSelectionChange,
   onTextChange,
   type = 'TTS',
+  onReorder,
 }) => {
   const renderHeader = () => {
     switch (type) {
@@ -70,10 +74,31 @@ export const TableListView: React.FC<TableListViewProps> = ({
     }
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = rows.findIndex((row) => row.id === active.id);
+    const newIndex = rows.findIndex((row) => row.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
+    }
+
+    onReorder?.(oldIndex, newIndex);
+  };
+
   return (
     <div className="w-full mx-auto relative">
       {renderHeader()}
-      {rows.map((row) => renderRow(row))}
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={rows.map((row) => row.id)} strategy={verticalListSortingStrategy}>
+          {rows.map((row) => renderRow(row))}
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };

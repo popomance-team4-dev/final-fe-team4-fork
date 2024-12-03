@@ -48,47 +48,46 @@ export const ConcatListRow: React.FC<ListRowProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none">
-      <div className="flex flex-col px-4 py-2 border-b bg-white">
-        <div className="grid grid-cols-[auto,auto,200px,1fr,auto] items-center group cursor-grab active:cursor-grabbing">
-          <div className="flex items-center cursor-pointer relative">
-            <Checkbox
-              checked={isSelected}
-              onCheckedChange={() => onSelectionChange(id)}
-              className="cursor-pointer ml-2 mr-2"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <PlayButton onClick={() => onPlay(id)} className="mx-2 w-6 h-6" />
-          </div>
-          <div className="ml-4 truncate">{fileName}</div>
-          <Textarea
-            value={text}
-            onChange={(e) => {
-              onTextChange(id, e.target.value);
-              handleTextAreaResize(e.target);
-            }}
-            placeholder="스크립트를 입력하세요."
-            className="flex-1 min-h-[40px] border-0 overflow-visible resize-none w-full"
-            rows={1}
+      <div className="flex items-center px-4 py-2 border-b group bg-white cursor-grab active:cursor-grabbing">
+        <div className="flex items-center cursor-pointer relative">
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={() => onSelectionChange(id)}
+            className="cursor-pointer ml-2 mr-2"
+            id={`checkbox-${id}`}
           />
-          <div className="flex gap-8 items-center">
-            <SilenceStatus
-              type={SILENCE_STATUS_TYPES.FRONT_SILENCE}
-              value={frontSilence}
-              showLabel={false}
-            />
-            <SilenceStatus
-              type={SILENCE_STATUS_TYPES.BACK_SILENCE}
-              value={backSilence}
-              showLabel={false}
-            />
-            <SilenceStatus
-              type={SILENCE_STATUS_TYPES.END_SILENCE}
-              value={endSilence}
-              showLabel={false}
-              className="mr-3"
-            />
-          </div>
+          <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
+        </div>
+        <PlayButton onClick={() => onPlay(id)} className="ml-2 mr-2 w-5 h-5" />
+        <div className="ml-4 truncate w-[180px]">{fileName}</div>
+        <Textarea
+          value={text}
+          onChange={(e) => {
+            onTextChange(id, e.target.value);
+            handleTextAreaResize(e.target);
+          }}
+          onInput={(e) => handleTextAreaResize(e.currentTarget)}
+          placeholder="스크립트를 입력하세요."
+          className="flex-1 ml-2 mr-4 min-h-[40px] border-0 overflow-visible resize-none"
+          rows={1}
+        />
+        <div className="flex gap-8 items-center">
+          <SilenceStatus
+            type={SILENCE_STATUS_TYPES.FRONT_SILENCE}
+            value={frontSilence}
+            showLabel={false}
+          />
+          <SilenceStatus
+            type={SILENCE_STATUS_TYPES.BACK_SILENCE}
+            value={backSilence}
+            showLabel={false}
+          />
+          <SilenceStatus
+            type={SILENCE_STATUS_TYPES.END_SILENCE}
+            value={endSilence}
+            showLabel={false}
+            className="mr-3"
+          />
         </div>
       </div>
     </div>

@@ -30,7 +30,7 @@ interface MainContentsProps {
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;
   onPause?: (id: string) => void;
-  onReorder?: (newItems: MainContentsItem[]) => void;
+  onReorder?: (startIndex: number, endIndex: number) => void;
   currentPlayingId?: string;
   itemCount?: number;
   totalItemsCount?: number;

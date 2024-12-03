@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { concatLoad } from '@/api/aIParkAPI';
@@ -108,6 +108,16 @@ const CONCATPage = () => {
     );
   };
 
+  const handleReorder = useCallback(
+    (startIndex: number, endIndex: number) => {
+      const newItems = [...items];
+      const [removed] = newItems.splice(startIndex, 1);
+      newItems.splice(endIndex, 0, removed);
+      setItems(newItems);
+    },
+    [items, setItems]
+  );
+
   return (
     <PageLayout
       variant="project"
@@ -143,6 +153,7 @@ const CONCATPage = () => {
           isAllSelected={items.every((item: ConcatItem) => item.isSelected)}
           hasAudioFile={hasAudioFile}
           onFileUpload={handleFileUpload}
+          onReorder={handleReorder}
         />
       )}
     </PageLayout>

@@ -2,15 +2,9 @@ import { useEffect, useState } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
 import { loadVoiceLanguageOptions, loadVoiceStyleOptions, voiceStyleData } from '@/api/ttsAPI';
-import {
-  ApplyAllButton,
-  ApplySelectionButton,
-  ResetChangesButton,
-} from '@/components/custom/buttons/IconButton';
+import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
-import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Select } from '@/components/ui/select';
-import { TTS_TOOLTIP } from '@/constants/tooltips';
 import { useTTSStore } from '@/stores/tts.store';
 
 const TTSSidebar: React.FC = () => {
@@ -25,7 +19,6 @@ const TTSSidebar: React.FC = () => {
     isModified,
     isAllConfigured,
     applyToSelected,
-    applyToAll,
   } = useTTSStore();
 
   const [voiceStyleList, setVoiceStyleList] = useState<voiceStyleData[]>([]);
@@ -136,31 +129,15 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <TooltipWrapper content={TTS_TOOLTIP.APPLY_SELECTED}>
-          <div>
-            <ApplySelectionButton
-              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
-              onClick={applyToSelected}
-            />
-          </div>
-        </TooltipWrapper>
+        <ApplyButton
+          onClick={applyToSelected}
+          className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+        />
 
-        <TooltipWrapper content={TTS_TOOLTIP.APPLY_ALL}>
-          <div>
-            <ApplyAllButton
-              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
-              onClick={applyToAll}
-            />
-          </div>
-        </TooltipWrapper>
-        <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
-          <div>
-            <ResetChangesButton
-              onClick={reset}
-              className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
-            />
-          </div>
-        </TooltipWrapper>
+        <ResetChangesButton
+          onClick={reset}
+          className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+        />
       </div>
     </aside>
   );

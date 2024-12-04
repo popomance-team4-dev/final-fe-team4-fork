@@ -10,7 +10,7 @@ interface TableFooterProps {
   onRegenerate: () => void;
   onDownload: () => void;
   isListView: boolean;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
 }
 
 export const TableFooter: React.FC<TableFooterProps> = ({
@@ -34,11 +34,7 @@ export const TableFooter: React.FC<TableFooterProps> = ({
               </div>
             </TooltipWrapper>
           )}
-          <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
-            <div>
-              <DownloadButton onClick={onDownload} />
-            </div>
-          </TooltipWrapper>
+          <DownloadButton onClick={onDownload} />
         </div>
       )}
     </div>

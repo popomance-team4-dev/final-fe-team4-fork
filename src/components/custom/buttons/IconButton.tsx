@@ -7,8 +7,7 @@ import {
   TbPlayerPlayFilled,
   TbRefresh,
   TbReload,
-  TbStack,
-  TbStack2,
+  TbSparkles,
   TbTrash,
   TbUpload,
 } from 'react-icons/tb';
@@ -203,26 +202,8 @@ export function TTSPlaybackHistoryButton({
     />
   );
 }
-export function ApplySelectionButton({
-  onClick,
-  className,
-}: {
-  readonly onClick?: () => void;
-  readonly className?: string;
-}) {
-  return (
-    <IconButton
-      icon={<TbStack />}
-      label="선택 적용"
-      iconBgColor="bg-blue-50"
-      iconColor="text-blue-600"
-      onClick={onClick}
-      className={className}
-    />
-  );
-}
 
-export function ApplyAllButton({
+export function ApplyButton({
   onClick,
   className,
 }: {
@@ -231,8 +212,8 @@ export function ApplyAllButton({
 }) {
   return (
     <IconButton
-      icon={<TbStack2 />}
-      label="전체 적용"
+      icon={<TbSparkles />}
+      label="적용하기"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}

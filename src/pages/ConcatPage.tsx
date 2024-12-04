@@ -5,9 +5,10 @@ import { concatLoad } from '@/api/concatAPI';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
-import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATSidebar';
+import ConcatSidebar from '@/components/section/sidebar/ConcatSidebar';
 import { Spinner } from '@/components/ui/spinner';
 import PageLayout from '@/layouts/PageLayout';
+import { ConcatItem, useConcatStore } from '@/stores/concat.store';
 
 interface ConcatProjectDto {
   id: number;
@@ -31,26 +32,26 @@ interface ConcatData {
   cnctProjectDto: ConcatProjectDto;
   cnctDetailDtos: ConcatDetailDto[];
 }
-interface CONCATItem {
-  id: string;
-  text: string;
-  isSelected: boolean;
-  speed: number;
-  volume: number;
-  pitch: number;
-  fileName: string;
-}
 
-const CONCATPage = () => {
+const ConcatPage = () => {
   const { id } = useParams();
-  const [items, setItems] = useState<CONCATItem[]>([]);
-  const [projectName, setProjectName] = useState('프로젝트');
+  const {
+    items,
+    setItems,
+    deleteSelectedItems,
+    toggleSelection,
+    toggleSelectAll,
+    handleAdd,
+    handleTextChange,
+    handlePlay,
+  } = useConcatStore();
+  const [projectName, setProjectName] = useState('새 프로젝트');
   const [isLoading, setIsLoading] = useState(false);
+  const hasAudioFile = items.length > 0;
 
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;
-
       setIsLoading(true);
       try {
         const response = await concatLoad(Number(id));
@@ -64,7 +65,7 @@ const CONCATPage = () => {
             setProjectName(cnctProjectDto.projectName);
           }
 
-          const newItems: CONCATItem[] = cnctDetailDtos.map((detail) => ({
+          const newItems: ConcatItem[] = cnctDetailDtos.map((detail) => ({
             id: detail.id.toString(),
             text: detail.unitScript,
             isSelected: detail.checked,
@@ -72,6 +73,9 @@ const CONCATPage = () => {
             volume: 1.0,
             pitch: 1.0,
             fileName: detail.srcUrl.split('/').pop() || '',
+            audioUrl: '',
+            file: new File([], ''),
+            status: '대기중' as const,
           }));
 
           setItems(newItems);
@@ -84,53 +88,45 @@ const CONCATPage = () => {
     };
 
     loadConcatProject();
-  }, [id]);
+  }, [id, setItems]);
 
-  const handleSelectionChange = (id: string) => {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, isSelected: !item.isSelected } : item))
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files) return;
+
+    const texts = await Promise.all(Array.from(files).map((file) => file.text()));
+
+    setItems(
+      items.map((item, index) => {
+        if (item.isSelected && texts[index]) {
+          return {
+            ...item,
+            text: texts[index],
+          };
+        }
+        return item;
+      })
     );
   };
 
-  const handleTextChange = (id: string, newText: string) => {
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, text: newText } : item)));
-  };
-
-  const handleDelete = useCallback(() => {
-    setItems((prevItems) => prevItems.filter((item) => !item.isSelected));
-  }, []);
-
-  const handleAdd = useCallback(() => {
-    const newItem: CONCATItem = {
-      id: `${items.length + 1}`,
-      text: '',
-      isSelected: false,
-      speed: 1.0,
-      volume: 1.0,
-      pitch: 1.0,
-      fileName: `new_file_${items.length + 1}.wav`,
-    };
-    setItems((prev) => [...prev, newItem]);
-  }, [items.length]);
-
-  const handlePlay = useCallback((id: string) => {
-    console.log('Play item:', id);
-  }, []);
-
-  const handleSelectAll = useCallback(() => {
-    const isAllSelected = items.every((item) => item.isSelected);
-    setItems((prev) => prev.map((item) => ({ ...item, isSelected: !isAllSelected })));
-  }, [items]);
+  const handleReorder = useCallback(
+    (startIndex: number, endIndex: number) => {
+      const newItems = [...items];
+      const [removed] = newItems.splice(startIndex, 1);
+      newItems.splice(endIndex, 0, removed);
+      setItems(newItems);
+    },
+    [items, setItems]
+  );
 
   return (
     <PageLayout
       variant="project"
-      header={<></>} // FileProgressDropDown
-      sidebar={<CONCATOptionsSidebar />}
+      header={<></>}
+      sidebar={<ConcatSidebar />}
       footer={<AudioPlayer audioUrl={''} />}
     >
       <Title
-        type="CONCAT"
+        type="Concat"
         projectTitle={projectName}
         onSave={() => console.log('저장')}
         onClose={() => console.log('닫기')}
@@ -141,19 +137,27 @@ const CONCATPage = () => {
         </div>
       ) : (
         <MainContents
-          type="CONCAT"
-          items={items}
-          onSelectionChange={handleSelectionChange}
+          type="Concat"
+          items={items.map((item) => ({
+            ...item,
+            frontSilence: item.frontSilence ?? 0,
+            backSilence: item.backSilence ?? 0,
+            endSilence: item.endSilence ?? 0,
+          }))}
+          onSelectionChange={toggleSelection}
           onTextChange={handleTextChange}
-          onDelete={handleDelete}
+          onDelete={deleteSelectedItems}
           onAdd={handleAdd}
           onPlay={handlePlay}
-          onSelectAll={handleSelectAll}
-          isAllSelected={items.every((item) => item.isSelected)}
+          onSelectAll={toggleSelectAll}
+          isAllSelected={items.every((item: ConcatItem) => item.isSelected)}
+          hasAudioFile={hasAudioFile}
+          onFileUpload={handleFileUpload}
+          onReorder={handleReorder}
         />
       )}
     </PageLayout>
   );
 };
 
-export default CONCATPage;
+export default ConcatPage;

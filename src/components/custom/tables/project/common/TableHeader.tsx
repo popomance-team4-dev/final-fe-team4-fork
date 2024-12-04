@@ -19,11 +19,56 @@ interface TableHeaderProps {
   isListView: boolean;
   onViewChange: (isListView: boolean) => void;
   itemCount: number;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   onFileUpload: (files: FileList | null) => void;
   isLoading?: boolean;
   hasAudioFile?: boolean;
 }
+
+export const TTSTableHeader: React.FC = () => {
+  return (
+    <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,auto,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="w-6" />
+      <div className="w-4 ml-2 mr-2" />
+      <div className="w-4 ml-2 mr-2" />
+      <div>텍스트</div>
+      <div className="flex gap-7">
+        <div className="w-[60px] text-center mr-1">속도</div>
+        <div className="w-[52px] text-center mr-2">볼륨</div>
+        <div className="w-[56px] text-center mr-2">피치</div>
+        <div className="text-center mr-3">내역</div>
+      </div>
+    </div>
+  );
+};
+
+export const VCTableHeader: React.FC = () => {
+  return (
+    <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,193px,1fr,202px] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="w-6" />
+      <div className="w-4 ml-2" />
+      <div className="ml-11">파일명</div>
+      <div className="ml-[54px]">텍스트</div>
+      <div className="ml-5">타겟 보이스</div>
+    </div>
+  );
+};
+
+export const ConcatTableHeader: React.FC = () => {
+  return (
+    <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,193px,1fr,auto] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
+      <div className="w-6" />
+      <div className="w-4 ml-2 mr-[42px]" />
+      <div>파일명</div>
+      <div className="ml-1">텍스트</div>
+      <div className="flex gap-7">
+        <div className="w-[60px] text-center mr-4.5">맨 앞</div>
+        <div className="w-[60px] text-center mr-4.5">맨 뒤</div>
+        <div className="w-[60px] text-center mr-5">간격</div>
+      </div>
+    </div>
+  );
+};
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
   onDelete,
@@ -84,7 +129,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
           )}
         </div>
         <div className="flex items-center gap-4">
-          {type === 'VC' ? (
+          {type === 'VC' || type === 'Concat' ? (
             <div className="flex items-center gap-4">
               <UploadAudioButton onClick={onAdd} />
               <div className="flex items-center gap-2">
@@ -123,24 +168,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
               />
               <ViewButtonGroup isListView={isListView} onViewChange={onViewChange} />
             </>
-          ) : (
-            <>
-              <UploadTextButton
-                onClick={() => {
-                  const input = document.createElement('input');
-                  input.type = 'file';
-                  input.accept = '.txt';
-                  input.multiple = true;
-                  input.onchange = (e) => {
-                    onFileUpload((e.target as HTMLInputElement).files);
-                  };
-                  input.click();
-                }}
-                isLoading={isLoading}
-              />
-              <UploadAudioButton onClick={onAdd} />
-            </>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

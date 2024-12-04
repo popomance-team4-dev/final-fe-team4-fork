@@ -53,7 +53,7 @@ const CreateProjectDialogContent = () => {
   const [projectName] = useState('새 프로젝트');
 
   // 프로젝트 생성 핸들러
-  const handleNewProject = (type: 'TTS' | 'VC' | 'CONCAT', route: string) => {
+  const handleNewProject = (type: 'TTS' | 'VC' | 'Concat', route: string) => {
     addProject({
       name: projectName,
       type: type,
@@ -79,7 +79,7 @@ const CreateProjectDialogContent = () => {
                   ? 'TTS'
                   : feature.title === 'Voice Conversion'
                     ? 'VC'
-                    : 'CONCAT',
+                    : 'Concat',
                 feature.route
               )
             } // 클릭 핸들러 추가

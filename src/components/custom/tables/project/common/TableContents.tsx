@@ -1,7 +1,5 @@
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -19,7 +17,13 @@ import { TableHeader } from './TableHeader';
 import { TableListView } from './TableListView';
 
 interface TableContentsProps {
-  items: TableItem[];
+  items: (TableItem & {
+    status?: '대기중' | '완료' | '실패' | '진행';
+    targetVoice?: string;
+    originalAudioUrl?: string;
+    convertedAudioUrl?: string;
+    type?: 'TTS' | 'VC' | 'Concat';
+  })[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
   onDelete: () => void;
@@ -29,8 +33,8 @@ interface TableContentsProps {
   onPlay: (id: string) => void;
   onSelectAll?: () => void;
   isAllSelected?: boolean;
-  type?: 'TTS' | 'VC' | 'CONCAT';
-  onReorder?: (items: TableItem[]) => void;
+  type?: 'TTS' | 'VC' | 'Concat';
+  onReorder?: (startIndex: number, endIndex: number) => void;
   onFileUpload?: (files: FileList | null) => void;
   hasAudioFile?: boolean;
 }
@@ -79,21 +83,13 @@ export const TableContents: React.FC<TableContentsProps> = ({
     onTextChange,
   });
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    })
-  );
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (items.length === 0 && isAllSelected) {
       onSelectAll?.();
     }
   }, [items.length, isAllSelected, onSelectAll]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (error) {
       const timer = window.setTimeout(() => {
         setError(null);
@@ -104,24 +100,6 @@ export const TableContents: React.FC<TableContentsProps> = ({
       };
     }
   }, [error]);
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over || active.id === over.id) {
-      return;
-    }
-
-    const oldIndex = items.findIndex((item) => item.id === active.id);
-    const newIndex = items.findIndex((item) => item.id === over.id);
-
-    if (oldIndex === -1 || newIndex === -1) {
-      return;
-    }
-
-    const newItems = arrayMove(items, oldIndex, newIndex);
-    onReorder?.(newItems);
-  };
 
   return (
     <>
@@ -157,22 +135,19 @@ export const TableContents: React.FC<TableContentsProps> = ({
               <img src={TableUploadMessage} alt="Empty table message" />
             </div>
           ) : (
-            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-              <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                <ScrollArea className={cn('h-full', !isListView && 'mt-3')}>
-                  {isListView ? (
-                    <TableListView
-                      rows={listItems}
-                      onSelectionChange={onSelectionChange}
-                      onTextChange={onTextChange}
-                      type={type}
-                    />
-                  ) : (
-                    <TTSTableGridView items={gridItems} />
-                  )}
-                </ScrollArea>
-              </SortableContext>
-            </DndContext>
+            <ScrollArea className={cn('h-full', !isListView && 'mt-3')}>
+              {isListView ? (
+                <TableListView
+                  rows={listItems}
+                  type={type}
+                  onReorder={onReorder}
+                  onSelectionChange={onSelectionChange}
+                  onTextChange={onTextChange}
+                />
+              ) : (
+                <TTSTableGridView items={gridItems} onReorder={onReorder} />
+              )}
+            </ScrollArea>
           )}
         </div>
         <TableFooter

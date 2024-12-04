@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 
 export interface TitleProps {
   variant?: 'project' | 'recent';
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   projectTitle?: string;
   title?: string;
   description?: string;

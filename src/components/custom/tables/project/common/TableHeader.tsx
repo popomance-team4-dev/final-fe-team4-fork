@@ -19,7 +19,7 @@ interface TableHeaderProps {
   isListView: boolean;
   onViewChange: (isListView: boolean) => void;
   itemCount: number;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   onFileUpload: (files: FileList | null) => void;
   isLoading?: boolean;
   hasAudioFile?: boolean;
@@ -129,7 +129,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
           )}
         </div>
         <div className="flex items-center gap-4">
-          {type === 'VC' || type === 'CONCAT' ? (
+          {type === 'VC' || type === 'Concat' ? (
             <div className="flex items-center gap-4">
               <UploadAudioButton onClick={onAdd} />
               <div className="flex items-center gap-2">

@@ -5,7 +5,7 @@ import { concatLoad } from '@/api/aIParkAPI';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
-import CONCATOptionsSidebar from '@/components/section/sidebar/CONCATSidebar';
+import ConcatSidebar from 'ConcatSidebar';
 import { Spinner } from '@/components/ui/spinner';
 import PageLayout from '@/layouts/PageLayout';
 import { ConcatItem, useConcatStore } from '@/stores/concat.store';
@@ -33,7 +33,7 @@ interface ConcatData {
   cnctDetailDtos: ConcatDetailDto[];
 }
 
-const CONCATPage = () => {
+const ConcatPage = () => {
   const { id } = useParams();
   const {
     items,
@@ -122,11 +122,11 @@ const CONCATPage = () => {
     <PageLayout
       variant="project"
       header={<></>}
-      sidebar={<CONCATOptionsSidebar />}
+      sidebar={<ConcatSidebar />}
       footer={<AudioPlayer audioUrl={''} />}
     >
       <Title
-        type="CONCAT"
+        type="Concat"
         projectTitle={projectName}
         onSave={() => console.log('저장')}
         onClose={() => console.log('닫기')}
@@ -137,7 +137,7 @@ const CONCATPage = () => {
         </div>
       ) : (
         <MainContents
-          type="CONCAT"
+          type="Concat"
           items={items.map((item) => ({
             ...item,
             frontSilence: item.frontSilence ?? 0,
@@ -160,4 +160,4 @@ const CONCATPage = () => {
   );
 };
 
-export default CONCATPage;
+export default ConcatPage;

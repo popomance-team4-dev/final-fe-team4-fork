@@ -38,7 +38,7 @@ const PageLayout = ({ variant, header, sidebar, footer, children }: PageLayoutPr
     );
   }
 
-  // TTS, VC, CONCAT 페이지
+  // TTS, VC, Concat 페이지
   return (
     <div className="flex justify-center bg-white min-h-screen">
       <div className="flex w-full">
@@ -57,7 +57,7 @@ const PageLayout = ({ variant, header, sidebar, footer, children }: PageLayoutPr
                 <section className="flex-1 py-6 pr-6 flex flex-col">{children}</section>
               </div>
 
-              {/* 오른쪽 사이드바 (TTS, VC, CONCAT 옵션) */}
+              {/* 오른쪽 사이드바 (TTS, VC, Concat 옵션) */}
               {sidebar && <aside className="w-[276px] flex-shrink-0">{sidebar}</aside>}
             </div>
 

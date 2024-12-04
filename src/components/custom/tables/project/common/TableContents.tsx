@@ -22,7 +22,7 @@ interface TableContentsProps {
     targetVoice?: string;
     originalAudioUrl?: string;
     convertedAudioUrl?: string;
-    type?: 'TTS' | 'VC' | 'CONCAT';
+    type?: 'TTS' | 'VC' | 'Concat';
   })[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
@@ -33,7 +33,7 @@ interface TableContentsProps {
   onPlay: (id: string) => void;
   onSelectAll?: () => void;
   isAllSelected?: boolean;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   onReorder?: (startIndex: number, endIndex: number) => void;
   onFileUpload?: (files: FileList | null) => void;
   hasAudioFile?: boolean;

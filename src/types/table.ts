@@ -14,7 +14,7 @@ export interface ProjectListTableItem {
   projectName: string;
   fileName: string;
   script: string;
-  projectType: 'VC' | 'TTS' | 'CONCAT';
+  projectType: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
   updatedAt: string;
   speed?: number;
@@ -47,7 +47,7 @@ export interface ListRowProps {
   onPlay: (id: string) => void;
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   fileName?: string;
   speed: number;
   volume: number;

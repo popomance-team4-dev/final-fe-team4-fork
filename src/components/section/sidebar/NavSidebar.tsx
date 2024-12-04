@@ -59,7 +59,7 @@ export function NavSidebar() {
         return TbFileTypography;
       case 'VC':
         return TbFileMusic;
-      case 'CONCAT':
+      case 'Concat':
         return TbFileDatabase;
       default:
         return TbFileTypography;
@@ -143,7 +143,7 @@ export function NavSidebar() {
         <div className="flex flex-col w-full gap-3">
           {/* <SidebarButton icon={TbFileTypography} label="TTS" />
           <SidebarButton icon={TbFileMusic} label="VC" />
-          <SidebarButton icon={TbFileDatabase} label="CONCAT" /> */}
+          <SidebarButton icon={TbFileDatabase} label="Concat" /> */}
           {projects.slice(0, 5).map((project) => (
             <SidebarButton
               key={project.id}

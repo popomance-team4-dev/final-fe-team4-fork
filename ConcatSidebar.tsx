@@ -5,7 +5,7 @@ import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/Ico
 import { StateController } from '@/components/custom/features/common/StateController';
 import { useConcatStore } from '@/stores/concat.store';
 
-const CONCATSidebar: React.FC = () => {
+const ConcatSidebar: React.FC = () => {
   const { silenceSettings, setSilenceSettings, applySilenceToSelected, reset } = useConcatStore();
 
   return (
@@ -53,4 +53,4 @@ const CONCATSidebar: React.FC = () => {
   );
 };
 
-export default CONCATSidebar;
+export default ConcatSidebar;

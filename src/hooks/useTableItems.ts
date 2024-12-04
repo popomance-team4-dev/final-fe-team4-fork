@@ -8,7 +8,7 @@ interface UseTableItemsProps {
     targetVoice?: string;
     originalAudioUrl?: string;
     convertedAudioUrl?: string;
-    type?: 'TTS' | 'VC' | 'CONCAT';
+    type?: 'TTS' | 'VC' | 'Concat';
     frontSilence?: number;
     backSilence?: number;
     endSilence?: number;

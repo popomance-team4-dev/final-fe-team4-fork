@@ -35,7 +35,7 @@ const HomePage = () => {
       projectName: '프로젝트1 발표자료',
       fileName: '오디오13.wav',
       content: 'Lorem ipsum dolor sit amet consectetur.',
-      type: 'CONCAT' as const,
+      type: 'Concat' as const,
       status: '실패' as const,
       createdAt: '2024. 11. 12',
     },

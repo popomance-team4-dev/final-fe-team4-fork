@@ -16,7 +16,7 @@ export interface MainContentsItem {
 }
 
 interface MainContentsProps {
-  type: 'TTS' | 'VC' | 'CONCAT' | 'RECENT' | 'PROJECT';
+  type: 'TTS' | 'VC' | 'Concat' | 'RECENT' | 'PROJECT';
   items: MainContentsItem[];
   isAllSelected: boolean;
   showAlert?: boolean;

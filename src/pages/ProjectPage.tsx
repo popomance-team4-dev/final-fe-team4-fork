@@ -99,7 +99,7 @@ const ProjectPage = () => {
         items={projects.map((project) => ({
           id: project.projectId.toString(),
           projectName: project.projectName,
-          projectType: project.projectType as 'TTS' | 'VC' | 'CONCAT',
+          projectType: project.projectType as 'TTS' | 'VC' | 'Concat',
           script: project.script || '작성된 내용이 없습니다.',
           updatedAt: formatUpdatedAt(project.updatedAt),
           isSelected: selectedItems.includes(project.projectId),

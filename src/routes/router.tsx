@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import CONCATPage from '@/pages/CONCATPage';
+import ConcatPage from 'ConcatPage';
 import ErrorPage from '@/pages/ErrorPage';
 import HistoryPage from '@/pages/HistoryPage';
 import HomePage from '@/pages/HomePage';
@@ -84,11 +84,11 @@ const router = createBrowserRouter([
           },
           {
             path: PATH.CONCAT,
-            element: <CONCATPage />,
+            element: <ConcatPage />,
           },
           {
             path: `${PATH.CONCAT}/:id`,
-            element: <CONCATPage />,
+            element: <ConcatPage />,
           },
           {
             path: PATH.VC,

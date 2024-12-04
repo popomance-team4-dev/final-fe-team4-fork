@@ -10,7 +10,7 @@ interface TableFooterProps {
   onRegenerate: () => void;
   onDownload: () => void;
   isListView: boolean;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
 }
 
 export const TableFooter: React.FC<TableFooterProps> = ({

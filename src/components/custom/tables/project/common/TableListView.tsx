@@ -16,7 +16,7 @@ interface ListRowProps {
   onPlay: (id: string) => void;
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   fileName?: string;
   speed: number;
   volume: number;
@@ -33,7 +33,7 @@ interface TableListViewProps {
   rows: ListRowProps[];
   onSelectionChange: (id: string) => void;
   onTextChange: (id: string, newText: string) => void;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   onReorder?: (startIndex: number, endIndex: number) => void;
 }
 
@@ -50,7 +50,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
         return <TTSTableHeader />;
       case 'VC':
         return <VCTableHeader />;
-      case 'CONCAT':
+      case 'Concat':
         return <ConcatTableHeader />;
     }
   };
@@ -65,7 +65,7 @@ export const TableListView: React.FC<TableListViewProps> = ({
         return (
           <VCListRow {...row} onSelectionChange={onSelectionChange} onTextChange={onTextChange} />
         );
-      case 'CONCAT':
+      case 'Concat':
         return (
           <ConcatListRow
             {...row}

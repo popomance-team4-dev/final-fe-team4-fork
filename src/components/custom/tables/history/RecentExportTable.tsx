@@ -18,7 +18,7 @@ interface RecentExportTableItem {
   projectName: string;
   fileName: string;
   content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  type: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
   createdAt: string;
 }
@@ -54,7 +54,7 @@ export function RecentExportTable({
   currentPlayingId,
 }: RecentExportTableProps) {
   const navigate = useNavigate();
-  const AudioBadge = (type: 'VC' | 'TTS' | 'CONCAT') => {
+  const AudioBadge = (type: 'VC' | 'TTS' | 'Concat') => {
     const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
     return <Badge variant={variant}>{type}</Badge>;
   };

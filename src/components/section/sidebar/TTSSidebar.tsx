@@ -3,10 +3,8 @@ import { TbWorld } from 'react-icons/tb';
 
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
-import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select } from '@/components/ui/select';
-import { TTS_TOOLTIP } from '@/constants/tooltips';
 import Ian from '@/images/avatar/ian.jpg';
 import Jennie from '@/images/avatar/jennie.png';
 import Jisu from '@/images/avatar/jisu.jpg';
@@ -101,6 +99,14 @@ const styleOptions: SelectItemType[] = [
   { value: '자신감있는 · 전문가', label: '자신감있는 · 전문가' },
   { value: '날카로운 · 정확함', label: '날카로운 · 정확함' },
 ];
+
+// const SIDEBAR_BUTTONS = {
+//   REGENERATE_SELECTED: '선택한 텍스트 재생성하기',
+//   DOWNLOAD_AUDIO: '선택한 음성 파일 다운로드',
+//   VIEW_HISTORY: '음성 생성 기록 및 히스토리 보기',
+//   APPLY: '적용',
+//   RESET_SETTINGS: '설정 초기화',
+// } as const;
 
 const TTSSidebar: React.FC = () => {
   const {
@@ -205,22 +211,15 @@ const TTSSidebar: React.FC = () => {
 
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
-        <TooltipWrapper content={TTS_TOOLTIP.APPLY}>
-          <div>
-            <ApplyButton
-              onClick={applyToSelected}
-              className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
-            />
-          </div>
-        </TooltipWrapper>
-        <TooltipWrapper content={TTS_TOOLTIP.RESET_SETTINGS}>
-          <div>
-            <ResetChangesButton
-              onClick={reset}
-              className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
-            />
-          </div>
-        </TooltipWrapper>
+        <ApplyButton
+          onClick={applyToSelected}
+          className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+        />
+
+        <ResetChangesButton
+          onClick={reset}
+          className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
+        />
       </div>
     </aside>
   );

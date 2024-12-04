@@ -4,10 +4,10 @@ module.exports = {
     input: './openapi.json',
     output: {
       mode: 'split',
-      target: './src/api',
+      target: './src/api-sample-new',
       override: {
         mutator: {
-          path: './src/api/axios-client.ts',
+          path: './src/api/axios-client-new.ts',
           name: 'customInstance',
         },
         operations: {

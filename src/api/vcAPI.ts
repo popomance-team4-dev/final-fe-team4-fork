@@ -54,7 +54,7 @@ export const processVoiceConversion = async (
 /**
  * VC 프로젝트 상태를 가져옵니다.
  */
-export const loadVCProject = async (projectId: number) => {
+export const vcLoad = async (projectId: number) => {
   try {
     const response = await customInstance<ResponseDto>({
       url: `/vc/${projectId}`,
@@ -71,7 +71,7 @@ export const loadVCProject = async (projectId: number) => {
 export type ProcessVoiceConversionResult = NonNullable<
   Awaited<ReturnType<typeof processVoiceConversion>>
 >;
-export type LoadVCProjectResult = NonNullable<Awaited<ReturnType<typeof loadVCProject>>>;
+export type LoadVCProjectResult = NonNullable<Awaited<ReturnType<typeof vcLoad>>>;
 
 // VCSaveDto를 export 해야 합니다
 export type { VCSaveDto } from './aIParkAPI.schemas';

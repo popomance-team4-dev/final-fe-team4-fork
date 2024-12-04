@@ -14,7 +14,7 @@ export interface ProjectListTableItem {
   projectName: string;
   fileName: string;
   script: string;
-  projectType: 'VC' | 'TTS' | 'CONCAT';
+  projectType: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
   updatedAt: string;
   speed?: number;
@@ -25,6 +25,38 @@ export interface ProjectListTableItem {
 export interface VCItem extends TableItem {
   fileName: string;
   status: '대기중' | '완료' | '실패' | '진행';
+  originalAudioUrl?: string;
+  convertedAudioUrl?: string;
+  targetVoice?: string;
+  file?: File;
+}
+
+export interface ConcatTableItem extends TableItem {
+  audioUrl: string;
+  frontSilence: number;
+  backSilence: number;
+  duration: number;
+  fileName: string;
+  silentRegions: { start: number; end: number }[];
+}
+
+export interface ListRowProps {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  onPlay: (id: string) => void;
+  onSelectionChange: (id: string) => void;
+  onTextChange: (id: string, newText: string) => void;
+  type?: 'TTS' | 'VC' | 'Concat';
+  fileName?: string;
+  speed: number;
+  volume: number;
+  pitch: number;
+  status?: '대기중' | '완료' | '실패' | '진행';
+  targetVoice?: string;
+  frontSilence?: number;
+  backSilence?: number;
+  endSilence?: number;
   originalAudioUrl?: string;
   convertedAudioUrl?: string;
 }

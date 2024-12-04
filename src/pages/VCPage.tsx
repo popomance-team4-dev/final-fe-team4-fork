@@ -1,10 +1,12 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
-import MainContents, { MainContentsItem } from '@/components/section/contents/MainContents';
+import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
-import VCSidebar from '@/components/section/sidebar/VCSidebar';
+import VCSidebar, { TargetVoice } from '@/components/section/sidebar/VCSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAudioDownload } from '@/hooks/useAudioDownload';
+import { useVoiceConversion } from '@/hooks/useVoiceConversion';
 import PageLayout from '@/layouts/PageLayout';
 import { useVCStore } from '@/stores/vc.store';
 
@@ -24,31 +26,58 @@ const VCPage = () => {
     handleTextChange,
     handlePlay,
     cleanupAllAudioUrls,
+    memberId,
+    setItems,
+    showAlert,
   } = useVCStore();
 
-  useEffect(() => {
-    return () => {
-      cleanupAllAudioUrls();
-    };
-  }, [cleanupAllAudioUrls]);
+  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
 
-  const handleVoiceConversion = useCallback(() => {
-    if (!selectedVoice) return;
-    // API 호출 및 변환 처리
-  }, [selectedVoice]);
+  // 클린업 이펙트
+  useEffect(() => cleanupAllAudioUrls, [cleanupAllAudioUrls]);
 
-  const mainContentItems: MainContentsItem[] = items.map(
-    ({ id, text, isSelected, status, fileName, originalAudioUrl }) => ({
-      id,
-      text,
-      isSelected,
-      status,
-      fileName,
-      originalAudioUrl,
-    })
+  // 음성 변환 핸들러
+  const { handleVoiceConversion, isGenerating } = useVoiceConversion({
+    items,
+    selectedVoice,
+    projectData,
+    memberId,
+    setItems,
+    showAlert,
+  });
+
+  // 다운로드 핸들러
+  const handleDownload = useAudioDownload({ items, showAlert });
+
+  // 메인 컨텐츠 아이템 변환
+  const mainContentItems = useMemo(
+    () =>
+      items.map((item) => ({
+        id: item.id,
+        text: item.text,
+        isSelected: item.isSelected,
+        status: item.status,
+        fileName: item.fileName,
+        audioUrl: item.convertedAudioUrl || item.originalAudioUrl,
+        targetVoice: item.targetVoice,
+      })),
+    [items]
   );
 
-  const hasAudioFile = items.length > 0;
+  // 현재 재생중인 오디오 URL
+  const currentAudioUrl = useMemo(() => {
+    const selectedItem = items.find(
+      (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
+    );
+    return selectedItem?.convertedAudioUrl || '';
+  }, [items]);
+
+  const handleReorder = (startIndex: number, endIndex: number) => {
+    const newItems = [...items];
+    const [removed] = newItems.splice(startIndex, 1);
+    newItems.splice(endIndex, 0, removed);
+    setItems(newItems);
+  };
 
   return (
     <PageLayout
@@ -59,9 +88,11 @@ const VCPage = () => {
           selectedVoice={selectedVoice}
           onVoiceSelect={setSelectedVoice}
           onApplyConversion={handleVoiceConversion}
+          customVoices={customVoices}
+          onVoiceUpload={setCustomVoices}
         />
       }
-      footer={<AudioPlayer audioUrl={''} />}
+      footer={<AudioPlayer audioUrl={currentAudioUrl} />}
     >
       {alert.show && (
         <div className="absolute left-1/2 -translate-x-1/2 top-6">
@@ -86,9 +117,13 @@ const VCPage = () => {
         onAdd={handleAdd}
         onPlay={handlePlay}
         onSelectAll={toggleSelectAll}
-        isAllSelected={items.length > 0 && items.every((item) => item.isSelected)}
+        isAllSelected={items.every((item) => item.isSelected)}
         onFileUpload={handleFileUpload}
-        hasAudioFile={hasAudioFile}
+        hasAudioFile={items.length > 0}
+        onGenerate={handleVoiceConversion}
+        isGenerating={isGenerating}
+        onDownloadItem={handleDownload}
+        onReorder={handleReorder}
       />
     </PageLayout>
   );

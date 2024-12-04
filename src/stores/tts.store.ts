@@ -62,7 +62,6 @@ interface TTSStore {
 
   // TTS 설정 적용 액션
   applyToSelected: () => void;
-  applyToAll: () => void;
 
   handleReorder: (items: TableItem[]) => void;
 }
@@ -98,7 +97,7 @@ export const ttsInitialSettings = {
   projectData: initialProjectData,
 };
 
-export const useTTSStore = create<TTSStore>((set, _get) => ({
+export const useTTSStore = create<TTSStore>((set, get) => ({
   ...ttsInitialSettings,
 
   setField: (field, value) =>
@@ -201,35 +200,24 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
       },
     })),
 
-  applyToSelected: () =>
-    set((state) => ({
-      items: state.items.map((item) =>
+  applyToSelected: () => {
+    const { items, speed, volume, pitch, language, voice, style } = get();
+    set({
+      items: items.map((item) =>
         item.isSelected
           ? {
               ...item,
-              speed: state.speed,
-              volume: state.volume,
-              pitch: state.pitch,
-              language: state.language,
-              voice: state.voice,
-              style: state.style,
+              speed,
+              volume,
+              pitch,
+              language,
+              voice,
+              style,
             }
           : item
       ),
-    })),
-
-  applyToAll: () =>
-    set((state) => ({
-      items: state.items.map((item) => ({
-        ...item,
-        speed: state.speed,
-        volume: state.volume,
-        pitch: state.pitch,
-        language: state.language,
-        voice: state.voice,
-        style: state.style,
-      })),
-    })),
+    });
+  },
 
   handleReorder: (newItems: TableItem[]) => {
     const convertedItems: TTSItem[] = newItems.map((item) => ({

@@ -13,6 +13,9 @@ export interface AudioPlayerProps {
   audioUrl: string;
   className?: string;
   mode?: PlayerMode;
+  silentRegions?: { start: number; end: number }[];
+  onSilentRegionAdd?: (region: { start: number; end: number }) => void;
+  onRegionClick?: (index: number, duration: number) => void;
 }
 
 const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
@@ -132,7 +135,7 @@ const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
         ref={ref}
         className={cn(
           'flex items-center gap-4 w-full bg-white rounded-lg',
-          mode === PlayerMode.NORMAL ? 'px-20 py-5' : 'w-[362px] max-[1200px]:w-[200px]',
+          mode === PlayerMode.NORMAL ? 'px-20 py-7' : 'w-[362px] max-[1200px]:w-[200px]',
           className
         )}
       >

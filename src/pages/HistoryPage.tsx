@@ -60,7 +60,7 @@ const HistoryPage = () => {
         items={getCurrentPageItems().map((item) => ({
           id: item.id,
           projectName: item.projectName,
-          projectType: item.projectType as 'TTS' | 'VC' | 'CONCAT',
+          projectType: item.projectType as 'TTS' | 'VC' | 'Concat',
           fileName: item.fileName,
           script: item.script,
           status: item.status,

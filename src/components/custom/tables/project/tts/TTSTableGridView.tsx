@@ -1,4 +1,5 @@
-import { useSortable } from '@dnd-kit/sortable';
+import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 
@@ -118,11 +119,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
                 </div>
               </TooltipWrapper>
 
-              <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
-                <div>
-                  <DownloadButton onClick={props.onDownload} />
-                </div>
-              </TooltipWrapper>
+              <DownloadButton onClick={props.onDownload} />
 
               <TooltipWrapper content={TTS_TOOLTIP.VIEW_HISTORY}>
                 <div>
@@ -147,7 +144,7 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
               handleTextAreaResize(e.target);
             }}
             onInput={(e) => handleTextAreaResize(e.currentTarget)}
-            placeholder="텍스트를 입력하세요."
+            placeholder="스크립트를 입력하세요."
             className="w-3/5 min-h-[40px] overflow-hidden mb-2 border-0"
             rows={1}
           />
@@ -165,14 +162,36 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
 
 interface TTSTableGridViewProps {
   items: TTSGridItemProps[];
+  onReorder?: (startIndex: number, endIndex: number) => void;
 }
 
-export const TTSTableGridView: React.FC<TTSTableGridViewProps> = ({ items }) => {
+export const TTSTableGridView: React.FC<TTSTableGridViewProps> = ({ items, onReorder }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const newIndex = items.findIndex((item) => item.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
+    }
+
+    onReorder?.(oldIndex, newIndex);
+  };
+
   return (
-    <div className="flex flex-col gap-4">
-      {items.map((item) => (
-        <SortableGridItem key={item.id} {...item} />
-      ))}
-    </div>
+    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+        <div className="flex flex-col gap-4">
+          {items.map((item) => (
+            <SortableGridItem key={item.id} {...item} />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 };

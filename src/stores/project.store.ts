@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 interface Project {
   id: string;
   name: string;
-  type: 'TTS' | 'VC' | 'CONCAT';
+  type: 'TTS' | 'VC' | 'Concat';
   createdAt: Date;
 }
 

@@ -24,7 +24,6 @@ const TTSPage = () => {
     updateItem,
     deleteSelectedItems,
     addItems,
-    handleReorder,
     updateProjectName,
   } = useTTSStore();
 
@@ -151,6 +150,16 @@ const TTSPage = () => {
   }, []);
 
   const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
+
+  const handleReorder = useCallback(
+    (startIndex: number, endIndex: number) => {
+      const newItems = [...items];
+      const [removed] = newItems.splice(startIndex, 1);
+      newItems.splice(endIndex, 0, removed);
+      setItems(newItems);
+    },
+    [items, setItems]
+  );
 
   return (
     <PageLayout

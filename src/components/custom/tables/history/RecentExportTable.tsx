@@ -18,7 +18,7 @@ interface RecentExportTableItem {
   projectName: string;
   fileName: string;
   content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  type: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
   createdAt: string;
 }
@@ -54,7 +54,7 @@ export function RecentExportTable({
   currentPlayingId,
 }: RecentExportTableProps) {
   const navigate = useNavigate();
-  const AudioBadge = (type: 'VC' | 'TTS' | 'CONCAT') => {
+  const AudioBadge = (type: 'VC' | 'TTS' | 'Concat') => {
     const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
     return <Badge variant={variant}>{type}</Badge>;
   };
@@ -74,18 +74,14 @@ export function RecentExportTable({
       <Table>
         <TableHeader className="border-t">
           <TableRow>
-            <TableHead className="pl-[74px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">
-              <div className="flex flex-col gap-2">
-                <span>유형</span>
-              </div>
-            </TableHead>
+            <TableHead className="pl-[79px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
+            <TableHead className="pl-[20px] bg-gray-50 font-bold text-gray-900">유형</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">프로젝트명</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">파일명</TableHead>
             <TableHead className="bg-gray-50 font-bold text-gray-900">내용</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">상태</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900 pl-9">다운로드</TableHead>
-            <TableHead className="pl-[60px] bg-gray-50 font-bold text-gray-900">
+            <TableHead className="pl-[16px] bg-gray-50 font-bold text-gray-900">상태</TableHead>
+            <TableHead className="bg-gray-50 font-bold text-gray-900 pl-[80px]">다운로드</TableHead>
+            <TableHead className="pl-[88px] bg-gray-50 font-bold text-gray-900">
               업데이트 날짜
             </TableHead>
           </TableRow>
@@ -114,7 +110,7 @@ export function RecentExportTable({
                 <div className="flex">{StatusBadge(item.status)}</div>
               </TableCell>
               <TableCell>
-                <div className="flex justify-start pl-8">
+                <div className="flex justify-start pl-[76px]">
                   <button
                     onClick={() => console.log('다운로드:', item.id)}
                     aria-label="Download file"
@@ -123,7 +119,7 @@ export function RecentExportTable({
                   </button>
                 </div>
               </TableCell>
-              <TableCell className="text-gray-700 pl-[60px]">{item.createdAt}</TableCell>
+              <TableCell className="text-gray-700 pl-[88px]">{item.createdAt}</TableCell>
             </TableRow>
           ))}
         </TableBody>

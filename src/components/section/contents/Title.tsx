@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 
 export interface TitleProps {
   variant?: 'project' | 'recent';
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   projectTitle?: string;
   title?: string;
   description?: string;
@@ -51,7 +51,7 @@ const Title = ({
 
   if (variant === 'recent') {
     return (
-      <div className="py-6">
+      <div className="py-5">
         <h2 className="text-h2 text-black mb-2">{title}</h2>
         <p className="text-body2 text-black">{description}</p>
       </div>

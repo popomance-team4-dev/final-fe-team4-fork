@@ -23,9 +23,10 @@ interface VCStore {
   };
   alert: Alert;
   audioPlayer: AudioPlayer;
+  memberId: number;
 
   // 기본 액션
-  setItems: (items: VCItem[]) => void;
+  setItems: (items: VCItem[] | ((prev: VCItem[]) => VCItem[])) => void;
   addItems: (newItems: VCItem[]) => void;
   updateItem: (id: string, updates: Partial<VCItem>) => void;
   deleteSelectedItems: () => void;
@@ -48,6 +49,9 @@ interface VCStore {
   // URL 정리를 위한 메서드 추가
   cleanupAudioUrl: (id: string) => void;
   cleanupAllAudioUrls: () => void;
+
+  // 적용 액션 추가
+  applyToSelected: () => void;
 }
 
 // useFileUpload hooks의 로직을 store에 맞게 재구현
@@ -128,164 +132,180 @@ const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
   return { handleFiles };
 };
 
-export const useVCStore = create<VCStore>((set, get) => {
-  const { openFileDialog } = handleAudioUpload(
-    (newItems) => get().addItems(newItems),
-    (error) => get().showAlert(error, 'destructive')
-  );
+export const useVCStore = create<VCStore>((set, get) => ({
+  // 초기 상태 설정
+  items: [], // 빈 배열로 초기화
+  selectedVoice: '',
+  projectData: {
+    projectId: null,
+    projectName: '새 프로젝트',
+  },
+  alert: {
+    show: false,
+    message: '',
+    variant: 'default',
+  },
+  audioPlayer: {
+    audioElement: null,
+    currentPlayingId: null,
+  },
+  memberId: 0,
 
-  const { handleFiles } = handleTextUpload((texts) => {
-    const { items, updateItem } = get();
+  // 기존 액션들
+  setItems: (items) => set({ items: typeof items === 'function' ? items(get().items) : items }),
+  addItems: (newItems) => set((state) => ({ items: [...state.items, ...newItems] })),
+  updateItem: (id, updates) =>
+    set((state) => ({
+      items: state.items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    })),
+  deleteSelectedItems: () => {
+    const { items } = get();
+    // 삭제되는 아이템들의 URL 정리
     items.forEach((item) => {
-      if (item.isSelected) {
-        updateItem(item.id, { text: texts[0] || '' });
+      if (item.isSelected && item.originalAudioUrl) {
+        URL.revokeObjectURL(item.originalAudioUrl);
       }
     });
-  });
+    set((state) => ({
+      items: state.items.filter((item) => !item.isSelected),
+    }));
+  },
+  toggleSelection: (id) =>
+    set((state) => ({
+      items: state.items.map((item) =>
+        item.id === id ? { ...item, isSelected: !item.isSelected } : item
+      ),
+    })),
+  toggleSelectAll: () =>
+    set((state) => {
+      const isAllSelected = state.items.every((item) => item.isSelected);
+      return {
+        items: state.items.map((item) => ({ ...item, isSelected: !isAllSelected })),
+      };
+    }),
+  setSelectedVoice: (voice) => set({ selectedVoice: voice }),
+  showAlert: (message, variant = 'destructive') => {
+    set({ alert: { show: true, message, variant } });
+    setTimeout(() => set((state) => ({ alert: { ...state.alert, show: false } })), 3000);
+  },
+  hideAlert: () => set((state) => ({ alert: { ...state.alert, show: false } })),
+  setProjectData: (data) => set({ projectData: data }),
+  updateProjectName: (name) =>
+    set((state) => ({ projectData: { ...state.projectData, projectName: name } })),
+  setCurrentPlayingId: (id) =>
+    set((state) => ({
+      audioPlayer: {
+        ...state.audioPlayer,
+        currentPlayingId: id,
+      },
+    })),
 
-  return {
-    // 초기 상태
-    items: [],
-    selectedVoice: '',
-    projectData: {
-      projectId: null,
-      projectName: '새 프로젝트',
-    },
-    alert: {
-      show: false,
-      message: '',
-      variant: 'default',
-    },
-    audioPlayer: {
-      audioElement: null,
-      currentPlayingId: null,
-    },
-
-    // 기존 액션들
-    setItems: (items) => set({ items }),
-    addItems: (newItems) => set((state) => ({ items: [...state.items, ...newItems] })),
-    updateItem: (id, updates) =>
-      set((state) => ({
-        items: state.items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
-      })),
-    deleteSelectedItems: () => {
-      const { items } = get();
-      // 삭제되는 아이템들의 URL 정리
+  // 파일 핸들러
+  handleAdd: () => {
+    const { openFileDialog } = handleAudioUpload(
+      (newItems) => get().addItems(newItems),
+      (error) => get().showAlert(error, 'destructive')
+    );
+    openFileDialog();
+  },
+  handleFileUpload: (files) => {
+    const { handleFiles } = handleTextUpload((texts) => {
+      const { items, updateItem } = get();
       items.forEach((item) => {
-        if (item.isSelected && item.originalAudioUrl) {
-          URL.revokeObjectURL(item.originalAudioUrl);
+        if (item.isSelected) {
+          updateItem(item.id, { text: texts[0] || '' });
         }
       });
-      set((state) => ({
-        items: state.items.filter((item) => !item.isSelected),
-      }));
-    },
-    toggleSelection: (id) =>
-      set((state) => ({
-        items: state.items.map((item) =>
-          item.id === id ? { ...item, isSelected: !item.isSelected } : item
-        ),
-      })),
-    toggleSelectAll: () =>
-      set((state) => {
-        const isAllSelected = state.items.every((item) => item.isSelected);
-        return {
-          items: state.items.map((item) => ({ ...item, isSelected: !isAllSelected })),
-        };
-      }),
-    setSelectedVoice: (voice) => set({ selectedVoice: voice }),
-    showAlert: (message, variant = 'destructive') => {
-      set({ alert: { show: true, message, variant } });
-      setTimeout(() => set((state) => ({ alert: { ...state.alert, show: false } })), 3000);
-    },
-    hideAlert: () => set((state) => ({ alert: { ...state.alert, show: false } })),
-    setProjectData: (data) => set({ projectData: data }),
-    updateProjectName: (name) =>
-      set((state) => ({ projectData: { ...state.projectData, projectName: name } })),
-    setCurrentPlayingId: (id) =>
-      set((state) => ({
+    });
+    handleFiles(files);
+  },
+  handleTextChange: (id, newText) => get().updateItem(id, { text: newText }),
+  handlePlay: (id: string) => {
+    const state = get();
+    const item = state.items.find((item) => item.id === id);
+    const audioUrl = item?.convertedAudioUrl || item?.originalAudioUrl;
+    if (!audioUrl) return;
+
+    // 이전에 재생하던 오디오가 있으면 재사용
+    if (state.audioPlayer.audioElement?.src === audioUrl) {
+      state.audioPlayer.audioElement.play();
+      set({
         audioPlayer: {
           ...state.audioPlayer,
           currentPlayingId: id,
         },
-      })),
+      });
+      return;
+    }
 
-    // 파일 핸들러
-    handleAdd: () => openFileDialog(),
-    handleFileUpload: (files) => handleFiles(files),
-    handleTextChange: (id, newText) => get().updateItem(id, { text: newText }),
-    handlePlay: (id) => {
-      const state = get();
-      const item = state.items.find((item) => item.id === id);
+    // 다른 오디오 재생 시도시
+    if (state.audioPlayer.audioElement) {
+      state.audioPlayer.audioElement.pause();
+    }
 
-      if (!item?.originalAudioUrl) return;
-
-      // 같은 오디오 재생 시도시 (일시정지 후 재생)
-      if (state.audioPlayer.audioElement && state.audioPlayer.currentPlayingId === null) {
-        state.audioPlayer.audioElement.play();
-        set({
-          audioPlayer: {
-            audioElement: state.audioPlayer.audioElement,
-            currentPlayingId: id,
-          },
-        });
-        return;
-      }
-
-      // 다른 오디오 재생 시도시
-      if (state.audioPlayer.audioElement) {
-        state.audioPlayer.audioElement.pause();
-      }
-
-      // 새로운 오디오 생성
-      const audio = new Audio(item.originalAudioUrl);
-      audio.onended = () => {
-        get().setCurrentPlayingId(null);
-        set({
-          audioPlayer: {
-            audioElement: null,
-            currentPlayingId: null,
-          },
-        });
-      };
-
-      audio.play();
+    // 새로운 오디오 생성
+    const audio = new Audio(audioUrl);
+    audio.onended = () => {
+      get().setCurrentPlayingId(null);
       set({
         audioPlayer: {
-          audioElement: audio,
-          currentPlayingId: id,
-        },
-      });
-    },
-    handlePause: () => {
-      const state = get();
-      if (state.audioPlayer.audioElement) {
-        state.audioPlayer.audioElement.pause();
-      }
-      // audioElement를 유지하면서 currentPlayingId만 null로 설정
-      set((state) => ({
-        audioPlayer: {
-          audioElement: state.audioPlayer.audioElement,
+          audioElement: null,
           currentPlayingId: null,
         },
-      }));
-    },
+      });
+    };
 
-    // URL 정리를 위한 메서드 추가
-    cleanupAudioUrl: (id: string) => {
-      const item = get().items.find((item) => item.id === id);
-      if (item?.originalAudioUrl) {
+    audio.play();
+    set({
+      audioPlayer: {
+        audioElement: audio,
+        currentPlayingId: id,
+      },
+    });
+  },
+  handlePause: () => {
+    const state = get();
+    state.audioPlayer.audioElement?.pause();
+    set({
+      audioPlayer: {
+        ...state.audioPlayer, // 기존 audioElement 유지
+        currentPlayingId: null,
+      },
+    });
+  },
+
+  // URL 정리를 위한 메서드 추가
+  cleanupAudioUrl: (id: string) => {
+    const item = get().items.find((item) => item.id === id);
+    if (item?.originalAudioUrl) {
+      URL.revokeObjectURL(item.originalAudioUrl);
+    }
+  },
+
+  // 모든 URL 정리
+  cleanupAllAudioUrls: () => {
+    get().items.forEach((item) => {
+      if (item.originalAudioUrl) {
         URL.revokeObjectURL(item.originalAudioUrl);
       }
-    },
+    });
+  },
 
-    // 모든 URL 정리
-    cleanupAllAudioUrls: () => {
-      get().items.forEach((item) => {
-        if (item.originalAudioUrl) {
-          URL.revokeObjectURL(item.originalAudioUrl);
-        }
-      });
-    },
-  };
-});
+  // 적용 액션 구현
+  applyToSelected: () => {
+    const { items, selectedVoice } = get();
+    if (!selectedVoice) return;
+
+    set({
+      items: items.map((item) =>
+        item.isSelected
+          ? {
+              ...item,
+              targetVoice: selectedVoice,
+              status: '대기중',
+            }
+          : item
+      ),
+    });
+  },
+}));

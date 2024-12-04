@@ -7,20 +7,18 @@ import { TableContents } from '@/components/custom/tables/project/common/TableCo
 import { Button } from '@/components/ui/button';
 import { ProjectListTableItem, TableItem } from '@/types/table';
 
-export interface MainContentsItem extends TableItem {
+export interface MainContentsItem {
+  id: string;
+  text: string;
+  isSelected: boolean;
   status?: '대기중' | '완료' | '실패' | '진행';
   fileName?: string;
-  originalAudioUrl?: string;
-  convertedAudioUrl?: string;
-  order?: string;
-  projectName?: string;
-  script?: string;
-  projectType?: 'VC' | 'TTS' | 'CONCAT';
-  updatedAt?: string;
+  audioUrl?: string;
+  targetVoice?: string;
 }
 
 interface MainContentsProps {
-  type: 'TTS' | 'VC' | 'CONCAT' | 'RECENT' | 'PROJECT';
+  type: 'TTS' | 'VC' | 'Concat' | 'RECENT' | 'PROJECT';
   items: MainContentsItem[];
   isAllSelected: boolean;
   showAlert?: boolean;
@@ -34,7 +32,7 @@ interface MainContentsProps {
   onDownloadItem?: (id: string) => void;
   onPlay: (id: string) => void;
   onPause?: (id: string) => void;
-  onReorder?: (newItems: MainContentsItem[]) => void;
+  onReorder?: (startIndex: number, endIndex: number) => void;
   currentPlayingId?: string;
   itemCount?: number;
   totalItemsCount?: number;
@@ -43,6 +41,8 @@ interface MainContentsProps {
   onFilter?: () => void;
   onFileUpload?: (files: FileList | null) => void;
   hasAudioFile?: boolean;
+  onGenerate?: () => Promise<void>;
+  isGenerating?: boolean;
 }
 
 const MainContents = ({
@@ -66,6 +66,8 @@ const MainContents = ({
   onFileUpload,
   hasAudioFile,
   totalItemsCount,
+  onGenerate,
+  isGenerating,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
   const navigate = useNavigate();
@@ -91,7 +93,7 @@ const MainContents = ({
                 onSelectAll={onSelectAll}
                 selectedItems={items.filter((item) => item.isSelected).map((item) => item.id)}
                 onSelectionChange={(id) => onSelectionChange(id)}
-                items={items as ProjectListTableItem[]}
+                items={items as unknown as ProjectListTableItem[]}
                 currentPlayingId={currentPlayingId}
               />
             ) : (
@@ -141,7 +143,9 @@ const MainContents = ({
           />
         </div>
         <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>
-          <Button>{getButtonText()}</Button>
+          <Button onClick={onGenerate} disabled={isGenerating}>
+            {isGenerating ? '생성 중...' : getButtonText()}
+          </Button>
         </div>
       </>
     );

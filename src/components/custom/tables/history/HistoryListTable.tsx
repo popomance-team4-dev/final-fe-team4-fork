@@ -18,7 +18,7 @@ export interface ProjectListTableItem {
   projectName: string;
   fileName: string;
   script: string;
-  projectType: 'VC' | 'TTS' | 'CONCAT';
+  projectType: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
   updatedAt: string;
 }
@@ -35,7 +35,7 @@ interface HistoryListTableProps {
   onSelectionChange: (id: string, checked: boolean) => void;
 }
 
-const AudioBadge = ({ type }: { type: 'VC' | 'TTS' | 'CONCAT' }) => (
+const AudioBadge = ({ type }: { type: 'VC' | 'TTS' | 'Concat' }) => (
   <Badge variant={type.toLowerCase() as 'vc' | 'tts' | 'concat'}>{type}</Badge>
 );
 

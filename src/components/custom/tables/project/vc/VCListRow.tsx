@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+import { useVCStore } from '@/stores/vc.store';
 import { ListRowProps } from '@/types/table';
 
 export const VCListRow: React.FC<ListRowProps> = ({
@@ -20,6 +21,9 @@ export const VCListRow: React.FC<ListRowProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
   });
+
+  const { audioPlayer, handlePause } = useVCStore();
+  const isPlaying = audioPlayer.currentPlayingId === id;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -52,7 +56,11 @@ export const VCListRow: React.FC<ListRowProps> = ({
           />
           <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
         </div>
-        <PlayButton onClick={() => onPlay(id)} className="ml-2 mr-2 w-5 h-5" />
+        <PlayButton
+          onClick={() => (isPlaying ? handlePause() : onPlay(id))}
+          className="ml-2 mr-2 w-6 h-6"
+          isPlaying={isPlaying}
+        />
         <div className="ml-4 truncate w-[180px]">{fileName}</div>
         <Textarea
           value={text}
@@ -62,10 +70,10 @@ export const VCListRow: React.FC<ListRowProps> = ({
           }}
           onInput={(e) => handleTextAreaResize(e.currentTarget)}
           placeholder="스크립트를 입력하세요."
-          className="flex-1 ml-2 mr-4 min-h-[40px] border-0 overflow-visible resize-none"
+          className="flex-1 ml-4 mr-4 min-h-[40px] border-0 overflow-visible resize-none"
           rows={1}
         />
-        <div className="text-sm text-gray-600 truncate whitespace-nowrap w-[180px]">
+        <div className="text-sm text-gray-600 truncate whitespace-nowrap w-[180px] ml-5">
           {targetVoice || ''}
         </div>
       </div>

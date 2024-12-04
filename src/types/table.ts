@@ -52,10 +52,11 @@ export interface ListRowProps {
   speed: number;
   volume: number;
   pitch: number;
-  convertedAudioUrl?: string;
   status?: '대기중' | '완료' | '실패' | '진행';
   targetVoice?: string;
   frontSilence?: number;
   backSilence?: number;
   endSilence?: number;
+  originalAudioUrl?: string;
+  convertedAudioUrl?: string;
 }

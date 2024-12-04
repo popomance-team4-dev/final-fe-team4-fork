@@ -226,12 +226,12 @@ export const useVCStore = create<VCStore>((set, get) => ({
     const audioUrl = item?.convertedAudioUrl || item?.originalAudioUrl;
     if (!audioUrl) return;
 
-    // 같은 오디오 재생 시도시
-    if (state.audioPlayer.currentPlayingId === id) {
-      state.audioPlayer.audioElement?.play();
+    // 이전에 재생하던 오디오가 있으면 재사용
+    if (state.audioPlayer.audioElement?.src === audioUrl) {
+      state.audioPlayer.audioElement.play();
       set({
         audioPlayer: {
-          audioElement: state.audioPlayer.audioElement,
+          ...state.audioPlayer,
           currentPlayingId: id,
         },
       });
@@ -265,16 +265,13 @@ export const useVCStore = create<VCStore>((set, get) => ({
   },
   handlePause: () => {
     const state = get();
-    if (state.audioPlayer.audioElement) {
-      state.audioPlayer.audioElement.pause();
-    }
-    // audioElement를 유지하면서 currentPlayingId만 null로 설정
-    set((state) => ({
+    state.audioPlayer.audioElement?.pause();
+    set({
       audioPlayer: {
-        audioElement: state.audioPlayer.audioElement,
+        ...state.audioPlayer, // 기존 audioElement 유지
         currentPlayingId: null,
       },
-    }));
+    });
   },
 
   // URL 정리를 위한 메서드 추가

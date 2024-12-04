@@ -124,9 +124,15 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
     const item = state.items.find((item) => item.id === id);
     if (!item?.audioUrl) return;
 
-    // 같은 오디오 재생 시도시
-    if (state.audioPlayer.currentPlayingId === id) {
-      state.audioPlayer.audioElement?.play();
+    // 이전에 재생하던 오디오가 있으면 재사용
+    if (state.audioPlayer.audioElement?.src === item.audioUrl) {
+      state.audioPlayer.audioElement.play();
+      set({
+        audioPlayer: {
+          ...state.audioPlayer,
+          currentPlayingId: id,
+        },
+      });
       return;
     }
 
@@ -161,7 +167,7 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
     state.audioPlayer.audioElement?.pause();
     set({
       audioPlayer: {
-        audioElement: null,
+        ...state.audioPlayer, // 기존 audioElement 유지
         currentPlayingId: null,
       },
     });

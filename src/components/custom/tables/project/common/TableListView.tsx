@@ -1,4 +1,6 @@
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
+import { useSensor, useSensors } from '@dnd-kit/core';
+import { PointerSensor } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
 
@@ -91,10 +93,18 @@ export const TableListView: React.FC<TableListViewProps> = ({
     onReorder?.(oldIndex, newIndex);
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
   return (
     <div className="w-full mx-auto relative">
       {renderHeader()}
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
         <SortableContext items={rows.map((row) => row.id)} strategy={verticalListSortingStrategy}>
           {rows.map((row) => renderRow(row))}
         </SortableContext>

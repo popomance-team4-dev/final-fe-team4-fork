@@ -46,10 +46,10 @@ export const VCTableHeader: React.FC = () => {
   return (
     <div className="sticky top-0 z-10 grid grid-cols-[auto,auto,193px,1fr,202px] px-4 py-2 border-b bg-gray-50 text-sm font-medium text-black">
       <div className="w-6" />
-      <div className="w-4 ml-2 mr-[42px]" />
+      <div className="w-4 ml-2" />
       <div>파일명</div>
-      <div>텍스트</div>
-      <div>타겟 보이스</div>
+      <div className="ml-4">텍스트</div>
+      <div className="ml-5">타겟 보이스</div>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import {
 } from '@/components/custom/features/concat/SilenceStatus';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+import { useConcatStore } from '@/stores/concat.store';
 import { ListRowProps } from '@/types/table';
 
 export const ConcatListRow: React.FC<ListRowProps> = ({
@@ -26,6 +27,9 @@ export const ConcatListRow: React.FC<ListRowProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
   });
+
+  const { audioPlayer, handlePause } = useConcatStore();
+  const isPlaying = audioPlayer.currentPlayingId === id;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -58,7 +62,11 @@ export const ConcatListRow: React.FC<ListRowProps> = ({
           />
           <div className="absolute inset-0" onClick={() => onSelectionChange(id)} />
         </div>
-        <PlayButton onClick={() => onPlay(id)} className="ml-2 mr-2 w-5 h-5" />
+        <PlayButton
+          onClick={() => (isPlaying ? handlePause() : onPlay(id))}
+          className="ml-2 mr-2 w-6 h-6"
+          isPlaying={isPlaying}
+        />
         <div className="ml-4 truncate w-[180px]">{fileName}</div>
         <Textarea
           value={text}

@@ -1,5 +1,5 @@
-import type { ResponseDto, VCSaveDto } from './src/api/aIParkAPI.schemas';
-import { customInstance } from './src/api/axios-client';
+import type { ResponseDto, VCSaveDto } from './aIParkAPI.schemas';
+import { customInstance } from './axios-client';
 
 export interface VCProcessResponse {
   id: number;
@@ -74,4 +74,4 @@ export type ProcessVoiceConversionResult = NonNullable<
 export type LoadVCProjectResult = NonNullable<Awaited<ReturnType<typeof loadVCProject>>>;
 
 // VCSaveDto를 export 해야 합니다
-export type { VCSaveDto } from './src/api/aIParkAPI.schemas';
+export type { VCSaveDto } from './aIParkAPI.schemas';

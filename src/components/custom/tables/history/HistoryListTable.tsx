@@ -1,6 +1,7 @@
-import { TbCircleFilled, TbDownload } from 'react-icons/tb';
+import { TbDownload } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
+import { StatusBadge } from '@/components/custom/tables/history/RecentExportTable';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -20,6 +21,7 @@ export interface ProjectListTableItem {
   script: string;
   projectType: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
+  unitStatus?: 'SUCCESS' | 'FAILURE';
   updatedAt: string;
 }
 
@@ -38,24 +40,6 @@ interface HistoryListTableProps {
 const AudioBadge = ({ type }: { type: 'VC' | 'TTS' | 'Concat' }) => (
   <Badge variant={type.toLowerCase() as 'vc' | 'tts' | 'concat'}>{type}</Badge>
 );
-
-const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
-  const variantMap = {
-    진행: 'progress',
-    대기중: 'waiting',
-    실패: 'failed',
-    완료: 'completed',
-  } as const;
-
-  return (
-    <div className="flex justify-start">
-      <Badge variant={variantMap[status]}>
-        <TbCircleFilled className="w-2 h-2 mr-2" />
-        {status}
-      </Badge>
-    </div>
-  );
-};
 
 export function HistoryListTable({
   items,
@@ -79,10 +63,10 @@ export function HistoryListTable({
               onCheckedChange={(checked) => onSelectAll(checked as boolean)}
             />
           </TableHead>
-          <TableHead className="pl-16 text-body3 text-black w-[130px]">유형</TableHead>
-          <TableHead className="text-body3 text-black w-[130px]">프로젝트명</TableHead>
-          <TableHead className="text-body3 text-black w-[100px]">파일명</TableHead>
-          <TableHead className="p-0 text-body3 text-black w-[300px]">내용</TableHead>
+          <TableHead className="pl-16 text-body3 text-black w-[100px]">유형</TableHead>
+          <TableHead className="text-body3 text-black w-[110px]">프로젝트명</TableHead>
+          <TableHead className="text-body3 text-black w-[120px]">파일명</TableHead>
+          <TableHead className="p-0 text-body3 text-black w-[200px]">내용</TableHead>
           <TableHead className="text-body3 text-black w-[60px] text-center">상태</TableHead>
           <TableHead className="text-body3 text-black w-[80px] text-center whitespace-nowrap">
             다운로드
@@ -116,15 +100,15 @@ export function HistoryListTable({
               </div>
             </TableCell>
 
-            <TableCell className="whitespace-nowrap">{item.projectName}</TableCell>
-            <TableCell className="whitespace-nowrap">{item.fileName}</TableCell>
+            <TableCell className="truncate text-left text-black">{item.projectName}</TableCell>
+            <TableCell className="truncate text-left text-black">{item.fileName}</TableCell>
             <TableCell className="max-w-md p-0">
-              <div className="whitespace-nowrap overflow-hidden text-ellipsis">{item.script}</div>
-            </TableCell>
-            <TableCell>
-              <div className="flex justify-center p-0 whitespace-nowrap">
-                {StatusBadge(item.status)}
+              <div className="truncate text-left text-black overflow-hidden text-ellipsis">
+                {item.script}
               </div>
+            </TableCell>
+            <TableCell className="pl-0">
+              <div className="flex">{StatusBadge(item.unitStatus || 'FAILURE')}</div>
             </TableCell>
             <TableCell>
               <div className="flex items-center justify-center">

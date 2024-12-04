@@ -1,9 +1,10 @@
-import { Project, workspacesResponse } from '@/api/aIParkAPI.schemas';
+import { Export, Project, workspacesResponse } from '@/api/aIParkAPI.schemas';
 import { customInstance } from '@/api/axios-client';
 import { concatLoad } from '@/api/concatAPI';
 import { ttsLoad } from '@/api/ttsAPI';
-import { vcLoad } from '@/api/vcAPI';
+import { loadVCProject } from '@/api/vcAPI';
 
+// 프로젝트 목록
 export const fetchProjects = async (
   page: number,
   size: number,
@@ -41,6 +42,7 @@ export const fetchProjects = async (
   }
 };
 
+// 프로젝트 삭제
 export const deleteProject = async (projectIds: number[]) => {
   try {
     const response = await customInstance.delete('/workspace/delete/project', {
@@ -73,6 +75,7 @@ export const fetchRecentProjects = async (): Promise<Project[]> => {
   }
 };
 
+// 프로젝트 클릭시 로드 호출
 export const fetchProjectByType = async (
   projectId: number,
   projectType: 'TTS' | 'VC' | 'CONCAT'
@@ -82,7 +85,7 @@ export const fetchProjectByType = async (
       case 'TTS':
         return await ttsLoad(projectId);
       case 'VC':
-        return await vcLoad(projectId);
+        return await loadVCProject(projectId);
       case 'CONCAT':
         return await concatLoad(projectId);
       default:
@@ -91,5 +94,47 @@ export const fetchProjectByType = async (
   } catch (error) {
     console.error(`프로젝트 로드 실패 [${projectType}]:`, error);
     throw error;
+  }
+};
+
+// 히스토리 목록
+export const fetchExports = async (
+  page: number,
+  size: number,
+  keyword: string = ''
+): Promise<{ content: Export[]; totalPages: number; totalElements: number }> => {
+  try {
+    const response = await customInstance.get('/workspace/exports', {
+      params: { page, size, keyword },
+    });
+
+    console.log('API 전체 응답:', response.data);
+
+    // 응답에서 data 필드 추출
+    const data = response.data;
+
+    console.log('내보내기 데이터:', data.content);
+    console.log('총 페이지 수:', data.totalPages);
+    console.log('총 데이터 수:', data.totalElements);
+
+    // 데이터 검증
+    if (
+      !data ||
+      !Array.isArray(data.content) ||
+      typeof data.totalPages !== 'number' ||
+      typeof data.totalElements !== 'number'
+    ) {
+      throw new Error('API 응답 데이터가 예상과 다릅니다.');
+    }
+
+    // 반환
+    return {
+      content: data.content,
+      totalPages: data.totalPages,
+      totalElements: data.totalElements,
+    };
+  } catch (error) {
+    console.error('API 요청 실패:', error);
+    throw new Error('API 요청 실패');
   }
 };

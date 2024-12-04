@@ -20,6 +20,7 @@ interface RecentExportTableItem {
   content: string;
   type: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
+  unitStatus?: 'SUCCESS' | 'FAILURE';
   createdAt: string;
 }
 
@@ -29,19 +30,22 @@ interface RecentExportTableProps {
   readonly onPause: (id: string) => void;
   readonly currentPlayingId?: string;
 }
-const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
+export const StatusBadge = (unitStatus: 'SUCCESS' | 'FAILURE') => {
   const variantMap = {
-    진행: 'progress',
-    대기중: 'waiting',
-    실패: 'failed',
-    완료: 'completed',
+    FAILURE: 'failed',
+    SUCCESS: 'completed',
+  } as const;
+
+  const textMap = {
+    FAILURE: '실패',
+    SUCCESS: '완료',
   } as const;
 
   return (
     <div className="flex justify-start">
-      <Badge variant={variantMap[status]}>
+      <Badge variant={variantMap[unitStatus]}>
         <TbCircleFilled className="w-2 h-2 mr-2" />
-        {status}
+        {textMap[unitStatus]}
       </Badge>
     </div>
   );
@@ -107,7 +111,7 @@ export function RecentExportTable({
               <TableCell>{item.fileName}</TableCell>
               <TableCell className="max-w-md pr-0 truncate">{item.content}</TableCell>
               <TableCell className="pl-0">
-                <div className="flex">{StatusBadge(item.status)}</div>
+                <div className="flex">{StatusBadge(item.unitStatus || 'FAILURE')}</div>
               </TableCell>
               <TableCell>
                 <div className="flex justify-start pl-[76px]">

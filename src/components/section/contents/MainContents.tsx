@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { ProjectListTableItem, TableItem } from '@/types/table';
 
 export interface MainContentsItem {
+  projectType: string;
   id: string;
   text: string;
   isSelected: boolean;
   status?: '대기중' | '완료' | '실패' | '진행';
+  unitStatus?: 'SUCCESS' | 'FAILURE';
   fileName?: string;
   audioUrl?: string;
   targetVoice?: string;
@@ -112,7 +114,7 @@ const MainContents = ({
                         navigate(path); // 상세 페이지로 이동
                       }
                     },
-                  })) as ProjectListTableItem[]
+                  })) as unknown as ProjectListTableItem[]
                 }
                 currentPlayingId={currentPlayingId}
               />

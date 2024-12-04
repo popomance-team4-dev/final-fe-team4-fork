@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { HistoryListTable } from '@/components/custom/tables/history/HistoryListTable';
 import { ProjectListTable } from '@/components/custom/tables/history/ProjectListTable';
 import TableToolbar from '@/components/custom/tables/history/TableToolbar';
@@ -68,6 +70,7 @@ const MainContents = ({
   isGenerating,
 }: MainContentsProps) => {
   const getButtonText = () => `${type} 생성`;
+  const navigate = useNavigate();
 
   const renderTable = () => {
     if (type === 'RECENT' || type === 'PROJECT') {
@@ -95,14 +98,22 @@ const MainContents = ({
               />
             ) : (
               <ProjectListTable
-                onPlay={onPlay}
-                onPause={onPause!}
                 itemCount={itemCount!}
                 isAllSelected={isAllSelected}
                 onSelectAll={onSelectAll}
                 selectedItems={items.filter((item) => item.isSelected).map((item) => item.id)}
                 onSelectionChange={(id) => onSelectionChange(id)}
-                items={items as unknown as ProjectListTableItem[]}
+                items={
+                  items.map((item) => ({
+                    ...item,
+                    onClick: () => {
+                      if (item.projectType && item.id) {
+                        const path = `/${item.projectType.toLowerCase()}/${item.id}`;
+                        navigate(path); // 상세 페이지로 이동
+                      }
+                    },
+                  })) as ProjectListTableItem[]
+                }
                 currentPlayingId={currentPlayingId}
               />
             )}

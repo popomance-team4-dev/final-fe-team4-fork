@@ -3,7 +3,7 @@ import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
 import { Project } from '@/api/aIParkAPI.schemas';
-import { fetchRecentProjects } from '@/api/workspaceAPI';
+import { fetchProjectByType, fetchRecentProjects } from '@/api/workspaceAPI';
 import RecentProjectCard from '@/components/custom/cards/RecentProjectCard';
 import { formatUpdatedAt } from '@/utils/dateUtils';
 
@@ -43,6 +43,23 @@ const RecentProject = () => {
     }
   };
 
+  // 프로젝트 클릭 핸들러
+  const handleProjectClick = async (projectId: number, projectType: 'TTS' | 'VC' | 'CONCAT') => {
+    try {
+      const response = await fetchProjectByType(projectId, projectType);
+      console.log('프로젝트 데이터:', response.data);
+
+      // 프로젝트 타입에 따른 경로 생성
+      const path = `/${projectType.toLowerCase()}/${projectId}`;
+
+      // 상세 페이지로 이동
+      navigate(path, { state: response.data });
+    } catch (error) {
+      console.error('프로젝트 로드 중 오류 발생:', error);
+      alert('프로젝트 로드 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className="pt-8 h-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
@@ -74,7 +91,16 @@ const RecentProject = () => {
           className="flex gap-6 overflow-x-hidden snap-x snap-mandatory scrollbar-hide scroll-smooth"
         >
           {projects.map((project) => (
-            <div key={project.projectId} className="snap-start">
+            <div
+              key={project.projectId}
+              className="snap-start"
+              onClick={() =>
+                handleProjectClick(
+                  project.projectId,
+                  project.projectType as 'TTS' | 'VC' | 'CONCAT'
+                )
+              }
+            >
               <RecentProjectCard
                 title={project.projectName}
                 description={project.script}

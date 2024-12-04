@@ -83,6 +83,10 @@ const router = createBrowserRouter([
             element: <TTSPage />,
           },
           {
+            path: `${PATH.TTS}/:id`,
+            element: <TTSPage />,
+          },
+          {
             path: PATH.CONCAT,
             element: <ConcatPage />,
           },
@@ -92,6 +96,10 @@ const router = createBrowserRouter([
           },
           {
             path: PATH.VC,
+            element: <VCPage />,
+          },
+          {
+            path: `${PATH.VC}/:id`,
             element: <VCPage />,
           },
           {

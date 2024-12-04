@@ -1,5 +1,8 @@
 import { Project, workspacesResponse } from '@/api/aIParkAPI.schemas';
 import { customInstance } from '@/api/axios-client';
+import { concatLoad } from '@/api/concatAPI';
+import { ttsLoad } from '@/api/ttsAPI';
+import { vcLoad } from '@/api/vcAPI';
 
 export const fetchProjects = async (
   page: number,
@@ -59,7 +62,7 @@ export const fetchRecentProjects = async (): Promise<Project[]> => {
       projectId: project.id, // id를 projectId로 매핑
       projectType: project.type, // type을 projectType으로 매핑
       projectName: project.name, // name을 projectName으로 매핑
-      script: project.script || '스크립트 없음', // script 기본값 처리
+      script: project.script || '작성된 내용이 없습니다.', // script 기본값 처리
       updatedAt: project.updatedAt,
       createdAt: project.createdAt,
       projectStatus: project.status,
@@ -67,5 +70,26 @@ export const fetchRecentProjects = async (): Promise<Project[]> => {
   } catch (error) {
     console.error('최근 프로젝트 조회 실패:', error);
     throw new Error('최근 프로젝트 조회에 실패했습니다.');
+  }
+};
+
+export const fetchProjectByType = async (
+  projectId: number,
+  projectType: 'TTS' | 'VC' | 'CONCAT'
+) => {
+  try {
+    switch (projectType) {
+      case 'TTS':
+        return await ttsLoad(projectId);
+      case 'VC':
+        return await vcLoad(projectId);
+      case 'CONCAT':
+        return await concatLoad(projectId);
+      default:
+        throw new Error('Invalid project type');
+    }
+  } catch (error) {
+    console.error(`프로젝트 로드 실패 [${projectType}]:`, error);
+    throw error;
   }
 };

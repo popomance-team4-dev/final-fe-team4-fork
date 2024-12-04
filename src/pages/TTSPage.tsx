@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { saveTTSProject, ttsLoad } from '@/api/ttsAPI';
 import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
@@ -12,6 +13,7 @@ import { fileProgressDummy } from '@/constants/dummy';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 const TTSPage = () => {
+  const { id } = useParams<{ id: string }>();
   const {
     items,
     projectData,
@@ -25,44 +27,88 @@ const TTSPage = () => {
     updateProjectName,
   } = useTTSStore();
 
+  console.log('useTTSStore 상태:', { items, projectData });
+
   const [progressFiles, setProgressFiles] = useState<FileProgressItem[]>(fileProgressDummy);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // TTS 상태 로드
-  const fetchTTSState = useCallback(
-    async (id: number) => {
+  // TTS 프로젝트 데이터 로드
+  useEffect(() => {
+    const loadTTSProject = async () => {
+      console.log('loadTTSProject 실행'); // 함수 호출 확인
+
+      if (!id) {
+        console.warn('ID가 없습니다.');
+        return;
+      }
+
+      setIsLoading(true); // 로딩 상태 업데이트
       try {
-        const response = await ttsLoad(id);
-        if (response.data?.success && response.data.data) {
-          const { ttsProject, ttsDetails } = response.data.data;
+        const response = await ttsLoad(Number(id));
+        console.log('API 응답:', response.data);
 
+        const { success, data } = response.data;
+
+        // 성공 여부 확인
+        if (!success || !data) {
+          console.error('API 응답 데이터가 올바르지 않습니다:', response.data);
+          return;
+        }
+
+        const { ttsProject, ttsDetails } = data;
+
+        // 상태 업데이트
+        if (ttsProject) {
           setProjectData({
             projectId: ttsProject.id,
-            projectName: ttsProject.projectName,
+            projectName: ttsProject.projectName || '새 프로젝트',
           });
+          console.log('setProjectData 호출 완료:', ttsProject);
+        } else {
+          console.warn('ttsProject 데이터가 없습니다.');
+        }
 
+        if (Array.isArray(ttsDetails)) {
           const loadedItems: TTSItem[] = ttsDetails.map((detail) => ({
             id: String(detail.id),
             enitityId: detail.id,
             text: detail.unitScript || '',
             isSelected: false,
-            speed: detail.unitSpeed || ttsInitialSettings.speed,
             volume: detail.unitVolume || ttsInitialSettings.volume,
+            speed: detail.unitSpeed || ttsInitialSettings.speed,
             pitch: detail.unitPitch || ttsInitialSettings.pitch,
           }));
+
           setItems(loadedItems);
+          console.log('setItems 호출 완료:', loadedItems);
+        } else {
+          console.warn('ttsDetails 데이터가 유효하지 않습니다.');
         }
       } catch (error) {
-        console.error('TTS 프로젝트 로드 실패', error);
+        console.error('TTS 프로젝트 로드 실패:', error);
+      } finally {
+        setIsLoading(false); // 로딩 상태 해제
       }
-    },
-    [setProjectData, setItems]
-  );
+    };
+
+    loadTTSProject();
+  }, [id, setProjectData, setItems]);
 
   useEffect(() => {
-    if (projectData.projectId) {
-      fetchTTSState(projectData.projectId);
-    }
-  }, [projectData.projectId, fetchTTSState]);
+    const unsubscribe = useTTSStore.subscribe((state) => {
+      console.log('zustand 상태 변경 감지:', state);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    console.log('items 상태 변경:', items);
+  }, [items]);
+
+  useEffect(() => {
+    console.log('projectData 상태 변경:', projectData);
+  }, [projectData]);
 
   // 프로젝트 저장
   const handleSaveProject = useCallback(async () => {
@@ -135,27 +181,33 @@ const TTSPage = () => {
             onProjectNameChange={updateProjectName} // 이름 변경 핸들러 추가
             onSave={handleSaveProject}
           />
-          <>
-            <div className={`h-[580px] mt-6 overflow-hidden`}>
-              <TableContents
-                items={items}
-                isAllSelected={isAllSelected}
-                onSelectAll={toggleSelectAll}
-                onSelectionChange={toggleSelection}
-                onTextChange={(id, text) => updateItem(id, { text })}
-                onDelete={deleteSelectedItems}
-                onAdd={addItems}
-                onRegenerateItem={(id) => console.log('재생성 항목:', id)}
-                onDownloadItem={(id) => console.log('다운로드 항목:', id)}
-                onPlay={(id) => console.log('재생:', id)}
-                onReorder={handleReorder}
-                type={'TTS'}
-              />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+              <div>Loading...</div>
             </div>
-            <div className={`TTS mt-12 text-center`}>
-              <Button>{'TTS 생성'}</Button>
-            </div>
-          </>
+          ) : (
+            <>
+              <div className={`h-[580px] mt-6 overflow-hidden`}>
+                <TableContents
+                  items={items}
+                  isAllSelected={isAllSelected}
+                  onSelectAll={toggleSelectAll}
+                  onSelectionChange={toggleSelection}
+                  onTextChange={(id, text) => updateItem(id, { text })}
+                  onDelete={deleteSelectedItems}
+                  onAdd={addItems}
+                  onRegenerateItem={(id) => console.log('재생성 항목:', id)}
+                  onDownloadItem={(id) => console.log('다운로드 항목:', id)}
+                  onPlay={(id) => console.log('재생:', id)}
+                  onReorder={handleReorder}
+                  type={'TTS'}
+                />
+              </div>
+              <div className={`TTS mt-12 text-center`}>
+                <Button>{'TTS 생성'}</Button>
+              </div>
+            </>
+          )}
         </>
       }
     />

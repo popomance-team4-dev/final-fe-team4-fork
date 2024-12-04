@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Project } from '@/api/aIParkAPI.schemas';
-import { deleteProject, fetchProjects } from '@/api/workspaceAPI';
+import { deleteProject, fetchProjectByType, fetchProjects } from '@/api/workspaceAPI';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
@@ -17,6 +18,25 @@ const ProjectPage = () => {
 
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // 선택된 항목
   const [searchKeyword, setSearchKeyword] = useState(''); // 검색 키워드 상태
+
+  const navigate = useNavigate();
+
+  // 프로젝트 클릭 핸들러
+  const handleProjectClick = async (projectId: number, projectType: 'TTS' | 'VC' | 'CONCAT') => {
+    try {
+      const response = await fetchProjectByType(projectId, projectType);
+      console.log('프로젝트 데이터:', response.data);
+
+      // 프로젝트 타입에 따른 경로 생성
+      const path = `/${projectType.toLowerCase()}/${projectId}`;
+
+      // 상세 페이지로 이동
+      navigate(path, { state: response.data });
+    } catch (error) {
+      console.error('프로젝트 로드 중 오류 발생:', error);
+      alert('프로젝트 로드 중 오류가 발생했습니다.');
+    }
+  };
 
   // 페이지네이션 데이터를 가져오는 함수
   const loadProjects = useCallback(
@@ -104,6 +124,8 @@ const ProjectPage = () => {
           updatedAt: formatUpdatedAt(project.updatedAt),
           isSelected: selectedItems.includes(project.projectId),
           text: project.projectName,
+          onClick: () =>
+            handleProjectClick(project.projectId, project.projectType as 'TTS' | 'VC' | 'CONCAT'), // 클릭 시 상세 페이지로 이동
         }))}
         isAllSelected={selectedItems.length === projects.length}
         onSelectAll={(checked = false) => handleSelectAll(checked)}

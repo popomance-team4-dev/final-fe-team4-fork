@@ -121,7 +121,11 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
 
   reset: () => set(ttsInitialSettings),
 
-  setItems: (items) => set({ items }),
+  setItems: (items) =>
+    set((state) => {
+      console.log('[zustand] setItems 호출됨:', items);
+      return { ...state, items };
+    }),
 
   addItems: (newItems) =>
     set((state) => {
@@ -184,12 +188,10 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
   reorderItems: (newItems) => set({ items: newItems }),
 
   setProjectData: (data) =>
-    set((state) => ({
-      projectData: {
-        ...state.projectData,
-        ...data,
-      },
-    })),
+    set((state) => {
+      console.log('[zustand] setProjectData 호출됨:', data);
+      return { ...state, projectData: { ...state.projectData, ...data } };
+    }),
 
   updateProjectName: (name: string) =>
     set((state) => ({

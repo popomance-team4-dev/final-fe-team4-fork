@@ -5,7 +5,7 @@ import { concatLoad } from '@/api/aIParkAPI';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
-import ConcatSidebar from 'ConcatSidebar';
+import ConcatSidebar from '@/components/section/sidebar/ConcatSidebar';
 import { Spinner } from '@/components/ui/spinner';
 import PageLayout from '@/layouts/PageLayout';
 import { ConcatItem, useConcatStore } from '@/stores/concat.store';

@@ -76,8 +76,20 @@ export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
   try {
     const formData = new FormData();
 
-    // 메타데이터 추가
-    formData.append('metadata', JSON.stringify(data));
+    // 메타데이터를 VCSaveDto 형식에 맞게 추가
+    formData.append(
+      'metadata',
+      JSON.stringify({
+        projectId: data.projectId,
+        projectName: data.projectName,
+        srcFiles: data.srcFiles,
+        trgFile: {
+          // trgFiles가 아닌 trgFile로 변경
+          localFileName: data.trgFiles?.[0]?.localFileName || null,
+          s3MemberAudioMetaId: data.trgFiles?.[0]?.s3MemberAudioMetaId || null,
+        },
+      })
+    );
 
     // 파일이 있는 경우 추가
     if (files?.length) {
@@ -95,7 +107,6 @@ export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
       data: formData,
     });
 
-    console.log('VC 프로젝트 저장 성공:', response.data);
     return response.data;
   } catch (error) {
     console.error('VC 프로젝트 저장 실패:', error);

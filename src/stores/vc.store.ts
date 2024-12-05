@@ -16,6 +16,7 @@ interface AudioPlayer {
 
 interface VCStore {
   // 상태
+  saving: boolean;
   items: VCItem[];
   selectedVoice: string;
   projectData: {
@@ -55,11 +56,16 @@ interface VCStore {
   applyToSelected: () => void;
 
   handleSave: () => Promise<void>;
+
+  resetStore: () => void;
 }
 
 interface VCProjectResponse {
-  vcProjectRes: {
-    id: number;
+  success: boolean;
+  data: {
+    vcProjectRes: {
+      id: number;
+    };
   };
 }
 
@@ -143,6 +149,7 @@ const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
 
 export const useVCStore = create<VCStore>((set, get) => ({
   // 초기 상태 설정
+  saving: false,
   items: [], // 빈 배열로 초기화
   selectedVoice: '',
   projectData: {
@@ -203,7 +210,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
           variant: 'default',
         },
       }));
-    }, 2000);
+    }, 1500);
   },
   hideAlert: () => set((state) => ({ alert: { ...state.alert, show: false } })),
   setProjectData: (data) => set({ projectData: data }),
@@ -329,9 +336,12 @@ export const useVCStore = create<VCStore>((set, get) => ({
   handleSave: async () => {
     const { items, projectData } = get();
 
+    if (get().saving) return;
+    set({ saving: true });
+
     try {
       const saveData = {
-        projectId: projectData.projectId || undefined,
+        projectId: projectData.projectId ?? undefined,
         projectName: projectData.projectName,
         srcFiles: items.map((item) => ({
           detailId: item.detailId || undefined,
@@ -351,24 +361,48 @@ export const useVCStore = create<VCStore>((set, get) => ({
         .filter((item) => item.file && !item.detailId)
         .map((item) => item.file as File);
 
-      const response = await saveVCProject(saveData, files);
+      const response = (await saveVCProject(saveData, files)) as VCProjectResponse;
 
       if (response.success) {
-        get().showAlert('프로젝트가 저장되었습니다.', 'default');
-
-        const data = response.data as VCProjectResponse;
-        if (!projectData.projectId && data?.vcProjectRes?.id) {
-          set(() => ({
+        // 프로젝트 ID 업데이트 (새 프로젝트인 경우)
+        if (response.data?.vcProjectRes?.id && !projectData.projectId) {
+          set({
             projectData: {
               ...projectData,
-              projectId: data.vcProjectRes.id,
+              projectId: response.data.vcProjectRes.id,
             },
-          }));
+          });
         }
+        // 저장 성공 메시지는 항상 표시
+        get().showAlert('프로젝트가 저장되었습니다.', 'default');
       }
     } catch (error) {
       console.error('프로젝트 저장 실패:', error);
       get().showAlert('프로젝트 저장에 실패했습니다.', 'destructive');
+    } finally {
+      set({ saving: false });
     }
+  },
+
+  // 스토어 초기화 메서드 추가
+  resetStore: () => {
+    set({
+      items: [],
+      saving: false,
+      selectedVoice: '',
+      projectData: {
+        projectId: null,
+        projectName: '새 프로젝트',
+      },
+      alert: {
+        show: false,
+        message: '',
+        variant: 'default',
+      },
+      audioPlayer: {
+        audioElement: null,
+        currentPlayingId: null,
+      },
+    });
   },
 }));

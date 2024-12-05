@@ -51,12 +51,25 @@ export const processVoiceConversion = async (
   }
 };
 
+interface VCLoadResponse {
+  vcProject: {
+    id: number;
+    projectName: string;
+  };
+  vcDetails: {
+    id: number;
+    fileName?: string;
+    unitScript?: string;
+    isChecked?: boolean;
+  }[];
+}
+
 /**
  * VC 프로젝트 상태를 가져옵니다.
  */
-export const vcLoad = async (projectId: number) => {
+export const vcLoad = async (projectId: number): Promise<ResponseDto<VCLoadResponse>> => {
   try {
-    const response = await customInstance<ResponseDto>({
+    const response = await customInstance<ResponseDto<VCLoadResponse>>({
       url: `/vc/${projectId}`,
       method: 'GET',
     });

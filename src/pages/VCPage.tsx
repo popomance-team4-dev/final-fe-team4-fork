@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
+import { vcLoad } from '@/api/vcAPI';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
@@ -11,6 +13,7 @@ import PageLayout from '@/layouts/PageLayout';
 import { useVCStore } from '@/stores/vc.store';
 
 const VCPage = () => {
+  const { id } = useParams<{ id: string }>();
   const {
     items,
     deleteSelectedItems,
@@ -29,9 +32,34 @@ const VCPage = () => {
     memberId,
     setItems,
     showAlert,
+    resetStore,
+    setProjectData,
+    handleSave,
   } = useVCStore();
 
-  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
+  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([
+    {
+      id: 'rico.mp3',
+      name: 'rico.mp3',
+      description: '',
+      avatarUrl: '',
+      type: 'custom',
+    },
+  ]);
+
+  // 새 프로젝트인 경우 스토어 초기화
+  useEffect(() => {
+    if (!id) {
+      resetStore();
+    }
+  }, [id, resetStore]);
+
+  // 첫 번째 보이스를 기본값으로 설정
+  useEffect(() => {
+    if (customVoices.length > 0 && !selectedVoice) {
+      setSelectedVoice(customVoices[0].name);
+    }
+  }, [customVoices, selectedVoice, setSelectedVoice]);
 
   // 클린업 이펙트
   useEffect(() => cleanupAllAudioUrls, [cleanupAllAudioUrls]);
@@ -88,6 +116,49 @@ const VCPage = () => {
     setItems(newItems);
   };
 
+  // 프로젝트 로드 로직 추가
+  useEffect(() => {
+    const loadVCProject = async () => {
+      if (!id) {
+        resetStore();
+        return;
+      }
+
+      try {
+        const response = await vcLoad(Number(id));
+        if (!response.data) return;
+
+        const { vcProject, vcDetails } = response.data;
+
+        if (vcProject) {
+          setProjectData({
+            projectId: vcProject.id,
+            projectName: vcProject.projectName || '새 프로젝트',
+          });
+        }
+
+        if (Array.isArray(vcDetails)) {
+          setItems(
+            vcDetails.map((detail) => ({
+              id: String(detail.id),
+              detailId: detail.id,
+              fileName: detail.fileName || '',
+              text: detail.unitScript || '',
+              isSelected: detail.isChecked || false,
+              status: '대기중',
+              file: undefined,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error('VC 프로젝트 로드 실패:', error);
+        showAlert('프로젝트 로드에 실패했습니다.', 'destructive');
+      }
+    };
+
+    loadVCProject();
+  }, [id, resetStore, setProjectData, setItems, showAlert]);
+
   return (
     <PageLayout
       variant="project"
@@ -114,7 +185,7 @@ const VCPage = () => {
         type="VC"
         projectTitle={projectData.projectName}
         onProjectNameChange={updateProjectName}
-        onSave={() => console.log('저장')}
+        onSave={handleSave}
         onClose={() => console.log('닫기')}
       />
       <MainContents

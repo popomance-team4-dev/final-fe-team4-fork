@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ProjectListTableItem, TableItem } from '@/types/table';
 
 export interface MainContentsItem {
-  projectType: string;
+  projectType?: string;
   id: string;
   text: string;
   isSelected: boolean;

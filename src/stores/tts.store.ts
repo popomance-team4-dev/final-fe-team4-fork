@@ -41,7 +41,7 @@ interface TTSStore {
 
   // 사이드바 액션
   setField: (field: keyof TTSConfig, value: string | number) => void;
-  reset: () => void;
+  cleanUpAllItems: () => void;
 
   // 테이블 액션
   setItems: (items: TTSItem[]) => void;
@@ -117,7 +117,15 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
       };
     }),
 
-  reset: () => set(ttsInitialSettings),
+  cleanUpAllItems: () => {
+    const updatedItems = get().items.map((item) => ({
+      ...item,
+      speed: ttsInitialSettings.speed,
+      volume: ttsInitialSettings.volume,
+      pitch: ttsInitialSettings.pitch,
+    }));
+    set({ ...ttsInitialSettings, items: updatedItems });
+  },
 
   setItems: (items) =>
     set((state) => {

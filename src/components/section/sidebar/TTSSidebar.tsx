@@ -16,7 +16,7 @@ const TTSSidebar: React.FC = () => {
     language,
     style,
     setField,
-    reset,
+    cleanUpAllItems,
     isModified,
     isAllConfigured,
     applyToSelected,
@@ -137,7 +137,7 @@ const TTSSidebar: React.FC = () => {
         />
 
         <ResetChangesButton
-          onClick={reset}
+          onClick={cleanUpAllItems}
           className={isModified ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
         />
       </div>

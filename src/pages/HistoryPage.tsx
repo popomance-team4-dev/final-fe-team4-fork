@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 // import { useNavigate } from 'react-router-dom';
 import { Export } from '@/api/aIParkAPI.schemas';
-import { fetchExports } from '@/api/workspaceAPI';
+import { deleteProject, fetchExports } from '@/api/workspaceAPI';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
@@ -24,20 +24,24 @@ const HistoryPage = () => {
   const loadProjects = useCallback(
     async (page: number) => {
       try {
+        if (page === 0) {
+          setData([]); // 페이지 변경 시 데이터 초기화
+        }
         const { content, totalPages, totalElements } = await fetchExports(page, 8, searchKeyword);
         console.log('로드된 프로젝트 데이터:', content);
-        setData(content); // 프로젝트 데이터 설정
-        setTotalPages(totalPages); // 총 페이지 수 설정
-        setTotalItemsCount(totalElements); // 전체 항목 수 설정
+        setData(content); // 새로운 데이터를 설정
+        setTotalPages(totalPages);
+        setTotalItemsCount(totalElements);
       } catch (error) {
         console.error('프로젝트 데이터를 불러오는 중 오류 발생:', error);
       }
     },
-    [searchKeyword] // 검색 키워드가 변경될 때 함수 갱신
+    [searchKeyword]
   );
 
   useEffect(() => {
     setCurrentPage(0); // 페이지 리셋
+    setData([]); // 검색어 변경 시 데이터 초기화
     loadProjects(0);
   }, [loadProjects]);
 
@@ -49,9 +53,19 @@ const HistoryPage = () => {
     console.log(`${id} 재생 중지`);
   };
 
-  const handleDelete = () => {
-    console.log('삭제:', selectedItems);
+  const handleDelete = async () => {
+    try {
+      await deleteProject(selectedItems); // 선택된 항목 삭제
+      alert('삭제되었습니다.');
+
+      // 현재 페이지 데이터 재로드
+      loadProjects(currentPage);
+    } catch (error) {
+      console.error('삭제 중 오류:', error); // 에러 로그 출력
+      alert('삭제 중 오류가 발생했습니다.');
+    }
   };
+
   const handleSearch = (searchTerm: string) => {
     setSearchKeyword(searchTerm); // 검색 키워드 업데이트
     setCurrentPage(0); // 검색 시 첫 페이지로 이동
@@ -59,7 +73,7 @@ const HistoryPage = () => {
   };
 
   const handleSelectAll = (checked: boolean) => {
-    setSelectedItems(checked ? data.map((project) => project.metaId) : []);
+    setSelectedItems(checked ? data.map((project) => project.projectId ?? -1) : []);
   };
 
   const handleSelectionChange = (id: number, selected: boolean) => {
@@ -90,17 +104,20 @@ const HistoryPage = () => {
       />
       <MainContents
         type="RECENT"
-        items={data.map((item) => ({
-          id: item.metaId.toString(),
-          projectName: item.projectName,
-          projectType: item.projectType as 'TTS' | 'VC' | 'Concat',
-          fileName: item.fileName,
-          script: item.script || '작성된 내용이 없습니다.',
-          unitStatus: item.unitStatus as 'SUCCESS' | 'FAILURE',
-          updatedAt: formatUpdatedAt(item.createdAt),
-          isSelected: selectedItems.includes(item.metaId),
-          text: item.projectName,
-        }))}
+        items={data
+          .filter((item) => item.projectId !== undefined) // projectId가 있는 항목만 포함
+          .map((item, index) => ({
+            id: item.projectId!.toString(),
+            projectName: item.projectName,
+            projectType: item.projectType as 'TTS' | 'VC' | 'Concat',
+            fileName: item.fileName,
+            script: item.script || '작성된 내용이 없습니다.',
+            unitStatus: item.unitStatus as 'SUCCESS' | 'FAILURE',
+            updatedAt: formatUpdatedAt(item.createdAt || ''),
+            isSelected: selectedItems.includes(item.projectId!),
+            text: item.projectName,
+            key: `${item.projectId}-${index}`, // 고유 key 생성
+          }))}
         isAllSelected={selectedItems.length === data.length}
         onSelectAll={(checked = false) => handleSelectAll(checked)}
         onSelectionChange={(id) =>

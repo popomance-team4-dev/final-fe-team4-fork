@@ -2,13 +2,22 @@ import 'dayjs/locale/ko';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(relativeTime);
 dayjs.locale('ko'); // 한국어 설정
 
 export const formatUpdatedAt = (updatedAt: string): string => {
-  const now = dayjs(); // 현재 시간
-  const updatedTime = dayjs(updatedAt); // 업데이트 시간
+  if (!updatedAt) {
+    return '업데이트 정보 없음';
+  }
+
+  const now = dayjs().tz('Asia/Seoul'); // 현재 시간 (한국 표준시)
+  const updatedTime = dayjs.utc(updatedAt).tz('Asia/Seoul'); // 업데이트 시간 (UTC -> KST 변환)
+
   const diffInHours = now.diff(updatedTime, 'hour'); // 시간 차이 계산
   const diffInDays = now.diff(updatedTime, 'day'); // 일 차이 계산
 

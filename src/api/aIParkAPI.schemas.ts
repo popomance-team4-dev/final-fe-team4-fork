@@ -301,12 +301,15 @@ export interface WorkspaceProject {
 export type workspacesResponse = WorkspaceProject[];
 
 export interface Export {
-  metaId: number;
+  projectId?: number;
+  url?: string;
+  metaId?: number;
   fileName: string;
-  downloadLink: string;
+  downloadLink?: string;
   unitStatus: string;
   projectName: string;
   projectType: string;
   script: string | null;
-  createdAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

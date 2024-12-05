@@ -63,7 +63,7 @@ export function HistoryListTable({
               onCheckedChange={(checked) => onSelectAll(checked as boolean)}
             />
           </TableHead>
-          <TableHead className="pl-16 text-body3 text-black w-[100px]">유형</TableHead>
+          <TableHead className="pl-16 text-body3 text-black w-[150px]">유형</TableHead>
           <TableHead className="text-body3 text-black w-[110px]">프로젝트명</TableHead>
           <TableHead className="text-body3 text-black w-[120px]">파일명</TableHead>
           <TableHead className="p-0 text-body3 text-black w-[200px]">내용</TableHead>
@@ -77,9 +77,9 @@ export function HistoryListTable({
 
       {/* Body */}
       <TableBody>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <TableRow
-            key={item.id}
+            key={`${item.id}-${index}`} // id와 index 조합으로 고유한 key 생성
             data-state={currentPlayingId === item.id ? 'selected' : undefined}
             className="text-body2"
           >
@@ -108,7 +108,9 @@ export function HistoryListTable({
               </div>
             </TableCell>
             <TableCell className="pl-0">
-              <div className="flex">{StatusBadge(item.unitStatus || 'FAILURE')}</div>
+              <div className="flex">
+                {item.unitStatus && <StatusBadge unitStatus={item.unitStatus} />}
+              </div>
             </TableCell>
             <TableCell>
               <div className="flex items-center justify-center">

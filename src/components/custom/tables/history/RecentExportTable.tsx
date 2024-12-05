@@ -1,6 +1,8 @@
+import { useCallback, useEffect, useState } from 'react';
 import { TbChevronRight, TbCircleFilled, TbDownload } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
+import { fetchRecentExports } from '@/api/workspaceAPI';
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -12,25 +14,27 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface RecentExportTableItem {
+export interface RecentExportTableItem {
   id: string;
-  order: string;
   projectName: string;
   fileName: string;
   content: string;
   type: 'VC' | 'TTS' | 'Concat';
-  status: '진행' | '대기중' | '실패' | '완료';
-  unitStatus?: 'SUCCESS' | 'FAILURE';
+  unitStatus?: string;
   createdAt: string;
 }
 
 interface RecentExportTableProps {
-  readonly items: RecentExportTableItem[];
   readonly onPlay: (id: string) => void;
   readonly onPause: (id: string) => void;
   readonly currentPlayingId?: string;
 }
-export const StatusBadge = (unitStatus: 'SUCCESS' | 'FAILURE') => {
+
+interface StatusBadgeProps {
+  unitStatus: 'SUCCESS' | 'FAILURE';
+}
+
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ unitStatus }) => {
   const variantMap = {
     FAILURE: 'failed',
     SUCCESS: 'completed',
@@ -51,17 +55,31 @@ export const StatusBadge = (unitStatus: 'SUCCESS' | 'FAILURE') => {
   );
 };
 
-export function RecentExportTable({
-  items,
-  onPlay,
-  onPause,
-  currentPlayingId,
-}: RecentExportTableProps) {
+export function RecentExportTable({ onPlay, onPause, currentPlayingId }: RecentExportTableProps) {
   const navigate = useNavigate();
-  const AudioBadge = (type: 'VC' | 'TTS' | 'Concat') => {
+  const [items, setItems] = useState<RecentExportTableItem[]>([]);
+
+  const AudioBadge = useCallback((type: 'VC' | 'TTS' | 'Concat') => {
     const variant = type.toLowerCase() as 'vc' | 'tts' | 'concat';
     return <Badge variant={variant}>{type}</Badge>;
-  };
+  }, []);
+
+  // 최근 내보내기 내역 호출
+  useEffect(() => {
+    const loadRecentExports = async () => {
+      try {
+        const data = await fetchRecentExports();
+        if (!data || data.length === 0) {
+          return;
+        }
+        setItems(data); // 매핑된 데이터를 그대로 설정
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadRecentExports();
+  }, []);
 
   return (
     <div className="pt-6 h-auto">
@@ -75,17 +93,20 @@ export function RecentExportTable({
           <TbChevronRight className="w-6 h-6" />
         </p>
       </div>
-      <Table>
-        <TableHeader className="border-t">
+      <Table className="table-fixed w-full">
+        <TableHeader className="bg-gray-50">
           <TableRow>
-            <TableHead className="pl-[79px] bg-gray-50 font-bold text-gray-900">순서</TableHead>
-            <TableHead className="pl-[20px] bg-gray-50 font-bold text-gray-900">유형</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">프로젝트명</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">파일명</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900">내용</TableHead>
-            <TableHead className="pl-[16px] bg-gray-50 font-bold text-gray-900">상태</TableHead>
-            <TableHead className="bg-gray-50 font-bold text-gray-900 pl-[80px]">다운로드</TableHead>
-            <TableHead className="pl-[88px] bg-gray-50 font-bold text-gray-900">
+            <TableHead className="pl-16 text-body3 text-black w-[150px]">유형</TableHead>
+            <TableHead className="text-body3 text-black w-[110px] truncate">프로젝트명</TableHead>
+            <TableHead className="text-body3 text-black w-[100px]">파일명</TableHead>
+            <TableHead className="p-0 text-body3 text-black w-[200px]">내용</TableHead>
+            <TableHead className="text-body3 text-black w-[60px] text-center truncate">
+              상태
+            </TableHead>
+            <TableHead className="text-body3 text-black w-[80px] text-center whitespace-nowrap">
+              다운로드
+            </TableHead>
+            <TableHead className="text-body3 text-black w-[130px] truncate">
               업데이트 날짜
             </TableHead>
           </TableRow>
@@ -96,25 +117,33 @@ export function RecentExportTable({
               key={item.id}
               data-state={currentPlayingId === item.id ? 'selected' : undefined}
             >
-              <TableCell className="font-medium">
-                <div className="flex items-center gap-9">
+              <TableCell className="w-[100px] text-left">
+                <div className="flex items-center gap-4">
                   <PlayButton
                     isPlaying={currentPlayingId === item.id}
                     onPlay={() => onPlay(item.id)}
                     onPause={() => onPause(item.id)}
                   />
-                  {item.order}
+                  {AudioBadge(item.type)}
                 </div>
               </TableCell>
-              <TableCell>{AudioBadge(item.type)}</TableCell>
-              <TableCell>{item.projectName}</TableCell>
-              <TableCell>{item.fileName}</TableCell>
-              <TableCell className="max-w-md pr-0 truncate">{item.content}</TableCell>
+
+              <TableCell className="truncate text-left text-black">{item.projectName}</TableCell>
+              <TableCell className="truncate text-left text-black">{item.fileName}</TableCell>
+              <TableCell className="max-w-md p-0">
+                <div className="truncate text-left text-black overflow-hidden text-ellipsis">
+                  {item.content}
+                </div>
+              </TableCell>
               <TableCell className="pl-0">
-                <div className="flex">{StatusBadge(item.unitStatus || 'FAILURE')}</div>
+                <div className="flex">
+                  {item.unitStatus === 'SUCCESS' || item.unitStatus === 'FAILURE' ? (
+                    <StatusBadge unitStatus={item.unitStatus} />
+                  ) : null}
+                </div>
               </TableCell>
               <TableCell>
-                <div className="flex justify-start pl-[76px]">
+                <div className="flex items-center justify-center">
                   <button
                     onClick={() => console.log('다운로드:', item.id)}
                     aria-label="Download file"
@@ -123,7 +152,7 @@ export function RecentExportTable({
                   </button>
                 </div>
               </TableCell>
-              <TableCell className="text-gray-700 pl-[88px]">{item.createdAt}</TableCell>
+              <TableCell className="text-gray-700 whitespace-nowrap">{item.createdAt}</TableCell>
             </TableRow>
           ))}
         </TableBody>

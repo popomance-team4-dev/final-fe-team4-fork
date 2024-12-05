@@ -3,6 +3,8 @@ import { customInstance } from '@/api/axios-client';
 import { concatLoad } from '@/api/concatAPI';
 import { ttsLoad } from '@/api/ttsAPI';
 import { loadVCProject } from '@/api/vcAPI';
+import { RecentExportTableItem } from '@/components/custom/tables/history/RecentExportTable';
+import { formatUpdatedAt } from '@/utils/dateUtils';
 
 // 프로젝트 목록
 export const fetchProjects = async (
@@ -55,6 +57,8 @@ export const deleteProject = async (projectIds: number[]) => {
     throw error;
   }
 };
+
+// 최근 프로젝트 5개
 export const fetchRecentProjects = async (): Promise<Project[]> => {
   try {
     const response = await customInstance.get<workspacesResponse>('/workspace/project-list');
@@ -136,5 +140,45 @@ export const fetchExports = async (
   } catch (error) {
     console.error('API 요청 실패:', error);
     throw new Error('API 요청 실패');
+  }
+};
+
+export const fetchRecentExports = async (): Promise<RecentExportTableItem[]> => {
+  try {
+    const response = await customInstance.get<{
+      success: boolean;
+      code: number;
+      message: string;
+      data: Export[];
+    }>('/workspace/export-list');
+
+    // 응답 전체 출력
+    console.log('API 응답 전체:', response);
+
+    const data = response.data;
+
+    if (!data || !Array.isArray(data)) {
+      throw new Error('API 응답에서 데이터를 찾을 수 없습니다.');
+    }
+
+    // 데이터 매핑
+    const mappedData = data.map((item) => ({
+      id: item.projectId,
+      projectName: item.projectName,
+      type: item.projectType as 'VC' | 'TTS' | 'Concat',
+      content: item.script || '작성된 내용이 없습니다.',
+      fileName: item.fileName,
+      url: item.url || '',
+      unitStatus:
+        item.unitStatus === 'SUCCESS' || item.unitStatus === 'FAILURE' ? item.unitStatus : null,
+      createdAt: formatUpdatedAt(item.createAt),
+    }));
+
+    console.log('매핑된 데이터:', mappedData);
+
+    return mappedData;
+  } catch (error) {
+    console.error('최근 내보내기 목록 조회 실패:', error);
+    throw new Error('최근 내보내기 목록 조회에 실패했습니다.');
   }
 };

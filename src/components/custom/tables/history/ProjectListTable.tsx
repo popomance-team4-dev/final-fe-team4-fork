@@ -78,6 +78,7 @@ export function ProjectListTable({
               <Checkbox
                 checked={selectedItems.includes(item.id)}
                 onCheckedChange={(checked) => onSelectionChange(item.id, checked as boolean)}
+                onClick={(e) => e.stopPropagation()}
               />
             </TableCell>
             <TableCell className="w-[80px] text-left">

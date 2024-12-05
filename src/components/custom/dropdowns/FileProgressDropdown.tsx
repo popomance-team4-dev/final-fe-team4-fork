@@ -19,6 +19,7 @@ export interface FileProgressItem {
 }
 
 export interface FileProgressDropdownProps {
+  items: FileProgressItem[];
   onDeleteCompleted?: () => void;
   onRetryFailed?: () => void;
 }

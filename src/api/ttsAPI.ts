@@ -1,4 +1,4 @@
-import { ResponseDto, TTSSaveDto, TTSSpecificResponse } from '@/api/aIParkAPI.schemas';
+import { ResponseDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
 import { customInstance } from '@/api/axios-client';
 
 /**
@@ -30,11 +30,12 @@ export const saveTTSProject = async (data: TTSSaveDto) => {
  * TTS 프로젝트 상태를 가져옵니다.
  * @summary TTS 상태 로드
  */
-export const ttsLoad = (projectId: number) => {
-  return customInstance<ResponseDto<TTSSpecificResponse>>({
+export const ttsLoad = async (projectId: number) => {
+  const response = await customInstance({
     url: `/tts/${projectId}`,
     method: 'GET',
   });
+  return response;
 };
 
 export interface VoiceStyle {

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { saveVCProject } from '@/api/vcAPI';
 import { VCItem } from '@/types/table';
 
 interface Alert {
@@ -52,6 +53,14 @@ interface VCStore {
 
   // 적용 액션 추가
   applyToSelected: () => void;
+
+  handleSave: () => Promise<void>;
+}
+
+interface VCProjectResponse {
+  vcProjectRes: {
+    id: number;
+  };
 }
 
 // useFileUpload hooks의 로직을 store에 맞게 재구현
@@ -186,7 +195,15 @@ export const useVCStore = create<VCStore>((set, get) => ({
   setSelectedVoice: (voice) => set({ selectedVoice: voice }),
   showAlert: (message, variant = 'destructive') => {
     set({ alert: { show: true, message, variant } });
-    setTimeout(() => set((state) => ({ alert: { ...state.alert, show: false } })), 3000);
+    setTimeout(() => {
+      set(() => ({
+        alert: {
+          show: false,
+          message: '',
+          variant: 'default',
+        },
+      }));
+    }, 2000);
   },
   hideAlert: () => set((state) => ({ alert: { ...state.alert, show: false } })),
   setProjectData: (data) => set({ projectData: data }),
@@ -268,7 +285,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
     state.audioPlayer.audioElement?.pause();
     set({
       audioPlayer: {
-        ...state.audioPlayer, // 기존 audioElement 유지
+        ...state.audioPlayer, // 존 audioElement 유지
         currentPlayingId: null,
       },
     });
@@ -307,5 +324,51 @@ export const useVCStore = create<VCStore>((set, get) => ({
           : item
       ),
     });
+  },
+
+  handleSave: async () => {
+    const { items, projectData } = get();
+
+    try {
+      const saveData = {
+        projectId: projectData.projectId || undefined,
+        projectName: projectData.projectName,
+        srcFiles: items.map((item) => ({
+          detailId: item.detailId || undefined,
+          localFileName: item.file ? item.fileName : undefined,
+          unitScript: item.text,
+          isChecked: item.isSelected,
+        })),
+        trgFiles: [
+          {
+            localFileName: undefined,
+            s3MemberAudioMetaId: undefined,
+          },
+        ],
+      };
+
+      const files = items
+        .filter((item) => item.file && !item.detailId)
+        .map((item) => item.file as File);
+
+      const response = await saveVCProject(saveData, files);
+
+      if (response.success) {
+        get().showAlert('프로젝트가 저장되었습니다.', 'default');
+
+        const data = response.data as VCProjectResponse;
+        if (!projectData.projectId && data?.vcProjectRes?.id) {
+          set(() => ({
+            projectData: {
+              ...projectData,
+              projectId: data.vcProjectRes.id,
+            },
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('프로젝트 저장 실패:', error);
+      get().showAlert('프로젝트 저장에 실패했습니다.', 'destructive');
+    }
   },
 }));

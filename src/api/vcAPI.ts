@@ -67,6 +67,42 @@ export const vcLoad = async (projectId: number) => {
   }
 };
 
+/**
+ * VC 프로젝트를 저장합니다.
+ * @param data VCSaveDto 데이터
+ * @param files 오디오 파일 배열 (선택적)
+ */
+export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
+  try {
+    const formData = new FormData();
+
+    // 메타데이터 추가
+    formData.append('metadata', JSON.stringify(data));
+
+    // 파일이 있는 경우 추가
+    if (files?.length) {
+      files.forEach((file) => {
+        formData.append('file', file);
+      });
+    }
+
+    const response = await customInstance<ResponseDto>({
+      url: '/vc/save',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data: formData,
+    });
+
+    console.log('VC 프로젝트 저장 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('VC 프로젝트 저장 실패:', error);
+    throw error;
+  }
+};
+
 // Response Types
 export type ProcessVoiceConversionResult = NonNullable<
   Awaited<ReturnType<typeof processVoiceConversion>>

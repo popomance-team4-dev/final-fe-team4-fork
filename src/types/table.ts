@@ -29,6 +29,7 @@ export interface VCItem extends TableItem {
   convertedAudioUrl?: string;
   targetVoice?: string;
   file?: File;
+  detailId?: number | null;
 }
 
 export interface ConcatTableItem extends TableItem {

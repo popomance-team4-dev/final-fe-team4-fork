@@ -16,6 +16,7 @@ export interface MainContentsItem {
   unitStatus?: 'SUCCESS' | 'FAILURE';
   fileName?: string;
   audioUrl?: string;
+  convertedAudioUrl?: string;
   targetVoice?: string;
 }
 
@@ -128,7 +129,10 @@ const MainContents = ({
       <>
         <div className={`h-[580px] mt-6 overflow-hidden`}>
           <TableContents
-            items={items}
+            items={items.map((item) => ({
+              ...item,
+              audioUrl: type === 'VC' ? item.audioUrl : item.convertedAudioUrl || item.audioUrl,
+            }))}
             isAllSelected={isAllSelected}
             onSelectAll={onSelectAll}
             onSelectionChange={onSelectionChange}

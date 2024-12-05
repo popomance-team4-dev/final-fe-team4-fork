@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
+import AudioFooter from '@/components/section/footer/AudioFooter';
 import VCSidebar, { TargetVoice } from '@/components/section/sidebar/VCSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAudioDownload } from '@/hooks/useAudioDownload';
@@ -58,18 +58,27 @@ const VCPage = () => {
         isSelected: item.isSelected,
         status: item.status,
         fileName: item.fileName,
-        audioUrl: item.convertedAudioUrl || item.originalAudioUrl,
+        audioUrl: item.originalAudioUrl,
+        convertedAudioUrl: item.convertedAudioUrl,
         targetVoice: item.targetVoice,
       })),
     [items]
   );
 
-  // 현재 재생중인 오디오 URL
+  // 현재 재생중 오디오 URL (AudioFooter용)
   const currentAudioUrl = useMemo(() => {
     const selectedItem = items.find(
       (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
     );
     return selectedItem?.convertedAudioUrl || '';
+  }, [items]);
+
+  // 현재 선택된 아이템의 파일명 가져오기
+  const currentFileName = useMemo(() => {
+    const selectedItem = items.find(
+      (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
+    );
+    return selectedItem?.fileName || '';
   }, [items]);
 
   const handleReorder = (startIndex: number, endIndex: number) => {
@@ -92,7 +101,7 @@ const VCPage = () => {
           onVoiceUpload={setCustomVoices}
         />
       }
-      footer={<AudioPlayer audioUrl={currentAudioUrl} />}
+      footer={<AudioFooter audioUrl={currentAudioUrl} type="VC" label={currentFileName} />}
     >
       {alert.show && (
         <div className="absolute left-1/2 -translate-x-1/2 top-6">

@@ -240,7 +240,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
   handlePlay: (id: string) => {
     const state = get();
     const item = state.items.find((item) => item.id === id);
-    const audioUrl = item?.convertedAudioUrl || item?.originalAudioUrl;
+    const audioUrl = item?.originalAudioUrl;
     if (!audioUrl) return;
 
     // 이전에 재생하던 오디오가 있으면 재사용

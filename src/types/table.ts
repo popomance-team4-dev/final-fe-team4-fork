@@ -6,6 +6,7 @@ export interface TableItem {
   volume?: number;
   pitch?: number;
   fileName?: string;
+  audioUrl?: string;
 }
 
 export interface ProjectListTableItem {

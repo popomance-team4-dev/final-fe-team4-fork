@@ -15,23 +15,33 @@ import { cn } from '@/lib/utils';
 interface AudioFooterProps {
   audioUrl: string;
   className?: string;
+  type?: 'TTS' | 'VC';
+  label?: string;
 }
 
 const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
-  ({ audioUrl, className }, ref) => {
+  ({ audioUrl, className, type = 'TTS', label }, ref) => {
     return (
       <div ref={ref} className={cn('flex items-center h-[92px] gap-4 bg-white', className)}>
         <Badge variant="default" className="flex-shrink-0 flex items-center gap-4">
-          <Avatar className="h-7 w-7 border border-gray-200">
-            <AvatarImage src={Jennie} alt="제니" />
-            <AvatarFallback>제</AvatarFallback>
-          </Avatar>
-          <span className="text-[14px]">KR</span>
+          {type === 'TTS' ? (
+            <>
+              <Avatar className="h-7 w-7 border border-gray-200">
+                <AvatarImage src={Jennie} alt="제니" />
+                <AvatarFallback>제</AvatarFallback>
+              </Avatar>
+              <span className="text-[14px]">KR</span>
+            </>
+          ) : (
+            <span className="text-[14px]">converted {label || '변환된 파일'}</span>
+          )}
         </Badge>
 
-        <Badge variant="default" className="flex-shrink-0 text-[14px] py-1.5">
-          명랑한 · 재미있음
-        </Badge>
+        {type === 'TTS' && (
+          <Badge variant="default" className="flex-shrink-0 text-[14px] py-1.5">
+            명랑한 · 재미있음
+          </Badge>
+        )}
 
         <Separator orientation="vertical" className="flex-shrink-0 h-[56px]" />
 
@@ -44,7 +54,6 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
 
         <Separator orientation="vertical" className="flex-shrink-0 h-[56px] mr-4" />
 
-        {/* Dialog Trigger */}
         <Dialog>
           <DialogTrigger asChild>
             <TooltipWrapper content={AUDIO_FOOTER_TOOLTIP.FULL_HISTORY} className="history-icon">
@@ -56,8 +65,6 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
               </button>
             </TooltipWrapper>
           </DialogTrigger>
-
-          {/* Dialog Content */}
           <AudioHistoryDialog />
         </Dialog>
       </div>

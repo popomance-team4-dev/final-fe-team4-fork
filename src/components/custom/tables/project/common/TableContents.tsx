@@ -75,7 +75,13 @@ export const TableContents: React.FC<TableContentsProps> = ({
   });
 
   const { selectedCount, handleRegenerate, handleDownload, listItems, gridItems } = useTableItems({
-    items,
+    items: items.map((item) => ({
+      ...item,
+      audioUrl:
+        type === 'VC'
+          ? item.originalAudioUrl || item.audioUrl
+          : item.convertedAudioUrl || item.audioUrl,
+    })),
     onPlay,
     onRegenerateItem,
     onDownloadItem,

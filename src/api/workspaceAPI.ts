@@ -182,3 +182,17 @@ export const fetchRecentExports = async (): Promise<RecentExportTableItem[]> => 
     throw new Error('최근 내보내기 목록 조회에 실패했습니다.');
   }
 };
+
+// 내보내기 오디오 삭제
+export const deleteExportProject = async (mataId: number[]) => {
+  try {
+    const response = await customInstance.delete('/workspace/delete/export', {
+      data: mataId, // 요청 본문에 ID 배열 전달
+    });
+    console.log('프로젝트 삭제 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('프로젝트 삭제 실패:', error);
+    throw error;
+  }
+};

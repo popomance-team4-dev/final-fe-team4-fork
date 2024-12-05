@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 // import { useNavigate } from 'react-router-dom';
 import { Export } from '@/api/aIParkAPI.schemas';
-import { deleteProject, fetchExports } from '@/api/workspaceAPI';
+import { deleteExportProject, fetchExports } from '@/api/workspaceAPI';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
@@ -16,7 +16,7 @@ const HistoryPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
 
-  const [selectedItems, setSelectedItems] = useState<number[]>([]); // 선택된 항목
+  const [selectedMetaIds, setSelectedMetaIds] = useState<number[]>([]); // 선택된 metaId
   const [searchKeyword, setSearchKeyword] = useState(''); // 검색 키워드 상태
 
   // const navigate = useNavigate();
@@ -55,7 +55,7 @@ const HistoryPage = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteProject(selectedItems); // 선택된 항목 삭제
+      await deleteExportProject(selectedMetaIds); // 선택된 항목 삭제
       alert('삭제되었습니다.');
 
       // 현재 페이지 데이터 재로드
@@ -73,12 +73,12 @@ const HistoryPage = () => {
   };
 
   const handleSelectAll = (checked: boolean) => {
-    setSelectedItems(checked ? data.map((project) => project.projectId ?? -1) : []);
+    setSelectedMetaIds(checked ? data.map((project) => project.metaId ?? -1) : []);
   };
 
-  const handleSelectionChange = (id: number, selected: boolean) => {
-    setSelectedItems((prev) =>
-      selected ? [...prev, id] : prev.filter((projectId) => projectId !== id)
+  const handleSelectionChange = (metaId: number, selected: boolean) => {
+    setSelectedMetaIds((prev) =>
+      selected ? [...prev, metaId] : prev.filter((id) => id !== metaId)
     );
   };
 
@@ -105,30 +105,30 @@ const HistoryPage = () => {
       <MainContents
         type="RECENT"
         items={data
-          .filter((item) => item.projectId !== undefined) // projectId가 있는 항목만 포함
+          .filter((item) => item.metaId !== undefined) // projectId가 있는 항목만 포함
           .map((item, index) => ({
-            id: item.projectId!.toString(),
+            id: item.metaId!.toString(),
             projectName: item.projectName,
             projectType: item.projectType as 'TTS' | 'VC' | 'Concat',
             fileName: item.fileName,
             script: item.script || '작성된 내용이 없습니다.',
             unitStatus: item.unitStatus as 'SUCCESS' | 'FAILURE',
             updatedAt: formatUpdatedAt(item.createdAt || ''),
-            isSelected: selectedItems.includes(item.projectId!),
+            isSelected: selectedMetaIds.includes(item.metaId!),
             text: item.projectName,
             key: `${item.projectId}-${index}`, // 고유 key 생성
           }))}
-        isAllSelected={selectedItems.length === data.length}
+        isAllSelected={selectedMetaIds.length === data.length}
         onSelectAll={(checked = false) => handleSelectAll(checked)}
         onSelectionChange={(id) =>
-          handleSelectionChange(Number(id), !selectedItems.includes(Number(id)))
+          handleSelectionChange(Number(id), !selectedMetaIds.includes(Number(id)))
         }
         onDelete={handleDelete}
         onAdd={() => {}}
         onPlay={handlePlay}
         onPause={handlePause}
         itemCount={data.length}
-        selectedItemsCount={selectedItems.length}
+        selectedItemsCount={selectedMetaIds.length}
         onSearch={handleSearch}
         totalItemsCount={totalItemsCount}
       />

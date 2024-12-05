@@ -12,6 +12,7 @@ import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
+import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
 const TTSPage = () => {
   const { id } = useParams<{ id: string }>();
   const {
@@ -26,6 +27,9 @@ const TTSPage = () => {
     addItems,
     updateProjectName,
   } = useTTSStore();
+
+  const [isGenerating, setIsGenerating] = useState(false);
+  const setHistoryItems = useAudioHistoryStore((state) => state.setHistoryItems);
 
   console.log('useTTSStore 상태:', { items, projectData });
 
@@ -72,6 +76,7 @@ const TTSPage = () => {
           }));
 
           setItems(loadedItems);
+          setHistoryItems(ttsDetails);
           console.log('setItems 호출 완료:', loadedItems);
         } else {
           console.warn('ttsDetails 데이터가 유효하지 않습니다.');
@@ -84,7 +89,7 @@ const TTSPage = () => {
     };
 
     loadTTSProject();
-  }, [id, setProjectData, setItems]);
+  }, [id, setProjectData, setItems, setHistoryItems]);
 
   useEffect(() => {
     const unsubscribe = useTTSStore.subscribe((state) => {
@@ -148,11 +153,10 @@ const TTSPage = () => {
     [items, setItems]
   );
 
-  const [isGenerating, setIsGenerating] = useState(false);
-
   // TTS 오디오 데이터 생성
   const generateTTSAudioData = useCallback(async () => {
     setIsGenerating(true);
+
     const response = await convertBatchTexts({
       ...projectData,
       ttsDetails: items.map((item, index) => ({
@@ -168,7 +172,9 @@ const TTSPage = () => {
     });
     setIsGenerating(false);
     console.log('TTS 변환 API 응답:', response.data);
-  }, [projectData, items]);
+
+    setHistoryItems(response.data.ttsDetails);
+  }, [projectData, items, setHistoryItems]);
 
   return (
     <PageLayout

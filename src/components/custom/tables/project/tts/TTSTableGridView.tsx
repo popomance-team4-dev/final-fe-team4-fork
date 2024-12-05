@@ -1,7 +1,7 @@
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React from 'react';
+import { useState } from 'react';
 
 import {
   DownloadButton,
@@ -14,7 +14,7 @@ import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { TTS_TOOLTIP } from '@/constants/tooltips';
-import { usePlaybackHistory } from '@/hooks/usePlaybackHistory';
+import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -33,23 +33,19 @@ interface TTSGridItemProps {
   onTextChange: (id: string, newText: string) => void;
 }
 
-export interface InterfaceHistoryItem {
-  id: string;
-  text: string;
-  speed: number;
-  volume: number;
-  pitch: number;
-}
+import React, { memo } from 'react';
 
-const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
+const SortableGridItem = memo((props: TTSGridItemProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: props.id,
   });
-  const { historyItems, isHistoryOpen, setIsHistoryOpen, handleDelete } = usePlaybackHistory();
 
-  // useEffect(() => {
-  //!TODO 백엔드 로직이 들어갈 자리, TTS 재생성 히스토리 API 호출
-  // }, []);
+  const historyItems = useAudioHistoryStore((state) => state.historyItems)[props.id] || [];
+  const handleDelete = useAudioHistoryStore((state) => state.deleteHistoryItem)(props.id);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  console.log('props.id', props.id);
+  console.log('isHistoryOpen', isHistoryOpen);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -158,7 +154,9 @@ const SortableGridItem: React.FC<TTSGridItemProps> = (props) => {
       </div>
     </div>
   );
-};
+});
+
+SortableGridItem.displayName = 'SortableGridItem';
 
 interface TTSTableGridViewProps {
   items: TTSGridItemProps[];
@@ -188,7 +186,9 @@ export const TTSTableGridView: React.FC<TTSTableGridViewProps> = ({ items, onReo
       <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
         <div className="flex flex-col gap-4">
           {items.map((item) => (
-            <SortableGridItem key={item.id} {...item} />
+            <>
+              <SortableGridItem key={item.id} {...item} />
+            </>
           ))}
         </div>
       </SortableContext>

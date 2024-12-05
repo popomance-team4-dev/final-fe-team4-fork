@@ -5,6 +5,7 @@ import { loadVoiceLanguageOptions, loadVoiceStyleOptions, voiceStyleData } from 
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
 import { Select } from '@/components/ui/select';
+import { GOOGLE_TTS_CONFIG } from '@/constants/googleTTSConfig';
 import { useTTSStore } from '@/stores/tts.store';
 
 const TTSSidebar: React.FC = () => {
@@ -34,6 +35,7 @@ const TTSSidebar: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    setField('style', '');
     if (!language) {
       return;
     }
@@ -42,7 +44,7 @@ const TTSSidebar: React.FC = () => {
       setVoiceStyleList(Array.from(response) || []);
     };
     fetchTTSVoiceOptions();
-  }, [language]);
+  }, [language, setField]);
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
@@ -95,9 +97,9 @@ const TTSSidebar: React.FC = () => {
           label="속도"
           value={speed}
           unit="x"
-          min={0.5}
-          max={2.0}
-          step={0.1}
+          min={GOOGLE_TTS_CONFIG.PITCH.MIN}
+          max={GOOGLE_TTS_CONFIG.PITCH.MAX}
+          step={GOOGLE_TTS_CONFIG.PITCH.STEP}
           onChange={(value) => setField('speed', value)}
         />
       </div>
@@ -106,10 +108,10 @@ const TTSSidebar: React.FC = () => {
         <StateController
           label="볼륨"
           value={volume}
-          unit="%"
-          min={0}
-          max={100}
-          step={1}
+          unit=" dB"
+          min={GOOGLE_TTS_CONFIG.VOLUME.MIN}
+          max={GOOGLE_TTS_CONFIG.VOLUME.MAX}
+          step={GOOGLE_TTS_CONFIG.VOLUME.STEP}
           onChange={(value) => setField('volume', value)}
         />
       </div>
@@ -120,9 +122,9 @@ const TTSSidebar: React.FC = () => {
           label="피치"
           value={pitch}
           unit=""
-          min={0}
-          max={10}
-          step={0.1}
+          min={GOOGLE_TTS_CONFIG.PITCH.MIN}
+          max={GOOGLE_TTS_CONFIG.PITCH.MAX}
+          step={GOOGLE_TTS_CONFIG.PITCH.STEP}
           onChange={(value) => setField('pitch', value)}
         />
       </div>

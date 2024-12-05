@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { saveTTSProject, ttsLoad } from '@/api/ttsAPI';
+import { convertBatchTexts, saveTTSProject, ttsLoad } from '@/api/ttsAPI';
 // import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 // import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 // import { fileProgressDummy } from '@/constants/dummy';
@@ -68,6 +68,7 @@ const TTSPage = () => {
             volume: detail.unitVolume || ttsInitialSettings.volume,
             speed: detail.unitSpeed || ttsInitialSettings.speed,
             pitch: detail.unitPitch || ttsInitialSettings.pitch,
+            style: detail.unitVoiceStyleId || null,
           }));
 
           setItems(loadedItems);
@@ -110,10 +111,10 @@ const TTSPage = () => {
           id: item.enitityId,
           unitScript: item.text,
           unitSpeed: item.speed,
-          unitVolume: item.volume * 0.01,
+          unitVolume: item.volume,
           unitPitch: item.pitch,
           unitSequence: index + 1,
-          unitVoiceStyleId: null,
+          unitVoiceStyleId: item.style ? Number(item.style) : null,
           isDeleted: false,
         })),
       });
@@ -122,23 +123,18 @@ const TTSPage = () => {
         setProjectData({
           projectId: response.ttsProject.id,
           projectName: response.ttsProject.projectName,
-          // !TODO다른 업데이트할 프로젝트 데이터들이 들어가면 좋을듯
+          fullScript: response.ttsProject.fullScript,
+          globalSpeed: response.ttsProject.globalSpeed,
+          globalPitch: response.ttsProject.globalPitch,
+          globalVolume: response.ttsProject.globalVolume,
+          globalVoiceStyleId: response.ttsProject.globalVoiceStyleId,
+          ttsDetails: response.ttsDetails,
         });
       }
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);
     }
   }, [projectData, items, setProjectData]);
-
-  // const handleDeleteCompleted = () => {
-  //   setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
-  // };
-
-  // const handleRetryFailed = useCallback(() => {
-  //   setProgressFiles((prev) =>
-  //     prev.map((file) => (file.status === '실패' ? { ...file, status: '대기' } : file))
-  //   );
-  // }, []);
 
   const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
 
@@ -152,12 +148,36 @@ const TTSPage = () => {
     [items, setItems]
   );
 
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // TTS 오디오 데이터 생성
+  const generateTTSAudioData = useCallback(async () => {
+    setIsGenerating(true);
+    const response = await convertBatchTexts({
+      ...projectData,
+      ttsDetails: items.map((item, index) => ({
+        id: item.enitityId,
+        unitScript: item.text,
+        unitSpeed: item.speed,
+        unitVolume: item.volume,
+        unitPitch: item.pitch,
+        unitSequence: index + 1,
+        unitVoiceStyleId: item.style ? Number(item.style) : null,
+        isDeleted: false,
+      })),
+    });
+    setIsGenerating(false);
+    console.log('TTS 변환 API 응답:', response.data);
+  }, [projectData, items]);
+
   return (
     <PageLayout
       variant="project"
       header={<></>}
       sidebar={<TTSOptionsSidebar />}
-      footer={<AudioFooter audioUrl="/sample.mp3" />}
+      footer={
+        <AudioFooter audioUrl="https://backend-audio-storage.s3.ap-northeast-2.amazonaws.com/Generated/1/TTS/89/88/20241205_102619.wav" />
+      }
       children={
         <>
           <Title
@@ -189,7 +209,9 @@ const TTSPage = () => {
                 />
               </div>
               <div className={`TTS mt-12 text-center`}>
-                <Button>{'TTS 생성'}</Button>
+                <Button onClick={generateTTSAudioData} disabled={isGenerating}>
+                  {isGenerating ? '생성 중...' : 'TTS 생성'}
+                </Button>
               </div>
             </>
           )}

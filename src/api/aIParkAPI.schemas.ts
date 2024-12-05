@@ -299,3 +299,17 @@ export interface WorkspaceProject {
 }
 
 export type workspacesResponse = WorkspaceProject[];
+
+export interface Export {
+  projectId?: number;
+  url?: string;
+  metaId?: number;
+  fileName: string;
+  downloadLink?: string;
+  unitStatus: string;
+  projectName: string;
+  projectType: string;
+  script: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}

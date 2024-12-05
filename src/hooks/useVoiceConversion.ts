@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { processVoiceConversion, VCSaveDto } from '@/api/vcApi';
+import { processVoiceConversion, VCSaveDto } from '@/api/vcAPI';
 import { VCItem } from '@/types/table';
 
 interface UseVoiceConversionProps {

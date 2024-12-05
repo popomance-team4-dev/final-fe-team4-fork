@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { saveTTSProject, ttsLoad } from '@/api/ttsAPI';
-import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
+// import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
+// import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
+// import { fileProgressDummy } from '@/constants/dummy';
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
-import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import { Button } from '@/components/ui/button';
-import { fileProgressDummy } from '@/constants/dummy';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 const TTSPage = () => {
@@ -29,7 +29,7 @@ const TTSPage = () => {
 
   console.log('useTTSStore 상태:', { items, projectData });
 
-  const [progressFiles, setProgressFiles] = useState<FileProgressItem[]>(fileProgressDummy);
+  // const [progressFiles, setProgressFiles] = useState<FileProgressItem[]>(fileProgressDummy);
   const [isLoading, setIsLoading] = useState(false);
 
   // TTS 프로젝트 데이터 로드
@@ -46,16 +46,7 @@ const TTSPage = () => {
       try {
         const response = await ttsLoad(Number(id));
         console.log('API 응답:', response.data);
-
-        const { success, data } = response.data;
-
-        // 성공 여부 확인
-        if (!success || !data) {
-          console.error('API 응답 데이터가 올바르지 않습니다:', response.data);
-          return;
-        }
-
-        const { ttsProject, ttsDetails } = data;
+        const { ttsProject, ttsDetails } = response.data;
 
         // 상태 업데이트
         if (ttsProject) {
@@ -139,15 +130,15 @@ const TTSPage = () => {
     }
   }, [projectData, items, setProjectData]);
 
-  const handleDeleteCompleted = () => {
-    setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
-  };
+  // const handleDeleteCompleted = () => {
+  //   setProgressFiles((prev) => prev.filter((file) => file.status !== '완료'));
+  // };
 
-  const handleRetryFailed = useCallback(() => {
-    setProgressFiles((prev) =>
-      prev.map((file) => (file.status === '실패' ? { ...file, status: '대기' } : file))
-    );
-  }, []);
+  // const handleRetryFailed = useCallback(() => {
+  //   setProgressFiles((prev) =>
+  //     prev.map((file) => (file.status === '실패' ? { ...file, status: '대기' } : file))
+  //   );
+  // }, []);
 
   const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
 
@@ -164,13 +155,7 @@ const TTSPage = () => {
   return (
     <PageLayout
       variant="project"
-      header={
-        <FileProgressHeader
-          files={progressFiles}
-          onDeleteCompleted={handleDeleteCompleted}
-          onRetryFailed={handleRetryFailed}
-        />
-      }
+      header={<></>}
       sidebar={<TTSOptionsSidebar />}
       footer={<AudioFooter audioUrl="/sample.mp3" />}
       children={

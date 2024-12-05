@@ -97,9 +97,9 @@ const TTSSidebar: React.FC = () => {
           label="속도"
           value={speed}
           unit="x"
-          min={GOOGLE_TTS_CONFIG.PITCH.MIN}
-          max={GOOGLE_TTS_CONFIG.PITCH.MAX}
-          step={GOOGLE_TTS_CONFIG.PITCH.STEP}
+          min={GOOGLE_TTS_CONFIG.SPEED.MIN}
+          max={GOOGLE_TTS_CONFIG.SPEED.MAX}
+          step={GOOGLE_TTS_CONFIG.SPEED.STEP}
           onChange={(value) => setField('speed', value)}
         />
       </div>

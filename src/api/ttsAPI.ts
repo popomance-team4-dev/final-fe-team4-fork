@@ -31,11 +31,15 @@ export const saveTTSProject = async (data: TTSSaveDto) => {
  * @summary TTS 상태 로드
  */
 export const ttsLoad = async (projectId: number) => {
-  const response = await customInstance({
-    url: `/tts/${projectId}`,
-    method: 'GET',
-  });
-  return response;
+  try {
+    return await customInstance({
+      url: `/tts/${projectId}`,
+      method: 'GET',
+    });
+  } catch (error) {
+    console.error('TTS 프로젝트 로드 오류:', error);
+    throw error;
+  }
 };
 
 export interface VoiceStyle {

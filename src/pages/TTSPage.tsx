@@ -164,7 +164,13 @@ const TTSPage = () => {
       setIsGenerating(false);
       return;
     }
-    uploadTTSProjectData(projectData, items, setProjectData);
+
+    try {
+      await uploadTTSProjectData(projectData, items, setProjectData);
+    } catch (error) {
+      console.error('프로젝트 저장 오류:', error);
+      showAlert('프로젝트 저장 중 오류가 발생했습니다.', 'destructive');
+    }
     const request = {
       ...projectData,
       projectId: projectData.projectId,
@@ -184,10 +190,10 @@ const TTSPage = () => {
     setIsGenerating(false);
 
     setHistoryItems(response.data.ttsDetails);
-  }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate]);
+  }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate, showAlert]);
 
   const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
-  const audioTTSHisoryItems = Object.values(historyItems)
+  const audioTTSHistoryItems = Object.values(historyItems)
     .flat()
     .reverse()
     .slice(0, 7)
@@ -198,7 +204,7 @@ const TTSPage = () => {
       };
     });
 
-  const currentAudioUrl = audioTTSHisoryItems.length > 0 ? audioTTSHisoryItems[0].audioUrl : '';
+  const currentAudioUrl = audioTTSHistoryItems.length > 0 ? audioTTSHistoryItems[0].audioUrl : '';
 
   const handleSave = useCallback(async () => {
     try {

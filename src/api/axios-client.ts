@@ -22,7 +22,6 @@ export const customInstance: AxiosInstance = axios.create({
 customInstance.interceptors.request.use(
   (config) => {
     // 세션 기반 인증에서는 Authorization 헤더가 필요 없습니다.
-    console.log('요청 데이터:', config);
     return config;
   },
   (error) => {

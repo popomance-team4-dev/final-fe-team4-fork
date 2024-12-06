@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
-import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { TTSDetailDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { GOOGLE_TTS_CONFIG } from '@/constants/googleTTSConfig';
 import { TableItem } from '@/types/table';
 
 export interface TTSItem {
@@ -22,7 +23,6 @@ interface TTSConfig {
   volume: number;
   pitch: number;
   language: string;
-  voice: string;
   style: string;
 }
 
@@ -32,7 +32,6 @@ interface TTSStore {
   volume: number;
   pitch: number;
   language: string;
-  voice: string;
   style: string;
   isModified: boolean;
   isAllConfigured: boolean;
@@ -42,7 +41,7 @@ interface TTSStore {
 
   // 사이드바 액션
   setField: (field: keyof TTSConfig, value: string | number) => void;
-  reset: () => void;
+  cleanUpAllItems: () => void;
 
   // 테이블 액션
   setItems: (items: TTSItem[]) => void;
@@ -57,7 +56,16 @@ interface TTSStore {
   projectData: TTSSaveDto;
 
   // 프로젝트 관련 액션
-  setProjectData: (data: { projectId: number | null; projectName: string }) => void;
+  setProjectData: (data: {
+    projectId: number | null;
+    projectName: string;
+    fullScript?: string;
+    globalVoiceStyleId?: number;
+    globalSpeed?: number;
+    globalPitch?: number;
+    globalVolume?: number;
+    ttsDetails?: TTSDetailDto[];
+  }) => void;
   updateProjectName: (name: string) => void;
 
   // TTS 설정 적용 액션
@@ -71,9 +79,9 @@ const initialProjectData = {
   projectName: '새 프로젝트',
   globalVoiceStyleId: 9,
   fullScript: '',
-  globalSpeed: 1.0,
-  globalPitch: 4.0,
-  globalVolume: 60,
+  globalSpeed: GOOGLE_TTS_CONFIG.SPEED.DEFAULT,
+  globalPitch: GOOGLE_TTS_CONFIG.PITCH.DEFAULT,
+  globalVolume: GOOGLE_TTS_CONFIG.VOLUME.DEFAULT,
   ttsDetails: [],
 };
 
@@ -107,7 +115,7 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
         (key) => newState[key as keyof TTSConfig] !== ttsInitialSettings[key as keyof TTSConfig]
       );
 
-      const isAllConfigured = ['language', 'voice', 'style'].every(
+      const isAllConfigured = ['language', 'style'].every(
         (key) => newState[key as keyof TTSConfig] !== ttsInitialSettings[key as keyof TTSConfig]
       );
 
@@ -118,7 +126,15 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
       };
     }),
 
-  reset: () => set(ttsInitialSettings),
+  cleanUpAllItems: () => {
+    const updatedItems = get().items.map((item) => ({
+      ...item,
+      speed: ttsInitialSettings.speed,
+      volume: ttsInitialSettings.volume,
+      pitch: ttsInitialSettings.pitch,
+    }));
+    set({ ...ttsInitialSettings, items: updatedItems });
+  },
 
   setItems: (items) =>
     set((state) => {
@@ -138,7 +154,6 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
           volume: state.volume ?? ttsInitialSettings.volume,
           pitch: state.pitch ?? ttsInitialSettings.pitch,
           language: state.language ?? ttsInitialSettings.language,
-          voice: state.voice ?? ttsInitialSettings.voice,
           style: state.style ?? ttsInitialSettings.style,
         }));
         return { items: [...state.items, ...mappedItems] };
@@ -152,7 +167,6 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
           volume: state.volume,
           pitch: state.pitch,
           language: state.language,
-          voice: state.voice,
           style: state.style,
         };
         return { items: [...state.items, newItem] };
@@ -201,7 +215,7 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
     })),
 
   applyToSelected: () => {
-    const { items, speed, volume, pitch, language, voice, style } = get();
+    const { items, speed, volume, pitch, language, style } = get();
     set({
       items: items.map((item) =>
         item.isSelected
@@ -211,7 +225,6 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
               volume,
               pitch,
               language,
-              voice,
               style,
             }
           : item

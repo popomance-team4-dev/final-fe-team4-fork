@@ -22,6 +22,7 @@ interface ListRowProps {
   volume: number;
   pitch: number;
   convertedAudioUrl?: string;
+  originalAudioUrl?: string;
   status?: '대기중' | '완료' | '실패' | '진행';
   targetVoice?: string;
   frontSilence?: number;
@@ -106,7 +107,9 @@ export const TableListView: React.FC<TableListViewProps> = ({
       {renderHeader()}
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
         <SortableContext items={rows.map((row) => row.id)} strategy={verticalListSortingStrategy}>
-          {rows.map((row) => renderRow(row))}
+          {rows.map((row) => (
+            <React.Fragment key={row.id}>{renderRow(row)}</React.Fragment>
+          ))}
         </SortableContext>
       </DndContext>
     </div>

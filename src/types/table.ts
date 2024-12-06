@@ -6,6 +6,7 @@ export interface TableItem {
   volume?: number;
   pitch?: number;
   fileName?: string;
+  audioUrl?: string;
 }
 
 export interface ProjectListTableItem {
@@ -29,6 +30,7 @@ export interface VCItem extends TableItem {
   convertedAudioUrl?: string;
   targetVoice?: string;
   file?: File;
+  detailId?: number | null;
 }
 
 export interface ConcatTableItem extends TableItem {

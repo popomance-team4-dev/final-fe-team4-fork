@@ -2,7 +2,7 @@ import { Export, Project, workspacesResponse } from '@/api/aIParkAPI.schemas';
 import { customInstance } from '@/api/axios-client';
 import { concatLoad } from '@/api/concatAPI';
 import { ttsLoad } from '@/api/ttsAPI';
-import { loadVCProject } from '@/api/vcAPI';
+import { vcLoad } from '@/api/vcAPI';
 import { RecentExportTableItem } from '@/components/custom/tables/history/RecentExportTable';
 import { formatUpdatedAt } from '@/utils/dateUtils';
 
@@ -89,7 +89,7 @@ export const fetchProjectByType = async (
       case 'TTS':
         return await ttsLoad(projectId);
       case 'VC':
-        return await loadVCProject(projectId);
+        return await vcLoad(projectId);
       case 'CONCAT':
         return await concatLoad(projectId);
       default:

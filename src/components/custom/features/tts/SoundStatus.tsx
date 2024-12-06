@@ -25,7 +25,7 @@ export const STATUS_CONFIGS = {
     label: '속도',
     rotation: 90,
   },
-  [UNIT_SOUND_STATUS_TYPES.VOLUME]: { icon: TbVolume, unit: '%', label: '볼륨', rotation: 0 },
+  [UNIT_SOUND_STATUS_TYPES.VOLUME]: { icon: TbVolume, unit: ' dB', label: '볼륨', rotation: 0 },
   [UNIT_SOUND_STATUS_TYPES.PITCH]: { icon: TbWaveSquare, unit: '', label: '피치', rotation: 0 },
 } as const;
 

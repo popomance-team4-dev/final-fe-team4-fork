@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useVCStore } from '@/stores/vc.store';
 
 export interface TitleProps {
   variant?: 'project' | 'recent';
@@ -36,6 +37,7 @@ const Title = ({
 }: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(projectTitle);
+  const handleSaveVC = useVCStore((state) => state.handleSave);
 
   // projectTitle prop이 변경될 때마다 editTitle 업데이트
   useEffect(() => {
@@ -47,6 +49,13 @@ const Title = ({
     if (editTitle !== projectTitle && onProjectNameChange) {
       onProjectNameChange(editTitle);
     }
+  };
+
+  const handleSaveClick = () => {
+    if (type === 'VC') {
+      handleSaveVC();
+    }
+    onSave?.();
   };
 
   if (variant === 'recent') {
@@ -117,7 +126,7 @@ const Title = ({
           )}
         </div>
         <div className="flex items-center gap-2 -mt-1">
-          <SaveButton onClick={onSave} />
+          <SaveButton onClick={handleSaveClick} />
           <button
             onClick={onClose}
             className="flex items-center justify-center px-2.5 py-2 rounded-md border border-gray-200 text-gray-900 hover:bg-gray-50"

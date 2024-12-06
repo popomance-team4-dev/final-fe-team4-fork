@@ -16,6 +16,7 @@ export interface MainContentsItem {
   unitStatus?: 'SUCCESS' | 'FAILURE';
   fileName?: string;
   audioUrl?: string;
+  convertedAudioUrl?: string;
   targetVoice?: string;
 }
 
@@ -129,7 +130,10 @@ const MainContents = ({
       <>
         <div className={`h-[580px] mt-6 overflow-hidden`}>
           <TableContents
-            items={items}
+            items={items.map((item) => ({
+              ...item,
+              audioUrl: type === 'VC' ? item.audioUrl : item.convertedAudioUrl || item.audioUrl,
+            }))}
             isAllSelected={isAllSelected}
             onSelectAll={onSelectAll}
             onSelectionChange={onSelectionChange}
@@ -145,7 +149,7 @@ const MainContents = ({
             hasAudioFile={hasAudioFile}
           />
         </div>
-        <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>
+        <div className={`mt-6 text-center`}>
           <Button onClick={onGenerate} disabled={isGenerating}>
             {isGenerating ? '생성 중...' : getButtonText()}
           </Button>

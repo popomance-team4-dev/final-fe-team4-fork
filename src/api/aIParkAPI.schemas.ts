@@ -185,7 +185,7 @@ export interface ConcatDetailDto {
   audioSeq?: number;
   checked?: boolean;
   endSilence?: number;
-  id?: number;
+  id?: number | null;
   memberAudioMeta?: MemberAudioMeta;
   unitScript?: string;
 }
@@ -194,7 +194,7 @@ export interface ConcatSaveDto {
   concatDetails?: ConcatDetailDto[];
   globalFrontSilenceLength?: number;
   globalTotalSilenceLength?: number;
-  projectId?: number;
+  projectId?: number | null;
   projectName?: string;
 }
 
@@ -218,6 +218,7 @@ export interface TTSDetailDto {
   unitSpeed?: number;
   unitVoiceStyleId: number | null;
   unitVolume?: number;
+  genAudios?: [{ id: number; audioUrl: string }];
 }
 
 export interface TTSSaveDto {

@@ -23,12 +23,14 @@ export interface ProjectListTableItem {
   status: '진행' | '대기중' | '실패' | '완료';
   unitStatus?: 'SUCCESS' | 'FAILURE';
   updatedAt: string;
+  onClick?: () => void;
 }
 
 interface HistoryListTableProps {
   items: ProjectListTableItem[];
   onPlay: (id: string) => void;
   onPause: (id: string) => void;
+  onDownload: (id: string) => void;
   currentPlayingId?: string;
   isAllSelected: boolean;
   itemCount: number;
@@ -45,6 +47,7 @@ export function HistoryListTable({
   items,
   onPlay,
   onPause,
+  onDownload,
   currentPlayingId,
   isAllSelected,
   itemCount,
@@ -81,12 +84,14 @@ export function HistoryListTable({
           <TableRow
             key={`${item.id}-${index}`} // id와 index 조합으로 고유한 key 생성
             data-state={currentPlayingId === item.id ? 'selected' : undefined}
-            className="text-body2"
+            className="text-body2 cursor-pointer"
+            onClick={item.onClick}
           >
             <TableCell className="pl-6 w-[50px] ">
               <Checkbox
                 checked={selectedItems.includes(item.id)}
                 onCheckedChange={(checked) => onSelectionChange(item.id, checked as boolean)}
+                onClick={(e) => e.stopPropagation()}
               />
             </TableCell>
             <TableCell className="w-[100px] text-left">
@@ -107,15 +112,22 @@ export function HistoryListTable({
                 {item.script}
               </div>
             </TableCell>
-            <TableCell className="pl-0">
-              <div className="flex">
-                {item.unitStatus && <StatusBadge unitStatus={item.unitStatus} />}
+            <TableCell className="px-0">
+              <div className="flex truncate">
+                {item.unitStatus === 'SUCCESS' ||
+                item.unitStatus === 'FAILURE' ||
+                item.unitStatus === null ? (
+                  <StatusBadge unitStatus={item.unitStatus} />
+                ) : null}
               </div>
             </TableCell>
             <TableCell>
               <div className="flex items-center justify-center">
                 <button
-                  onClick={() => console.log('다운로드:', item.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDownload(item.id); // 다운로드 이벤트 호출
+                  }}
                   aria-label="Download file"
                 >
                   <TbDownload className="h-6 w-6" />

@@ -98,6 +98,7 @@ const MainContents = ({
                 onSelectionChange={(id) => onSelectionChange(id)}
                 items={items as unknown as ProjectListTableItem[]}
                 currentPlayingId={currentPlayingId}
+                onDownload={(id) => onDownloadItem?.(id)}
               />
             ) : (
               <ProjectListTable

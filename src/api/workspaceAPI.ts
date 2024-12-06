@@ -162,8 +162,9 @@ export const fetchRecentExports = async (): Promise<RecentExportTableItem[]> => 
     }
 
     // 데이터 매핑
-    const mappedData = data.map((item) => ({
+    const mappedData = data.map((item, index) => ({
       id: item.projectId,
+      metaId: item.metaId || index,
       projectName: item.projectName,
       type: item.projectType as 'VC' | 'TTS' | 'Concat',
       content: item.script || '작성된 내용이 없습니다.',

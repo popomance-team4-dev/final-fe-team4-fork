@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { Project } from '@/api/aIParkAPI.schemas';
 import { deleteProject, fetchProjectByType, fetchProjects } from '@/api/workspaceAPI';
+import { DeleteConfirm } from '@/components/custom/dialogs/ConfirmationDialog';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import PageLayout from '@/layouts/PageLayout';
 import { formatUpdatedAt } from '@/utils/dateUtils';
 
@@ -18,6 +20,16 @@ const ProjectPage = () => {
 
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // 선택된 항목
   const [searchKeyword, setSearchKeyword] = useState(''); // 검색 키워드 상태
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [alert, setAlert] = useState<{
+    visible: boolean;
+    message: string;
+    variant: 'default' | 'destructive';
+  }>({
+    visible: false,
+    message: '',
+    variant: 'default',
+  });
 
   const navigate = useNavigate();
 
@@ -34,7 +46,13 @@ const ProjectPage = () => {
       navigate(path, { state: response.data });
     } catch (error) {
       console.error('프로젝트 로드 중 오류 발생:', error);
-      alert('프로젝트 로드 중 오류가 발생했습니다.');
+      setAlert({
+        visible: true,
+        message: '프로젝트 로드 중 오류가 발생했습니다. 다시 시도해주세요.',
+        variant: 'destructive',
+      });
+
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
     }
   };
 
@@ -69,13 +87,27 @@ const ProjectPage = () => {
   const handleDelete = async () => {
     try {
       await deleteProject(selectedItems); // 선택된 항목 삭제
-      alert('삭제되었습니다.');
+      setAlert({
+        visible: true,
+        message: '삭제가 완료되었습니다.',
+        variant: 'default',
+      });
+
+      setSelectedItems([]);
 
       // 현재 페이지 데이터 재로드
       loadProjects(currentPage);
+      setIsDialogOpen(false);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
     } catch (error) {
-      console.error('삭제 중 오류:', error); // 에러 로그 출력
-      alert('삭제 중 오류가 발생했습니다.');
+      console.error('삭제 중 오류:', error);
+      setAlert({
+        visible: true,
+        message: '삭제 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      });
+
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
     }
   };
 
@@ -109,6 +141,14 @@ const ProjectPage = () => {
         />
       }
     >
+      {alert.visible && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert variant={alert.variant}>
+            <AlertTitle>{alert.variant === 'default' ? '성공' : '오류'}</AlertTitle>
+            <AlertDescription>{alert.message}</AlertDescription>
+          </Alert>
+        </div>
+      )}
       <Title
         variant="recent"
         title="프로젝트 목록"
@@ -132,7 +172,7 @@ const ProjectPage = () => {
         onSelectionChange={(id) =>
           handleSelectionChange(Number(id), !selectedItems.includes(Number(id)))
         }
-        onDelete={handleDelete}
+        onDelete={() => setIsDialogOpen(true)}
         onAdd={() => console.log('프로젝트 추가')}
         onPlay={handlePlay}
         onPause={handlePause}
@@ -141,6 +181,7 @@ const ProjectPage = () => {
         onSearch={handleSearch}
         totalItemsCount={totalItemsCount}
       />
+      <DeleteConfirm open={isDialogOpen} onOpenChange={setIsDialogOpen} onConfirm={handleDelete} />
     </PageLayout>
   );
 };

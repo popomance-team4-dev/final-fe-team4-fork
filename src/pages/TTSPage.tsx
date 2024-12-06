@@ -176,24 +176,24 @@ const TTSPage = () => {
     setHistoryItems(response.data.ttsDetails);
   }, [projectData, items, setHistoryItems]);
 
-  const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
-  const audioTTSHisoryItems = Object.values(historyItems)
-    .flat()
-    .reverse()
-    .slice(0, 7)
-    .map((historyItem) => {
-      return {
-        id: historyItem.audioId,
-        audioUrl: historyItem.audioUrl,
-      };
-    });
+  // const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
+  // const audioTTSHisoryItems = Object.values(historyItems)
+  //   .flat()
+  //   .reverse()
+  //   .slice(0, 7)
+  //   .map((historyItem) => {
+  //     return {
+  //       id: historyItem.audioId,
+  //       audioUrl: historyItem.audioUrl,
+  //     };
+  //   });
 
   return (
     <PageLayout
       variant="project"
       header={<></>}
       sidebar={<TTSOptionsSidebar />}
-      footer={<AudioFooter audioUrl="" audioHistoryItems={audioTTSHisoryItems} />}
+      footer={<AudioFooter audioUrl="" />}
       children={
         <>
           <Title

@@ -7,7 +7,7 @@ interface HistoryBranchProps {
   className?: string;
 }
 
-interface HistoryTreeProps<T extends { id: string | number }> {
+interface HistoryTreeProps<T extends { audioId: string | number }> {
   historyItems: T[];
 }
 
@@ -42,11 +42,13 @@ const HistoryBranch: React.FC<HistoryBranchProps> = ({
   );
 };
 
-const HistoryTree = <T extends { id: string | number }>({ historyItems }: HistoryTreeProps<T>) => {
+const HistoryTree = <T extends { audioId: string | number }>({
+  historyItems,
+}: HistoryTreeProps<T>) => {
   return (
     <div className="history-tree">
       {[...historyItems].map((hisoryItem, index) => (
-        <HistoryBranch key={hisoryItem.id} isFirst={index === 0} />
+        <HistoryBranch key={hisoryItem.audioId} isFirst={index === 0} />
       ))}
     </div>
   );

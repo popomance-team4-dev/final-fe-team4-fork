@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { TTSDetailDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
 import { GOOGLE_TTS_CONFIG } from '@/constants/googleTTSConfig';
 import { TableItem } from '@/types/table';
 
@@ -56,7 +56,16 @@ interface TTSStore {
   projectData: TTSSaveDto;
 
   // 프로젝트 관련 액션
-  setProjectData: (data: { projectId: number | null; projectName: string }) => void;
+  setProjectData: (data: {
+    projectId: number | null;
+    projectName: string;
+    fullScript?: string;
+    globalVoiceStyleId?: number;
+    globalSpeed?: number;
+    globalPitch?: number;
+    globalVolume?: number;
+    ttsDetails?: TTSDetailDto[];
+  }) => void;
   updateProjectName: (name: string) => void;
 
   // TTS 설정 적용 액션

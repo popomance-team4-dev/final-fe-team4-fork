@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { findID, findPassword } from '@/api/profileAPI';
-import { sendSMS } from '@/api/smsAPI';
 import { ResultDialog } from '@/components/custom/dialogs/FindResultDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -77,9 +76,6 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
 
   const handleSMS = async () => {
     try {
-      await sendSMS(formData.phone);
-      console.log(formData.phone);
-
       setResultDialogInfo({
         title: '인증번호 발송',
         message: '인증번호가 발송되었습니다.',
@@ -198,9 +194,17 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
         variant="default"
         size="default"
         onClick={handleSubmit}
-        disabled={!formData.email || (type === 'PW' && !formData.isPhoneVerified)}
+        disabled={
+          !formData.phone ||
+          (type === 'ID' && !formData.name) ||
+          (type === 'PW' && !formData.email) ||
+          (type === 'PW' && !formData.isPhoneVerified)
+        }
       >
         {type === 'ID' ? '아이디 찾기' : '비밀번호 찾기'}
+      </Button>
+      <Button variant="outline" size="default" onClick={() => window.history.back()}>
+        로그인 화면으로 돌아가기
       </Button>
       <ResultDialog
         open={resultDialogOpen}

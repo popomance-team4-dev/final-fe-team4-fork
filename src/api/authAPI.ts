@@ -2,8 +2,6 @@
 
 import { AxiosError } from 'axios';
 
-import { joaatHash } from '@/utils/joaatHash';
-
 import { customInstance } from './axios-client';
 
 interface SignupRequest {
@@ -14,12 +12,11 @@ interface SignupRequest {
   phoneNumber: string;
   terms: string;
 }
-export const login = async (email: string, pwd: string, isTemporaryPwd: boolean = false) => {
+export const login = async (email: string, pwd: string) => {
   try {
-    const password = isTemporaryPwd ? pwd : joaatHash(pwd);
     const data = await customInstance.post('/member/login', {
       email,
-      pwd: password,
+      pwd,
     });
     return data;
   } catch (error: unknown) {
@@ -45,12 +42,7 @@ export const logout = async () => {
 
 export const signup = async (signupRequest: SignupRequest) => {
   try {
-    const signupHashedPwd = {
-      ...signupRequest,
-      pwd: joaatHash(signupRequest.pwd),
-      pwdConfirm: joaatHash(signupRequest.pwdConfirm),
-    };
-    const response = await customInstance.post('/member/signup', signupHashedPwd);
+    const response = await customInstance.post('/member/signup', signupRequest);
     console.log('회원가입 서버 응답:', response);
     return response;
   } catch (error) {

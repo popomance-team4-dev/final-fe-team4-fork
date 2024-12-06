@@ -15,7 +15,6 @@ const SigninForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isTemporaryPwd, setIsTemporaryPwd] = useState(false);
   const [rememberEmail, setRememberEmail] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -26,7 +25,7 @@ const SigninForm = () => {
       } else {
         localStorage.removeItem('rememberedEmail');
       }
-      const userData = await login(email, password, isTemporaryPwd);
+      const userData = await login(email, password);
       setUser({
         id: userData.data.id,
         email: userData.data.email,
@@ -76,20 +75,6 @@ const SigninForm = () => {
           <label className="self-stretch text-black text-base font-medium leading-6 font-pretendard">
             비밀번호
           </label>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="temporary-pwd"
-              checked={isTemporaryPwd}
-              onCheckedChange={(checked) => setIsTemporaryPwd(checked as boolean)}
-              className="h-4 w-4 border-gray-100 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-            />{' '}
-            <label
-              htmlFor="temporary-pwd"
-              className="text-gray-400 font-medium leading-6 select-none"
-            >
-              임시 비밀번호 사용
-            </label>
-          </div>
         </div>
         <Input
           variant="signin"

@@ -22,6 +22,7 @@ interface ListRowProps {
   volume: number;
   pitch: number;
   convertedAudioUrl?: string;
+  originalAudioUrl?: string;
   status?: '대기중' | '완료' | '실패' | '진행';
   targetVoice?: string;
   frontSilence?: number;

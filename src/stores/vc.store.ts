@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { saveVCProject } from '@/api/vcAPI';
 import { VCItem } from '@/types/table';
 
 interface Alert {
@@ -15,6 +16,7 @@ interface AudioPlayer {
 
 interface VCStore {
   // 상태
+  saving: boolean;
   items: VCItem[];
   selectedVoice: string;
   projectData: {
@@ -52,6 +54,19 @@ interface VCStore {
 
   // 적용 액션 추가
   applyToSelected: () => void;
+
+  handleSave: () => Promise<void>;
+
+  resetStore: () => void;
+}
+
+interface VCProjectResponse {
+  success: boolean;
+  data: {
+    vcProjectRes: {
+      id: number;
+    };
+  };
 }
 
 // useFileUpload hooks의 로직을 store에 맞게 재구현
@@ -134,6 +149,7 @@ const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
 
 export const useVCStore = create<VCStore>((set, get) => ({
   // 초기 상태 설정
+  saving: false,
   items: [], // 빈 배열로 초기화
   selectedVoice: '',
   projectData: {
@@ -186,7 +202,15 @@ export const useVCStore = create<VCStore>((set, get) => ({
   setSelectedVoice: (voice) => set({ selectedVoice: voice }),
   showAlert: (message, variant = 'destructive') => {
     set({ alert: { show: true, message, variant } });
-    setTimeout(() => set((state) => ({ alert: { ...state.alert, show: false } })), 3000);
+    setTimeout(() => {
+      set(() => ({
+        alert: {
+          show: false,
+          message: '',
+          variant: 'default',
+        },
+      }));
+    }, 1500);
   },
   hideAlert: () => set((state) => ({ alert: { ...state.alert, show: false } })),
   setProjectData: (data) => set({ projectData: data }),
@@ -223,7 +247,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
   handlePlay: (id: string) => {
     const state = get();
     const item = state.items.find((item) => item.id === id);
-    const audioUrl = item?.convertedAudioUrl || item?.originalAudioUrl;
+    const audioUrl = item?.originalAudioUrl;
     if (!audioUrl) return;
 
     // 이전에 재생하던 오디오가 있으면 재사용
@@ -268,7 +292,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
     state.audioPlayer.audioElement?.pause();
     set({
       audioPlayer: {
-        ...state.audioPlayer, // 기존 audioElement 유지
+        ...state.audioPlayer, // 존 audioElement 유지
         currentPlayingId: null,
       },
     });
@@ -306,6 +330,79 @@ export const useVCStore = create<VCStore>((set, get) => ({
             }
           : item
       ),
+    });
+  },
+
+  handleSave: async () => {
+    const { items, projectData } = get();
+
+    if (get().saving) return;
+    set({ saving: true });
+
+    try {
+      const saveData = {
+        projectId: projectData.projectId ?? undefined,
+        projectName: projectData.projectName,
+        srcFiles: items.map((item) => ({
+          detailId: item.detailId || undefined,
+          localFileName: item.file ? item.fileName : undefined,
+          unitScript: item.text,
+          isChecked: item.isSelected,
+        })),
+        trgFiles: [
+          {
+            localFileName: undefined,
+            s3MemberAudioMetaId: undefined,
+          },
+        ],
+      };
+
+      const files = items
+        .filter((item) => item.file && !item.detailId)
+        .map((item) => item.file as File);
+
+      const response = (await saveVCProject(saveData, files)) as VCProjectResponse;
+
+      if (response.success) {
+        // 프로젝트 ID 업데이트 (새 프로젝트인 경우)
+        if (response.data?.vcProjectRes?.id && !projectData.projectId) {
+          set({
+            projectData: {
+              ...projectData,
+              projectId: response.data.vcProjectRes.id,
+            },
+          });
+        }
+        // 저장 성공 메시지는 항상 표시
+        get().showAlert('프로젝트가 저장되었습니다.', 'default');
+      }
+    } catch (error) {
+      console.error('프로젝트 저장 실패:', error);
+      get().showAlert('프로젝트 저장에 실패했습니다.', 'destructive');
+    } finally {
+      set({ saving: false });
+    }
+  },
+
+  // 스토어 초기화 메서드 추가
+  resetStore: () => {
+    set({
+      items: [],
+      saving: false,
+      selectedVoice: '',
+      projectData: {
+        projectId: null,
+        projectName: '새 프로젝트',
+      },
+      alert: {
+        show: false,
+        message: '',
+        variant: 'default',
+      },
+      audioPlayer: {
+        audioElement: null,
+        currentPlayingId: null,
+      },
     });
   },
 }));

@@ -112,9 +112,9 @@ export function RecentExportTable({ onPlay, onPause, currentPlayingId }: RecentE
           </TableRow>
         </TableHeader>
         <TableBody>
-          {items.slice(0, 5).map((item) => (
+          {items.slice(0, 5).map((item, index) => (
             <TableRow
-              key={item.id}
+              key={`${item.id}-${index}`}
               data-state={currentPlayingId === item.id ? 'selected' : undefined}
             >
               <TableCell className="w-[100px] text-left">

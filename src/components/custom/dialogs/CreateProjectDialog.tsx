@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TbFileDatabase, TbFileMusic, TbFileTypography } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
-import { DialogContent } from '@/components/ui/dialog';
+import { DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useProjectStore } from '@/stores/project.store';
 
 const features = [
@@ -65,6 +65,7 @@ const CreateProjectDialogContent = () => {
 
   return (
     <DialogContent className="max-w-[1168px] max-h-[673px]">
+      <DialogTitle className="sr-only">새 프로젝트 생성</DialogTitle>
       <h2 className="py-[76px] text-h2 text-black flex justify-center">
         새 프로젝트 작업을 시작해 보세요!
       </h2>

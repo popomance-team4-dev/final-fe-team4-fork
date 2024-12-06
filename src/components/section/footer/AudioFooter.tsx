@@ -13,6 +13,8 @@ import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
 interface AudioFooterProps {
   audioUrl: string;
   className?: string;
+  type?: 'TTS' | 'VC';
+  label?: string;
 }
 
 const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(

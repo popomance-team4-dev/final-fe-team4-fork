@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
+import { vcLoad } from '@/api/vcAPI';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
+import AudioFooter from '@/components/section/footer/AudioFooter';
 import VCSidebar, { TargetVoice } from '@/components/section/sidebar/VCSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAudioDownload } from '@/hooks/useAudioDownload';
@@ -11,6 +13,7 @@ import PageLayout from '@/layouts/PageLayout';
 import { useVCStore } from '@/stores/vc.store';
 
 const VCPage = () => {
+  const { id } = useParams<{ id: string }>();
   const {
     items,
     deleteSelectedItems,
@@ -29,9 +32,34 @@ const VCPage = () => {
     memberId,
     setItems,
     showAlert,
+    resetStore,
+    setProjectData,
+    handleSave,
   } = useVCStore();
 
-  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
+  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([
+    {
+      id: 'rico.mp3',
+      name: 'rico.mp3',
+      description: '',
+      avatarUrl: '',
+      type: 'custom',
+    },
+  ]);
+
+  // 새 프로젝트인 경우 스토어 초기화
+  useEffect(() => {
+    if (!id) {
+      resetStore();
+    }
+  }, [id, resetStore]);
+
+  // 첫 번째 보이스를 기본값으로 설정
+  useEffect(() => {
+    if (customVoices.length > 0 && !selectedVoice) {
+      setSelectedVoice(customVoices[0].name);
+    }
+  }, [customVoices, selectedVoice, setSelectedVoice]);
 
   // 클린업 이펙트
   useEffect(() => cleanupAllAudioUrls, [cleanupAllAudioUrls]);
@@ -58,18 +86,27 @@ const VCPage = () => {
         isSelected: item.isSelected,
         status: item.status,
         fileName: item.fileName,
-        audioUrl: item.convertedAudioUrl || item.originalAudioUrl,
+        audioUrl: item.originalAudioUrl,
+        convertedAudioUrl: item.convertedAudioUrl,
         targetVoice: item.targetVoice,
       })),
     [items]
   );
 
-  // 현재 재생중인 오디오 URL
+  // 현재 재생중 오디오 URL (AudioFooter용)
   const currentAudioUrl = useMemo(() => {
     const selectedItem = items.find(
       (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
     );
     return selectedItem?.convertedAudioUrl || '';
+  }, [items]);
+
+  // 현재 선택된 아이템의 파일명 가져오기
+  const currentFileName = useMemo(() => {
+    const selectedItem = items.find(
+      (item) => item.isSelected && item.status === '완료' && item.convertedAudioUrl
+    );
+    return selectedItem?.fileName || '';
   }, [items]);
 
   const handleReorder = (startIndex: number, endIndex: number) => {
@@ -78,6 +115,49 @@ const VCPage = () => {
     newItems.splice(endIndex, 0, removed);
     setItems(newItems);
   };
+
+  // 프로젝트 로드 로직 추가
+  useEffect(() => {
+    const loadVCProject = async () => {
+      if (!id) {
+        resetStore();
+        return;
+      }
+
+      try {
+        const response = await vcLoad(Number(id));
+        if (!response.data) return;
+
+        const { vcProject, vcDetails } = response.data;
+
+        if (vcProject) {
+          setProjectData({
+            projectId: vcProject.id,
+            projectName: vcProject.projectName || '새 프로젝트',
+          });
+        }
+
+        if (Array.isArray(vcDetails)) {
+          setItems(
+            vcDetails.map((detail) => ({
+              id: String(detail.id),
+              detailId: detail.id,
+              fileName: detail.fileName || '',
+              text: detail.unitScript || '',
+              isSelected: detail.isChecked || false,
+              status: '대기중',
+              file: undefined,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error('VC 프로젝트 로드 실패:', error);
+        showAlert('프로젝트 로드에 실패했습니다.', 'destructive');
+      }
+    };
+
+    loadVCProject();
+  }, [id, resetStore, setProjectData, setItems, showAlert]);
 
   return (
     <PageLayout
@@ -92,7 +172,7 @@ const VCPage = () => {
           onVoiceUpload={setCustomVoices}
         />
       }
-      footer={<AudioPlayer audioUrl={currentAudioUrl} />}
+      footer={<AudioFooter audioUrl={currentAudioUrl} type="VC" label={currentFileName} />}
     >
       {alert.show && (
         <div className="absolute left-1/2 -translate-x-1/2 top-6">
@@ -105,7 +185,7 @@ const VCPage = () => {
         type="VC"
         projectTitle={projectData.projectName}
         onProjectNameChange={updateProjectName}
-        onSave={() => console.log('저장')}
+        onSave={handleSave}
         onClose={() => console.log('닫기')}
       />
       <MainContents

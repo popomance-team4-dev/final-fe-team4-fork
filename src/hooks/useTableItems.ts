@@ -81,7 +81,9 @@ export const useTableItems = ({
         id: item.id,
         text: item.text,
         isSelected: item.isSelected,
-        audioUrl: '',
+        audioUrl:
+          (item.type === 'VC' ? item.originalAudioUrl : item.convertedAudioUrl || item.audioUrl) ||
+          '',
         speed: item.speed,
         volume: item.volume,
         pitch: item.pitch,

@@ -11,8 +11,11 @@ reviews:
       - 'WIP'
       - 'DO NOT MERGE'
     base_branches:
-      - 'main'
-      - 'develop'
-      - 'release/*'
-    source_branches: 
-      - '*'
+      - '*'  
+    draft: true  
+    labels: []  
+chat:
+  auto_reply: true
+ignore:
+  - "node_modules/"
+  - "dist/"

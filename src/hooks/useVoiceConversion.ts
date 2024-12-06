@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { processVoiceConversion, VCSaveDto } from '@/api/vcAPI';
+import { useVCHistoryStore } from '@/stores/vc.history.store';
 import { VCItem } from '@/types/table';
 
 interface UseVoiceConversionProps {
@@ -29,6 +30,7 @@ export const useVoiceConversion = ({
   showAlert,
 }: UseVoiceConversionProps): VoiceConversionResult => {
   const [isGenerating, setIsGenerating] = useState(false);
+  const setHistoryItems = useVCHistoryStore((state) => state.setHistoryItems);
 
   const handleVoiceConversion = useCallback(async () => {
     setIsGenerating(true);
@@ -89,6 +91,17 @@ export const useVoiceConversion = ({
           return item;
         });
         setItems(processedItems);
+
+        const historyItems = result.map((item) => ({
+          id: item.id,
+          audioId: item.id,
+          audioUrl: item.genAudios[0],
+          unitScript: item.unitScript,
+          fileName: item.srcAudio.split('/').pop() || '',
+          createdAt: new Date().toISOString(),
+        }));
+        setHistoryItems(historyItems);
+
         showAlert('음성 변환이 완료되었습니다.', 'default');
       }
     } catch (error) {
@@ -97,7 +110,7 @@ export const useVoiceConversion = ({
     } finally {
       setIsGenerating(false);
     }
-  }, [items, selectedVoice, projectData, memberId, setItems, showAlert]);
+  }, [items, selectedVoice, projectData, memberId, setItems, showAlert, setHistoryItems]);
 
   return { handleVoiceConversion, isGenerating };
 };

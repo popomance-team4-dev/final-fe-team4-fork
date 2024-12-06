@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
+import { PATH } from '@/routes/router';
+
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 console.log('BASE_URL', BASE_URL);
@@ -20,6 +22,7 @@ export const customInstance: AxiosInstance = axios.create({
 customInstance.interceptors.request.use(
   (config) => {
     // 세션 기반 인증에서는 Authorization 헤더가 필요 없습니다.
+    console.log('요청 데이터:', config);
     return config;
   },
   (error) => {
@@ -35,6 +38,11 @@ customInstance.interceptors.response.use(
   },
   (error) => {
     // 오류 처리
+    if (error.response?.data.code === 1004) {
+      const currentUrl = window.location.href;
+      localStorage.setItem('redirectAfterLogin', currentUrl);
+      window.location.href = PATH.SIGNIN;
+    }
     return Promise.reject(error);
   }
 );

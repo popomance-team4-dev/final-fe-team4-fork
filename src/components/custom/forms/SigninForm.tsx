@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import Logo from '@/images/logo.png';
 import { useAuthStore } from '@/stores/auth.store';
+import { handleRedirectAfterLogin } from '@/utils/redirect';
 
 const SigninForm = () => {
   const navigate = useNavigate();
@@ -32,6 +33,10 @@ const SigninForm = () => {
         name: userData.data.name,
         phoneNumber: userData.data.phoneNumber,
       });
+      if (localStorage.getItem('redirectAfterLogin')) {
+        handleRedirectAfterLogin();
+        return;
+      }
       navigate('/');
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

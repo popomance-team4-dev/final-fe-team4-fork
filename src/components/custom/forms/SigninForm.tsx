@@ -34,7 +34,7 @@ const SigninForm = () => {
         phoneNumber: userData.data.phoneNumber,
       });
       if (localStorage.getItem('redirectAfterLogin')) {
-        handleRedirectAfterLogin();
+        handleRedirectAfterLogin(navigate);
         return;
       }
       navigate('/');

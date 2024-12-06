@@ -14,5 +14,5 @@ reviews:
       - 'main'
       - 'develop'
       - 'release/*'
-chat:
-  auto_reply: true
+    source_branches: 
+      - '*'

@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { TTS_TOOLTIP } from '@/constants/tooltips';
 import { useTTSStore } from '@/stores/tts.store';
-import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
+import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
 
@@ -38,8 +38,8 @@ export const SortableGridItem = memo((props: SortableGridItemProps) => {
     id: props.id,
   });
 
-  const historyItems = useAudioHistoryStore((state) => state.historyItems)[props.id] || [];
-  const handleDelete = useAudioHistoryStore((state) => state.deleteHistoryItem)(props.id);
+  const historyItems = useTTSAudioHistoryStore((state) => state.historyItems)[props.id] || [];
+  const handleDelete = useTTSAudioHistoryStore((state) => state.deleteHistoryItem)(props.id);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const addItems = useTTSStore((state) => state.addItems);

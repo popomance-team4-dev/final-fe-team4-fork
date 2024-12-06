@@ -8,7 +8,7 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { AUDIO_FOOTER_TOOLTIP } from '@/constants/tooltips';
 import { cn } from '@/lib/utils';
-import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
+import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 import { useVCHistoryStore } from '@/stores/vc.history.store';
 
 interface AudioFooterProps {
@@ -22,7 +22,7 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
   ({ audioUrl, className, type = 'TTS' }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const ttsHistoryItems = useAudioHistoryStore((state) => state.historyItems);
+    const ttsHistoryItems = useTTSAudioHistoryStore((state) => state.historyItems);
     const vcHistoryItems = useVCHistoryStore((state) => state.historyItems);
 
     const audiohisoryItems = (

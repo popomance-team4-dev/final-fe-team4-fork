@@ -12,7 +12,7 @@ import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
-import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
+import { useTTSAudioHistoryStore as useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 const TTSPage = () => {
   const { id } = useParams<{ id: string }>();
   const {
@@ -29,7 +29,7 @@ const TTSPage = () => {
   } = useTTSStore();
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const setHistoryItems = useAudioHistoryStore((state) => state.setHistoryItems);
+  const setHistoryItems = useTTSAudioHistoryStore((state) => state.setHistoryItems);
 
   console.log('useTTSStore 상태:', { items, projectData });
 
@@ -176,14 +176,24 @@ const TTSPage = () => {
     setHistoryItems(response.data.ttsDetails);
   }, [projectData, items, setHistoryItems]);
 
+  // const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
+  // const audioTTSHisoryItems = Object.values(historyItems)
+  //   .flat()
+  //   .reverse()
+  //   .slice(0, 7)
+  //   .map((historyItem) => {
+  //     return {
+  //       id: historyItem.audioId,
+  //       audioUrl: historyItem.audioUrl,
+  //     };
+  //   });
+
   return (
     <PageLayout
       variant="project"
       header={<></>}
       sidebar={<TTSOptionsSidebar />}
-      footer={
-        <AudioFooter audioUrl="https://backend-audio-storage.s3.ap-northeast-2.amazonaws.com/Generated/1/TTS/89/88/20241205_102619.wav" />
-      }
+      footer={<AudioFooter audioUrl="" />}
       children={
         <>
           <Title

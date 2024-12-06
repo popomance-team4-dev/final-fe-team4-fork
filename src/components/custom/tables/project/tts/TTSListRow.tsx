@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useTTSStore } from '@/stores/tts.store';
-import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
+import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 import { ListRowProps } from '@/types/table';
 
 export const TTSListRow: React.FC<ListRowProps> = ({
@@ -34,8 +34,8 @@ export const TTSListRow: React.FC<ListRowProps> = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const historyItems = useAudioHistoryStore((state) => state.historyItems)[id] || [];
-  const handleDelete = useAudioHistoryStore((state) => state.deleteHistoryItem)(id);
+  const historyItems = useTTSAudioHistoryStore((state) => state.historyItems)[id] || [];
+  const handleDelete = useTTSAudioHistoryStore((state) => state.deleteHistoryItem)(id);
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 

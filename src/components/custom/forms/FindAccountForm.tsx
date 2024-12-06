@@ -203,6 +203,9 @@ const FindAccount: React.FC<FindAccountProps> = ({ type }) => {
       >
         {type === 'ID' ? '아이디 찾기' : '비밀번호 찾기'}
       </Button>
+      <Button variant="outline" size="default" onClick={() => window.history.back()}>
+        로그인 화면으로 돌아가기
+      </Button>
       <ResultDialog
         open={resultDialogOpen}
         onOpenChange={setResultDialogOpen}

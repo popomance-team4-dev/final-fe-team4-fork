@@ -140,7 +140,7 @@ const MainContents = ({
             onDelete={onDelete}
             onAdd={onAdd}
             onRegenerateItem={onRegenerateItem}
-            onDownloadItem={onDownloadItem}
+            onDownloadItem={type === 'VC' ? undefined : onDownloadItem}
             onPlay={onPlay}
             onReorder={onReorder}
             type={type === 'TTS' ? undefined : type}

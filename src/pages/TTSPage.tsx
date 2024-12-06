@@ -120,35 +120,28 @@ const TTSPage = () => {
   );
 
   const checkIsValidToGenerate = useCallback(() => {
-    if (!projectData.projectId) {
-      console.warn('프로젝트 ID가 없습니다.');
-      showAlert('프로젝트 데이터가 유효하지 않습니다.', 'destructive');
-      return false;
-    }
-    if (!projectData.projectName || !items.length) {
-      console.warn('프로젝트 데이터가 유효하지 않습니다.');
-      showAlert('프로젝트 데이터가 유효하지 않습니다.', 'destructive');
-      return false;
-    } else if (!items.every((item) => item.text)) {
-      console.warn('텍스트가 없는 항목이 있습니다.');
-      showAlert('텍스트가 없는 항목이 있습니다.', 'destructive');
-      return false;
-    } else if (!items.every((item) => item.speed)) {
-      console.warn('속도가 없는 항목이 있습니다.');
-      showAlert('속도가 없는 항목이 있습니다.', 'destructive');
-      return false;
-    } else if (!items.every((item) => item.volume)) {
-      console.warn('볼륨이 없는 항목이 있습니다.');
-      showAlert('볼륨이 없는 항목이 있습니다.', 'destructive');
-      return false;
-    } else if (!items.every((item) => item.pitch)) {
-      console.warn('피치가 없는 항목이 있습니다.');
-      showAlert('피치가 없는 항목이 있습니다.', 'destructive');
-      return false;
-    } else if (!items.every((item) => item.style)) {
-      console.warn('음성 스타일이 없는 항목이 있습니다.');
-      showAlert('음성 스타일이 없는 항목이 있습니다.', 'destructive');
-      return false;
+    const validations = [
+      { condition: !projectData.projectId, message: '프로젝트 ID가 없습니다.' },
+      {
+        condition: !projectData.projectName || !items.length,
+        message: '프로젝트 데이터가 유효하지 않습니다.',
+      },
+      { condition: !items.every((item) => item.text), message: '텍스트가 없는 항목이 있습니다.' },
+      { condition: !items.every((item) => item.speed), message: '속도가 없는 항목이 있습니다.' },
+      { condition: !items.every((item) => item.volume), message: '볼륨이 없는 항목이 있습니다.' },
+      { condition: !items.every((item) => item.pitch), message: '피치가 없는 항목이 있습니다.' },
+      {
+        condition: !items.every((item) => item.style),
+        message: '음성 스타일이 없는 항목이 있습니다.',
+      },
+    ];
+
+    for (const { condition, message } of validations) {
+      if (condition) {
+        console.warn(message);
+        showAlert(message, 'destructive');
+        return false;
+      }
     }
     return true;
   }, [projectData, items, showAlert]);

@@ -127,7 +127,7 @@ export interface TTSConvertRequestDto {
   globalVoiceStyleId?: number;
   globalVolume?: number;
   memberId?: number;
-  projectId: number | null;
+  projectId: number;
   projectName?: string;
   ttsDetails: TTSDetailDto[];
 }
@@ -139,12 +139,6 @@ export interface TTSConvertRequestDto {
 export const convertBatchTexts = async (TTSConvertRequest: TTSConvertRequestDto) => {
   try {
     console.log('convertBatchTexts 보낸 데이터:', TTSConvertRequest);
-    if (!TTSConvertRequest.ttsDetails.length) {
-      throw new Error('변환할 텍스트가 없습니다.');
-    }
-    if (!TTSConvertRequest.projectId) {
-      throw new Error('프로젝트 ID가 없습니다.');
-    }
     const response = await customInstance({
       url: `/tts/convert/batch`,
       method: 'POST',

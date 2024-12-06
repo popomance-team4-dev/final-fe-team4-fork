@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Project } from '@/api/aIParkAPI.schemas';
 import { fetchProjectByType, fetchRecentProjects } from '@/api/workspaceAPI';
 import RecentProjectCard from '@/components/custom/cards/RecentProjectCard';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { formatUpdatedAt } from '@/utils/dateUtils';
 
 const RecentProject = () => {
@@ -13,6 +14,15 @@ const RecentProject = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isScrolledLeft, setIsScrolledLeft] = useState(false);
   const [isScrolledRight, setIsScrolledRight] = useState(false);
+  const [alert, setAlert] = useState<{
+    visible: boolean;
+    message: string;
+    variant: 'default' | 'destructive';
+  }>({
+    visible: false,
+    message: '',
+    variant: 'default',
+  });
 
   useEffect(() => {
     const loadRecentProjects = async () => {
@@ -22,6 +32,13 @@ const RecentProject = () => {
         setIsScrolledRight(data.length > 4);
       } catch (error) {
         console.error('최근 프로젝트 데이터를 불러오는 중 오류 발생:', error);
+        setAlert({
+          visible: true,
+          message: '최근 프로젝트 데이터를 불러오는 중 오류가 발생했습니다.',
+          variant: 'destructive',
+        });
+
+        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
       }
     };
 
@@ -56,12 +73,26 @@ const RecentProject = () => {
       navigate(path, { state: response.data });
     } catch (error) {
       console.error('프로젝트 로드 중 오류 발생:', error);
-      alert('프로젝트 로드 중 오류가 발생했습니다.');
+      setAlert({
+        visible: true,
+        message: '프로젝트 로드 중 오류가 발생했습니다. 다시 시도해주세요.',
+        variant: 'destructive',
+      });
+
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
     }
   };
 
   return (
     <div className="pt-8 h-auto">
+      {alert.visible && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert variant={alert.variant}>
+            <AlertTitle>{alert.variant === 'default' ? '성공' : '오류'}</AlertTitle>
+            <AlertDescription>{alert.message}</AlertDescription>
+          </Alert>
+        </div>
+      )}
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <h3 className="text-h3">최근 프로젝트</h3>
         <p

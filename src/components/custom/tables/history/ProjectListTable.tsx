@@ -71,7 +71,7 @@ export function ProjectListTable({
           <TableRow
             key={item.id}
             data-state={currentPlayingId === item.id ? 'selected' : undefined}
-            className="text-body2 cursor-pointer hover:bg-gray-50"
+            className="text-body2 cursor-pointer"
             onClick={item.onClick}
           >
             <TableCell className="pl-6 w-[50px] ">

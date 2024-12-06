@@ -1,28 +1,24 @@
 import React from 'react';
 import { TbTrash, TbX } from 'react-icons/tb';
 
-import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
+import { DownloadButton } from '@/components/custom/buttons/IconButton';
+import { AudioPlayer, PlayerMode } from '@/components/custom/features/common/AudioPlayer';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DialogClose, DialogContent, DialogPortal, DialogTitle } from '@/components/ui/dialog';
+import { useAudioDownload } from '@/hooks/useAudioDownload';
+import { formatUpdatedAt } from '@/utils/dateUtils';
 
 interface AudioHistoryDialogProps {
-  audioHistory: { id: number; audioUrl: string }[];
+  audioHistory: {
+    id: number;
+    audioUrl: string;
+    fileName?: string;
+    createdAt?: string;
+  }[];
 }
 
 const AudioHistoryDialog: React.FC<AudioHistoryDialogProps> = ({ audioHistory }) => {
   const [selectedItems, setSelectedItems] = React.useState<number[]>([]);
-  // const audioHistory = [
-  //   {
-  //     id: 1,
-  //     time: '오늘 오전 11:30',
-  //     audioUrl:
-  //       'https://backend-audio-storage.s3.ap-northeast-2.amazonaws.com/Generated/1/TTS/151/215/20241205_150137.wav',
-  //   },
-  //   { id: 2, time: '오늘 오전 09:30' },
-  //   { id: 3, time: '어제 오후 11:30' },
-  //   { id: 4, time: '어제 오후 11:20' },
-  //   { id: 5, time: '금요일 오전 11:30' },
-  // ];
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -38,10 +34,20 @@ const AudioHistoryDialog: React.FC<AudioHistoryDialogProps> = ({ audioHistory })
 
   const handleDelete = () => {
     console.log('삭제된 아이템:', selectedItems);
-    // 삭제 로직 추가
   };
 
   const isAllSelected = selectedItems.length === audioHistory.length;
+
+  const handleDownload = useAudioDownload({
+    items: audioHistory.map((item) => ({
+      id: item.id.toString(),
+      fileName: item.fileName || 'audio',
+      convertedAudioUrl: item.audioUrl,
+    })),
+    showAlert: (message, _variant) => {
+      console.log(message); // 실제로는 여기에 알림 컴포넌트를 사용하면 좋습니다
+    },
+  });
 
   return (
     <DialogPortal>
@@ -68,25 +74,37 @@ const AudioHistoryDialog: React.FC<AudioHistoryDialogProps> = ({ audioHistory })
           </button>
         </div>
 
-        {/* History List */}
-        <div className="p-6 space-y-8">
+        {/* History Grid */}
+        <div className="flex flex-col gap-4 p-6">
           {audioHistory.map((audio) => (
-            <div key={audio.id} className="flex items-center gap-3">
-              <Checkbox
-                checked={selectedItems.includes(audio.id)}
-                onCheckedChange={(checked) => handleSelectItem(audio.id, checked as boolean)}
-              />
-              <div className="flex flex-col gap-1 ">
-                {/* AudioPlayer Component */}
-                <AudioPlayer audioUrl={audio.audioUrl} className="w-[705px]" />
-                {/* Additional Info */}
-                {/* <div className="flex justify-between text-body4 text-gray-300">
-                  <span>{audio.time}</span>
-                </div> */}
+            <div
+              key={audio.id}
+              className="flex flex-col p-4 bg-white border rounded-lg hover:border-primary transition-colors"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    checked={selectedItems.includes(audio.id)}
+                    onCheckedChange={(checked) => handleSelectItem(audio.id, checked as boolean)}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-900">{audio.fileName}</span>
+                    <span className="text-xs text-gray-500">
+                      {audio.createdAt && formatUpdatedAt(audio.createdAt)}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-center">
+                  <DownloadButton onClick={() => handleDownload(audio.id.toString())} />
+                </div>
+              </div>
+              <div className="w-[680px]">
+                <AudioPlayer audioUrl={audio.audioUrl} mode={PlayerMode.MINI} />
               </div>
             </div>
           ))}
         </div>
+
         <DialogClose asChild>
           <button
             className="absolute right-6 top-6 flex items-center justify-center"

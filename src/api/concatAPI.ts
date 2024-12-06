@@ -48,6 +48,29 @@ interface ConcatSaveRequest {
   file?: File[];
 }
 
+// Concat 삭제 요청 타입
+interface DeleteConcatRequest {
+  projectId: number;
+  detailIds?: number[];
+  audioIds?: number[];
+}
+
+// Concat 변환 요청 타입
+interface ConvertConcatRequest {
+  projectId: number;
+  projectName: string;
+  globalFrontSilenceLength: number;
+  globalTotalSilenceLength: number;
+  concatRequestDetails: Array<{
+    id: number | null;
+    localFileName: string | null;
+    audioSeq: number;
+    checked: boolean;
+    unitScript: string;
+    endSilence: number;
+  }>;
+}
+
 /**
  * Concat 프로젝트 상태를 가져옵니다.
  */
@@ -94,6 +117,42 @@ export const concatSave = async (data: ConcatSaveRequest) => {
     return response.data;
   } catch (error) {
     console.error('Concat Save API 에러:', error);
+    throw error;
+  }
+};
+
+/**
+ * 선택된 Concat 항목들을 삭제합니다.
+ */
+export const deleteSelectedConcatItems = async (data: DeleteConcatRequest) => {
+  try {
+    const response = await customInstance.post('/concat/delete/details', data);
+    console.log('삭제 응답:', response);
+    return response.data;
+  } catch (error) {
+    console.error('Concat 항목 삭제 실패:', error);
+    throw error;
+  }
+};
+
+/**
+ * 오디오 파일들을 병합합니다.
+ */
+export const convertMultipleAudios = async (data: ConvertConcatRequest) => {
+  try {
+    const formData = new FormData();
+    formData.append('concatRequestDto', JSON.stringify(data));
+
+    const response = await customInstance.post('/concat/convert/batch', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('병합 응답:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Concat 변환 실패:', error);
     throw error;
   }
 };

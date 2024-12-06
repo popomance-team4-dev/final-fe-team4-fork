@@ -5,15 +5,24 @@ import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DialogClose, DialogContent, DialogPortal, DialogTitle } from '@/components/ui/dialog';
 
-const AudioHistoryDialog = () => {
+interface AudioHistoryDialogProps {
+  audioHistory: { id: number; audioUrl: string }[];
+}
+
+const AudioHistoryDialog: React.FC<AudioHistoryDialogProps> = ({ audioHistory }) => {
   const [selectedItems, setSelectedItems] = React.useState<number[]>([]);
-  const audioHistory = [
-    { id: 1, time: '오늘 오전 11:30' },
-    { id: 2, time: '오늘 오전 09:30' },
-    { id: 3, time: '어제 오후 11:30' },
-    { id: 4, time: '어제 오후 11:20' },
-    { id: 5, time: '금요일 오전 11:30' },
-  ];
+  // const audioHistory = [
+  //   {
+  //     id: 1,
+  //     time: '오늘 오전 11:30',
+  //     audioUrl:
+  //       'https://backend-audio-storage.s3.ap-northeast-2.amazonaws.com/Generated/1/TTS/151/215/20241205_150137.wav',
+  //   },
+  //   { id: 2, time: '오늘 오전 09:30' },
+  //   { id: 3, time: '어제 오후 11:30' },
+  //   { id: 4, time: '어제 오후 11:20' },
+  //   { id: 5, time: '금요일 오전 11:30' },
+  // ];
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -69,11 +78,11 @@ const AudioHistoryDialog = () => {
               />
               <div className="flex flex-col gap-1 ">
                 {/* AudioPlayer Component */}
-                <AudioPlayer audioUrl="" className="w-[705px]" />
+                <AudioPlayer audioUrl={audio.audioUrl} className="w-[705px]" />
                 {/* Additional Info */}
-                <div className="flex justify-between text-body4 text-gray-300">
+                {/* <div className="flex justify-between text-body4 text-gray-300">
                   <span>{audio.time}</span>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}

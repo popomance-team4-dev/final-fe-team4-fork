@@ -199,6 +199,7 @@ export function TTSPlaybackHistoryButton({
           ? ''
           : 'bg-gray-50 opacity-50 cursor-not-allowed pointer-events-none  border-transparent '
       )}
+      type="button"
     />
   );
 }

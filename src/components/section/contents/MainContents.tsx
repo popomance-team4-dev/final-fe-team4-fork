@@ -148,7 +148,7 @@ const MainContents = ({
             hasAudioFile={hasAudioFile}
           />
         </div>
-        <div className={`${type === 'TTS' ? 'mt-12' : 'mt-6'} text-center`}>
+        <div className={`mt-6 text-center`}>
           <Button onClick={onGenerate} disabled={isGenerating}>
             {isGenerating ? '생성 중...' : getButtonText()}
           </Button>

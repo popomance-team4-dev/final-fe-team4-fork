@@ -3,17 +3,16 @@ import { useParams } from 'react-router-dom';
 
 import { convertBatchTexts, ttsLoad } from '@/api/ttsAPI';
 import { uploadTTSProjectData } from '@/api/uploadTTSProjectData';
-// import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-// import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
-// import { fileProgressDummy } from '@/constants/dummy';
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/layouts/PageLayout';
 import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
+
 const TTSPage = () => {
   const { id } = useParams<{ id: string }>();
   const {
@@ -32,17 +31,31 @@ const TTSPage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const setHistoryItems = useTTSAudioHistoryStore((state) => state.setHistoryItems);
 
-  console.log('useTTSStore 상태:', { items, projectData });
+  const [alert, setAlert] = useState<{
+    visible: boolean;
+    message: string;
+    variant: 'default' | 'destructive';
+  }>({
+    visible: false,
+    message: '',
+    variant: 'default',
+  });
+
+  console.log('alert visible', alert.visible);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
+    setAlert({ visible: true, message, variant });
+    setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+  }, []);
 
   // TTS 프로젝트 데이터 로드
   useEffect(() => {
     const loadTTSProject = async () => {
-      console.log('loadTTSProject 실행'); // 함수 호출 확인
-
       if (!id) {
         console.warn('ID가 없습니다.');
+        showAlert('프로젝트 ID가 없습니다. 저장을 누르면 새프로젝트가 생성됩니다 ', 'destructive');
         return;
       }
 
@@ -77,19 +90,22 @@ const TTSPage = () => {
 
           setItems(loadedItems);
           setHistoryItems(ttsDetails);
-          console.log('setItems 호출 완료:', loadedItems);
+
+          // 사용자에게 성공 적으로 프로젝트를 로드했음을 알림
+          showAlert('프로젝트를 성공적으로 로드했습니다.', 'default');
         } else {
           console.warn('ttsDetails 데이터가 유효하지 않습니다.');
         }
       } catch (error) {
-        console.error('TTS 프로젝트 로드 실패:', error);
+        console.error('TTS 프로젝트 로드 오류:', error);
+        showAlert('프로젝트 로드 중 오류가 발생했습니다.', 'destructive');
       } finally {
         setIsLoading(false); // 로딩 상태 해제
       }
     };
 
     loadTTSProject();
-  }, [id, setProjectData, setItems, setHistoryItems]);
+  }, [id, setProjectData, setItems, setHistoryItems, showAlert]);
 
   const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
 
@@ -103,12 +119,55 @@ const TTSPage = () => {
     [items, setItems]
   );
 
+  const checkIsValidToGenerate = useCallback(() => {
+    if (!projectData.projectId) {
+      console.warn('프로젝트 ID가 없습니다.');
+      showAlert('프로젝트 데이터가 유효하지 않습니다.', 'destructive');
+      return false;
+    }
+    if (!projectData.projectName || !items.length) {
+      console.warn('프로젝트 데이터가 유효하지 않습니다.');
+      showAlert('프로젝트 데이터가 유효하지 않습니다.', 'destructive');
+      return false;
+    } else if (!items.every((item) => item.text)) {
+      console.warn('텍스트가 없는 항목이 있습니다.');
+      showAlert('텍스트가 없는 항목이 있습니다.', 'destructive');
+      return false;
+    } else if (!items.every((item) => item.speed)) {
+      console.warn('속도가 없는 항목이 있습니다.');
+      showAlert('속도가 없는 항목이 있습니다.', 'destructive');
+      return false;
+    } else if (!items.every((item) => item.volume)) {
+      console.warn('볼륨이 없는 항목이 있습니다.');
+      showAlert('볼륨이 없는 항목이 있습니다.', 'destructive');
+      return false;
+    } else if (!items.every((item) => item.pitch)) {
+      console.warn('피치가 없는 항목이 있습니다.');
+      showAlert('피치가 없는 항목이 있습니다.', 'destructive');
+      return false;
+    } else if (!items.every((item) => item.style)) {
+      console.warn('음성 스타일이 없는 항목이 있습니다.');
+      showAlert('음성 스타일이 없는 항목이 있습니다.', 'destructive');
+      return false;
+    }
+    return true;
+  }, [projectData, items, showAlert]);
+
   // TTS 오디오 데이터 생성
   const generateTTSAudioData = useCallback(async () => {
     setIsGenerating(true);
-
-    const response = await convertBatchTexts({
+    if (!checkIsValidToGenerate()) {
+      setIsGenerating(false);
+      return;
+    }
+    if (!projectData.projectId) {
+      setIsGenerating(false);
+      return;
+    }
+    uploadTTSProjectData(projectData, items, setProjectData);
+    const request = {
       ...projectData,
+      projectId: projectData.projectId,
       ttsDetails: items.map((item, index) => ({
         id: item.enitityId,
         unitScript: item.text,
@@ -119,11 +178,13 @@ const TTSPage = () => {
         unitVoiceStyleId: item.style ? Number(item.style) : null,
         isDeleted: false,
       })),
-    });
+    };
+    // 유효성 검사
+    const response = await convertBatchTexts(request);
     setIsGenerating(false);
 
     setHistoryItems(response.data.ttsDetails);
-  }, [projectData, items, setHistoryItems]);
+  }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate]);
 
   const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
   const audioTTSHisoryItems = Object.values(historyItems)
@@ -144,8 +205,9 @@ const TTSPage = () => {
       await uploadTTSProjectData(projectData, items, setProjectData);
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);
+      showAlert('프로젝트 저장 중 오류가 발생했습니다.', 'destructive');
     }
-  }, [projectData, items, setProjectData]);
+  }, [projectData, items, setProjectData, showAlert]);
 
   return (
     <PageLayout
@@ -167,6 +229,13 @@ const TTSPage = () => {
             </div>
           ) : (
             <>
+              {alert.visible && (
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+                  <Alert variant={alert.variant}>
+                    <AlertDescription>{alert.message}</AlertDescription>
+                  </Alert>
+                </div>
+              )}
               <div className={`h-[580px] mt-6 overflow-hidden`}>
                 <TableContents
                   items={items}

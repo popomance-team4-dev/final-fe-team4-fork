@@ -11,7 +11,7 @@ const HomePopup = () => {
   const navigate = useNavigate();
   const addProject = useProjectStore((state) => state.addProject);
 
-  const handleNewProject = (type: 'TTS' | 'VC' | 'CONCAT', route: string) => {
+  const handleNewProject = (type: 'TTS' | 'VC' | 'Concat', route: string) => {
     addProject({
       name: '새 프로젝트',
       type: type,
@@ -63,7 +63,7 @@ const HomePopup = () => {
           title="Concat"
           description1="다양한 오디오 파일을"
           description2="하나로 연결"
-          onClick={() => handleNewProject('CONCAT', '/concat')}
+          onClick={() => handleNewProject('Concat', '/concat')}
         />
       </div>
     </div>

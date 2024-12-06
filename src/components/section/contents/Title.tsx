@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbCheck, TbPencil, TbX } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 
@@ -12,10 +12,11 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useVCStore } from '@/stores/vc.store';
 
 export interface TitleProps {
   variant?: 'project' | 'recent';
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
   projectTitle?: string;
   title?: string;
   description?: string;
@@ -36,6 +37,12 @@ const Title = ({
 }: TitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(projectTitle);
+  const handleSaveVC = useVCStore((state) => state.handleSave);
+
+  // projectTitle prop이 변경될 때마다 editTitle 업데이트
+  useEffect(() => {
+    setEditTitle(projectTitle);
+  }, [projectTitle]);
 
   const handleSubmit = () => {
     setIsEditing(false);
@@ -44,9 +51,16 @@ const Title = ({
     }
   };
 
+  const handleSaveClick = () => {
+    if (type === 'VC') {
+      handleSaveVC();
+    }
+    onSave?.();
+  };
+
   if (variant === 'recent') {
     return (
-      <div className="py-6">
+      <div className="py-5">
         <h2 className="text-h2 text-black mb-2">{title}</h2>
         <p className="text-body2 text-black">{description}</p>
       </div>
@@ -112,7 +126,7 @@ const Title = ({
           )}
         </div>
         <div className="flex items-center gap-2 -mt-1">
-          <SaveButton onClick={onSave} />
+          <SaveButton onClick={handleSaveClick} />
           <button
             onClick={onClose}
             className="flex items-center justify-center px-2.5 py-2 rounded-md border border-gray-200 text-gray-900 hover:bg-gray-50"

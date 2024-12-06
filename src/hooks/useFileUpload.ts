@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const ALLOWED_FILE_TYPES = {
   WAV: 'audio/wav',
@@ -14,26 +14,40 @@ export const FILE_TYPES_TO_KOREAN = {
 
 export type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[keyof typeof ALLOWED_FILE_TYPES];
 
-export interface FileInfo {
-  id: string;
-  name: string;
-  size: number;
-  isEditing?: boolean;
+// 파일 처리 타입 정의
+type FileProcessor<T> = (file: File) => Promise<T>;
+
+// 파일 처리기 인터페이스
+interface FileProcessors {
+  audio: FileProcessor<File>;
+  text: FileProcessor<string>;
 }
 
-interface UseFileUploadProps<T> {
+// 파일 타입별 처리 로직
+const fileProcessors: FileProcessors = {
+  audio: async (file: File) => file,
+  text: async (file: File) => file.text(),
+};
+
+interface UseFileUploadOptions<T> {
   maxSizeInMB: number;
   allowedTypes: AllowedFileType[];
-  onSuccess: (files: T[]) => void;
+  onSuccess: (result: T[]) => void;
   onError?: (error: string) => void;
+  multiple?: boolean;
+  accept?: string;
+  type: keyof FileProcessors;
 }
 
-export const useFileUpload = <T extends string | File>({
+export const useFileUpload = <T>({
   maxSizeInMB,
   allowedTypes,
   onSuccess,
   onError,
-}: UseFileUploadProps<T>) => {
+  multiple = true,
+  accept,
+  type,
+}: UseFileUploadOptions<T>) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateFile = useCallback(
@@ -52,191 +66,132 @@ export const useFileUpload = <T extends string | File>({
     [maxSizeInMB, allowedTypes]
   );
 
+  const processFiles = useCallback(
+    async (files: File[]) => {
+      const processor = fileProcessors[type] as FileProcessor<T>;
+      return Promise.all(files.map(processor));
+    },
+    [type]
+  );
+
   const handleFiles = useCallback(
     async (files: FileList | null) => {
-      if (!files?.length) return;
+      if (!files?.length) {
+        return;
+      }
+
       setIsLoading(true);
 
       try {
         const fileArray = Array.from(files);
         fileArray.forEach(validateFile);
 
-        const result: T[] = [];
-
-        for (const file of fileArray) {
-          if (file.type === ALLOWED_FILE_TYPES.TEXT) {
-            const text = await file.text();
-            result.push(text as T);
-          } else if (file.type === ALLOWED_FILE_TYPES.WAV || file.type === ALLOWED_FILE_TYPES.MP3) {
-            result.push(file as T);
-          }
-        }
-
-        onSuccess(result);
+        const result = await processFiles(fileArray);
+        onSuccess(result as T[]);
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '파일 업로드에 실패했습니다.';
         if (onError) {
-          onError(error instanceof Error ? error.message : '파일 업로드에 실패했습니다.');
+          onError(errorMessage);
         } else {
-          alert(error instanceof Error ? error.message : '파일 업로드에 실패했습니다.');
+          alert(errorMessage);
         }
       } finally {
         setIsLoading(false);
       }
     },
-    [validateFile, onSuccess, onError]
+    [validateFile, processFiles, onSuccess, onError]
   );
 
-  return { handleFiles, isLoading };
-};
-
-interface UseFileUploadBoxProps {
-  maxSizeInMB: number;
-  allowedTypes: AllowedFileType[];
-  onSuccess?: (file: FileInfo) => void;
-  mode?: 'upload' | 'display';
-  selectedFile?: FileInfo | null;
-}
-
-interface UseFileUploadBoxReturn {
-  state: 'empty' | 'uploading' | 'completed';
-  progress: number;
-  file: FileInfo | null;
-  uploadingFile: File | null;
-  isLoading: boolean;
-  fileInputRef: React.RefObject<HTMLInputElement>;
-  handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  formatFileSize: (size: number) => string;
-  resetUpload: () => void;
-}
-
-export const useFileUploadBox = ({
-  maxSizeInMB,
-  allowedTypes,
-  onSuccess,
-  mode = 'upload',
-  selectedFile = null,
-}: UseFileUploadBoxProps): UseFileUploadBoxReturn => {
-  const [state, setState] = useState<'empty' | 'uploading' | 'completed'>('empty');
-  const [progress, setProgress] = useState(0);
-  const [file, setFile] = useState<FileInfo | null>(null);
-  const [uploadingFile, setUploadingFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const uploadIntervalRef = useRef<NodeJS.Timeout>();
-
-  useEffect(() => {
-    if (mode === 'display') {
-      setFile(selectedFile);
-      setState(selectedFile ? 'completed' : 'empty');
-    }
-  }, [selectedFile, mode]);
-
-  useEffect(() => {
-    return () => {
-      if (uploadIntervalRef.current) {
-        clearInterval(uploadIntervalRef.current);
-      }
+  const openFileDialog = useCallback(() => {
+    const input = document.createElement('input');
+    const inputConfig = {
+      type: 'file',
+      multiple,
+      accept: accept || allowedTypes.join(','),
     };
-  }, []);
 
-  const formatFileSize = useCallback((size: number) => {
-    const sizeInMB = size / (1024 * 1024);
-    return sizeInMB < 0.1 ? '0.1' : sizeInMB.toFixed(1);
-  }, []);
+    Object.assign(input, inputConfig);
 
-  const resetUpload = useCallback(() => {
-    setState('empty');
-    setFile(null);
-    setUploadingFile(null);
-    setProgress(0);
-    setIsLoading(false);
-  }, []);
+    input.onchange = ({ target }) => {
+      const { files } = target as HTMLInputElement;
+      handleFiles(files);
+    };
 
-  const validateFile = useCallback(
-    (file: File) => {
-      if (file.size === 0) {
-        throw new Error('빈 파일은 업로드할 수 없습니다!');
-      }
-      if (file.size > maxSizeInMB * 1024 * 1024) {
-        throw new Error(`파일 크기는 ${maxSizeInMB}MB를 초과할 수 없습니다.`);
-      }
-      if (!allowedTypes.includes(file.type as AllowedFileType)) {
-        const allowedTypeNames = allowedTypes.map((type) => FILE_TYPES_TO_KOREAN[type]).join(', ');
-        throw new Error(`${allowedTypeNames} 파일만 업로드할 수 있습니다.`);
-      }
-    },
-    [maxSizeInMB, allowedTypes]
-  );
-
-  const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFile = e.target.files?.[0];
-      if (!selectedFile) return;
-
-      try {
-        setIsLoading(true);
-        validateFile(selectedFile);
-
-        setState('uploading');
-        setProgress(0);
-        setUploadingFile(selectedFile);
-
-        uploadIntervalRef.current = setInterval(() => {
-          setProgress((prev) => {
-            if (prev >= 83) {
-              if (uploadIntervalRef.current) {
-                clearInterval(uploadIntervalRef.current);
-              }
-
-              const newFile: FileInfo = {
-                id: Math.random().toString(36).slice(2),
-                name: selectedFile.name,
-                size: selectedFile.size,
-              };
-
-              setFile(newFile);
-              setState('completed');
-              setIsLoading(false);
-
-              if (onSuccess) {
-                setTimeout(() => {
-                  onSuccess(newFile);
-                }, 0);
-              }
-
-              if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-              }
-
-              if (mode === 'upload') {
-                setTimeout(resetUpload, 3000);
-              }
-
-              return prev;
-            }
-            return prev + 10;
-          });
-        }, 500);
-      } catch (error) {
-        setIsLoading(false);
-        alert(error instanceof Error ? error.message : '파일 업로드 중 오류가 발생했습니다.');
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-      }
-    },
-    [mode, onSuccess, resetUpload, validateFile]
-  );
+    input.click();
+  }, [multiple, accept, allowedTypes, handleFiles]);
 
   return {
-    state,
-    progress,
-    file,
-    uploadingFile,
+    handleFiles,
+    openFileDialog,
     isLoading,
-    fileInputRef,
-    handleFileSelect,
-    formatFileSize,
-    resetUpload,
   };
+};
+
+interface AudioUploadResult {
+  id: string;
+  text: string;
+  isSelected: boolean;
+  fileName: string;
+  status: '대기중' | '완료' | '실패' | '진행';
+  originalAudioUrl: string;
+}
+
+interface FileUploadConfig {
+  audio: {
+    maxSizeInMB: number;
+    allowedTypes: [typeof ALLOWED_FILE_TYPES.WAV, typeof ALLOWED_FILE_TYPES.MP3];
+    accept: 'audio/*';
+  };
+  text: {
+    maxSizeInMB: number;
+    allowedTypes: [typeof ALLOWED_FILE_TYPES.TEXT];
+    accept: '.txt';
+  };
+}
+
+const CONFIG: FileUploadConfig = {
+  audio: {
+    maxSizeInMB: 10,
+    allowedTypes: [ALLOWED_FILE_TYPES.WAV, ALLOWED_FILE_TYPES.MP3],
+    accept: 'audio/*',
+  },
+  text: {
+    maxSizeInMB: 5,
+    allowedTypes: [ALLOWED_FILE_TYPES.TEXT],
+    accept: '.txt',
+  },
+} as const;
+
+export const useAudioUpload = (
+  onSuccess: (items: AudioUploadResult[]) => void,
+  onError: (error: string) => void
+) => {
+  return useFileUpload<File>({
+    ...CONFIG.audio,
+    type: 'audio',
+    onSuccess: (files) => {
+      const newItems = files.map((file) => ({
+        id: crypto.randomUUID(),
+        text: '',
+        isSelected: false,
+        fileName: file.name,
+        status: '대기중' as const,
+        originalAudioUrl: URL.createObjectURL(file),
+      }));
+      onSuccess(newItems);
+    },
+    onError,
+  });
+};
+
+export const useTextUpload = (
+  onSuccess: (texts: string[]) => void,
+  options?: { onError?: (error: string) => void }
+) => {
+  return useFileUpload<string>({
+    ...CONFIG.text,
+    type: 'text',
+    onSuccess,
+    onError: options?.onError,
+  });
 };

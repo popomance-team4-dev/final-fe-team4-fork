@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 
-import { TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { TTSDetailDto, TTSSaveDto } from '@/api/aIParkAPI.schemas';
+import { GOOGLE_TTS_CONFIG } from '@/constants/googleTTSConfig';
 import { TableItem } from '@/types/table';
 
 export interface TTSItem {
   id: string;
+  enitityId: number | null;
   text: string;
   isSelected: boolean;
   speed?: number;
@@ -21,7 +23,6 @@ interface TTSConfig {
   volume: number;
   pitch: number;
   language: string;
-  voice: string;
   style: string;
 }
 
@@ -31,7 +32,6 @@ interface TTSStore {
   volume: number;
   pitch: number;
   language: string;
-  voice: string;
   style: string;
   isModified: boolean;
   isAllConfigured: boolean;
@@ -41,7 +41,7 @@ interface TTSStore {
 
   // 사이드바 액션
   setField: (field: keyof TTSConfig, value: string | number) => void;
-  reset: () => void;
+  cleanUpAllItems: () => void;
 
   // 테이블 액션
   setItems: (items: TTSItem[]) => void;
@@ -56,32 +56,40 @@ interface TTSStore {
   projectData: TTSSaveDto;
 
   // 프로젝트 관련 액션
-  setProjectData: (data: { projectId: number | null; projectName: string }) => void;
+  setProjectData: (data: {
+    projectId: number | null;
+    projectName: string;
+    fullScript?: string;
+    globalVoiceStyleId?: number;
+    globalSpeed?: number;
+    globalPitch?: number;
+    globalVolume?: number;
+    ttsDetails?: TTSDetailDto[];
+  }) => void;
   updateProjectName: (name: string) => void;
 
   // TTS 설정 적용 액션
   applyToSelected: () => void;
-  applyToAll: () => void;
 
   handleReorder: (items: TableItem[]) => void;
 }
 
-const initialProjectData: TTSSaveDto = {
+const initialProjectData = {
   projectId: null,
   projectName: '새 프로젝트',
   globalVoiceStyleId: 9,
   fullScript: '',
-  globalSpeed: 1.0,
-  globalPitch: 0.5,
-  globalVolume: 0.8,
+  globalSpeed: GOOGLE_TTS_CONFIG.SPEED.DEFAULT,
+  globalPitch: GOOGLE_TTS_CONFIG.PITCH.DEFAULT,
+  globalVolume: GOOGLE_TTS_CONFIG.VOLUME.DEFAULT,
   ttsDetails: [],
 };
 
 export const ttsInitialSettings = {
   // 사이드바 초기값
-  speed: 1.0,
-  volume: 60,
-  pitch: 4.0,
+  speed: initialProjectData.globalSpeed,
+  volume: initialProjectData.globalVolume,
+  pitch: initialProjectData.globalPitch,
   language: '',
   voice: '',
   style: '',
@@ -97,7 +105,7 @@ export const ttsInitialSettings = {
   projectData: initialProjectData,
 };
 
-export const useTTSStore = create<TTSStore>((set, _get) => ({
+export const useTTSStore = create<TTSStore>((set, get) => ({
   ...ttsInitialSettings,
 
   setField: (field, value) =>
@@ -107,7 +115,7 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
         (key) => newState[key as keyof TTSConfig] !== ttsInitialSettings[key as keyof TTSConfig]
       );
 
-      const isAllConfigured = ['language', 'voice', 'style'].every(
+      const isAllConfigured = ['language', 'style'].every(
         (key) => newState[key as keyof TTSConfig] !== ttsInitialSettings[key as keyof TTSConfig]
       );
 
@@ -118,38 +126,51 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
       };
     }),
 
-  reset: () => set(ttsInitialSettings),
+  cleanUpAllItems: () => {
+    const updatedItems = get().items.map((item) => ({
+      ...item,
+      speed: ttsInitialSettings.speed,
+      volume: ttsInitialSettings.volume,
+      pitch: ttsInitialSettings.pitch,
+    }));
+    set({ ...ttsInitialSettings, items: updatedItems });
+  },
 
-  setItems: (items) => set({ items }),
+  setItems: (items) =>
+    set((state) => {
+      console.log('[zustand] setItems 호출됨:', items);
+      return { ...state, items };
+    }),
 
   addItems: (newItems) =>
     set((state) => {
       if (newItems && newItems.length > 0) {
         const mappedItems = newItems.map((item) => ({
           id: crypto.randomUUID(),
+          enitityId: null,
           text: item.text ?? '',
           isSelected: false,
           speed: state.speed ?? ttsInitialSettings.speed,
           volume: state.volume ?? ttsInitialSettings.volume,
           pitch: state.pitch ?? ttsInitialSettings.pitch,
           language: state.language ?? ttsInitialSettings.language,
-          voice: state.voice ?? ttsInitialSettings.voice,
           style: state.style ?? ttsInitialSettings.style,
         }));
         return { items: [...state.items, ...mappedItems] };
+      } else {
+        const newItem: TTSItem = {
+          id: crypto.randomUUID(),
+          enitityId: null,
+          text: '',
+          isSelected: false,
+          speed: state.speed,
+          volume: state.volume,
+          pitch: state.pitch,
+          language: state.language,
+          style: state.style,
+        };
+        return { items: [...state.items, newItem] };
       }
-      const newItem: TTSItem = {
-        id: crypto.randomUUID(),
-        text: '',
-        isSelected: false,
-        speed: state.speed,
-        volume: state.volume,
-        pitch: state.pitch,
-        language: state.language,
-        voice: state.voice,
-        style: state.style,
-      };
-      return { items: [...state.items, newItem] };
     }),
 
   updateItem: (id, updates) =>
@@ -180,12 +201,10 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
   reorderItems: (newItems) => set({ items: newItems }),
 
   setProjectData: (data) =>
-    set((state) => ({
-      projectData: {
-        ...state.projectData,
-        ...data,
-      },
-    })),
+    set((state) => {
+      console.log('[zustand] setProjectData 호출됨:', data);
+      return { ...state, projectData: { ...state.projectData, ...data } };
+    }),
 
   updateProjectName: (name: string) =>
     set((state) => ({
@@ -195,39 +214,28 @@ export const useTTSStore = create<TTSStore>((set, _get) => ({
       },
     })),
 
-  applyToSelected: () =>
-    set((state) => ({
-      items: state.items.map((item) =>
+  applyToSelected: () => {
+    const { items, speed, volume, pitch, language, style } = get();
+    set({
+      items: items.map((item) =>
         item.isSelected
           ? {
               ...item,
-              speed: state.speed,
-              volume: state.volume,
-              pitch: state.pitch,
-              language: state.language,
-              voice: state.voice,
-              style: state.style,
+              speed,
+              volume,
+              pitch,
+              language,
+              style,
             }
           : item
       ),
-    })),
-
-  applyToAll: () =>
-    set((state) => ({
-      items: state.items.map((item) => ({
-        ...item,
-        speed: state.speed,
-        volume: state.volume,
-        pitch: state.pitch,
-        language: state.language,
-        voice: state.voice,
-        style: state.style,
-      })),
-    })),
+    });
+  },
 
   handleReorder: (newItems: TableItem[]) => {
     const convertedItems: TTSItem[] = newItems.map((item) => ({
       id: item.id,
+      enitityId: null,
       text: item.text,
       isSelected: false,
       speed: item.speed ?? ttsInitialSettings.speed,

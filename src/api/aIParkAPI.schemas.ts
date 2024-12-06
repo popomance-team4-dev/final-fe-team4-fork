@@ -185,7 +185,7 @@ export interface ConcatDetailDto {
   audioSeq?: number;
   checked?: boolean;
   endSilence?: number;
-  id?: number;
+  id?: number | null;
   memberAudioMeta?: MemberAudioMeta;
   unitScript?: string;
 }
@@ -194,7 +194,7 @@ export interface ConcatSaveDto {
   concatDetails?: ConcatDetailDto[];
   globalFrontSilenceLength?: number;
   globalTotalSilenceLength?: number;
-  projectId?: number;
+  projectId?: number | null;
   projectName?: string;
 }
 
@@ -211,13 +211,14 @@ export interface TTSProject {
 
 export interface TTSDetailDto {
   id: number | null;
-  isDeleted?: boolean;
+  isDeleted: boolean;
   unitPitch?: number;
   unitScript?: string;
-  unitSequence?: number;
+  unitSequence: number;
   unitSpeed?: number;
-  unitVoiceStyleId?: number;
+  unitVoiceStyleId: number | null;
   unitVolume?: number;
+  genAudios?: [{ id: number; audioUrl: string }];
 }
 
 export interface TTSSaveDto {
@@ -266,4 +267,50 @@ export interface VCSaveDto {
   projectName?: string;
   srcFiles?: AudioFileDto[];
   trgFiles?: AudioFileDto[];
+}
+
+export interface Project {
+  projectId: number;
+  projectType: string;
+  projectName: string;
+  script?: string;
+  projectStatus?: string;
+  updatedAt: string;
+  createdAt?: string;
+}
+
+export interface ProjectsResponse {
+  content: Project[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
+  totalPages: number;
+  totalElements: number;
+}
+
+export interface WorkspaceProject {
+  id: number;
+  type: string;
+  name: string;
+  script?: string;
+  status?: string;
+  updatedAt: string;
+  createdAt?: string;
+}
+
+export type workspacesResponse = WorkspaceProject[];
+
+export interface Export {
+  projectId?: number;
+  url?: string;
+  metaId?: number;
+  fileName: string;
+  downloadLink?: string;
+  unitStatus: string;
+  projectName: string;
+  projectType: string;
+  script: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }

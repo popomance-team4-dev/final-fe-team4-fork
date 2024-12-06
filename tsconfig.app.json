@@ -26,7 +26,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/components/ui"],
+  "include": ["src", "src/components/ui", "ConcatPage.tsx", "ConcatSidebar.tsx", "src/api/vcApi.ts"],
 
   "exclude": ["node_modules", "dist", "temp"]
 }

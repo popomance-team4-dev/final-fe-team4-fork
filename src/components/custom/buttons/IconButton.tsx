@@ -7,8 +7,7 @@ import {
   TbPlayerPlayFilled,
   TbRefresh,
   TbReload,
-  TbStack,
-  TbStack2,
+  TbSparkles,
   TbTrash,
   TbUpload,
 } from 'react-icons/tb';
@@ -28,6 +27,7 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   readonly iconColor?: string;
   readonly textColor?: string;
   readonly width?: string;
+  disabled?: boolean;
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
@@ -100,9 +100,14 @@ IconButton.displayName = 'IconButton';
 interface UploadTextButtonProps {
   onClick?: () => void;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
-export const UploadTextButton: React.FC<UploadTextButtonProps> = ({ onClick, isLoading }) => {
+export const UploadTextButton: React.FC<UploadTextButtonProps> = ({
+  onClick,
+  isLoading,
+  disabled,
+}) => {
   return (
     <IconButton
       icon={<TbUpload />}
@@ -112,7 +117,7 @@ export const UploadTextButton: React.FC<UploadTextButtonProps> = ({ onClick, isL
       textColor="text-gray-800"
       width="167px"
       onClick={onClick}
-      disabled={isLoading}
+      disabled={disabled || isLoading}
     />
   );
 };
@@ -194,29 +199,12 @@ export function TTSPlaybackHistoryButton({
           ? ''
           : 'bg-gray-50 opacity-50 cursor-not-allowed pointer-events-none  border-transparent '
       )}
-    />
-  );
-}
-export function ApplySelectionButton({
-  onClick,
-  className,
-}: {
-  readonly onClick?: () => void;
-  readonly className?: string;
-}) {
-  return (
-    <IconButton
-      icon={<TbStack />}
-      label="선택 적용"
-      iconBgColor="bg-blue-50"
-      iconColor="text-blue-600"
-      onClick={onClick}
-      className={className}
+      type="button"
     />
   );
 }
 
-export function ApplyAllButton({
+export function ApplyButton({
   onClick,
   className,
 }: {
@@ -225,8 +213,8 @@ export function ApplyAllButton({
 }) {
   return (
     <IconButton
-      icon={<TbStack2 />}
-      label="전체 적용"
+      icon={<TbSparkles />}
+      label="적용하기"
       iconBgColor="bg-blue-50"
       iconColor="text-blue-600"
       onClick={onClick}

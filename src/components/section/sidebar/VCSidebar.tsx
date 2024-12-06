@@ -1,58 +1,56 @@
-import { useState } from 'react';
 import { TbSettings } from 'react-icons/tb';
 
-import {
-  ApplyAllButton,
-  ApplySelectionButton,
-  ResetChangesButton,
-} from '@/components/custom/buttons/IconButton';
-import VoiceSelection from '@/components/custom/feature/VoiceSelection';
-import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
+import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
+import VoiceSelection from '@/components/custom/features/vc/VoiceSelection';
 import { Label } from '@/components/ui/label';
-import { PRESET_VOICES } from '@/constants/dummy';
-import { VC_TOOLTIP } from '@/constants/tooltips';
+import { useVCStore } from '@/stores/vc.store';
+import { VCItem } from '@/types/table';
 
-interface TargetVoice {
+export interface TargetVoice {
   id: string;
   name: string;
   description: string;
   avatarUrl: string;
-  type: 'preset' | 'custom';
+  type: 'custom';
 }
 
 interface VCSidebarProps {
   selectedVoice: string;
   onVoiceSelect: (voice: string) => void;
-  onApplyConversion: () => void;
+  onApplyConversion: () => Promise<void>;
+  customVoices: TargetVoice[];
+  onVoiceUpload: (voices: TargetVoice[]) => void;
 }
 
 const VCSidebar: React.FC<VCSidebarProps> = ({
   selectedVoice,
   onVoiceSelect,
-  onApplyConversion,
+  customVoices,
+  onVoiceUpload,
 }) => {
-  const [customVoices, setCustomVoices] = useState<TargetVoice[]>([]);
+  const { showAlert, applyToSelected, setItems, items } = useVCStore();
 
-  const handleVoiceUpload = (file: File) => {
-    const newVoice: TargetVoice = {
-      id: `custom-${crypto.randomUUID()}`,
+  const handleVoiceUpload = (files: File[]) => {
+    const newVoices = files.map((file) => ({
+      id: file.name,
       name: file.name,
       description: '',
       avatarUrl: '',
-      type: 'custom',
-    };
+      type: 'custom' as const,
+    }));
 
-    setCustomVoices((prev) => [...prev, newVoice]);
+    onVoiceUpload([...customVoices, ...newVoices]);
+    onVoiceSelect(files[0].name);
   };
 
   const handleVoiceDelete = (id: string) => {
-    setCustomVoices((prev) => prev.filter((voice) => voice.id !== id));
+    onVoiceUpload(customVoices.filter((voice) => voice.id !== id));
   };
 
   const handleVoiceEdit = (newName: string) => {
-    setCustomVoices((prev) =>
-      prev.map((v) =>
-        v.id === selectedVoice
+    onVoiceUpload(
+      customVoices.map((v) =>
+        v.name === selectedVoice
           ? {
               ...v,
               name: newName,
@@ -60,6 +58,35 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
           : v
       )
     );
+  };
+
+  const handleApplyClick = async () => {
+    if (!selectedVoice) {
+      showAlert('타겟 보이스를 선택해주세요.', 'destructive');
+      return;
+    }
+
+    const hasSelectedItems = items.some((item) => item.isSelected);
+    if (!hasSelectedItems) {
+      showAlert('적용할 원본 음성을 선택해주세요.', 'destructive');
+      return;
+    }
+
+    applyToSelected();
+    showAlert('타겟 보이스가 적용되었습니다.', 'default');
+  };
+
+  const handleResetClick = () => {
+    setItems((prevItems: VCItem[]) =>
+      prevItems.map(
+        (item): VCItem => ({
+          ...item,
+          targetVoice: undefined,
+          status: '대기중',
+        })
+      )
+    );
+    showAlert('변경사항이 초기화되었습니다.', 'default');
   };
 
   return (
@@ -75,7 +102,6 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
         <div>
           <Label className="text-sm font-bold mb-4 block">타겟 보이스</Label>
           <VoiceSelection
-            presetVoices={PRESET_VOICES}
             customVoices={customVoices}
             selectedVoice={selectedVoice}
             onVoiceSelect={onVoiceSelect}
@@ -85,30 +111,12 @@ const VCSidebar: React.FC<VCSidebarProps> = ({
           />
         </div>
 
-        <div className="mt-8">
-          <div className="flex flex-col gap-4">
-            <TooltipWrapper content={VC_TOOLTIP.APPLY_SELECTED}>
-              <div>
-                <ApplySelectionButton
-                  onClick={onApplyConversion}
-                  className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
-                />
-              </div>
-            </TooltipWrapper>
-            <TooltipWrapper content={VC_TOOLTIP.APPLY_ALL}>
-              <div>
-                <ApplyAllButton
-                  onClick={onApplyConversion}
-                  className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
-                />
-              </div>
-            </TooltipWrapper>
-            <TooltipWrapper content={VC_TOOLTIP.RESET_SETTINGS}>
-              <div>
-                <ResetChangesButton />
-              </div>
-            </TooltipWrapper>
-          </div>
+        <div className="flex flex-col gap-4">
+          <ApplyButton
+            onClick={handleApplyClick}
+            className={!selectedVoice ? 'opacity-50 cursor-not-allowed' : ''}
+          />
+          <ResetChangesButton onClick={handleResetClick} />
         </div>
       </div>
     </aside>

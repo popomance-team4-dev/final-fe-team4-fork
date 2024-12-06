@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
 import AccountRecoveryPage from '@/pages/AccountRecoveryPage';
-import CONCATPage from '@/pages/CONCATPage';
+import ConcatPage from '@/pages/ConcatPage';
 import ErrorPage from '@/pages/ErrorPage';
 import HistoryPage from '@/pages/HistoryPage';
 import HomePage from '@/pages/HomePage';
@@ -12,6 +12,7 @@ import SigninPage from '@/pages/SigninPage';
 import SignupPage from '@/pages/SignupPage';
 import TTSPage from '@/pages/TTSPage';
 import VCPage from '@/pages/VCPage';
+import ProtectedRoute from '@/routes/ProtectedRoute';
 
 const PATH = {
   HOME: '/',
@@ -56,39 +57,56 @@ const router = createBrowserRouter([
         path: PATH.ERROR,
         element: <ErrorPage />,
       },
-      // 그 외 모든 페이지들
-      {
-        path: PATH.HOME,
-        element: <HomePage />,
-      },
-      {
-        path: PATH.PROJECT,
-        element: <ProjectPage />,
-      },
-      {
-        path: PATH.HISTORY,
-        element: <HistoryPage />,
-      },
-      {
-        path: PATH.TTS,
-        element: <TTSPage />,
-      },
-      {
-        path: PATH.CONCAT,
-        element: <CONCATPage />,
-      },
-      {
-        path: PATH.VC,
-        element: <VCPage />,
-      },
-      {
-        path: PATH.MYPAGE,
-        element: <MyPage />,
-      },
       // 404 에러 페이지
       {
         path: '*',
         element: <ErrorPage />,
+      },
+      // 로그인 후에만 접근 가능한 페이지들
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: PATH.HOME,
+            element: <HomePage />,
+          },
+          {
+            path: PATH.PROJECT,
+            element: <ProjectPage />,
+          },
+          {
+            path: PATH.HISTORY,
+            element: <HistoryPage />,
+          },
+          {
+            path: PATH.TTS,
+            element: <TTSPage />,
+          },
+          {
+            path: `${PATH.TTS}/:id`,
+            element: <TTSPage />,
+          },
+          {
+            path: PATH.CONCAT,
+            element: <ConcatPage />,
+          },
+          {
+            path: `${PATH.CONCAT}/:id`,
+            element: <ConcatPage />,
+          },
+          {
+            path: PATH.VC,
+            element: <VCPage />,
+          },
+          {
+            path: `${PATH.VC}/:id`,
+            element: <VCPage />,
+          },
+          {
+            path: PATH.MYPAGE,
+            element: <MyPage />,
+          },
+        ],
       },
     ],
   },

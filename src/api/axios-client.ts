@@ -10,20 +10,19 @@ if (!BASE_URL) {
 // Axios 인스턴스 생성
 export const customInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true, // 세션 쿠키를 자동으로 포함
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// 요청 인터셉터 (필요하면 추가)
+// 요청 인터셉터
 customInstance.interceptors.request.use(
   (config) => {
-    // 요청 전에 실행할 작업 (예: 토큰 추가)
-    // config.headers.Authorization = `Bearer ${yourToken}`;
+    // 세션 기반 인증에서는 Authorization 헤더가 필요 없습니다.
     return config;
   },
   (error) => {
-    // 요청 오류 처리
     return Promise.reject(error);
   }
 );

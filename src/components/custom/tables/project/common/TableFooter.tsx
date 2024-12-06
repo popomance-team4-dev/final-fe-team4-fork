@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { DownloadButton, RecreateButton } from '@/components/custom/buttons/IconButton';
+import { RecreateButton } from '@/components/custom/buttons/IconButton';
 import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { TTS_TOOLTIP } from '@/constants/tooltips';
 import { cn } from '@/lib/utils';
@@ -10,13 +10,12 @@ interface TableFooterProps {
   onRegenerate: () => void;
   onDownload: () => void;
   isListView: boolean;
-  type?: 'TTS' | 'VC' | 'CONCAT';
+  type?: 'TTS' | 'VC' | 'Concat';
 }
 
 export const TableFooter: React.FC<TableFooterProps> = ({
   selectedCount,
   onRegenerate,
-  onDownload,
   isListView,
   type = 'TTS',
 }) => (
@@ -34,11 +33,6 @@ export const TableFooter: React.FC<TableFooterProps> = ({
               </div>
             </TooltipWrapper>
           )}
-          <TooltipWrapper content={TTS_TOOLTIP.DOWNLOAD_AUDIO}>
-            <div>
-              <DownloadButton onClick={onDownload} />
-            </div>
-          </TooltipWrapper>
         </div>
       )}
     </div>

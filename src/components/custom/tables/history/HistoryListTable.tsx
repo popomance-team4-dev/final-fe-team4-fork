@@ -1,6 +1,7 @@
-import { TbCircleFilled, TbDownload } from 'react-icons/tb';
+import { TbDownload } from 'react-icons/tb';
 
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
+import { StatusBadge } from '@/components/custom/tables/history/RecentExportTable';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -17,16 +18,19 @@ export interface ProjectListTableItem {
   order: string;
   projectName: string;
   fileName: string;
-  content: string;
-  type: 'VC' | 'TTS' | 'CONCAT';
+  script: string;
+  projectType: 'VC' | 'TTS' | 'Concat';
   status: '진행' | '대기중' | '실패' | '완료';
-  createdAt: string;
+  unitStatus?: 'SUCCESS' | 'FAILURE';
+  updatedAt: string;
+  onClick?: () => void;
 }
 
 interface HistoryListTableProps {
   items: ProjectListTableItem[];
   onPlay: (id: string) => void;
   onPause: (id: string) => void;
+  onDownload: (id: string) => void;
   currentPlayingId?: string;
   isAllSelected: boolean;
   itemCount: number;
@@ -35,32 +39,15 @@ interface HistoryListTableProps {
   onSelectionChange: (id: string, checked: boolean) => void;
 }
 
-const AudioBadge = ({ type }: { type: 'VC' | 'TTS' | 'CONCAT' }) => (
+const AudioBadge = ({ type }: { type: 'VC' | 'TTS' | 'Concat' }) => (
   <Badge variant={type.toLowerCase() as 'vc' | 'tts' | 'concat'}>{type}</Badge>
 );
-
-const StatusBadge = (status: '진행' | '대기중' | '실패' | '완료') => {
-  const variantMap = {
-    진행: 'progress',
-    대기중: 'waiting',
-    실패: 'failed',
-    완료: 'completed',
-  } as const;
-
-  return (
-    <div className="flex justify-start">
-      <Badge variant={variantMap[status]}>
-        <TbCircleFilled className="w-2 h-2 mr-2" />
-        {status}
-      </Badge>
-    </div>
-  );
-};
 
 export function HistoryListTable({
   items,
   onPlay,
   onPause,
+  onDownload,
   currentPlayingId,
   isAllSelected,
   itemCount,
@@ -79,10 +66,10 @@ export function HistoryListTable({
               onCheckedChange={(checked) => onSelectAll(checked as boolean)}
             />
           </TableHead>
-          <TableHead className="pl-16 text-body3 text-black w-[130px]">유형</TableHead>
-          <TableHead className="text-body3 text-black w-[130px]">프로젝트명</TableHead>
-          <TableHead className="text-body3 text-black w-[100px]">파일명</TableHead>
-          <TableHead className="p-0 text-body3 text-black w-[300px]">내용</TableHead>
+          <TableHead className="pl-16 text-body3 text-black w-[150px]">유형</TableHead>
+          <TableHead className="text-body3 text-black w-[110px]">프로젝트명</TableHead>
+          <TableHead className="text-body3 text-black w-[120px]">파일명</TableHead>
+          <TableHead className="p-0 text-body3 text-black w-[200px]">내용</TableHead>
           <TableHead className="text-body3 text-black w-[60px] text-center">상태</TableHead>
           <TableHead className="text-body3 text-black w-[80px] text-center whitespace-nowrap">
             다운로드
@@ -93,16 +80,18 @@ export function HistoryListTable({
 
       {/* Body */}
       <TableBody>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <TableRow
-            key={item.id}
+            key={`${item.id}-${index}`} // id와 index 조합으로 고유한 key 생성
             data-state={currentPlayingId === item.id ? 'selected' : undefined}
-            className="text-body2"
+            className="text-body2 cursor-pointer"
+            onClick={item.onClick}
           >
             <TableCell className="pl-6 w-[50px] ">
               <Checkbox
                 checked={selectedItems.includes(item.id)}
                 onCheckedChange={(checked) => onSelectionChange(item.id, checked as boolean)}
+                onClick={(e) => e.stopPropagation()}
               />
             </TableCell>
             <TableCell className="w-[100px] text-left">
@@ -112,31 +101,40 @@ export function HistoryListTable({
                   onPlay={() => onPlay(item.id)}
                   onPause={() => onPause(item.id)}
                 />
-                <AudioBadge type={item.type} />
+                <AudioBadge type={item.projectType} />
               </div>
             </TableCell>
 
-            <TableCell className="whitespace-nowrap">{item.projectName}</TableCell>
-            <TableCell className="whitespace-nowrap">{item.fileName}</TableCell>
+            <TableCell className="truncate text-left text-black">{item.projectName}</TableCell>
+            <TableCell className="truncate text-left text-black">{item.fileName}</TableCell>
             <TableCell className="max-w-md p-0">
-              <div className="whitespace-nowrap overflow-hidden text-ellipsis">{item.content}</div>
+              <div className="truncate text-left text-black overflow-hidden text-ellipsis">
+                {item.script}
+              </div>
             </TableCell>
-            <TableCell>
-              <div className="flex justify-center p-0 whitespace-nowrap">
-                {StatusBadge(item.status)}
+            <TableCell className="px-0">
+              <div className="flex truncate">
+                {item.unitStatus === 'SUCCESS' ||
+                item.unitStatus === 'FAILURE' ||
+                item.unitStatus === null ? (
+                  <StatusBadge unitStatus={item.unitStatus} />
+                ) : null}
               </div>
             </TableCell>
             <TableCell>
               <div className="flex items-center justify-center">
                 <button
-                  onClick={() => console.log('다운로드:', item.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDownload(item.id); // 다운로드 이벤트 호출
+                  }}
                   aria-label="Download file"
                 >
                   <TbDownload className="h-6 w-6" />
                 </button>
               </div>
             </TableCell>
-            <TableCell className="text-gray-700 whitespace-nowrap">{item.createdAt}</TableCell>
+            <TableCell className="text-gray-700 whitespace-nowrap">{item.updatedAt}</TableCell>
           </TableRow>
         ))}
       </TableBody>

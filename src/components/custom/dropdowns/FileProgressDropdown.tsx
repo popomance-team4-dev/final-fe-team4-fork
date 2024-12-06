@@ -112,7 +112,6 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
               <span className="text-[#512A91] text-xs font-medium">{fileStats['진행'] || 0}</span>
             </div>
           </Badge>
-
           {/* 대기 상태 */}
           <Badge variant="waiting">
             <TbCircleFilled className="w-2 h-2 mr-2" />
@@ -121,7 +120,6 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
               <span className="text-[#512A91] text-xs font-medium">{fileStats['대기'] || 0}</span>
             </div>
           </Badge>
-
           {/* 실패 상태 */}
           <Badge variant="failed">
             <TbCircleFilled className="w-2 h-2 mr-2" />
@@ -130,7 +128,6 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
               <span className="text-[#512A91] text-xs font-medium">{fileStats['실패'] || 0}</span>
             </div>
           </Badge>
-
           {/* 완료 상태 */}
           <Badge variant="completed">
             <TbCircleFilled className="w-2 h-2 mr-2" />
@@ -152,7 +149,7 @@ const FileProgressDropdown: React.FC<FileProgressDropdownProps> = ({ items }) =>
       </div>
 
       {isOpen && (
-        <div className="absolute w-[504px] bg-background rounded-lg border border-gray-300 mt-2 z-50">
+        <div className="absolute w-[504px] bg-background rounded-lg border border-gray-300 mt-2 z-50 shadow-md">
           {/* 필터 버튼 영역 */}
           <div className="h-10 border-b border-gray-300 flex items-center px-4">
             <div className="flex gap-2">

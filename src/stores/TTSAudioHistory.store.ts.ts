@@ -14,7 +14,7 @@ interface PlaybackStore {
   getHistoryItem: (unitId: string) => InterfaceHistoryItem[];
 }
 
-export const useAudioHistoryStore = create<PlaybackStore>((set, get) => ({
+export const useTTSAudioHistoryStore = create<PlaybackStore>((set, get) => ({
   historyItems: {},
   setHistoryItems: (ttsDetails: TTSDetailDto[]) => {
     const history = ttsDetails.reduce<Record<string, InterfaceHistoryItem[]>>((acc, item) => {

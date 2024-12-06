@@ -8,31 +8,18 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { AUDIO_FOOTER_TOOLTIP } from '@/constants/tooltips';
 import { cn } from '@/lib/utils';
-import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
 
 interface AudioFooterProps {
   audioUrl: string;
   className?: string;
   type?: 'TTS' | 'VC';
   label?: string;
+  audioHistoryItems?: { id: number; audioUrl: string }[];
 }
 
 const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
-  ({ audioUrl, className }, ref) => {
+  ({ audioUrl, className, audioHistoryItems }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false);
-
-    const historyItems = useAudioHistoryStore((state) => state.historyItems);
-
-    const audiohisoryItems = Object.values(historyItems)
-      .flat()
-      .reverse()
-      .slice(0, 7)
-      .map((historyItem) => {
-        return {
-          id: historyItem.audioId,
-          audioUrl: historyItem.audioUrl,
-        };
-      });
 
     //!TODO TTS 오디오 히스토리 삭제 기능 추가 필요
 
@@ -62,7 +49,7 @@ const AudioFooter = React.forwardRef<HTMLDivElement, AudioFooterProps>(
           </DialogTrigger>
 
           {/* Dialog Content */}
-          <AudioHistoryDialog audioHistory={audiohisoryItems} />
+          <AudioHistoryDialog audioHistory={audioHistoryItems ?? []} />
         </Dialog>
       </div>
     );

@@ -2,7 +2,7 @@ import { Checkbox } from '@radix-ui/react-checkbox';
 import { TbX } from 'react-icons/tb';
 
 import { AudioPlayer, PlayerMode } from '@/components/custom/features/common/AudioPlayer';
-import { InterfaceHistoryItem } from '@/stores/ttsPlayback.store.ts';
+import { InterfaceHistoryItem } from '@/stores/TTSAudioHistory.store.ts';
 
 import HistoryTree from './TTSHistoryTree';
 

@@ -9,7 +9,6 @@ permissions:
   pull-requests: write
 jobs:
   build_and_preview:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,5 +25,5 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AIPARK_FOUR_T }}
           projectId: aipark-four-t
-          channelId: ${{ github.event.pull_request.number }}
-          expires: 3d
+          channelId: preview
+          expires: 7d

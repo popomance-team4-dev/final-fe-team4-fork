@@ -13,6 +13,7 @@ import TooltipWrapper from '@/components/custom/guide/TooltipWrapper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { TTS_TOOLTIP } from '@/constants/tooltips';
+import { useTTSStore } from '@/stores/tts.store';
 import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
 
 import TTSPlaybackHistory from './TTSPlaybackHistory';
@@ -41,8 +42,7 @@ export const SortableGridItem = memo((props: SortableGridItemProps) => {
   const handleDelete = useAudioHistoryStore((state) => state.deleteHistoryItem)(props.id);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  console.log('props.id', props.id);
-  console.log('isHistoryOpen', isHistoryOpen);
+  const addItems = useTTSStore((state) => state.addItems);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -140,6 +140,18 @@ export const SortableGridItem = memo((props: SortableGridItemProps) => {
             placeholder="스크립트를 입력하세요."
             className="w-3/5 min-h-[40px] overflow-hidden mb-2 border-0"
             rows={1}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addItems();
+                setTimeout(() => {
+                  const textareas = document.querySelectorAll('textarea');
+                  if (textareas.length > 0) {
+                    textareas[textareas.length - 1].focus();
+                  }
+                }, 0);
+              }
+            }}
           />
           <div className="w-3/5 mb-5">
             <AudioPlayer audioUrl={props.audioUrl} className="px-6 py-3" />

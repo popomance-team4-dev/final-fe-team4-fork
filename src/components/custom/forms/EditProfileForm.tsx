@@ -3,17 +3,16 @@ import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { changePassword, changeProfile } from '@/api/profileAPI'; // Assuming you'll create this
+import { changePassword, changeProfile } from '@/api/profileAPI';
 import { EditConfirm } from '@/components/custom/dialogs/EditProfileDialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/stores/auth.store';
-import { joaatHash } from '@/utils/joaatHash';
-import { formatPhoneNumber, formattedPhone } from '@/utils/phoneNumber';
-
+import { formatPhoneNumber } from '@/utils/phoneNumber';
 interface ProfileFormData {
   email: string;
   name: string;
@@ -36,6 +35,12 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { setUser } = useAuthStore();
+  const [showAlert, setShowAlert] = useState(false);
+  const [lastSuccessfulResponse, setLastSuccessfulResponse] = useState<ProfileFormData | boolean>(
+    false
+  );
+  const [passwordChangeData, setPasswordChangeData] = useState<PasswordFormData | null>(null);
+  const [profileChangeData, setProfileChangeData] = useState<ProfileFormData | null>(null);
 
   const profileForm = useForm<ProfileFormData>({
     defaultValues: {
@@ -51,20 +56,15 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
       confirmPassword: '',
     },
   });
+
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       setErrorMessage('');
       const formattedData = {
         ...data,
-        phoneNumber: formattedPhone(data.phoneNumber),
+        phoneNumber: formatPhoneNumber(data.phoneNumber),
       };
-
-      const response = await changeProfile(formattedData);
-      const updatedUserData = response.data;
-      setUser({
-        name: updatedUserData.name,
-        phoneNumber: updatedUserData.phoneNumber,
-      });
+      setProfileChangeData(formattedData);
       setIsModalOpen(true);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -80,20 +80,10 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
   const onPasswordSubmit = async (data: PasswordFormData) => {
     try {
       setErrorMessage('');
-
       if (data.newPassword !== data.confirmPassword) {
         throw new Error('새 비밀번호가 일치하지 않습니다.');
       }
-
-      const hashedCurrentPassword = joaatHash(data.currentPassword);
-      const hashedNewPassword = joaatHash(data.newPassword);
-
-      await changePassword({
-        currentPassword: hashedCurrentPassword,
-        newPassword: hashedNewPassword,
-        confirmPassword: hashedNewPassword,
-      });
-
+      setPasswordChangeData(data);
       setIsModalOpen(true);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -106,7 +96,44 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
     }
   };
 
-  const handleConfirmSubmit = () => {
+  const handleConfirmSubmit = async () => {
+    try {
+      if (profileChangeData) {
+        const response = await changeProfile(profileChangeData);
+        setLastSuccessfulResponse(response.data);
+      }
+      if (passwordChangeData) {
+        await changePassword({
+          currentPassword: passwordChangeData.currentPassword,
+          newPassword: passwordChangeData.newPassword,
+          confirmPassword: passwordChangeData.confirmPassword,
+        });
+        setLastSuccessfulResponse(true);
+      }
+      if (lastSuccessfulResponse) {
+        if (typeof lastSuccessfulResponse === 'object' && lastSuccessfulResponse !== null) {
+          setUser({
+            email: lastSuccessfulResponse.email,
+            name: lastSuccessfulResponse.name,
+            phoneNumber: formatPhoneNumber(lastSuccessfulResponse.phoneNumber),
+          });
+        }
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 2000);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data?.message || '수정에 실패했습니다.');
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('알 수 없는 오류가 발생했습니다.');
+      }
+    }
+    setProfileChangeData(null);
+    setPasswordChangeData(null);
     setIsModalOpen(false);
   };
 
@@ -202,7 +229,15 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
                       </FormLabel>
                     </div>
                     <FormControl>
-                      <Input {...field} className="flex-1 max-w-[320px] h-[50px]" />
+                      <Input
+                        {...field}
+                        maxLength={13}
+                        onChange={(e) => {
+                          const value = formatPhoneNumber(e.target.value);
+                          field.onChange({ target: { name: field.name, value } });
+                        }}
+                        className="flex-1 max-w-[320px] h-[50px]"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -309,6 +344,15 @@ const EditProfileForm = ({ defaultValues, avatarUrl }: EditProfileFormProps) => 
         onOpenChange={setIsModalOpen}
         onConfirm={handleConfirmSubmit}
       />
+      {showAlert && (
+        <div className="absolute left-1/2 -translate-x-1/2 top-6">
+          <Alert variant="default" className="w-[360px] bg-white">
+            <AlertDescription className="text-sm">
+              회원정보가 성공적으로 수정되었습니다.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
     </>
   );
 };

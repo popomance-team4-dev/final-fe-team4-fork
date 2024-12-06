@@ -28,7 +28,7 @@ interface ConcatStore {
   isModified: boolean;
 
   // 액션
-  setItems: (items: ConcatItem[]) => void;
+  setItems: (items: ConcatItem[] | ((prev: ConcatItem[]) => ConcatItem[])) => void;
   toggleSelection: (id: string) => void;
   toggleSelectAll: () => void;
   deleteSelectedItems: () => void;
@@ -62,7 +62,14 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
   isModified: false,
 
   // 액션
-  setItems: (items) => set({ items }),
+  // setItems: (items) => set({ items }),
+  setItems: (items) => {
+    if (typeof items === 'function') {
+      set((state) => ({ items: items(state.items) }));
+    } else {
+      set({ items });
+    }
+  },
 
   toggleSelection: (id) =>
     set((state) => ({

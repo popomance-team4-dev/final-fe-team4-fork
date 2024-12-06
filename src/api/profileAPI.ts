@@ -60,6 +60,7 @@ export const findPassword = async ({ email, phoneNumber }: FindPasswordRequest) 
 };
 
 interface Profile {
+  email: string;
   name: string;
   phoneNumber: string;
 }
@@ -70,9 +71,10 @@ interface Password {
   confirmPassword: string;
 }
 
-export const changeProfile = async ({ name, phoneNumber }: Profile) => {
+export const changeProfile = async ({ email, name, phoneNumber }: Profile) => {
   try {
     const response = await customInstance.put('/member/info/update', {
+      email,
       name,
       phoneNumber,
     });

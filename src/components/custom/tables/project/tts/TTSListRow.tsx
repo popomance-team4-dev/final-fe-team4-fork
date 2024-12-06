@@ -9,6 +9,7 @@ import TTSPlaybackHistory from '@/components/custom/tables/project/tts/TTSPlayba
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { useTTSStore } from '@/stores/tts.store';
 import { useAudioHistoryStore } from '@/stores/ttsPlayback.store.ts';
 import { ListRowProps } from '@/types/table';
 
@@ -43,6 +44,8 @@ export const TTSListRow: React.FC<ListRowProps> = ({
     element.style.height = `${element.scrollHeight}px`;
   };
 
+  const addItems = useTTSStore((state) => state.addItems);
+
   useEffect(() => {
     const textareas = document.querySelectorAll('textarea');
     textareas.forEach((textarea) => {
@@ -69,6 +72,18 @@ export const TTSListRow: React.FC<ListRowProps> = ({
           onChange={(e) => {
             onTextChange(id, e.target.value);
             handleTextAreaResize(e.target);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              addItems();
+              setTimeout(() => {
+                const textareas = document.querySelectorAll('textarea');
+                if (textareas.length > 0) {
+                  textareas[textareas.length - 1].focus();
+                }
+              }, 0);
+            }
           }}
           onInput={(e) => handleTextAreaResize(e.currentTarget)}
           placeholder="텍스트를 입력하세요."

@@ -27,5 +27,4 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AIPARK_FOUR_T }}
           projectId: aipark-four-t
-          channelId: preview
-          expires: 3d
+          expires: 7d

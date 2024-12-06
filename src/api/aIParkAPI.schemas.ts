@@ -218,6 +218,7 @@ export interface TTSDetailDto {
   unitSpeed?: number;
   unitVoiceStyleId: number | null;
   unitVolume?: number;
+  genAudios?: [{ id: number; audioUrl: string }];
 }
 
 export interface TTSSaveDto {

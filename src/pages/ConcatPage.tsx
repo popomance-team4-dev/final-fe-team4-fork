@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { concatLoad, concatSave } from '@/api/concatAPI';
+import {
+  concatLoad,
+  concatSave,
+  convertMultipleAudios,
+  deleteSelectedConcatItems,
+} from '@/api/concatAPI';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
@@ -28,7 +33,7 @@ const ConcatPage = () => {
   const [globalFrontSilenceLength, setGlobalFrontSilenceLength] = useState(0);
   const [globalTotalSilenceLength, setGlobalTotalSilenceLength] = useState(0);
   const hasAudioFile = items.length > 0;
-
+  const [concatAudioUrl, setConcatAudioUrl] = useState<string>('');
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;
@@ -39,10 +44,8 @@ const ConcatPage = () => {
         console.log('API 전체 응답:', response);
         console.log('API 응답 데이터:', response.data);
 
-        // response.data 직접 사용
         if (response.data.cnctProjectDto) {
           console.log('프로젝트 정보:', response.data.cnctProjectDto);
-          // 프로젝트 기본 정보 설정
           setProjectName(response.data.cnctProjectDto.projectName);
           setGlobalFrontSilenceLength(
             Number(response.data.cnctProjectDto.globalFrontSilenceLength) || 0
@@ -144,7 +147,79 @@ const ConcatPage = () => {
     },
     [setItems]
   );
+  // 선택된 항목 삭제
+  const handleDeleteSelectedItems = useCallback(async () => {
+    try {
+      setIsLoading(true);
 
+      // 선택된 항목들의 ID 추출
+      const selectedDetailIds = items
+        .filter((item) => item.isSelected)
+        .map((item) => parseInt(item.id));
+
+      if (selectedDetailIds.length === 0) {
+        console.log('선택된 항목이 없습니다.');
+        return;
+      }
+
+      const deleteResponse = await deleteSelectedConcatItems({
+        projectId: id ? parseInt(id) : 0,
+        detailIds: selectedDetailIds,
+      });
+
+      if (deleteResponse.success) {
+        deleteSelectedItems();
+        const updatedItems = items.filter((item) => !item.isSelected);
+        setItems(updatedItems);
+      }
+    } catch (error) {
+      console.error('항목 삭제 실패:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id, items, setItems, deleteSelectedItems]);
+
+  //콘캣 새성
+  const handleConcatGenerate = useCallback(async () => {
+    try {
+      setIsLoading(true);
+
+      const selectedItems = items.filter((item) => item.isSelected);
+      if (selectedItems.length === 0) {
+        console.log('선택된 항목이 없습니다.');
+        return;
+      }
+
+      const response = await convertMultipleAudios({
+        projectId: id ? parseInt(id) : 0,
+        projectName,
+        globalFrontSilenceLength,
+        globalTotalSilenceLength,
+        concatRequestDetails: selectedItems.map((item, index) => ({
+          id: id && item.id ? parseInt(item.id) : null,
+          localFileName: item.fileName || null,
+          audioSeq: index + 1,
+          checked: item.isSelected,
+          unitScript: item.text || '',
+          endSilence: item.endSilence || 0,
+        })),
+      });
+
+      if (response.outputConcatAudios?.length > 0) {
+        const outputUrl = response.outputConcatAudios[0];
+        console.log('생성된 오디오 URL:', outputUrl);
+        setConcatAudioUrl(outputUrl);
+      } else {
+        console.warn('생성된 오디오 URL이 없습니다.');
+        setConcatAudioUrl('');
+      }
+    } catch (error) {
+      console.error('Concat 생성 실패:', error);
+      setConcatAudioUrl('');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items]);
   // 순서 변경
   const handleReorder = useCallback(
     (startIndex: number, endIndex: number) => {
@@ -161,7 +236,7 @@ const ConcatPage = () => {
       variant="project"
       header={<></>}
       sidebar={<ConcatSidebar />}
-      footer={<AudioPlayer audioUrl={''} />}
+      footer={<AudioPlayer audioUrl={concatAudioUrl} />}
     >
       <Title
         type="Concat"
@@ -185,7 +260,7 @@ const ConcatPage = () => {
           }))}
           onSelectionChange={toggleSelection}
           onTextChange={handleTextChange}
-          onDelete={deleteSelectedItems}
+          onDelete={handleDeleteSelectedItems}
           onAdd={handleAdd}
           onPlay={handlePlay}
           onSelectAll={toggleSelectAll}
@@ -193,6 +268,8 @@ const ConcatPage = () => {
           hasAudioFile={hasAudioFile}
           onFileUpload={handleFileUpload}
           onReorder={handleReorder}
+          onGenerate={handleConcatGenerate}
+          isGenerating={isLoading}
         />
       )}
     </PageLayout>

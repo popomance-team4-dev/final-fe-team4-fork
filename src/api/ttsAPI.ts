@@ -145,13 +145,11 @@ export const convertBatchTexts = async (TTSConvertRequest: TTSConvertRequestDto)
       headers: { 'Content-Type': 'application/json' },
       data: TTSConvertRequest,
     });
-    if (response.data) {
-      console.log('TTS 배치 변환 성공:', response.data);
-      return ttsLoad(TTSConvertRequest.projectId);
-    } else {
+    if (!response.data) {
       console.error('TTS 배치 변환 실패:', response.data);
       throw new Error('TTS 배치 변환 실패');
     }
+    return ttsLoad(TTSConvertRequest.projectId);
   } catch (error) {
     console.error('TTS 배치 변환 오류:', error);
     throw error;

@@ -40,27 +40,25 @@ const TTSPage = () => {
     message: '',
     variant: 'default',
   });
-
-  const [isLoading, setIsLoading] = useState(false);
-
   const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
     setAlert({ visible: true, message, variant });
     setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
   }, []);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // TTS 프로젝트 데이터 로드
   useEffect(() => {
     const loadTTSProject = async () => {
       if (!id) {
         console.warn('ID가 없습니다.');
-        showAlert('프로젝트 ID가 없습니다. 저장을 누르면 새프로젝트가 생성됩니다 ', 'destructive');
+        showAlert('프로젝트 데이터가 없음. 저장을 누르면 새 프로젝트가 저장됩니다.', 'destructive');
         return;
       }
 
       setIsLoading(true); // 로딩 상태 업데이트
       try {
         const response = await ttsLoad(Number(id));
-        console.log('API 응답:', response.data);
         const { ttsProject, ttsDetails } = response.data;
 
         // 상태 업데이트
@@ -89,7 +87,6 @@ const TTSPage = () => {
           setItems(loadedItems);
           setHistoryItems(ttsDetails);
 
-          // 사용자에게 성공 적으로 프로젝트를 로드했음을 알림
           showAlert('프로젝트를 성공적으로 로드했습니다.', 'default');
         } else {
           console.warn('ttsDetails 데이터가 유효하지 않습니다.');
@@ -98,7 +95,7 @@ const TTSPage = () => {
         console.error('TTS 프로젝트 로드 오류:', error);
         showAlert('프로젝트 로드 중 오류가 발생했습니다.', 'destructive');
       } finally {
-        setIsLoading(false); // 로딩 상태 해제
+        setIsLoading(false);
       }
     };
 
@@ -118,18 +115,33 @@ const TTSPage = () => {
   );
 
   const checkIsValidToGenerate = useCallback(() => {
+    const isNotNullOrUndefined = (value: string | number | undefined) =>
+      value !== null && value !== undefined;
+
     const validations = [
       { condition: !projectData.projectId, message: '프로젝트를 먼저 저장을 해주세요' },
       {
         condition: !projectData.projectName || !items.length,
         message: '프로젝트 이름 또는 항목이 없습니다.',
       },
-      { condition: !items.every((item) => item.text), message: '텍스트가 없는 항목이 있습니다.' },
-      { condition: !items.every((item) => item.speed), message: '속도가 없는 항목이 있습니다.' },
-      { condition: !items.every((item) => item.volume), message: '볼륨이 없는 항목이 있습니다.' },
-      { condition: !items.every((item) => item.pitch), message: '피치가 없는 항목이 있습니다.' },
       {
-        condition: !items.every((item) => item.style),
+        condition: !items.every((item) => item.text),
+        message: '텍스트가 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.speed)),
+        message: '속도가 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.volume)),
+        message: '볼륨이 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.pitch)),
+        message: '피치가 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.style)),
         message: '음성 스타일이 없는 항목이 있습니다.',
       },
     ];
@@ -137,6 +149,10 @@ const TTSPage = () => {
     for (const { condition, message } of validations) {
       if (condition) {
         console.warn(message);
+        console.log(
+          '피치 확인',
+          items.map((item) => item.pitch)
+        );
         showAlert(message, 'destructive');
         return false;
       }
@@ -179,33 +195,31 @@ const TTSPage = () => {
 
     try {
       const response = await convertBatchTexts(request);
-      setIsGenerating(false);
+      if (response.data?.ttsProject?.apiStatus !== 'SUCCESS' || !response.data?.ttsDetails.length) {
+        console.error('TTS 오디오 데이터 생성 오류:', response.data);
+        throw new Error('TTS 오디오 데이터 생성 오류');
+      }
       setHistoryItems(response.data.ttsDetails);
       showAlert('TTS 오디오 데이터 생성이 완료되었습니다.', 'default');
     } catch (error) {
       console.error('TTS 오디오 데이터 생성 오류:', error);
+      showAlert('각 항목에 언어를 다시 적용해주세요.', 'destructive');
+    } finally {
       setIsGenerating(false);
-      showAlert('입력하신 언어와 TTS옵션 언어와 일치하는지 확인해주세요', 'destructive');
     }
   }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate, showAlert]);
 
   const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
-  const audioTTSHistoryItems = Object.values(historyItems)
-    .flat()
-    .reverse()
-    .slice(0, 7)
-    .map((historyItem) => {
-      return {
-        id: historyItem.audioId,
-        audioUrl: historyItem.audioUrl,
-      };
-    });
-
-  const currentAudioUrl = audioTTSHistoryItems.length > 0 ? audioTTSHistoryItems[0].audioUrl : '';
+  const lastAudioUrl =
+    Object.values(historyItems)
+      .flat()
+      .reverse()
+      .find((historyItem) => historyItem.audioUrl)?.audioUrl || '';
 
   const handleSave = useCallback(async () => {
     try {
       await uploadTTSProjectData(projectData, items, setProjectData);
+      showAlert('프로젝트 저장 완료', 'default');
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);
       showAlert('프로젝트 저장 중 오류가 발생했습니다.', 'destructive');
@@ -217,7 +231,7 @@ const TTSPage = () => {
       variant="project"
       header={<></>}
       sidebar={<TTSOptionsSidebar />}
-      footer={<AudioFooter audioUrl={currentAudioUrl} />}
+      footer={<AudioFooter audioUrl={lastAudioUrl} />}
       children={
         <>
           <Title

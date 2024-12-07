@@ -41,8 +41,6 @@ const TTSPage = () => {
     variant: 'default',
   });
 
-  console.log('alert visible', alert.visible);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
@@ -121,10 +119,10 @@ const TTSPage = () => {
 
   const checkIsValidToGenerate = useCallback(() => {
     const validations = [
-      { condition: !projectData.projectId, message: '프로젝트 ID가 없습니다.' },
+      { condition: !projectData.projectId, message: '프로젝트를 먼저 저장을 해주세요' },
       {
         condition: !projectData.projectName || !items.length,
-        message: '프로젝트 데이터가 유효하지 않습니다.',
+        message: '프로젝트 이름 또는 항목이 없습니다.',
       },
       { condition: !items.every((item) => item.text), message: '텍스트가 없는 항목이 있습니다.' },
       { condition: !items.every((item) => item.speed), message: '속도가 없는 항목이 있습니다.' },
@@ -178,12 +176,17 @@ const TTSPage = () => {
         isDeleted: false,
       })),
     };
-    // 유효성 검사
-    const response = await convertBatchTexts(request);
-    setIsGenerating(false);
 
-    setHistoryItems(response.data.ttsDetails);
-    showAlert('TTS 오디오 데이터 생성이 완료되었습니다.', 'default');
+    try {
+      const response = await convertBatchTexts(request);
+      setIsGenerating(false);
+      setHistoryItems(response.data.ttsDetails);
+      showAlert('TTS 오디오 데이터 생성이 완료되었습니다.', 'default');
+    } catch (error) {
+      console.error('TTS 오디오 데이터 생성 오류:', error);
+      setIsGenerating(false);
+      showAlert('입력하신 언어와 TTS옵션 언어와 일치하는지 확인해주세요', 'destructive');
+    }
   }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate, showAlert]);
 
   const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);

@@ -10,7 +10,7 @@ import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/layouts/PageLayout';
-import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
+import { initialProjectData, ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 
 const TTSPage = () => {
@@ -177,6 +177,10 @@ const TTSPage = () => {
     const request = {
       ...projectData,
       projectId: projectData.projectId,
+      projectName: projectData.projectName || initialProjectData.projectName,
+      fullScript: projectData.fullScript || initialProjectData.fullScript,
+      globalSpeed: projectData.globalSpeed || initialProjectData.globalSpeed,
+      globalVoiceStyleId: projectData.globalVoiceStyleId || initialProjectData.globalVoiceStyleId,
       ttsDetails: items.map((item, index) => ({
         id: item.enitityId,
         unitScript: item.text,

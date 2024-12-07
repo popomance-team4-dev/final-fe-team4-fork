@@ -75,7 +75,7 @@ interface TTSStore {
   handleReorder: (items: TableItem[]) => void;
 }
 
-const initialProjectData = {
+export const initialProjectData = {
   projectId: null,
   projectName: '새 프로젝트',
   globalVoiceStyleId: 9,

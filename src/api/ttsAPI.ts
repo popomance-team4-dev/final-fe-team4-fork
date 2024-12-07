@@ -124,7 +124,7 @@ export interface TTSConvertRequestDto {
   fullScript?: string;
   globalPitch?: number;
   globalSpeed?: number;
-  globalVoiceStyleId?: number;
+  globalVoiceStyleId: number;
   globalVolume?: number;
   memberId?: number;
   projectId: number;

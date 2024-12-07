@@ -49,6 +49,7 @@ const TTSPage = () => {
 
   // TTS 프로젝트 데이터 로드
   useEffect(() => {
+    console.log('test log', id);
     const loadTTSProject = async () => {
       if (!id) {
         console.warn('ID가 없습니다.');

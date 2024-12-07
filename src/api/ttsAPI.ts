@@ -121,11 +121,11 @@ export const loadVoiceLanguageOptions = async (): Promise<ResponseDto<Set<string
 };
 
 export interface TTSConvertRequestDto {
-  fullScript?: string;
-  globalPitch?: number;
-  globalSpeed?: number;
+  fullScript: string;
+  globalPitch: number;
+  globalSpeed: number;
   globalVoiceStyleId: number;
-  globalVolume?: number;
+  globalVolume: number;
   memberId?: number;
   projectId: number;
   projectName?: string;

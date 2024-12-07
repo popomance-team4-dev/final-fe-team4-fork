@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { convertBatchTexts, ttsLoad } from '@/api/ttsAPI';
+import { convertBatchTexts, TTSConvertRequestDto, ttsLoad } from '@/api/ttsAPI';
 import { uploadTTSProjectData } from '@/api/uploadTTSProjectData';
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import Title from '@/components/section/contents/Title';
@@ -180,7 +180,7 @@ const TTSPage = () => {
       projectName: projectData.projectName || initialProjectData.projectName,
       fullScript: projectData.fullScript || initialProjectData.fullScript,
       globalSpeed: projectData.globalSpeed || initialProjectData.globalSpeed,
-      globalVoiceStyleId: projectData.globalVoiceStyleId || initialProjectData.globalVoiceStyleId,
+      globalVoiceStyleId: 1,
       ttsDetails: items.map((item, index) => ({
         id: item.enitityId,
         unitScript: item.text,
@@ -191,7 +191,8 @@ const TTSPage = () => {
         unitVoiceStyleId: item.style ? Number(item.style) : null,
         isDeleted: false,
       })),
-    };
+    } as TTSConvertRequestDto;
+    console.log('convertBatchTexts reqest 보낸 데이터:', request);
 
     try {
       const response = await convertBatchTexts(request);

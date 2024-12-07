@@ -149,10 +149,6 @@ const TTSPage = () => {
     for (const { condition, message } of validations) {
       if (condition) {
         console.warn(message);
-        console.log(
-          '피치 확인',
-          items.map((item) => item.pitch)
-        );
         showAlert(message, 'destructive');
         return false;
       }

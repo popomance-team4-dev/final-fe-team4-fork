@@ -55,22 +55,6 @@ interface DeleteConcatRequest {
   audioIds?: number[];
 }
 
-// Concat 변환 요청 타입
-interface ConvertConcatRequest {
-  projectId: number;
-  projectName: string;
-  globalFrontSilenceLength: number;
-  globalTotalSilenceLength: number;
-  concatRequestDetails: Array<{
-    id: number | null;
-    localFileName: string | null;
-    audioSeq: number;
-    checked: boolean;
-    unitScript: string;
-    endSilence: number;
-  }>;
-}
-
 /**
  * Concat 프로젝트 상태를 가져옵니다.
  */
@@ -135,22 +119,149 @@ export const deleteSelectedConcatItems = async (data: DeleteConcatRequest) => {
   }
 };
 
-/**
- * 오디오 파일들을 병합합니다.
- */
-export const convertMultipleAudios = async (data: ConvertConcatRequest) => {
-  try {
-    const formData = new FormData();
-    formData.append('concatRequestDto', JSON.stringify(data));
+// Concat 변환 요청 타입
+interface ConvertConcatAddFileRequest {
+  projectId: number | null;
+  projectName: string;
+  globalFrontSilenceLength: number;
+  globalTotalSilenceLength: number;
+  concatRequestDetails: Array<{
+    id: number | null;
+    localFileName: string;
+    audioSeq: number;
+    checked: boolean;
+    unitScript: string;
+    endSilence: number;
+  }>;
+}
 
-    const response = await customInstance.post('/concat/convert/batch', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+// audio-buffer-to-wav 함수 (필수)
+function audioBufferToWav(audioBuffer: AudioBuffer): ArrayBuffer {
+  const numberOfChannels = audioBuffer.numberOfChannels;
+  const length = audioBuffer.length * numberOfChannels * 2;
+  const buffer = new ArrayBuffer(44 + length);
+  const view = new DataView(buffer);
+  const sampleRate = audioBuffer.sampleRate;
+  const channels = audioBuffer.numberOfChannels;
+
+  // WAV 헤더 작성
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, 36 + length, true);
+  writeString(view, 8, 'WAVE');
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, channels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * channels * 2, true);
+  view.setUint16(32, channels * 2, true);
+  view.setUint16(34, 16, true);
+  writeString(view, 36, 'data');
+  view.setUint32(40, length, true);
+
+  // 오디오 데이터 작성
+  const offset = 44;
+  const samples = audioBuffer.getChannelData(0);
+  for (let i = 0; i < samples.length; i++) {
+    const sample = samples[i] * 32768;
+    view.setInt16(
+      offset + i * 2,
+      sample < 0 ? Math.max(-32768, sample) : Math.min(32767, sample),
+      true
+    );
+  }
+
+  return buffer;
+}
+
+function writeString(view: DataView, offset: number, string: string) {
+  for (let i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+interface ConvertResult {
+  file: File;
+  url: string;
+}
+
+export const convertMultipleAudiosAddFile = async (
+  data: ConvertConcatAddFileRequest,
+  files: File[]
+): Promise<ConvertResult> => {
+  try {
+    // 무음 길이 배열 생성
+    const silenceDurations = data.concatRequestDetails.map((detail) => detail.endSilence);
+
+    // 오디오 컨텍스트 생성
+    const audioContext = new AudioContext();
+
+    // 파일들을 AudioBuffer로 변환
+    const audioBuffers = await Promise.all(
+      files.map(async (file) => {
+        const arrayBuffer = await file.arrayBuffer();
+        return audioContext.decodeAudioData(arrayBuffer);
+      })
+    );
+
+    // 전체 길이 계산 (원본 오디오 + 무음)
+    const totalLength = audioBuffers.reduce((acc, buffer, i) => {
+      return acc + buffer.length + (silenceDurations[i] || 0) * audioContext.sampleRate;
+    }, 0);
+
+    // 새 버퍼 생성
+    const outputBuffer = audioContext.createBuffer(
+      audioBuffers[0].numberOfChannels,
+      totalLength,
+      audioContext.sampleRate
+    );
+
+    // 오디오 데이터 복사 및 무음 추가
+    let offset = 0;
+    audioBuffers.forEach((buffer, i) => {
+      // 오디오 데이터 복사
+      for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        const outputData = outputBuffer.getChannelData(channel);
+        const inputData = buffer.getChannelData(channel);
+        outputData.set(inputData, offset);
+      }
+      offset += buffer.length;
+
+      // 무음 추가
+      if (silenceDurations[i] > 0) {
+        const silenceSamples = silenceDurations[i] * audioContext.sampleRate;
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+          const outputData = outputBuffer.getChannelData(channel);
+          for (let j = 0; j < silenceSamples; j++) {
+            outputData[offset + j] = 0;
+          }
+        }
+        offset += silenceSamples;
+      }
     });
 
-    console.log('병합 응답:', response.data);
-    return response.data;
+    // WAV로 변환
+    const wavBuffer = audioBufferToWav(outputBuffer);
+    const mergedBlob = new Blob([wavBuffer], { type: 'audio/wav' });
+    const mergedFile = new File([mergedBlob], 'merged.wav', { type: 'audio/wav' });
+
+    // 오디오 컨텍스트 정리
+    await audioContext.close();
+
+    // 파일 자동 다운로드
+    const url = URL.createObjectURL(mergedFile);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = mergedFile.name;
+    a.click();
+    // URL.revokeObjectURL(url);
+    // console.log('병합 파일:', mergedFile);
+    // console.log('병합 파일 URL:', url);
+
+    return {
+      file: mergedFile,
+      url: url,
+    };
   } catch (error) {
     console.error('Concat 변환 실패:', error);
     throw error;

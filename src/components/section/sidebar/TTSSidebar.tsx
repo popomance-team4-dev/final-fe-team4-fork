@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TbWorld } from 'react-icons/tb';
 
 import { loadVoiceLanguageOptions, loadVoiceStyleOptions, voiceStyleData } from '@/api/ttsAPI';
 import { ApplyButton, ResetChangesButton } from '@/components/custom/buttons/IconButton';
 import { StateController } from '@/components/custom/features/common/StateController';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Select } from '@/components/ui/select';
 import { GOOGLE_TTS_CONFIG } from '@/constants/googleTTSConfig';
 import { useTTSStore } from '@/stores/tts.store';
@@ -24,6 +25,20 @@ const TTSSidebar: React.FC = () => {
 
   const [voiceStyleList, setVoiceStyleList] = useState<voiceStyleData[]>([]);
   const [voiceLanguageList, setVoiceLanguageLists] = useState<string[]>([]);
+
+  const [alert, setAlert] = useState<{
+    visible: boolean;
+    message: string;
+    variant: 'default' | 'destructive';
+  }>({
+    visible: false,
+    message: '',
+    variant: 'default',
+  });
+  const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
+    setAlert({ visible: true, message, variant });
+    setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+  }, []);
 
   useEffect(() => {
     // 목소리 언어 옵션 로드
@@ -48,6 +63,13 @@ const TTSSidebar: React.FC = () => {
 
   return (
     <aside className="w-[276px] min-h-full border-l p-6">
+      {alert.visible && (
+        <div className="fixed top-14 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert variant={alert.variant}>
+            <AlertDescription>{alert.message}</AlertDescription>
+          </Alert>
+        </div>
+      )}
       <h2 className="text-lg font-semibold mb-8">TTS 옵션 설정</h2>
 
       {/* 언어 선택 */}
@@ -132,7 +154,7 @@ const TTSSidebar: React.FC = () => {
       {/* 적용 버튼들 */}
       <div className="flex flex-col gap-4">
         <ApplyButton
-          onClick={applyToSelected}
+          onClick={() => applyToSelected(showAlert)}
           className={isAllConfigured ? '' : `pointer-events-none opacity-50 cursor-not-allowed`}
         />
 

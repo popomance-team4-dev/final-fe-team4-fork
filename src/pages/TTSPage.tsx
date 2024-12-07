@@ -183,6 +183,7 @@ const TTSPage = () => {
     setIsGenerating(false);
 
     setHistoryItems(response.data.ttsDetails);
+    showAlert('TTS 오디오 데이터 생성이 완료되었습니다.', 'default');
   }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate, showAlert]);
 
   const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);

@@ -9,7 +9,7 @@ export interface ConcatSaveDto {
     id: number | null;
     localFileName: string;
     audioSeq: number;
-    isChecked: boolean;
+    checked: boolean;
     unitScript: string;
     endSilence: number;
   }[];
@@ -123,7 +123,7 @@ interface ConcatRequestDetail {
   id: number | null;
   localFileName: string | null;
   audioSeq: number;
-  isChecked: boolean;
+  checked: boolean;
   unitScript: string;
   endSilence: number;
 }
@@ -152,6 +152,9 @@ export const convertMultipleAudios = async (data: ConvertConcatRequest) => {
     data.files.forEach((file, _index) => {
       formData.append('files', file);
     });
+
+    //FormData 로깅
+    console.log('병합 요청 데이터:', formData);
 
     const response = await customInstance.post('/concat/convert/batch', formData, {
       headers: {

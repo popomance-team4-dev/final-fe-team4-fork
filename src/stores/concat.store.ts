@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 
+// 엔티티 아이디 추가
 export interface ConcatItem {
   id: string;
+  entitId: number | null;
   text: string;
   isSelected: boolean;
   fileName: string;
@@ -101,8 +103,9 @@ export const useConcatStore = create<ConcatStore>((set, get) => ({
       if (!files) return;
 
       const audioFiles = Array.from(files).filter((file) => file.type.startsWith('audio/'));
-      const newItems = audioFiles.map((file) => ({
+      const newItems: ConcatItem[] = audioFiles.map((file) => ({
         id: crypto.randomUUID(),
+        entitId: null,
         text: '',
         isSelected: false,
         fileName: file.name,

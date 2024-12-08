@@ -61,6 +61,7 @@ const ConcatPage = () => {
           // 상세 항목 설정
           const newItems: ConcatItem[] = response.data.cnctDetailDtos.map((detail) => ({
             id: detail.id.toString(),
+            entitId: detail.id,
             text: detail.unitScript,
             isSelected: detail.checked,
             fileName: detail.srcUrl.split('/').pop() || '',
@@ -98,10 +99,10 @@ const ConcatPage = () => {
         globalFrontSilenceLength: Number(globalFrontSilenceLength) || 0,
         globalTotalSilenceLength: Number(globalTotalSilenceLength) || 0,
         concatDetails: items.map((item, index) => ({
-          id: id && item.id ? parseInt(item.id) : null,
+          id: null,
           localFileName: item.fileName || '',
           audioSeq: index + 1,
-          isChecked: item.isSelected,
+          checked: item.isSelected,
           unitScript: item.text || '',
           endSilence: item.endSilence || 0,
         })),
@@ -189,10 +190,10 @@ const ConcatPage = () => {
           globalFrontSilenceLength,
           globalTotalSilenceLength,
           concatRequestDetails: selectedItems.map((item, index) => ({
-            id: id && item.id ? parseInt(item.id) : null,
+            id: null,
             localFileName: item.fileName || null,
             audioSeq: index + 1,
-            isChecked: item.isSelected,
+            checked: item.isSelected,
             unitScript: item.text || '',
             endSilence: item.endSilence || 0,
           })),

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import {
   concatLoad,
   concatSave,
-  convertMultipleAudios,
+  convertMultipleAudiosAddFile,
   deleteSelectedConcatItems,
 } from '@/api/concatAPI';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
@@ -34,6 +34,7 @@ const ConcatPage = () => {
   const [globalTotalSilenceLength, setGlobalTotalSilenceLength] = useState(0);
   const hasAudioFile = items.length > 0;
   const [concatAudioUrl, setConcatAudioUrl] = useState<string>('');
+
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;
@@ -125,28 +126,6 @@ const ConcatPage = () => {
     }
   }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items]);
 
-  // 파일 업로드
-  const handleFileUpload = useCallback(
-    (files: FileList | null) => {
-      if (!files) return;
-
-      const updateItems = (prevItems: ConcatItem[]): ConcatItem[] =>
-        prevItems.map((item, index) => {
-          if (item.isSelected && files[index]) {
-            return {
-              ...item,
-              file: files[index],
-              fileName: files[index].name,
-              audioUrl: URL.createObjectURL(files[index]),
-            };
-          }
-          return item;
-        });
-
-      setItems(updateItems);
-    },
-    [setItems]
-  );
   // 선택된 항목 삭제
   const handleDeleteSelectedItems = useCallback(async () => {
     try {
@@ -179,7 +158,7 @@ const ConcatPage = () => {
     }
   }, [id, items, setItems, deleteSelectedItems]);
 
-  //콘캣 새성
+  //con cat 오디오 생성
   const handleConcatGenerate = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -190,27 +169,31 @@ const ConcatPage = () => {
         return;
       }
 
-      const response = await convertMultipleAudios({
-        projectId: id ? parseInt(id) : 0,
-        projectName,
-        globalFrontSilenceLength,
-        globalTotalSilenceLength,
-        concatRequestDetails: selectedItems.map((item, index) => ({
-          id: id && item.id ? parseInt(item.id) : null,
-          localFileName: item.fileName || null,
-          audioSeq: index + 1,
-          checked: item.isSelected,
-          unitScript: item.text || '',
-          endSilence: item.endSilence || 0,
-        })),
-      });
+      console.log('선택된 항목:', selectedItems);
 
-      if (response.outputConcatAudios?.length > 0) {
-        const outputUrl = response.outputConcatAudios[0];
-        console.log('생성된 오디오 URL:', outputUrl);
-        setConcatAudioUrl(outputUrl);
+      const response = await convertMultipleAudiosAddFile(
+        {
+          projectId: id ? parseInt(id) : 0,
+          projectName,
+          globalFrontSilenceLength,
+          globalTotalSilenceLength,
+          concatRequestDetails: selectedItems.map((item, index) => ({
+            id: id && item.id ? parseInt(item.id) : null,
+            localFileName: item.fileName,
+            audioSeq: index + 1,
+            checked: item.isSelected,
+            unitScript: item.text || '',
+            endSilence: item.endSilence || 0,
+          })),
+        },
+        selectedItems.map((item) => item.file as File)
+      );
+
+      if (response) {
+        console.log('Concat 생성 성공:', response);
+        setConcatAudioUrl(response.url);
       } else {
-        console.warn('생성된 오디오 URL이 없습니다.');
+        console.error('Concat 생성 실패:', response);
         setConcatAudioUrl('');
       }
     } catch (error) {
@@ -266,7 +249,6 @@ const ConcatPage = () => {
           onSelectAll={toggleSelectAll}
           isAllSelected={items.every((item) => item.isSelected)}
           hasAudioFile={hasAudioFile}
-          onFileUpload={handleFileUpload}
           onReorder={handleReorder}
           onGenerate={handleConcatGenerate}
           isGenerating={isLoading}

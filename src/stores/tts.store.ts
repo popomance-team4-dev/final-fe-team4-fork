@@ -18,6 +18,7 @@ export interface TTSItem {
   fileName?: string;
 }
 
+type showAlert = (message: string, variant: 'default' | 'destructive') => void;
 interface TTSConfig {
   speed: number;
   volume: number;
@@ -69,12 +70,12 @@ interface TTSStore {
   updateProjectName: (name: string) => void;
 
   // TTS 설정 적용 액션
-  applyToSelected: () => void;
+  applyToSelected: (showAlert?: showAlert) => void;
 
   handleReorder: (items: TableItem[]) => void;
 }
 
-const initialProjectData = {
+export const initialProjectData = {
   projectId: null,
   projectName: '새 프로젝트',
   globalVoiceStyleId: 9,
@@ -138,7 +139,6 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
 
   setItems: (items) =>
     set((state) => {
-      console.log('[zustand] setItems 호출됨:', items);
       return { ...state, items };
     }),
 
@@ -202,7 +202,6 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
 
   setProjectData: (data) =>
     set((state) => {
-      console.log('[zustand] setProjectData 호출됨:', data);
       return { ...state, projectData: { ...state.projectData, ...data } };
     }),
 
@@ -214,8 +213,14 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
       },
     })),
 
-  applyToSelected: () => {
+  applyToSelected: (showAlert) => {
     const { items, speed, volume, pitch, language, style } = get();
+    if (!items.some((item) => item.isSelected)) {
+      if (showAlert) {
+        showAlert('선택된 아이템이 없습니다.', 'destructive');
+      }
+      return;
+    }
     set({
       items: items.map((item) =>
         item.isSelected
@@ -230,6 +235,10 @@ export const useTTSStore = create<TTSStore>((set, get) => ({
           : item
       ),
     });
+    if (showAlert) {
+      //!TODO: 더나은 alert message를 만들어야 함
+      showAlert('TTS 옵션 설정 적용됨 ', 'default');
+    }
   },
 
   handleReorder: (newItems: TableItem[]) => {

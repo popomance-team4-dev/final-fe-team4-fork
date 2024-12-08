@@ -123,7 +123,7 @@ interface ConcatRequestDetail {
   id: number | null;
   localFileName: string | null;
   audioSeq: number;
-  checked: boolean;
+  isChecked: boolean;
   unitScript: string;
   endSilence: number;
 }

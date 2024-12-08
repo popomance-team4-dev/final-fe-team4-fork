@@ -183,7 +183,7 @@ const ConcatPage = () => {
             id: id && item.id ? parseInt(item.id) : null,
             localFileName: item.fileName || null,
             audioSeq: index + 1,
-            checked: item.isSelected,
+            isChecked: item.isSelected,
             unitScript: item.text || '',
             endSilence: item.endSilence || 0,
           })),

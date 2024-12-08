@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import {
   concatLoad,
   concatSave,
-  convertMultipleAudiosAddFile,
+  convertMultipleAudios,
   deleteSelectedConcatItems,
 } from '@/api/concatAPI';
 import { AudioPlayer } from '@/components/custom/features/common/AudioPlayer';
@@ -168,30 +168,34 @@ const ConcatPage = () => {
         console.log('선택된 항목이 없습니다.');
         return;
       }
+      console.log(
+        'files',
+        selectedItems.map((item) => item.file).filter((file) => file !== undefined)
+      );
 
-      console.log('선택된 항목:', selectedItems);
-
-      const response = await convertMultipleAudiosAddFile(
-        {
-          projectId: id ? parseInt(id) : 0,
+      const response = await convertMultipleAudios({
+        concatRequestDto: {
+          projectId: id ? parseInt(id) : null,
           projectName,
           globalFrontSilenceLength,
           globalTotalSilenceLength,
           concatRequestDetails: selectedItems.map((item, index) => ({
             id: id && item.id ? parseInt(item.id) : null,
-            localFileName: item.fileName,
+            localFileName: item.fileName || null,
             audioSeq: index + 1,
             checked: item.isSelected,
             unitScript: item.text || '',
             endSilence: item.endSilence || 0,
           })),
         },
-        selectedItems.map((item) => item.file as File)
-      );
+        files: selectedItems
+          .map((item) => item.file)
+          .filter((file) => file !== undefined) as File[],
+      });
 
       if (response) {
         console.log('Concat 생성 성공:', response);
-        setConcatAudioUrl(response.url);
+        setConcatAudioUrl(response.outputConcatAudios.at(-1));
       } else {
         console.error('Concat 생성 실패:', response);
         setConcatAudioUrl('');

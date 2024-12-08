@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { convertBatchTexts, saveTTSProject, ttsLoad } from '@/api/ttsAPI';
-// import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
-// import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
-// import { fileProgressDummy } from '@/constants/dummy';
+import { convertBatchTexts, TTSConvertRequestDto, ttsLoad } from '@/api/ttsAPI';
+import { uploadTTSProjectData } from '@/api/uploadTTSProjectData';
 import { TableContents } from '@/components/custom/tables/project/common/TableContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
 import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/layouts/PageLayout';
-import { ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
-import { useTTSAudioHistoryStore as useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
+import { initialProjectData, ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
+import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
+
 const TTSPage = () => {
   const { id } = useParams<{ id: string }>();
   const {
@@ -31,25 +31,35 @@ const TTSPage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const setHistoryItems = useTTSAudioHistoryStore((state) => state.setHistoryItems);
 
-  console.log('useTTSStore 상태:', { items, projectData });
+  const [alert, setAlert] = useState<{
+    visible: boolean;
+    message: string;
+    variant: 'default' | 'destructive';
+  }>({
+    visible: false,
+    message: '',
+    variant: 'default',
+  });
+  const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
+    setAlert({ visible: true, message, variant });
+    setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+  }, []);
 
-  // const [progressFiles, setProgressFiles] = useState<FileProgressItem[]>(fileProgressDummy);
   const [isLoading, setIsLoading] = useState(false);
 
   // TTS 프로젝트 데이터 로드
   useEffect(() => {
+    console.log('test log', id);
     const loadTTSProject = async () => {
-      console.log('loadTTSProject 실행'); // 함수 호출 확인
-
       if (!id) {
         console.warn('ID가 없습니다.');
+        showAlert('프로젝트 데이터가 없음. 저장을 누르면 새 프로젝트가 저장됩니다.', 'destructive');
         return;
       }
 
       setIsLoading(true); // 로딩 상태 업데이트
       try {
         const response = await ttsLoad(Number(id));
-        console.log('API 응답:', response.data);
         const { ttsProject, ttsDetails } = response.data;
 
         // 상태 업데이트
@@ -77,69 +87,21 @@ const TTSPage = () => {
 
           setItems(loadedItems);
           setHistoryItems(ttsDetails);
-          console.log('setItems 호출 완료:', loadedItems);
+
+          showAlert('프로젝트를 성공적으로 로드했습니다.', 'default');
         } else {
           console.warn('ttsDetails 데이터가 유효하지 않습니다.');
         }
       } catch (error) {
-        console.error('TTS 프로젝트 로드 실패:', error);
+        console.error('TTS 프로젝트 로드 오류:', error);
+        showAlert('프로젝트 로드 중 오류가 발생했습니다.', 'destructive');
       } finally {
-        setIsLoading(false); // 로딩 상태 해제
+        setIsLoading(false);
       }
     };
 
     loadTTSProject();
-  }, [id, setProjectData, setItems, setHistoryItems]);
-
-  useEffect(() => {
-    const unsubscribe = useTTSStore.subscribe((state) => {
-      console.log('zustand 상태 변경 감지:', state);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    console.log('items 상태 변경:', items);
-  }, [items]);
-
-  useEffect(() => {
-    console.log('projectData 상태 변경:', projectData);
-  }, [projectData]);
-
-  // 프로젝트 저장
-  const handleSaveProject = useCallback(async () => {
-    try {
-      const response = await saveTTSProject({
-        ...projectData,
-        ttsDetails: items.map((item, index) => ({
-          id: item.enitityId,
-          unitScript: item.text,
-          unitSpeed: item.speed,
-          unitVolume: item.volume,
-          unitPitch: item.pitch,
-          unitSequence: index + 1,
-          unitVoiceStyleId: item.style ? Number(item.style) : null,
-          isDeleted: false,
-        })),
-      });
-
-      if (response) {
-        setProjectData({
-          projectId: response.ttsProject.id,
-          projectName: response.ttsProject.projectName,
-          fullScript: response.ttsProject.fullScript,
-          globalSpeed: response.ttsProject.globalSpeed,
-          globalPitch: response.ttsProject.globalPitch,
-          globalVolume: response.ttsProject.globalVolume,
-          globalVoiceStyleId: response.ttsProject.globalVoiceStyleId,
-          ttsDetails: response.ttsDetails,
-        });
-      }
-    } catch (error) {
-      console.error('프로젝트 저장 오류:', error);
-    }
-  }, [projectData, items, setProjectData]);
+  }, [id, setProjectData, setItems, setHistoryItems, showAlert]);
 
   const isAllSelected = useMemo(() => items.every((item) => item.isSelected), [items]);
 
@@ -153,12 +115,73 @@ const TTSPage = () => {
     [items, setItems]
   );
 
+  const checkIsValidToGenerate = useCallback(() => {
+    const isNotNullOrUndefined = (value: string | number | undefined) =>
+      value !== null && value !== undefined;
+
+    const validations = [
+      { condition: !projectData.projectId, message: '프로젝트를 먼저 저장을 해주세요' },
+      {
+        condition: !projectData.projectName || !items.length,
+        message: '프로젝트 이름 또는 항목이 없습니다.',
+      },
+      {
+        condition: !items.every((item) => item.text),
+        message: '텍스트가 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.speed)),
+        message: '속도가 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.volume)),
+        message: '볼륨이 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.pitch)),
+        message: '피치가 없는 항목이 있습니다.',
+      },
+      {
+        condition: !items.every((item) => isNotNullOrUndefined(item.style)),
+        message: '음성 스타일이 없는 항목이 있습니다.',
+      },
+    ];
+
+    for (const { condition, message } of validations) {
+      if (condition) {
+        console.warn(message);
+        showAlert(message, 'destructive');
+        return false;
+      }
+    }
+    return true;
+  }, [projectData, items, showAlert]);
+
   // TTS 오디오 데이터 생성
   const generateTTSAudioData = useCallback(async () => {
     setIsGenerating(true);
+    if (!checkIsValidToGenerate()) {
+      setIsGenerating(false);
+      return;
+    }
+    if (!projectData.projectId) {
+      setIsGenerating(false);
+      return;
+    }
 
-    const response = await convertBatchTexts({
+    try {
+      await uploadTTSProjectData(projectData, items, setProjectData);
+    } catch (error) {
+      console.error('프로젝트 저장 오류:', error);
+      showAlert('프로젝트 저장 중 오류가 발생했습니다.', 'destructive');
+    }
+    const request = {
       ...projectData,
+      projectId: projectData.projectId,
+      projectName: projectData.projectName || initialProjectData.projectName,
+      fullScript: projectData.fullScript || initialProjectData.fullScript,
+      globalSpeed: projectData.globalSpeed || initialProjectData.globalSpeed,
+      globalVoiceStyleId: 1,
       ttsDetails: items.map((item, index) => ({
         id: item.enitityId,
         unitScript: item.text,
@@ -169,38 +192,55 @@ const TTSPage = () => {
         unitVoiceStyleId: item.style ? Number(item.style) : null,
         isDeleted: false,
       })),
-    });
-    setIsGenerating(false);
-    console.log('TTS 변환 API 응답:', response.data);
+    } as TTSConvertRequestDto;
+    console.log('convertBatchTexts reqest 보낸 데이터:', request);
 
-    setHistoryItems(response.data.ttsDetails);
-  }, [projectData, items, setHistoryItems]);
+    try {
+      const response = await convertBatchTexts(request);
+      if (response.data?.ttsProject?.apiStatus !== 'SUCCESS' || !response.data?.ttsDetails.length) {
+        console.error('TTS 오디오 데이터 생성 오류:', response.data);
+        throw new Error('TTS 오디오 데이터 생성 오류');
+      }
+      setHistoryItems(response.data.ttsDetails);
+      showAlert('TTS 오디오 데이터 생성이 완료되었습니다.', 'default');
+    } catch (error) {
+      console.error('TTS 오디오 데이터 생성 오류:', error);
+      showAlert('각 항목에 언어를 다시 적용해주세요.', 'destructive');
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [projectData, items, setHistoryItems, setProjectData, checkIsValidToGenerate, showAlert]);
 
-  // const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
-  // const audioTTSHisoryItems = Object.values(historyItems)
-  //   .flat()
-  //   .reverse()
-  //   .slice(0, 7)
-  //   .map((historyItem) => {
-  //     return {
-  //       id: historyItem.audioId,
-  //       audioUrl: historyItem.audioUrl,
-  //     };
-  //   });
+  const historyItems = useTTSAudioHistoryStore((state) => state.historyItems);
+  const lastAudioUrl =
+    Object.values(historyItems)
+      .flat()
+      .reverse()
+      .find((historyItem) => historyItem.audioUrl)?.audioUrl || '';
+
+  const handleSave = useCallback(async () => {
+    try {
+      await uploadTTSProjectData(projectData, items, setProjectData);
+      showAlert('프로젝트 저장 완료', 'default');
+    } catch (error) {
+      console.error('프로젝트 저장 오류:', error);
+      showAlert('프로젝트 저장 중 오류가 발생했습니다.', 'destructive');
+    }
+  }, [projectData, items, setProjectData, showAlert]);
 
   return (
     <PageLayout
       variant="project"
       header={<></>}
       sidebar={<TTSOptionsSidebar />}
-      footer={<AudioFooter audioUrl="" />}
+      footer={<AudioFooter audioUrl={lastAudioUrl} />}
       children={
         <>
           <Title
             type="TTS"
             projectTitle={projectData.projectName ?? '새 프로젝트'}
             onProjectNameChange={updateProjectName} // 이름 변경 핸들러 추가
-            onSave={handleSaveProject}
+            onSave={handleSave} // 저장 핸들러 추가
           />
           {isLoading ? (
             <div className="flex items-center justify-center h-[calc(100vh-200px)]">
@@ -208,6 +248,13 @@ const TTSPage = () => {
             </div>
           ) : (
             <>
+              {alert.visible && (
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+                  <Alert variant={alert.variant}>
+                    <AlertDescription>{alert.message}</AlertDescription>
+                  </Alert>
+                </div>
+              )}
               <div className={`h-[580px] mt-6 overflow-hidden`}>
                 <TableContents
                   items={items}

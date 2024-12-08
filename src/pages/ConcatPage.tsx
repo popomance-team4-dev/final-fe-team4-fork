@@ -179,19 +179,12 @@ const ConcatPage = () => {
         projectName,
         globalFrontSilenceLength,
         globalTotalSilenceLength,
-        selectedItems.map((item, index) => ({
-          projectId: id && id.trim() ? parseInt(id) : null,
-          localFileName: item.fileName || null,
-          audioSeq: index + 1,
-          isChecked: item.isSelected,
-          unitScript: item.text || '',
-          endSilence: item.endSilence || 0,
-        }))
+        selectedItems
       );
 
       const response = await convertMultipleAudios({
         concatRequestDto: {
-          projectId: id && id.trim() ? parseInt(id) : null,
+          projectId: id && id?.trim() ? parseInt(id) : null,
           projectName,
           globalFrontSilenceLength,
           globalTotalSilenceLength,

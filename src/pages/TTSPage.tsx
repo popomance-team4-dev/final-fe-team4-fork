@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { convertBatchTexts, TTSConvertRequestDto, ttsLoad } from '@/api/ttsAPI';
 import { uploadTTSProjectData } from '@/api/uploadTTSProjectData';
@@ -15,6 +15,10 @@ import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 
 const TTSPage = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const tabId = searchParams.get('tabId');
+
+  console.log('tabId', tabId);
   const {
     items,
     projectData,
@@ -40,6 +44,7 @@ const TTSPage = () => {
     message: '',
     variant: 'default',
   });
+
   const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
     setAlert({ visible: true, message, variant });
     setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
@@ -49,7 +54,6 @@ const TTSPage = () => {
 
   // TTS 프로젝트 데이터 로드
   useEffect(() => {
-    console.log('test log', id);
     const loadTTSProject = async () => {
       if (!id) {
         console.warn('ID가 없습니다.');

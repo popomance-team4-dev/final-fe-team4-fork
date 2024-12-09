@@ -17,7 +17,7 @@ const features = [
     ),
     icon: TbFileTypography,
     bgColor: 'bg-green-50',
-    route: '/tts', // TTS 경로 추가
+    route: '/tts?tabId=', // TTS 경로 추가
   },
   {
     title: 'Voice Conversion',
@@ -30,7 +30,7 @@ const features = [
     ),
     icon: TbFileMusic,
     bgColor: 'bg-pink-50',
-    route: '/vc',
+    route: '/vc?tabId=', // VC 경로 추가
   },
   {
     title: 'Concat',
@@ -43,7 +43,7 @@ const features = [
     ),
     icon: TbFileDatabase,
     bgColor: 'bg-yellow-50',
-    route: '/concat',
+    route: '/concat?tabId=', // Concat 경로 추가
   },
 ];
 
@@ -54,13 +54,13 @@ const CreateProjectDialogContent = () => {
 
   // 프로젝트 생성 핸들러
   const handleNewProject = (type: 'TTS' | 'VC' | 'Concat', route: string) => {
-    addProject({
+    const { id } = addProject({
       name: projectName,
       type: type,
     });
 
     // 선택한 경로로 이동
-    navigate(route);
+    navigate(`${route}${id}`);
   };
 
   return (

@@ -10,7 +10,7 @@ interface Project {
 
 interface ProjectState {
   projects: Project[];
-  addProject: (project: Omit<Project, 'id' | 'createdAt'>) => void;
+  addProject: (project: Omit<Project, 'id' | 'createdAt'>) => Project;
   removeProject: (id: string) => void;
 }
 
@@ -18,17 +18,17 @@ export const useProjectStore = create<ProjectState>()(
   persist(
     (set) => ({
       projects: [],
-      addProject: (project) =>
+      addProject: (project) => {
+        const newProject = {
+          ...project,
+          id: crypto.randomUUID(),
+          createdAt: new Date(),
+        };
         set((state) => ({
-          projects: [
-            ...state.projects,
-            {
-              ...project,
-              id: crypto.randomUUID(),
-              createdAt: new Date(),
-            },
-          ],
-        })),
+          projects: [...state.projects, newProject],
+        }));
+        return newProject;
+      },
       removeProject: (id) =>
         set((state) => ({
           projects: state.projects.filter((project) => project.id !== id),

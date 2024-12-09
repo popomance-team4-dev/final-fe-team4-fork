@@ -149,7 +149,7 @@ export function NavSidebar() {
               key={project.id}
               icon={getProjectIcon(project.type)}
               label={isExpanded ? `${project.type} ${project.name}` : project.type}
-              onClick={() => navigate(`/${project.type.toLowerCase()}`)}
+              onClick={() => navigate(`/${project.type.toLowerCase()}?tabId=${project.id}`)}
             />
           ))}
         </div>

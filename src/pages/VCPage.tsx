@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { vcLoad } from '@/api/vcAPI';
+import { FileProgressItem } from '@/components/custom/dropdowns/FileProgressDropdown';
 import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import AudioFooter from '@/components/section/footer/AudioFooter';
+import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import VCSidebar, { TargetVoice } from '@/components/section/sidebar/VCSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAudioDownload } from '@/hooks/useAudioDownload';
@@ -13,6 +15,52 @@ import PageLayout from '@/layouts/PageLayout';
 import { useVCStore } from '@/stores/vc.store';
 
 const VCPage = () => {
+  const [progressFiles] = useState<FileProgressItem[]>([
+    {
+      id: 1,
+      name: 'text_001.txt',
+      status: '진행',
+      progress: 75,
+      createdAt: new Date().toISOString(), // 오늘
+    },
+    {
+      id: 2,
+      name: 'text_002.txt',
+      status: '진행',
+      progress: 82,
+      createdAt: new Date().toISOString(), // 오늘
+    },
+    {
+      id: 3,
+      name: 'text_003.txt',
+      status: '대기',
+      createdAt: new Date(Date.now() - 86400000).toISOString(), // 어제
+    },
+    {
+      id: 4,
+      name: 'text_004.txt',
+      status: '대기',
+      createdAt: new Date(Date.now() - 86400000).toISOString(), // 어제
+    },
+    {
+      id: 5,
+      name: 'text_005.txt',
+      status: '실패',
+      createdAt: new Date(Date.now() - 86400000 * 2).toISOString(), // 그저께
+    },
+    {
+      id: 6,
+      name: 'text_006.txt',
+      status: '완료',
+      createdAt: new Date(Date.now() - 86400000 * 7).toISOString(), // 일주일 전
+    },
+    {
+      id: 7,
+      name: 'text_007.txt',
+      status: '완료',
+      createdAt: new Date(Date.now() - 86400000 * 31).toISOString(), // 한달 전
+    },
+  ]);
   const { id } = useParams<{ id: string }>();
   const {
     items,
@@ -162,7 +210,7 @@ const VCPage = () => {
   return (
     <PageLayout
       variant="project"
-      header={<></>}
+      header={<FileProgressHeader files={progressFiles} />}
       sidebar={
         <VCSidebar
           selectedVoice={selectedVoice}

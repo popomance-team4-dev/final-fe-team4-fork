@@ -16,7 +16,11 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import logofull from '@/images/logo-full.png';
 import logomini from '@/images/logo-mini.png';
-import { useProjectStore } from '@/stores/project.store';
+import {
+  useConcatProjectStore,
+  useTTSProjectStore,
+  useVCProjectStore,
+} from '@/stores/project.store';
 
 interface NavSidebarButtonProps {
   icon: React.ElementType;
@@ -51,7 +55,17 @@ const SidebarButton: FC<NavSidebarButtonProps> = ({ icon: Icon, label, onClick }
 export function NavSidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();
-  const projects = useProjectStore((state) => state.projects);
+
+  const ttsProjects = useTTSProjectStore((state) => state.projects);
+  const vcProjects = useVCProjectStore((state) => state.projects);
+  const concatProjects = useConcatProjectStore((state) => state.projects);
+
+  console.log('ttsProjects', ttsProjects);
+  console.log('vcProjects', vcProjects);
+  console.log('concatProjects', concatProjects);
+
+  const projects = [...ttsProjects, ...vcProjects, ...concatProjects];
+  console.log(projects);
 
   const getProjectIcon = (type: string) => {
     switch (type) {

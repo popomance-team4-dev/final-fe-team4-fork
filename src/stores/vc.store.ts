@@ -3,20 +3,19 @@ import { create } from 'zustand';
 import { saveVCProject } from '@/api/vcAPI';
 import { VCItem } from '@/types/table';
 
-interface Alert {
+export interface Alert {
   show: boolean;
   message: string;
   variant: 'default' | 'destructive';
 }
 
-interface AudioPlayer {
+export interface AudioPlayer {
   audioElement: HTMLAudioElement | null;
   currentPlayingId: string | null;
 }
 
-interface VCStore {
-  // 상태
-  saving: boolean;
+export interface VCProjectConfig {
+  saving: boolean; // 상태
   items: VCItem[];
   selectedVoice: string;
   projectData: {
@@ -26,7 +25,9 @@ interface VCStore {
   alert: Alert;
   audioPlayer: AudioPlayer;
   memberId: number;
+}
 
+interface VCStore extends VCProjectConfig {
   // 기본 액션
   setItems: (items: VCItem[] | ((prev: VCItem[]) => VCItem[])) => void;
   addItems: (newItems: VCItem[]) => void;

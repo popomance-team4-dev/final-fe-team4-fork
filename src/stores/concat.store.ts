@@ -13,7 +13,7 @@ export interface ConcatItem {
   endSilence?: number;
 }
 
-interface ConcatStore {
+export interface ConcatProjectConfig {
   // 상태
   items: ConcatItem[];
   audioPlayer: {
@@ -26,7 +26,9 @@ interface ConcatStore {
     backSilence: number; // 맨 뒤 무음
   };
   isModified: boolean;
+}
 
+interface ConcatStore extends ConcatProjectConfig {
   // 액션
   setItems: (items: ConcatItem[] | ((prev: ConcatItem[]) => ConcatItem[])) => void;
   toggleSelection: (id: string) => void;

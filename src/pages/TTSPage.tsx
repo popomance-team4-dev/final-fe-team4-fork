@@ -10,6 +10,7 @@ import TTSOptionsSidebar from '@/components/section/sidebar/TTSSidebar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/layouts/PageLayout';
+import { useTTSProjectStore } from '@/stores/project.store';
 import { initialProjectData, ttsInitialSettings, TTSItem, useTTSStore } from '@/stores/tts.store';
 import { useTTSAudioHistoryStore } from '@/stores/TTSAudioHistory.store.ts';
 
@@ -18,7 +19,13 @@ const TTSPage = () => {
   const [searchParams] = useSearchParams();
   const tabId = searchParams.get('tabId');
 
-  console.log('tabId', tabId);
+  // 프로젝트 데이터를 가져옴 tabId로
+
+  const localProjectData = useTTSProjectStore((state) =>
+    state.projects.find((project) => project.id === tabId)
+  );
+  console.log('localProjectData:', localProjectData);
+
   const {
     items,
     projectData,

@@ -27,7 +27,7 @@ interface TTSConfig {
   style: string;
 }
 
-interface TTSStore {
+export interface TTSProjectConfig {
   // 사이드바 설정
   speed: number;
   volume: number;
@@ -40,6 +40,11 @@ interface TTSStore {
   // 테이블 아이템 관련
   items: TTSItem[];
 
+  // 프로젝트 데이터
+  projectData: TTSSaveDto;
+}
+
+interface TTSStore extends TTSProjectConfig {
   // 사이드바 액션
   setField: (field: keyof TTSConfig, value: string | number) => void;
   cleanUpAllItems: () => void;
@@ -52,9 +57,6 @@ interface TTSStore {
   toggleSelection: (id: string) => void;
   toggleSelectAll: () => void;
   reorderItems: (newItems: TTSItem[]) => void;
-
-  // 프로젝트 데이터
-  projectData: TTSSaveDto;
 
   // 프로젝트 관련 액션
   setProjectData: (data: {
@@ -71,7 +73,6 @@ interface TTSStore {
 
   // TTS 설정 적용 액션
   applyToSelected: (showAlert?: showAlert) => void;
-
   handleReorder: (items: TableItem[]) => void;
 }
 

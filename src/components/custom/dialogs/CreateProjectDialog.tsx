@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { TbFileDatabase, TbFileMusic, TbFileTypography } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
 import { DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { useProjectStore } from '@/stores/project.store';
+import {
+  Project,
+  useConcatProjectStore,
+  useTTSProjectStore,
+  useVCProjectStore,
+} from '@/stores/project.store';
 
 const features = [
   {
@@ -49,7 +54,26 @@ const features = [
 
 const CreateProjectDialogContent = () => {
   const navigate = useNavigate(); // useNavigate로 이동 기능 정의
-  const addProject = useProjectStore((state) => state.addProject);
+  const addVCProject = useVCProjectStore((state) => state.addProject);
+  const addTTSProject = useTTSProjectStore((state) => state.addProject);
+  const addConcatProject = useConcatProjectStore((state) => state.addProject);
+
+  const addProject = useCallback(
+    (project: Omit<Project<never>, 'id' | 'createdAt'>) => {
+      switch (project.type) {
+        case 'TTS':
+          return addTTSProject(project);
+        case 'VC':
+          return addVCProject(project);
+        case 'Concat':
+          return addConcatProject(project);
+        default:
+          throw new Error('Invalid project type');
+      }
+    },
+    [addTTSProject, addVCProject, addConcatProject]
+  );
+
   const [projectName] = useState('새 프로젝트');
 
   // 프로젝트 생성 핸들러

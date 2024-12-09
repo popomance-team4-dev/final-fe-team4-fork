@@ -1,23 +1,66 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { TbX } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
 import HomeCard from '@/components/custom/cards/HomeCard';
 import HomePopupBg from '@/images/home-popup-bg.svg';
-import { useProjectStore } from '@/stores/project.store';
+import {
+  Project,
+  useConcatProjectStore,
+  useTTSProjectStore,
+  useVCProjectStore,
+} from '@/stores/project.store';
+
+const homeCards = [
+  {
+    title: 'Text to Speech',
+    description1: '텍스트 파일 업로드로',
+    description2: '다양한 스타일의 음성 생성',
+    route: '/tts?tabId=', // TTS 경로 추가
+  },
+  {
+    title: 'Voice Conversion',
+    description1: '다양한 음성 샘플을 사용하여',
+    description2: '원하는 음색으로 변환',
+    route: '/vc?tabId=', // VC 경로 추가
+  },
+  {
+    title: 'Concat',
+    description1: '다양한 오디오 파일을',
+    description2: '하나로 연결',
+    route: '/concat?tabId=', // Concat 경로 추가
+  },
+];
 
 const HomePopup = () => {
   const [isVisible, setIsVisible] = useState(true);
   const navigate = useNavigate();
-  const addProject = useProjectStore((state) => state.addProject);
+  const addVCProject = useVCProjectStore((state) => state.addProject);
+  const addTTSProject = useTTSProjectStore((state) => state.addProject);
+  const addConcatProject = useConcatProjectStore((state) => state.addProject);
+
+  const addProject = useCallback(
+    (project: Omit<Project<never>, 'id' | 'createdAt'>) => {
+      switch (project.type) {
+        case 'TTS':
+          return addTTSProject(project);
+        case 'VC':
+          return addVCProject(project);
+        case 'Concat':
+          return addConcatProject(project);
+        default:
+          throw new Error('Invalid project type');
+      }
+    },
+    [addTTSProject, addVCProject, addConcatProject]
+  );
 
   const handleNewProject = (type: 'TTS' | 'VC' | 'Concat', route: string) => {
-    addProject({
+    const { id } = addProject({
       name: '새 프로젝트',
       type: type,
     });
-
-    navigate(route);
+    navigate(`${route}${id}`);
   };
 
   if (!isVisible) {
@@ -47,24 +90,15 @@ const HomePopup = () => {
 
       {/* Cards Container */}
       <div className="absolute top-[152px] flex gap-11">
-        <HomeCard
-          title="Text to Speech"
-          description1="텍스트 파일 업로드로"
-          description2="다양한 스타일의 음성 생성"
-          onClick={() => handleNewProject('TTS', '/tts')}
-        />
-        <HomeCard
-          title="Voice Conversion"
-          description1="다양한 음성 샘플을 사용하여"
-          description2="원하는 음색으로 변환"
-          onClick={() => handleNewProject('VC', '/vc')}
-        />
-        <HomeCard
-          title="Concat"
-          description1="다양한 오디오 파일을"
-          description2="하나로 연결"
-          onClick={() => handleNewProject('Concat', '/concat')}
-        />
+        {homeCards.map((card, index) => (
+          <HomeCard
+            key={index}
+            title={card.title}
+            description1={card.description1}
+            description2={card.description2}
+            onClick={() => handleNewProject(card.title as 'TTS' | 'VC' | 'Concat', card.route)}
+          />
+        ))}
       </div>
     </div>
   );

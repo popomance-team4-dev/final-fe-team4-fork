@@ -255,18 +255,19 @@ export const AudioFileDtoAudioType = {
 } as const;
 
 export interface AudioFileDto {
-  audioType?: AudioFileDtoAudioType;
-  isChecked?: boolean;
-  localFileName?: string;
-  s3MemberAudioMetaId?: number;
+  detailId?: number | null;
+  localFileName?: string | null;
   unitScript?: string;
+  isChecked?: boolean;
+  audioType?: 'VC_SRC' | 'VC_TRG' | 'CONCAT';
+  s3MemberAudioMetaId?: number | null;
 }
 
 export interface VCSaveDto {
   projectId?: number;
-  projectName?: string;
-  srcFiles?: AudioFileDto[];
-  trgFiles?: AudioFileDto[];
+  projectName: string;
+  srcFiles: AudioFileDto[];
+  trgFiles: AudioFileDto[];
 }
 
 export interface Project {

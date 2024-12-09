@@ -140,7 +140,7 @@ const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
       const texts = await Promise.all(Array.from(files).map((file) => file.text()));
       onSuccess(texts);
     } catch (error) {
-      console.error('텍스트 파일 처리 중 오류:', error);
+      console.error('텍스트 파일 처리 중 ��류:', error);
     }
   };
 
@@ -346,7 +346,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
         srcFiles: items.map((item) => ({
           detailId: item.detailId || undefined,
           localFileName: item.file ? item.fileName : undefined,
-          unitScript: item.text,
+          unitScript: item.text || '',
           isChecked: item.isSelected,
         })),
         trgFiles: [
@@ -373,7 +373,6 @@ export const useVCStore = create<VCStore>((set, get) => ({
             },
           });
         }
-        // 저장 성공 메시지는 항상 표시
         get().showAlert('프로젝트가 저장되었습니다.', 'default');
       }
     } catch (error) {

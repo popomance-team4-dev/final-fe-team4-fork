@@ -89,22 +89,26 @@ export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
   try {
     const formData = new FormData();
 
-    // 메타데이터를 VCSaveDto 형식에 맞게 추가
-    formData.append(
-      'metadata',
-      JSON.stringify({
-        projectId: data.projectId,
-        projectName: data.projectName,
-        srcFiles: data.srcFiles,
-        trgFile: {
-          // trgFiles가 아닌 trgFile로 변경
-          localFileName: data.trgFiles?.[0]?.localFileName || null,
-          s3MemberAudioMetaId: data.trgFiles?.[0]?.s3MemberAudioMetaId || null,
-        },
-      })
-    );
+    const metadata = {
+      projectId: data.projectId,
+      projectName: data.projectName,
+      srcFiles:
+        data.srcFiles?.map((file) => ({
+          detailId: file.detailId || null,
+          localFileName: file.localFileName || null,
+          unitScript: file.unitScript || '',
+          isChecked: file.isChecked || false,
+        })) || [],
+      trgFile: data.trgFiles?.[0]
+        ? {
+            localFileName: data.trgFiles[0].localFileName || null,
+            s3MemberAudioMetaId: data.trgFiles[0].s3MemberAudioMetaId || null,
+          }
+        : null,
+    };
 
-    // 파일이 있는 경우 추가
+    formData.append('metadata', JSON.stringify(metadata));
+
     if (files?.length) {
       files.forEach((file) => {
         formData.append('file', file);

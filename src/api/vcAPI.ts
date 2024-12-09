@@ -52,15 +52,24 @@ export const processVoiceConversion = async (
 };
 
 interface VCLoadResponse {
-  vcProject: {
+  vcProjectRes: {
     id: number;
     projectName: string;
+    trgAudios: {
+      id: number;
+      audioUrl: string;
+    }[];
   };
-  vcDetails: {
+  vcDetailsRes: {
     id: number;
-    fileName?: string;
-    unitScript?: string;
-    isChecked?: boolean;
+    projectId: number;
+    isChecked: boolean;
+    unitScript: string;
+    srcAudio: string | null;
+    genAudios: {
+      id: number;
+      audioUrl: string;
+    }[];
   }[];
 }
 
@@ -95,14 +104,14 @@ export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
       srcFiles:
         data.srcFiles?.map((file) => ({
           detailId: file.detailId || null,
-          localFileName: file.localFileName || null,
+          localFileName: file.detailId ? null : file.localFileName,
           unitScript: file.unitScript || '',
           isChecked: file.isChecked || false,
         })) || [],
-      trgFile: data.trgFiles?.[0]
+      trgFile: data.trgFile
         ? {
-            localFileName: data.trgFiles[0].localFileName || null,
-            s3MemberAudioMetaId: data.trgFiles[0].s3MemberAudioMetaId || null,
+            localFileName: data.trgFile.s3MemberAudioMetaId ? null : data.trgFile.localFileName,
+            s3MemberAudioMetaId: data.trgFile.s3MemberAudioMetaId || null,
           }
         : null,
     };

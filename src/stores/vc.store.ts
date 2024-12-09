@@ -140,7 +140,7 @@ const handleTextUpload = (onSuccess: (texts: string[]) => void) => {
       const texts = await Promise.all(Array.from(files).map((file) => file.text()));
       onSuccess(texts);
     } catch (error) {
-      console.error('텍스트 파일 처리 중 ��류:', error);
+      console.error('텍스트 파일 처리 중 오류:', error);
     }
   };
 
@@ -235,9 +235,12 @@ export const useVCStore = create<VCStore>((set, get) => ({
   handleFileUpload: (files) => {
     const { handleFiles } = handleTextUpload((texts) => {
       const { items, updateItem } = get();
-      items.forEach((item) => {
-        if (item.isSelected) {
-          updateItem(item.id, { text: texts[0] || '' });
+      const selectedItems = items.filter((item) => item.isSelected);
+
+      // 선택된 아이템과 텍스트를 매칭하여 업데이트
+      selectedItems.forEach((item, index) => {
+        if (index < texts.length) {
+          updateItem(item.id, { text: texts[index] });
         }
       });
     });
@@ -344,17 +347,15 @@ export const useVCStore = create<VCStore>((set, get) => ({
         projectId: projectData.projectId ?? undefined,
         projectName: projectData.projectName,
         srcFiles: items.map((item) => ({
-          detailId: item.detailId || undefined,
-          localFileName: item.file ? item.fileName : undefined,
+          detailId: item.detailId || null,
+          localFileName: item.detailId ? null : item.file ? item.fileName : null,
           unitScript: item.text || '',
-          isChecked: item.isSelected,
+          isChecked: item.isSelected || false,
         })),
-        trgFiles: [
-          {
-            localFileName: undefined,
-            s3MemberAudioMetaId: undefined,
-          },
-        ],
+        trgFile: {
+          localFileName: null,
+          s3MemberAudioMetaId: null,
+        },
       };
 
       const files = items

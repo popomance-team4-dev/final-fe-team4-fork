@@ -266,8 +266,16 @@ export interface AudioFileDto {
 export interface VCSaveDto {
   projectId?: number;
   projectName: string;
-  srcFiles: AudioFileDto[];
-  trgFiles: AudioFileDto[];
+  srcFiles: {
+    detailId: number | null;
+    localFileName: string | null;
+    unitScript: string;
+    isChecked: boolean;
+  }[];
+  trgFile: {
+    localFileName: string | null;
+    s3MemberAudioMetaId: number | null;
+  } | null;
 }
 
 export interface Project {

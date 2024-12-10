@@ -8,7 +8,7 @@ import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import PaginationFooter from '@/components/section/footer/PaginationFooter';
 import MainHeader from '@/components/section/header/MainHeader';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import PageLayout from '@/layouts/PageLayout';
 import { formatUpdatedAt } from '@/utils/dateUtils';
 
@@ -234,7 +234,6 @@ const HistoryPage = () => {
       {alert.visible && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
           <Alert variant={alert.variant}>
-            <AlertTitle>{alert.variant === 'default' ? '성공' : '오류'}</AlertTitle>
             <AlertDescription>{alert.message}</AlertDescription>
           </Alert>
         </div>

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { fetchProjectByType, fetchRecentExports } from '@/api/workspaceAPI';
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -201,7 +201,6 @@ export function RecentExportTable() {
       {alert.visible && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
           <Alert variant={alert.variant}>
-            <AlertTitle>{alert.variant === 'default' ? '성공' : '오류'}</AlertTitle>
             <AlertDescription>{alert.message}</AlertDescription>
           </Alert>
         </div>

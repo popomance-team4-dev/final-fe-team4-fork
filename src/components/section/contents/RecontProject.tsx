@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Project } from '@/api/aIParkAPI.schemas';
 import { fetchProjectByType, fetchRecentProjects } from '@/api/workspaceAPI';
 import RecentProjectCard from '@/components/custom/cards/RecentProjectCard';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { formatUpdatedAt } from '@/utils/dateUtils';
 
 const RecentProject = () => {
@@ -88,7 +88,6 @@ const RecentProject = () => {
       {alert.visible && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
           <Alert variant={alert.variant}>
-            <AlertTitle>{alert.variant === 'default' ? '성공' : '오류'}</AlertTitle>
             <AlertDescription>{alert.message}</AlertDescription>
           </Alert>
         </div>

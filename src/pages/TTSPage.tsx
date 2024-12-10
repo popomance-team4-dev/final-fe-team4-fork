@@ -143,7 +143,7 @@ const TTSPage = () => {
         }
       } catch (error) {
         console.error('TTS 프로젝트 로드 오류:', error);
-        showAlert('프로젝트 로드 중 오류가 발생했습니다.', 'destructive');
+        showAlert('프로젝트 로드에 실패했습니다.', 'destructive');
       } finally {
         setIsLoading(false);
       }

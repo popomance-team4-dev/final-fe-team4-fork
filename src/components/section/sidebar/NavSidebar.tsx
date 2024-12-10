@@ -157,11 +157,13 @@ export function NavSidebar() {
           ))}
         </div>
       </div>
-      <div className="mt-auto h-[93px]">
+      <div className="mt-auto h-[93px] flex flex-col">
         <Separator />
-        <button className="mt-9 ml-4" onClick={() => setIsExpanded(!isExpanded)}>
-          <TbLayoutSidebar className="w-6 h-6 group-[.expanded]/navbar:text-gray-300 text-black" />
-        </button>
+        <div className={`flex ${isExpanded ? 'justify-start pl-4' : 'justify-center'} mt-9`}>
+          <button onClick={() => setIsExpanded(!isExpanded)}>
+            <TbLayoutSidebar className="w-6 h-6 group-[.expanded]/navbar:text-gray-300 text-black" />
+          </button>
+        </div>
       </div>
     </div>
   );

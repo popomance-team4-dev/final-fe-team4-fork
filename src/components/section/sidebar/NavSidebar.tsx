@@ -68,7 +68,9 @@ export function NavSidebar() {
 
   return (
     <div
-      className={`flex h-screen w-[104px] flex-col border-r bg-white px-6 group/navbar ${isExpanded ? 'expanded w-[244px]' : ''}`}
+      className={`flex h-screen w-[104px] flex-col border-r bg-white group/navbar ${
+        isExpanded ? 'expanded w-[244px] px-6' : 'px-4'
+      }`}
     >
       <div className=" border-b flex items-center">
         <div className="h-[91px] w-full flex items-center gap-2">
@@ -96,9 +98,8 @@ export function NavSidebar() {
 
       {/* Dialog for Create Project */}
       <Dialog>
-        {/* Dialog Trigger */}
         <DialogTrigger asChild>
-          <Button size="icon" icon className="mt-6">
+          <Button size="icon" icon className="mt-6 mx-auto">
             새 프로젝트 생성
           </Button>
         </DialogTrigger>
@@ -133,11 +134,9 @@ export function NavSidebar() {
         <Separator className="my-4" />
         <div className="pt-2 pb-3">
           <h2
-            className={`pt-2 pb-3 text-overline ${
-              isExpanded ? 'ml-2 text-left' : 'ml-0 text-center'
-            }`}
+            className={`pt-2 pb-3 text-overline ${isExpanded ? 'ml-2 text-left' : 'text-center'}`}
           >
-            Workspace
+            워크스페이스
           </h2>
         </div>
         <div className="flex flex-col w-full gap-3">

@@ -38,7 +38,7 @@ const RecentProject = () => {
           variant: 'destructive',
         });
 
-        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       }
     };
 
@@ -79,7 +79,7 @@ const RecentProject = () => {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
     }
   };
 

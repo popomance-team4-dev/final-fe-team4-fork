@@ -111,7 +111,7 @@ export function RecentExportTable() {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
     }
   };
 
@@ -157,7 +157,7 @@ export function RecentExportTable() {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       return;
     }
 
@@ -181,7 +181,7 @@ export function RecentExportTable() {
           variant: 'default',
         });
 
-        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       })
       .catch((error) => {
         console.error('다운로드 중 오류 발생:', error);
@@ -192,7 +192,7 @@ export function RecentExportTable() {
         });
 
         // 알림 자동 제거
-        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       });
   };
 

@@ -91,7 +91,7 @@ const TTSPage = () => {
   });
   const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
     setAlert({ visible: true, message, variant });
-    setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+    setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -270,10 +270,10 @@ const TTSPage = () => {
   const handleSave = useCallback(async () => {
     try {
       await uploadTTSProjectData(projectData, items, setProjectData);
-      showAlert('프로젝트 저장 완료', 'default');
+      showAlert('프로젝트가 저장되었습니다.', 'default');
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);
-      showAlert('프로젝트 저장 중 오류가 발생했습니다.', 'destructive');
+      showAlert('프로젝트 저장에 실패했습니다.', 'destructive');
     }
   }, [projectData, items, setProjectData, showAlert]);
 

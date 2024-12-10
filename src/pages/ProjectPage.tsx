@@ -52,7 +52,7 @@ const ProjectPage = () => {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
     }
   };
 
@@ -98,7 +98,7 @@ const ProjectPage = () => {
       // 현재 페이지 데이터 재로드
       loadProjects(currentPage);
       setIsDialogOpen(false);
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
     } catch (error) {
       console.error('삭제 중 오류:', error);
       setAlert({
@@ -107,7 +107,7 @@ const ProjectPage = () => {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
     }
   };
 

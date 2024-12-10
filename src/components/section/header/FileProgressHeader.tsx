@@ -5,8 +5,8 @@ import ProfileDropdown from '@/components/custom/dropdowns/ProfileDropdown';
 
 interface FileProgressHeaderProps {
   files: FileProgressItem[];
-  onDeleteCompleted: () => void;
-  onRetryFailed: () => void;
+  onDeleteCompleted?: () => void;
+  onRetryFailed?: () => void;
 }
 
 export const FileProgressHeader = ({

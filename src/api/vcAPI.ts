@@ -52,15 +52,24 @@ export const processVoiceConversion = async (
 };
 
 interface VCLoadResponse {
-  vcProject: {
+  vcProjectRes: {
     id: number;
     projectName: string;
+    trgAudios: {
+      id: number;
+      audioUrl: string;
+    }[];
   };
-  vcDetails: {
+  vcDetailsRes: {
     id: number;
-    fileName?: string;
-    unitScript?: string;
-    isChecked?: boolean;
+    projectId: number;
+    isChecked: boolean;
+    unitScript: string;
+    srcAudio: string | null;
+    genAudios: {
+      id: number;
+      audioUrl: string;
+    }[];
   }[];
 }
 
@@ -85,33 +94,51 @@ export const vcLoad = async (projectId: number): Promise<ResponseDto<VCLoadRespo
  * @param data VCSaveDto 데이터
  * @param files 오디오 파일 배열 (선택적)
  */
-export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
+export const saveVCProject = async (
+  data: VCSaveDto,
+  files?: File[]
+): Promise<ResponseDto<VCLoadResponse>> => {
   try {
     const formData = new FormData();
 
-    // 메타데이터를 VCSaveDto 형식에 맞게 추가
-    formData.append(
-      'metadata',
-      JSON.stringify({
-        projectId: data.projectId,
-        projectName: data.projectName,
-        srcFiles: data.srcFiles,
-        trgFile: {
-          // trgFiles가 아닌 trgFile로 변경
-          localFileName: data.trgFiles?.[0]?.localFileName || null,
-          s3MemberAudioMetaId: data.trgFiles?.[0]?.s3MemberAudioMetaId || null,
-        },
-      })
-    );
+    // 메타데이터 구성
+    const metadata: VCSaveDto = {
+      projectId: data.projectId,
+      projectName: data.projectName,
+      srcFiles: data.srcFiles.map((file) => ({
+        detailId: file.detailId,
+        localFileName: file.detailId ? null : file.localFileName,
+        unitScript: file.unitScript,
+        isChecked: file.isChecked,
+      })),
+      trgFiles: data.trgFiles?.[0]
+        ? [
+            {
+              localFileName: data.trgFiles[0].s3MemberAudioMetaId
+                ? ''
+                : data.trgFiles[0].localFileName,
+              s3MemberAudioMetaId: data.trgFiles[0].s3MemberAudioMetaId,
+              audioType: data.trgFiles[0].audioType,
+            },
+          ]
+        : [],
+    };
 
-    // 파일이 있는 경우 추가
+    formData.append('metadata', JSON.stringify(metadata));
+
+    // 파일 추가 로직 수정
     if (files?.length) {
       files.forEach((file) => {
-        formData.append('file', file);
+        const matchingSrcFile = data.srcFiles.find(
+          (srcFile) => srcFile.localFileName === file.name
+        );
+        if (matchingSrcFile) {
+          formData.append('file', file);
+        }
       });
     }
 
-    const response = await customInstance<ResponseDto>({
+    const response = await customInstance<ResponseDto<VCLoadResponse>>({
       url: '/vc/save',
       method: 'POST',
       headers: {
@@ -119,6 +146,10 @@ export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
       },
       data: formData,
     });
+
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
 
     return response.data;
   } catch (error) {

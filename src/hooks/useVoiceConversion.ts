@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { processVoiceConversion, VCSaveDto } from '@/api/vcAPI';
+import { processVoiceConversion } from '@/api/vcAPI';
 import { useVCHistoryStore } from '@/stores/vc.history.store';
 import { VCItem } from '@/types/table';
 
@@ -37,7 +37,7 @@ export const useVoiceConversion = ({
     try {
       if (!selectedVoice) return;
 
-      const selectedItems = items.filter((item) => item.isSelected && item.file);
+      const selectedItems = items.filter((item) => item.isSelected && (item.file || item.srcAudio));
       if (selectedItems.length === 0) {
         showAlert('변환할 오디오를 선택해주세요.', 'destructive');
         return;
@@ -52,20 +52,21 @@ export const useVoiceConversion = ({
       }));
       setItems(updatedItems);
 
-      const vcSaveDto: VCSaveDto = {
-        projectId: projectData.projectId ?? undefined,
+      const vcSaveDto = {
+        projectId: projectData.projectId || null,
         projectName: projectData.projectName,
-        srcFiles: selectedItems.map((item) => ({
+        srcFiles: selectedItems.map((item, index) => ({
           audioType: 'VC_SRC',
           localFileName: item.fileName,
           unitScript: item.text,
           isChecked: true,
+          detailId: index + 1,
         })),
         trgFiles: [
           {
             audioType: 'VC_TRG',
             localFileName: 'rico.mp3',
-            s3MemberAudioMetaId: undefined,
+            s3MemberAudioMetaId: null,
           },
         ],
       };

@@ -134,7 +134,7 @@ export function NavSidebar() {
         <Separator className="my-4" />
         <div className="pt-2 pb-3">
           <h2
-            className={`pt-2 pb-3 text-overline ${isExpanded ? 'ml-2 text-left' : 'text-center'}`}
+            className={`pt-2 pb-3 text-overline text-primary ${isExpanded ? 'ml-2 text-left' : 'text-center'}`}
           >
             워크스페이스
           </h2>

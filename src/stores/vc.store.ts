@@ -228,16 +228,22 @@ export const useVCStore = create<VCStore>((set, get) => ({
       const { items, updateItem } = get();
       const selectedItems = items.filter((item) => item.isSelected);
 
-      // 선택된 아이템과 텍스트를 매칭하여 업데이트
       selectedItems.forEach((item, index) => {
         if (index < texts.length) {
-          updateItem(item.id, { text: texts[index] });
+          updateItem(item.id, {
+            text: texts[index],
+            unitScript: texts[index],
+          });
         }
       });
     });
     handleFiles(files);
   },
-  handleTextChange: (id, newText) => get().updateItem(id, { text: newText }),
+  handleTextChange: (id, newText) =>
+    get().updateItem(id, {
+      text: newText,
+      unitScript: newText,
+    }),
   handlePlay: (id: string) => {
     const state = get();
     const item = state.items.find((item) => item.id === id);

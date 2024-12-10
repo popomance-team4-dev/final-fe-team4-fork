@@ -31,6 +31,7 @@ export interface VCItem extends TableItem {
   targetVoice?: string;
   file?: File;
   detailId?: number | null;
+  unitScript?: string;
 }
 
 export interface ConcatTableItem extends TableItem {

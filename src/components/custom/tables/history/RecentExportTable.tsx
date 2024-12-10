@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { fetchProjectByType, fetchRecentExports } from '@/api/workspaceAPI';
 import { PlayButton } from '@/components/custom/buttons/PlayButton';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -111,7 +111,7 @@ export function RecentExportTable() {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
     }
   };
 
@@ -157,7 +157,7 @@ export function RecentExportTable() {
         variant: 'destructive',
       });
 
-      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+      setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       return;
     }
 
@@ -181,7 +181,7 @@ export function RecentExportTable() {
           variant: 'default',
         });
 
-        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       })
       .catch((error) => {
         console.error('다운로드 중 오류 발생:', error);
@@ -192,7 +192,7 @@ export function RecentExportTable() {
         });
 
         // 알림 자동 제거
-        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 3000);
+        setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
       });
   };
 
@@ -201,7 +201,6 @@ export function RecentExportTable() {
       {alert.visible && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
           <Alert variant={alert.variant}>
-            <AlertTitle>{alert.variant === 'default' ? '성공' : '오류'}</AlertTitle>
             <AlertDescription>{alert.message}</AlertDescription>
           </Alert>
         </div>

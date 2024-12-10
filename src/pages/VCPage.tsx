@@ -224,9 +224,9 @@ const VCPage = () => {
       footer={<AudioFooter audioUrl={currentAudioUrl} type="VC" label={currentFileName} />}
     >
       {alert.show && (
-        <div className="absolute left-1/2 -translate-x-1/2 top-6">
-          <Alert variant={alert.variant} className="w-[360px] bg-white">
-            <AlertDescription className="text-sm">{alert.message}</AlertDescription>
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert variant={alert.variant} className="w-[360px]">
+            <AlertDescription>{alert.message}</AlertDescription>
           </Alert>
         </div>
       )}

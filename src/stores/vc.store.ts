@@ -351,7 +351,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
             unitScript: item.unitScript || item.text || '',
             isChecked: true,
           })),
-        trgFile: null,
+        trgFiles: [],
       };
 
       const files = items
@@ -392,7 +392,7 @@ export const useVCStore = create<VCStore>((set, get) => ({
       }
     } catch (error) {
       console.error('프로젝트 저장 실패:', error);
-      get().showAlert('프로젝트 저장에 실패했습니다.', 'destructive');
+      get().showAlert('프��젝트 저장에 실패했습니다.', 'destructive');
     } finally {
       set({ saving: false });
     }

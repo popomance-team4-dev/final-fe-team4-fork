@@ -32,7 +32,7 @@ export interface VCItem extends TableItem {
   file?: File | null;
   detailId?: number | null;
   unitScript?: string;
-  srcAudio?: string;
+  srcAudio?: string | null;
 }
 
 export interface ConcatTableItem extends TableItem {

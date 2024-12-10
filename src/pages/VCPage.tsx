@@ -176,7 +176,7 @@ const VCPage = () => {
         const response = await vcLoad(Number(id));
         if (!response.data) return;
 
-        const { vcProject, vcDetails } = response.data;
+        const { vcProjectRes: vcProject, vcDetailsRes: vcDetails } = response.data;
 
         if (vcProject) {
           setProjectData({
@@ -190,11 +190,12 @@ const VCPage = () => {
             vcDetails.map((detail) => ({
               id: String(detail.id),
               detailId: detail.id,
-              fileName: detail.fileName || '',
+              fileName: detail.srcAudio?.split('/').pop() || '',
               text: detail.unitScript || '',
               isSelected: detail.isChecked || false,
               status: '대기중',
               file: undefined,
+              srcAudio: detail.srcAudio,
             }))
           );
         }

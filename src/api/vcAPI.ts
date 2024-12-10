@@ -76,13 +76,13 @@ interface VCLoadResponse {
 /**
  * VC 프로젝트 상태를 가져옵니다.
  */
-export const vcLoad = async (projectId: number): Promise<ResponseDto<VCLoadResponse>> => {
+export const vcLoad = async (projectId: number) => {
   try {
-    const response = await customInstance<ResponseDto<VCLoadResponse>>({
+    const response = await customInstance({
       url: `/vc/${projectId}`,
       method: 'GET',
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('VC 프로젝트 로드 실패:', error);
     throw error;

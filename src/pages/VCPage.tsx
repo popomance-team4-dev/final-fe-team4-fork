@@ -174,7 +174,7 @@ const VCPage = () => {
 
       try {
         const response = await vcLoad(Number(id));
-        if (!response.data) return;
+        if (!response?.data) return;
 
         const { vcProjectRes: vcProject, vcDetailsRes: vcDetails } = response.data;
 

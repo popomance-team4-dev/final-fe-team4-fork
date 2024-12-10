@@ -340,38 +340,54 @@ export const useVCStore = create<VCStore>((set, get) => ({
     set({ saving: true });
 
     try {
-      // 선택된 항목만 필터링
-      const selectedItems = items.filter((item) => item.isSelected);
-
       const saveData = {
         projectId: projectData.projectId,
         projectName: projectData.projectName,
-        srcFiles: selectedItems.map((item) => ({
-          detailId: item.detailId || null,
-          localFileName: item.file ? item.fileName : null, // 파일이 있는 경우만 fileName 설정
-          unitScript: item.text, // 빈 문자열 체크 제거
-          isChecked: true, // 선택된 항목은 항상 true
-        })),
-        trgFile: {
-          localFileName: null,
-          s3MemberAudioMetaId: null,
-        },
+        srcFiles: items
+          .filter((item) => item.isSelected)
+          .map((item) => ({
+            detailId: item.detailId || null,
+            localFileName: item.file ? item.fileName : null,
+            unitScript: item.unitScript || item.text || '',
+            isChecked: true,
+          })),
+        trgFile: null,
       };
 
-      // 파일이 있는 선택된 항목만 전송
-      const files = selectedItems.filter((item) => item.file).map((item) => item.file as File);
+      const files = items
+        .filter((item) => item.isSelected && item.file)
+        .map((item) => item.file as File);
 
       const response = await saveVCProject(saveData, files);
 
-      if (response.success) {
-        if (response.data?.vcProjectRes?.id) {
-          set({
-            projectData: {
-              ...projectData,
-              projectId: response.data.vcProjectRes.id,
-            },
+      if (response?.data?.vcProjectRes) {
+        // 프로젝트 ID 업데이트
+        set({
+          projectData: {
+            ...projectData,
+            projectId: response.data.vcProjectRes.id,
+          },
+        });
+
+        // 저장된 아이템 상태 업데이트
+        if (response.data?.vcDetailsRes) {
+          const updatedItems = items.map((item) => {
+            const matchingDetail = response.data!.vcDetailsRes.find(
+              (detail) => detail.unitScript === (item.unitScript || item.text)
+            );
+            if (matchingDetail) {
+              return {
+                ...item,
+                detailId: matchingDetail.id,
+                file: null,
+                srcAudio: matchingDetail.srcAudio,
+              };
+            }
+            return item;
           });
+          set({ items: updatedItems });
         }
+
         get().showAlert('프로젝트가 저장되었습니다.', 'default');
       }
     } catch (error) {

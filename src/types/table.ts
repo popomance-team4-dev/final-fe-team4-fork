@@ -29,7 +29,7 @@ export interface VCItem extends TableItem {
   originalAudioUrl?: string;
   convertedAudioUrl?: string;
   targetVoice?: string;
-  file?: File;
+  file?: File | null;
   detailId?: number | null;
   unitScript?: string;
 }

@@ -60,15 +60,6 @@ interface VCStore {
   resetStore: () => void;
 }
 
-interface VCProjectResponse {
-  success: boolean;
-  data: {
-    vcProjectRes: {
-      id: number;
-    };
-  };
-}
-
 // useFileUpload hooks의 로직을 store에 맞게 재구현
 const handleAudioUpload = (
   onSuccess: (items: VCItem[]) => void,
@@ -343,14 +334,17 @@ export const useVCStore = create<VCStore>((set, get) => ({
     set({ saving: true });
 
     try {
+      // 선택된 항목만 필터링
+      const selectedItems = items.filter((item) => item.isSelected);
+
       const saveData = {
-        projectId: projectData.projectId ?? undefined,
+        projectId: projectData.projectId,
         projectName: projectData.projectName,
-        srcFiles: items.map((item) => ({
+        srcFiles: selectedItems.map((item) => ({
           detailId: item.detailId || null,
-          localFileName: item.detailId ? null : item.file ? item.fileName : null,
-          unitScript: item.text || '',
-          isChecked: item.isSelected || false,
+          localFileName: item.file ? item.fileName : null, // 파일이 있는 경우만 fileName 설정
+          unitScript: item.text, // 빈 문자열 체크 제거
+          isChecked: true, // 선택된 항목은 항상 true
         })),
         trgFile: {
           localFileName: null,
@@ -358,15 +352,13 @@ export const useVCStore = create<VCStore>((set, get) => ({
         },
       };
 
-      const files = items
-        .filter((item) => item.file && !item.detailId)
-        .map((item) => item.file as File);
+      // 파일이 있는 선택된 항목만 전송
+      const files = selectedItems.filter((item) => item.file).map((item) => item.file as File);
 
-      const response = (await saveVCProject(saveData, files)) as VCProjectResponse;
+      const response = await saveVCProject(saveData, files);
 
       if (response.success) {
-        // 프로젝트 ID 업데이트 (새 프로젝트인 경우)
-        if (response.data?.vcProjectRes?.id && !projectData.projectId) {
+        if (response.data?.vcProjectRes?.id) {
           set({
             projectData: {
               ...projectData,

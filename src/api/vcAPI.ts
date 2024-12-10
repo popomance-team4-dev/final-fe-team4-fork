@@ -94,37 +94,46 @@ export const vcLoad = async (projectId: number): Promise<ResponseDto<VCLoadRespo
  * @param data VCSaveDto 데이터
  * @param files 오디오 파일 배열 (선택적)
  */
-export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
+export const saveVCProject = async (
+  data: VCSaveDto,
+  files?: File[]
+): Promise<ResponseDto<VCLoadResponse>> => {
   try {
     const formData = new FormData();
 
-    const metadata = {
+    // 메타데이터 구성
+    const metadata: VCSaveDto = {
       projectId: data.projectId,
       projectName: data.projectName,
-      srcFiles:
-        data.srcFiles?.map((file) => ({
-          detailId: file.detailId || null,
-          localFileName: file.detailId ? null : file.localFileName,
-          unitScript: file.unitScript || '',
-          isChecked: file.isChecked || false,
-        })) || [],
+      srcFiles: data.srcFiles.map((file) => ({
+        detailId: file.detailId,
+        localFileName: file.detailId ? null : file.localFileName,
+        unitScript: file.unitScript,
+        isChecked: file.isChecked,
+      })),
       trgFile: data.trgFile
         ? {
             localFileName: data.trgFile.s3MemberAudioMetaId ? null : data.trgFile.localFileName,
-            s3MemberAudioMetaId: data.trgFile.s3MemberAudioMetaId || null,
+            s3MemberAudioMetaId: data.trgFile.s3MemberAudioMetaId,
           }
         : null,
     };
 
     formData.append('metadata', JSON.stringify(metadata));
 
+    // 파일 추가 로직 수정
     if (files?.length) {
       files.forEach((file) => {
-        formData.append('file', file);
+        const matchingSrcFile = data.srcFiles.find(
+          (srcFile) => srcFile.localFileName === file.name
+        );
+        if (matchingSrcFile) {
+          formData.append('file', file);
+        }
       });
     }
 
-    const response = await customInstance<ResponseDto>({
+    const response = await customInstance<ResponseDto<VCLoadResponse>>({
       url: '/vc/save',
       method: 'POST',
       headers: {
@@ -132,6 +141,10 @@ export const saveVCProject = async (data: VCSaveDto, files?: File[]) => {
       },
       data: formData,
     });
+
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
 
     return response.data;
   } catch (error) {

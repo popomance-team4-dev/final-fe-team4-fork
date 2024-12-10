@@ -239,10 +239,10 @@ export interface TTSSpecificResponse {
 }
 
 export interface ResponseDto<T = unknown> {
-  code?: number;
-  message?: string;
-  success?: boolean;
-  data?: T; // 제네릭으로 데이터를 확장 가능하도록 설계
+  success: boolean;
+  code: number;
+  message: string;
+  data?: T;
 }
 
 export type AudioFileDtoAudioType =
@@ -264,18 +264,10 @@ export interface AudioFileDto {
 }
 
 export interface VCSaveDto {
-  projectId?: number;
+  projectId: number | null;
   projectName: string;
-  srcFiles: {
-    detailId: number | null;
-    localFileName: string | null;
-    unitScript: string;
-    isChecked: boolean;
-  }[];
-  trgFile: {
-    localFileName: string | null;
-    s3MemberAudioMetaId: number | null;
-  } | null;
+  srcFiles: VCSrcFile[];
+  trgFile: VCTrgFile | null;
 }
 
 export interface Project {
@@ -322,4 +314,50 @@ export interface Export {
   script: string | null;
   createdAt?: string;
   updatedAt?: string;
+}
+
+// VC 관련 타입 정의 수정
+export interface VCAudioMeta {
+  id: number;
+  audioUrl: string;
+}
+
+export interface VCProjectResponse {
+  id: number;
+  projectName: string;
+  trgAudios: VCAudioMeta[];
+}
+
+export interface VCDetailResponse {
+  id: number;
+  projectId: number;
+  isChecked: boolean;
+  unitScript: string;
+  srcAudio: string | null;
+  genAudios: VCAudioMeta[];
+}
+
+export interface VCLoadResponse {
+  vcProjectRes: VCProjectResponse;
+  vcDetailsRes: VCDetailResponse[];
+}
+
+export interface VCSrcFile {
+  detailId: number | null;
+  localFileName: string | null;
+  unitScript: string;
+  isChecked: boolean;
+}
+
+export interface VCTrgFile {
+  localFileName: string | null;
+  s3MemberAudioMetaId: number | null;
+}
+
+// ResponseDto 수정 (기존 정의 교체)
+export interface ResponseDto<T = unknown> {
+  success: boolean;
+  code: number;
+  message: string;
+  data?: T;
 }

@@ -54,7 +54,12 @@ interface DeleteConcatRequest {
   detailIds?: number[];
   audioIds?: number[];
 }
-
+interface DeleteResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: string;
+}
 /**
  * Concat 프로젝트 상태를 가져옵니다.
  */
@@ -110,15 +115,18 @@ export const concatSave = async (data: ConcatSaveRequest) => {
  */
 export const deleteSelectedConcatItems = async (data: DeleteConcatRequest) => {
   try {
-    const response = await customInstance.post('/concat/delete/details', data);
+    const response = await customInstance.post<any, DeleteResponse>('/concat/delete/details', data);
     console.log('삭제 응답:', response);
-    return response.data;
+    return {
+      success: response.code === 0,
+      message: response.message,
+      data: response.data,
+    };
   } catch (error) {
     console.error('Concat 항목 삭제 실패:', error);
     throw error;
   }
 };
-
 interface ConcatRequestDetail {
   id: number | null;
   localFileName: string | null;

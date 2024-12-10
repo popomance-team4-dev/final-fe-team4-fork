@@ -200,15 +200,13 @@ const ConcatPage = () => {
 
       if (deleteResponse.success) {
         deleteSelectedItems();
-        const updatedItems = items.filter((item) => !item.isSelected);
-        setItems(updatedItems);
       }
     } catch (error) {
       console.error('항목 삭제 실패:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [id, items, setItems, deleteSelectedItems]);
+  }, [id, items, deleteSelectedItems]);
 
   //con cat 오디오 생성
   const handleConcatGenerate = useCallback(async () => {

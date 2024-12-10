@@ -72,24 +72,26 @@ export function NavSidebar() {
         isExpanded ? 'expanded w-[244px] px-6' : 'px-4'
       }`}
     >
-      <div className=" border-b flex items-center">
-        <div className="h-[91px] w-full flex items-center gap-2">
+      <div className="border-b flex items-center">
+        <div
+          className={`h-[91px] w-full flex items-center ${isExpanded ? 'px-6' : 'justify-center'}`}
+        >
           {/* 미니 로고 */}
           <span
             className={`flex items-center transition-opacity duration-300 ${
               isExpanded ? 'opacity-0 hidden' : 'opacity-100'
             }`}
           >
-            <img src={logomini} alt="AI" className="h-6 w-auto" />
+            <img src={logomini} alt="AI" className="h-8 w-auto" />
           </span>
 
           {/* 풀 로고 */}
           <span
-            className={`transition-opacity duration-300 ${
+            className={`flex items-center transition-opacity duration-300 ${
               isExpanded ? 'opacity-100' : 'opacity-0 hidden'
             }`}
           >
-            <img src={logofull} alt="AI PARK" className="h-6 w-auto" />
+            <img src={logofull} alt="AI PARK" className="h-8 w-auto" />
           </span>
         </div>
       </div>
@@ -134,7 +136,9 @@ export function NavSidebar() {
         <Separator className="my-4" />
         <div className="pt-2 pb-3">
           <h2
-            className={`pt-2 pb-3 text-overline text-primary ${isExpanded ? 'ml-2 text-left' : 'text-center'}`}
+            className={`pt-2 pb-3 text-gray-800 ${
+              isExpanded ? 'ml-2 text-left text-sm font-medium' : 'text-center text-xs font-medium'
+            }`}
           >
             워크스페이스
           </h2>

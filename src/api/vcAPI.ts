@@ -111,12 +111,17 @@ export const saveVCProject = async (
         unitScript: file.unitScript,
         isChecked: file.isChecked,
       })),
-      trgFile: data.trgFile
-        ? {
-            localFileName: data.trgFile.s3MemberAudioMetaId ? null : data.trgFile.localFileName,
-            s3MemberAudioMetaId: data.trgFile.s3MemberAudioMetaId,
-          }
-        : null,
+      trgFiles: data.trgFiles?.[0]
+        ? [
+            {
+              localFileName: data.trgFiles[0].s3MemberAudioMetaId
+                ? ''
+                : data.trgFiles[0].localFileName,
+              s3MemberAudioMetaId: data.trgFiles[0].s3MemberAudioMetaId,
+              audioType: data.trgFiles[0].audioType,
+            },
+          ]
+        : [],
     };
 
     formData.append('metadata', JSON.stringify(metadata));

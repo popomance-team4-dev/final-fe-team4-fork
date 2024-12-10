@@ -267,7 +267,7 @@ export interface VCSaveDto {
   projectId: number | null;
   projectName: string;
   srcFiles: VCSrcFile[];
-  trgFile: VCTrgFile | null;
+  trgFiles: VCTrgFile[];
 }
 
 export interface Project {
@@ -350,7 +350,8 @@ export interface VCSrcFile {
 }
 
 export interface VCTrgFile {
-  localFileName: string | null;
+  audioType: string;
+  localFileName: string;
   s3MemberAudioMetaId: number | null;
 }
 

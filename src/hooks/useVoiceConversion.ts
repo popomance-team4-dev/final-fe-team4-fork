@@ -37,7 +37,7 @@ export const useVoiceConversion = ({
     try {
       if (!selectedVoice) return;
 
-      const selectedItems = items.filter((item) => item.isSelected && item.file);
+      const selectedItems = items.filter((item) => item.isSelected && (item.file || item.srcAudio));
       if (selectedItems.length === 0) {
         showAlert('변환할 오디오를 선택해주세요.', 'destructive');
         return;

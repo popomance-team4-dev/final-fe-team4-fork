@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TbCheck, TbPencil } from 'react-icons/tb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { CloseButton, SaveButton } from '@/components/custom/buttons/IconButton';
 import {
@@ -35,6 +35,7 @@ const Title = ({
   onClose,
   onProjectNameChange,
 }: TitleProps) => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(projectTitle);
   const handleSaveVC = useVCStore((state) => state.handleSave);
@@ -55,6 +56,11 @@ const Title = ({
       handleSaveVC();
     }
     onSave?.();
+  };
+
+  const handleClose = () => {
+    onClose?.();
+    navigate('/project');
   };
 
   if (variant === 'recent') {
@@ -126,7 +132,7 @@ const Title = ({
         </div>
         <div className="flex items-center gap-2 -mt-1">
           <SaveButton onClick={handleSaveClick} />
-          <CloseButton onClick={onClose} />
+          <CloseButton onClick={handleClose} />
         </div>
       </div>
     </div>

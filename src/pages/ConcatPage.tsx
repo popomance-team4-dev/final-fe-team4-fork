@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   concatLoad,
@@ -82,6 +82,7 @@ const ConcatPage = () => {
   const [globalTotalSilenceLength, setGlobalTotalSilenceLength] = useState(0);
   const hasAudioFile = items.length > 0;
   const [concatAudioUrl, setConcatAudioUrl] = useState<string>('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadConcatProject = async () => {
@@ -175,6 +176,10 @@ const ConcatPage = () => {
 
   // 선택된 항목 삭제
   const handleDeleteSelectedItems = useCallback(async () => {
+    if (!id) {
+      deleteSelectedItems();
+      return;
+    }
     try {
       setIsLoading(true);
 
@@ -264,7 +269,9 @@ const ConcatPage = () => {
     },
     [items, setItems]
   );
-
+  const handleClose = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
   return (
     <PageLayout
       variant="project"
@@ -277,7 +284,7 @@ const ConcatPage = () => {
         projectTitle={projectName}
         onProjectNameChange={handleProjectNameChange}
         onSave={handleSave}
-        onClose={() => console.log('닫기')}
+        onClose={handleClose}
       />
       {isLoading ? (
         <div className="flex items-center justify-center h-[calc(100vh-200px)]">

@@ -290,7 +290,7 @@ export function RecentExportTable() {
                     </button>
                   </div>
                 </TableCell>
-                <TableCell className="w-[190px] text-gray-700">{item.createdAt}</TableCell>
+                <TableCell className="text-gray-700 pl-8">{item.createdAt}</TableCell>
               </TableRow>
             );
           })}

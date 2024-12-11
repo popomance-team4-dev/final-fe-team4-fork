@@ -218,60 +218,58 @@ export function RecentExportTable() {
       <Table className="table-fixed w-full">
         <TableHeader className="bg-gray-50">
           <TableRow>
-            <TableHead className="pl-16 text-body3 text-black w-[150px]">유형</TableHead>
-            <TableHead className="text-body3 text-black w-[110px] truncate">프로젝트명</TableHead>
-            <TableHead className="text-body3 text-black w-[100px]">파일명</TableHead>
-            <TableHead className="p-0 text-body3 text-black w-[200px]">스크립트</TableHead>
-            <TableHead className="text-body3 text-black w-[60px] text-center truncate">
-              상태
-            </TableHead>
-            <TableHead className="text-body3 text-black w-[80px] text-center whitespace-nowrap">
+            <TableHead className="pl-[70px] text-body3 text-black w-[180px]">유형</TableHead>
+            <TableHead className="text-body3 text-black w-[160px]">프로젝트명</TableHead>
+            <TableHead className="text-body3 text-black w-[200px]">파일명</TableHead>
+            <TableHead className="text-body3 text-black flex-1">스크립트</TableHead>
+            <TableHead className="text-body3 text-black w-[120px] text-center">상태</TableHead>
+            <TableHead className="text-body3 text-black w-[120px] text-center pl-0">
               다운로드
             </TableHead>
-            <TableHead className="text-body3 text-black w-[130px] truncate">
-              업데이트 날짜
-            </TableHead>
+            <TableHead className="text-body3 text-black w-[190px]">업데이트 날짜</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {items.map((item, index) => {
-            const metaId = item.metaId ?? `meta-${index}`; // metaId 기본값 설정
-            const projectId = item.id ?? `project-${index}`; // projectId 기본값 설정
-            const key = `${projectId}-${metaId}`; // 고유한 key 생성
-            const playing = isPlaying(projectId, metaId); // 정확히 매칭되는지 확인
+            const metaId = item.metaId ?? `meta-${index}`;
+            const projectId = item.id ?? `project-${index}`;
+            const key = `${projectId}-${metaId}`;
+            const playing = isPlaying(projectId, metaId);
 
             return (
               <TableRow
-                key={key} // 고유 key 설정
+                key={key}
                 data-state={playing ? 'selected' : undefined}
                 onClick={() =>
                   handleProjectClick(projectId, item.type.toUpperCase() as 'TTS' | 'VC' | 'CONCAT')
                 }
                 className="cursor-pointer"
               >
-                <TableCell className="w-[100px] text-left">
+                <TableCell className="w-[180px]">
                   <div
-                    onClick={(e) => e.stopPropagation()} // 이벤트 전파 방지
-                    className="flex items-center gap-4"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-[14px]"
                   >
                     <PlayButton
                       isPlaying={playing}
                       onPlay={() => handlePlay(projectId, metaId, item.url || '')}
                       onPause={() => handlePause()}
+                      className="scale-90"
                     />
                     {AudioBadge(item.type)}
                   </div>
                 </TableCell>
-
-                <TableCell className="truncate text-left text-black">{item.projectName}</TableCell>
-                <TableCell className="truncate text-left text-black">{item.fileName}</TableCell>
-                <TableCell className="max-w-md p-0">
-                  <div className="truncate text-left text-black overflow-hidden text-ellipsis">
-                    {item.content}
-                  </div>
+                <TableCell className="w-[160px] truncate text-left text-black">
+                  {item.projectName}
                 </TableCell>
-                <TableCell className="px-0 truncate">
-                  <div className="flex">
+                <TableCell className="w-[200px] truncate text-left text-black">
+                  {item.fileName}
+                </TableCell>
+                <TableCell className="flex-1">
+                  <div className="truncate text-left text-black">{item.content}</div>
+                </TableCell>
+                <TableCell className="w-[120px]">
+                  <div className="flex justify-center">
                     {item.unitStatus === 'SUCCESS' ||
                     item.unitStatus === 'FAILURE' ||
                     item.unitStatus === null ? (
@@ -279,11 +277,11 @@ export function RecentExportTable() {
                     ) : null}
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="w-[120px] pl-0">
                   <div className="flex items-center justify-center">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // 이벤트 전파 방지
+                        e.stopPropagation();
                         handleDownload(item.url || '', item.fileName);
                       }}
                       aria-label="Download file"
@@ -292,7 +290,7 @@ export function RecentExportTable() {
                     </button>
                   </div>
                 </TableCell>
-                <TableCell className="text-gray-700 whitespace-nowrap">{item.createdAt}</TableCell>
+                <TableCell className="w-[190px] text-gray-700">{item.createdAt}</TableCell>
               </TableRow>
             );
           })}

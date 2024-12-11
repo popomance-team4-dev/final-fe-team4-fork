@@ -174,7 +174,7 @@ const VCPage = () => {
 
       try {
         const response = await vcLoad(Number(id));
-        if (!response.data) return;
+        if (!response?.data) return;
 
         const { vcProjectRes: vcProject, vcDetailsRes: vcDetails } = response.data;
 
@@ -199,6 +199,7 @@ const VCPage = () => {
             }))
           );
         }
+        console.log('vcDetails', vcDetails);
       } catch (error) {
         console.error('VC 프로젝트 로드 실패:', error);
         showAlert('프로젝트 로드에 실패했습니다.', 'destructive');

@@ -21,6 +21,18 @@ interface VoiceConversionResult {
   isGenerating: boolean;
 }
 
+// const checkSrcAudioValid = (srcAudio: string | null, file: File | null) => {
+//   if (srcAudio) throw new Error('srcAudio가 없습니다.');
+//   if (file) return new Error('file이 없습니다.');
+//   return { srcAudio, file };
+// };
+
+async function urlToFile(url: string, filename: string): Promise<File> {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type });
+}
+
 export const useVoiceConversion = ({
   items,
   selectedVoice,
@@ -72,10 +84,13 @@ export const useVoiceConversion = ({
       };
 
       const targetVoiceFile = await fetch('/rico.mp3').then((res) => res.blob());
-      const files = [
-        ...selectedItems.map((item) => item.file as File),
+      const files = await Promise.all([
+        ...selectedItems.map(
+          async (item) =>
+            (item.file as File) || (await urlToFile(item.srcAudio || '', item.fileName))
+        ),
         new File([targetVoiceFile], 'rico.mp3', { type: 'audio/mp3' }),
-      ];
+      ]);
 
       const result = await processVoiceConversion(vcSaveDto, files, memberId);
 

@@ -21,33 +21,74 @@ export const processVoiceConversion = async (
   files: File[],
   memberId: number
 ): Promise<VCProcessResponse[]> => {
-  try {
-    const formData = new FormData();
+  if (vcSaveDto.projectId === null) {
+    try {
+      const formData = new FormData();
 
-    // VCSaveDto를 JSON 문자열로 변환하여 추가
-    formData.append('VCSaveRequestDto', JSON.stringify(vcSaveDto));
+      // VCSaveDto를 JSON 문자열로 변환하여 추가
+      formData.append('VCSaveRequestDto', JSON.stringify(vcSaveDto));
 
-    // 파일들을 순서대로 추가 (소스 파일들 + 타겟 파일)
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
+      // 파일들을 순서대로 추가 (소스 파일들 + 타겟 파일)
+      files.forEach((file) => {
+        formData.append('files', file);
+      });
 
-    const response = await customInstance<ResponseDto<VCProcessResponse[]>>({
-      url: '/vc/process',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      data: formData,
-      params: { memberId },
-    });
+      //request 데이터를 파일안에 현재 로컬 폴더에 파일에 저장하기
+      // vcSaveDto와 files를 request-log.txt 파일에 저장
+      console.log('vcSaveDto', vcSaveDto);
+      // const fs = require('fs');');
 
-    console.log('서버 원본 응답:', response);
-    console.log('응답 데이터:', response.data);
-    return Array.isArray(response.data) ? response.data : [];
-  } catch (error) {
-    console.error('VC 프로세스 실패:', error);
-    throw error;
+      const response = await customInstance<ResponseDto<VCProcessResponse[]>>({
+        url: '/vc/process',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+        params: { memberId },
+      });
+
+      console.log('서버 원본 응답:', response);
+      console.log('응답 데이터:', response.data);
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (error) {
+      console.error('VC 프로세스 실패:', error);
+      throw error;
+    }
+  } else {
+    try {
+      const formData = new FormData();
+
+      // VCSaveDto를 JSON 문자열로 변환하여 추가
+      formData.append('VCSaveRequestDto', JSON.stringify(vcSaveDto));
+
+      // 파일들을 순서대로 추가 (소스 파일들 + 타겟 파일)
+      files.forEach((file) => {
+        formData.append('files', file);
+      });
+
+      //request 데이터를 파일안에 현재 로컬 폴더에 파일에 저장하기
+      // vcSaveDto와 files를 request-log.txt 파일에 저장
+      console.log('vcSaveDto', vcSaveDto);
+      // const fs = require('fs');');
+
+      const response = await customInstance<ResponseDto<VCProcessResponse[]>>({
+        url: '/vc/process',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+        params: { memberId },
+      });
+
+      console.log('서버 원본 응답:', response);
+      console.log('응답 데이터:', response.data);
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (error) {
+      console.error('VC 프로세스 실패:', error);
+      throw error;
+    }
   }
 };
 
@@ -76,13 +117,13 @@ interface VCLoadResponse {
 /**
  * VC 프로젝트 상태를 가져옵니다.
  */
-export const vcLoad = async (projectId: number): Promise<ResponseDto<VCLoadResponse>> => {
+export const vcLoad = async (projectId: number) => {
   try {
-    const response = await customInstance<ResponseDto<VCLoadResponse>>({
+    const response = await customInstance({
       url: `/vc/${projectId}`,
       method: 'GET',
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('VC 프로젝트 로드 실패:', error);
     throw error;

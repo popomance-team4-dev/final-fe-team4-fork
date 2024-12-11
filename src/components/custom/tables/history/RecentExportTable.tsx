@@ -229,7 +229,7 @@ export function RecentExportTable() {
             <TableHead className="text-body3 text-black w-[190px]">업데이트 날짜</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="border-b">
           {items.map((item, index) => {
             const metaId = item.metaId ?? `meta-${index}`;
             const projectId = item.id ?? `project-${index}`;

@@ -136,7 +136,7 @@ export function HistoryListTable({
                 </button>
               </div>
             </TableCell>
-            <TableCell className="w-[190px] text-gray-700">{item.updatedAt}</TableCell>
+            <TableCell className="w-[190px] text-gray-700 pl-[18px]">{item.updatedAt}</TableCell>
           </TableRow>
         ))}
       </TableBody>

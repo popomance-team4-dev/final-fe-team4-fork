@@ -216,7 +216,7 @@ export function RecentExportTable() {
         </p>
       </div>
       <Table className="table-fixed w-full">
-        <TableHeader className="bg-gray-50">
+        <TableHeader className="bg-gray-50 border-t">
           <TableRow>
             <TableHead className="pl-[70px] text-body3 text-black w-[180px]">유형</TableHead>
             <TableHead className="text-body3 text-black w-[160px]">프로젝트명</TableHead>

@@ -109,8 +109,6 @@ const HistoryPage = () => {
     // 상태를 즉시 업데이트
     setCurrentPlayingId(id);
     setAudio(newAudio);
-
-    console.log('Audio is now playing:', id);
   };
 
   const handlePause = () => {
@@ -118,6 +116,7 @@ const HistoryPage = () => {
       audio.pause(); // 오디오 재생 멈춤
       setAudio(null); // 상태 초기화
     }
+    setCurrentPlayingId(null); // 재생 중인 ID 초기화
   };
 
   const handleDownload = (url: string, fileName: string) => {
@@ -307,6 +306,7 @@ const HistoryPage = () => {
         selectedItemsCount={selectedMetaIds.length}
         onSearch={handleSearch}
         totalItemsCount={totalItemsCount}
+        currentPlayingId={currentPlayingId ?? undefined}
       />
       <DeleteConfirm open={isDialogOpen} onOpenChange={setIsDialogOpen} onConfirm={handleDelete} />
     </PageLayout>

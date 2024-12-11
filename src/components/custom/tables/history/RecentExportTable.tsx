@@ -47,8 +47,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ unitStatus }) => {
   const status = unitStatus === null ? 'NONE' : unitStatus;
 
   return (
-    <div className="flex justify-start">
-      <Badge variant={variantMap[status] || 'failed'}>
+    <div className="flex justify-start whitespace-nowrap">
+      <Badge variant={variantMap[status] || 'failed'} className="whitespace-nowrap">
         <TbCircleFilled className="w-2 h-2 mr-2" />
         {textMap[status]}
       </Badge>
@@ -222,11 +222,9 @@ export function RecentExportTable() {
             <TableHead className="text-body3 text-black w-[160px]">프로젝트명</TableHead>
             <TableHead className="text-body3 text-black w-[200px]">파일명</TableHead>
             <TableHead className="text-body3 text-black flex-1">스크립트</TableHead>
-            <TableHead className="text-body3 text-black w-[120px] text-center">상태</TableHead>
-            <TableHead className="text-body3 text-black w-[120px] text-center pl-0">
-              다운로드
-            </TableHead>
-            <TableHead className="text-body3 text-black w-[190px]">업데이트 날짜</TableHead>
+            <TableHead className="text-body3 text-black w-[100px] text-center">상태</TableHead>
+            <TableHead className="text-body3 text-black w-[140px] text-center">다운로드</TableHead>
+            <TableHead className="text-body3 text-black w-[160px] pr-4">업데이트 날짜</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="border-b">
@@ -268,7 +266,7 @@ export function RecentExportTable() {
                 <TableCell className="flex-1">
                   <div className="truncate text-left text-black">{item.content}</div>
                 </TableCell>
-                <TableCell className="w-[120px]">
+                <TableCell className="w-[100px]">
                   <div className="flex justify-center">
                     {item.unitStatus === 'SUCCESS' ||
                     item.unitStatus === 'FAILURE' ||
@@ -277,7 +275,7 @@ export function RecentExportTable() {
                     ) : null}
                   </div>
                 </TableCell>
-                <TableCell className="w-[120px] pl-0">
+                <TableCell className="w-[140px]">
                   <div className="flex items-center justify-center">
                     <button
                       onClick={(e) => {
@@ -290,7 +288,9 @@ export function RecentExportTable() {
                     </button>
                   </div>
                 </TableCell>
-                <TableCell className="text-gray-700 pl-8">{item.createdAt}</TableCell>
+                <TableCell className="text-gray-700 w-[160px] pl-[30px] pr-4">
+                  {item.createdAt}
+                </TableCell>
               </TableRow>
             );
           })}

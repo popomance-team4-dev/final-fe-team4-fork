@@ -60,7 +60,7 @@ export function ProjectListTable({
 
           <TableHead className="text-body3 text-black w-[80px]">유형</TableHead>
           <TableHead className="text-body3 text-black w-[150px]">프로젝트명</TableHead>
-          <TableHead className="text-body3 text-black w-[300px]">내용</TableHead>
+          <TableHead className="text-body3 text-black w-[300px]">스크립트</TableHead>
           <TableHead className="pl-6 text-body3 text-black w-[150px]">업데이트 날짜</TableHead>
         </TableRow>
       </TableHeader>

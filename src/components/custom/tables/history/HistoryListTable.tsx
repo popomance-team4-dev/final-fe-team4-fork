@@ -69,7 +69,7 @@ export function HistoryListTable({
           <TableHead className="pl-16 text-body3 text-black w-[150px]">유형</TableHead>
           <TableHead className="text-body3 text-black w-[110px]">프로젝트명</TableHead>
           <TableHead className="text-body3 text-black w-[120px]">파일명</TableHead>
-          <TableHead className="p-0 text-body3 text-black w-[200px]">내용</TableHead>
+          <TableHead className="p-0 text-body3 text-black w-[200px]">스크립트</TableHead>
           <TableHead className="text-body3 text-black w-[60px] text-center">상태</TableHead>
           <TableHead className="text-body3 text-black w-[80px] text-center whitespace-nowrap">
             다운로드

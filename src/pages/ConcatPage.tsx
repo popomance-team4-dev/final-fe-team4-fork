@@ -13,6 +13,7 @@ import MainContents from '@/components/section/contents/MainContents';
 import Title from '@/components/section/contents/Title';
 import { FileProgressHeader } from '@/components/section/header/FileProgressHeader';
 import ConcatSidebar from '@/components/section/sidebar/ConcatSidebar';
+import { Alert } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
 import PageLayout from '@/layouts/PageLayout';
 import { ConcatItem, useConcatStore } from '@/stores/concat.store';
@@ -76,11 +77,25 @@ const ConcatPage = () => {
   } = useConcatStore();
   const [projectName, setProjectName] = useState('새 프로젝트');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [globalFrontSilenceLength, setGlobalFrontSilenceLength] = useState(0);
   const [globalTotalSilenceLength, setGlobalTotalSilenceLength] = useState(0);
   const hasAudioFile = items.length > 0;
   const [concatAudioUrl, setConcatAudioUrl] = useState<string>('');
   const navigate = useNavigate();
+  const [alert, setAlert] = useState<{
+    visible: boolean;
+    message: string;
+    variant: 'default' | 'destructive';
+  }>({
+    visible: false,
+    message: '',
+    variant: 'default',
+  });
+  const showAlert = useCallback((message: string, variant: 'default' | 'destructive') => {
+    setAlert({ visible: true, message, variant });
+    setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
+  }, []);
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;
@@ -153,12 +168,14 @@ const ConcatPage = () => {
         file: files,
       });
       console.log('저장 성공:', response);
+      showAlert('프로젝트가 저장되었습니다.', 'default');
     } catch (error) {
       console.error('저장 실패:', error);
+      showAlert('프로젝트 저장에 실패했습니다.', 'destructive');
     } finally {
       setIsLoading(false);
     }
-  }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items]);
+  }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items, showAlert]);
   // 선택된 항목 삭제
   const handleDeleteSelectedItems = useCallback(async () => {
     if (!id) {
@@ -191,10 +208,10 @@ const ConcatPage = () => {
   //con cat 오디오 생성
   const handleConcatGenerate = useCallback(async () => {
     try {
-      setIsLoading(true);
+      setIsGenerating(true);
       const selectedItems = items.filter((item) => item.isSelected);
       if (selectedItems.length === 0) {
-        console.log('선택된 항목이 없습니다.');
+        showAlert('선택된 항목이 없습니다.', 'destructive');
         return;
       }
       console.log(
@@ -223,17 +240,20 @@ const ConcatPage = () => {
       if (response) {
         console.log('Concat 생성 성공:', response);
         setConcatAudioUrl(response.outputConcatAudios.at(-1));
+        showAlert('Concat 생성이 완료되었습니다.', 'default');
       } else {
         console.error('Concat 생성 실패:', response);
         setConcatAudioUrl('');
+        showAlert('Concat 생성에 실패했습니다.', 'destructive');
       }
     } catch (error) {
       console.error('Concat 생성 실패:', error);
       setConcatAudioUrl('');
+      showAlert('Concat 생성 중 오류가 발생했습니다.', 'destructive');
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
     }
-  }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items]);
+  }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items, showAlert]);
   // 순서 변경
   const handleReorder = useCallback(
     (startIndex: number, endIndex: number) => {
@@ -247,11 +267,25 @@ const ConcatPage = () => {
   const handleClose = useCallback(() => {
     navigate(-1);
   }, [navigate]);
+  const handleApplySettings = useCallback(
+    (frontSilence: number, totalSilence: number, message?: string) => {
+      setGlobalFrontSilenceLength(frontSilence);
+      setGlobalTotalSilenceLength(totalSilence);
+      showAlert(message || '설정이 적용되었습니다.', 'default');
+    },
+    [showAlert]
+  );
   return (
     <PageLayout
       variant="project"
       header={<FileProgressHeader files={progressFiles} />}
-      sidebar={<ConcatSidebar />}
+      sidebar={
+        <ConcatSidebar
+          frontSilence={globalFrontSilenceLength}
+          totalSilence={globalTotalSilenceLength}
+          onApplySettings={handleApplySettings}
+        />
+      }
       footer={<AudioPlayer audioUrl={concatAudioUrl} />}
     >
       <Title
@@ -284,8 +318,15 @@ const ConcatPage = () => {
           hasAudioFile={hasAudioFile}
           onReorder={handleReorder}
           onGenerate={handleConcatGenerate}
-          isGenerating={isLoading}
+          isGenerating={isGenerating}
+          showAlert={alert.visible}
+          onCloseAlert={() => setAlert({ visible: false, message: '', variant: 'default' })}
         />
+      )}
+      {alert.visible && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert variant={alert.variant}>{alert.message}</Alert>
+        </div>
       )}
     </PageLayout>
   );

@@ -96,6 +96,18 @@ const ConcatPage = () => {
     setAlert({ visible: true, message, variant });
     setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
   }, []);
+
+  useEffect(() => {
+    if (!id) {
+      // 초기 상태로 리셋
+      setItems([]);
+      setProjectName('새 프로젝트');
+      setGlobalFrontSilenceLength(0);
+      setGlobalTotalSilenceLength(0);
+      setConcatAudioUrl('');
+    }
+  }, [id, setItems]);
+
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;

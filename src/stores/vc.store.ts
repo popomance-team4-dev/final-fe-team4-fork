@@ -361,6 +361,9 @@ export const useVCStore = create<VCStore>((set, get) => ({
       const response = await saveVCProject(saveData, files);
 
       if (response?.data?.vcProjectRes) {
+        if (!projectData.projectId && response.data.vcProjectRes.id) {
+          window.history.replaceState(null, '', `/vc/${response.data.vcProjectRes.id}`);
+        }
         // 프로젝트 ID 업데이트
         set({
           projectData: {

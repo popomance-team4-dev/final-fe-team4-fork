@@ -55,6 +55,15 @@ interface DeleteResponse {
   message: string;
   data: string;
 }
+interface ConcatSaveResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: {
+    cnctProjectDto: ConcatProjectDto;
+    cnctDetailDtos: ConcatDetailDto[];
+  };
+}
 /**
  * Concat 프로젝트 상태를 가져옵니다.
  */
@@ -75,7 +84,7 @@ export const concatLoad = async (projectId: number) => {
 /**
  * Concat 프로젝트 상태를 저장합니다.
  */
-export const concatSave = async (data: ConcatSaveRequest) => {
+export const concatSave = async (data: ConcatSaveRequest): Promise<ConcatSaveResponse> => {
   try {
     if (data.concatSaveDto.projectId === null) {
       const formData = new FormData();
@@ -89,13 +98,17 @@ export const concatSave = async (data: ConcatSaveRequest) => {
           formData.append('file', file);
         });
       }
-      const response = await customInstance.post('/concat/save', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Save API 응답:', response.data);
-      return response.data;
+      const { data: responseData } = await customInstance.post<any, { data: ConcatSaveResponse }>(
+        '/concat/save',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('Save API 응답:', responseData);
+      return responseData;
     } else {
       const formData = new FormData();
       // 저장할 데이터 로깅
@@ -121,13 +134,17 @@ export const concatSave = async (data: ConcatSaveRequest) => {
           formData.append('file', file);
         });
       }
-      const response = await customInstance.post('/concat/save', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Save API 응답:', response.data);
-      return response.data;
+      const { data: responseData } = await customInstance.post<any, { data: ConcatSaveResponse }>(
+        '/concat/save',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('Save API 응답:', responseData);
+      return responseData;
     }
   } catch (error) {
     console.error('Concat Save API 에러:', error);

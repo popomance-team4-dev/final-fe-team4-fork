@@ -211,26 +211,27 @@ const ConcatPage = () => {
   ]);
   // 선택된 항목 삭제
   const handleDeleteSelectedItems = useCallback(async () => {
-    if (!id) {
+    const selectedItems = items.filter((item) => item.isSelected);
+    const isAllLocal = selectedItems.every((item) => isNaN(Number(item.id)));
+    if (isAllLocal) {
       deleteSelectedItems();
       return;
     }
     try {
       setIsLoading(true);
-      // 선택된 항목들의 ID 추출
-      const selectedDetailIds = items
-        .filter((item) => item.isSelected)
+      const selectedDetailIds = selectedItems
+        .filter((item) => !isNaN(Number(item.id)))
         .map((item) => parseInt(item.id));
-      if (selectedDetailIds.length === 0) {
-        console.log('선택된 항목이 없습니다.');
-        return;
-      }
-      const deleteResponse = await deleteSelectedConcatItems({
-        projectId: id ? parseInt(id) : 0,
-        detailIds: selectedDetailIds,
-      });
-      if (deleteResponse.success) {
-        deleteSelectedItems();
+
+      if (selectedDetailIds.length > 0) {
+        const deleteResponse = await deleteSelectedConcatItems({
+          projectId: id ? parseInt(id) : 0,
+          detailIds: selectedDetailIds,
+        });
+
+        if (deleteResponse.success) {
+          deleteSelectedItems();
+        }
       }
     } catch (error) {
       console.error('항목 삭제 실패:', error);

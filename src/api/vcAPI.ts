@@ -1,3 +1,5 @@
+import { newcustomInstance } from '@/api/new-axios-client';
+
 import type { ResponseDto, VCSaveDto } from './aIParkAPI.schemas';
 import { customInstance } from './axios-client';
 
@@ -8,6 +10,25 @@ export interface VCProcessResponse {
   unitScript: string;
   srcAudio: string;
   genAudios: string[];
+}
+
+export interface VCSaveRequestSrcFile {
+  id: number | null;
+  localFileName: string | null;
+  unitScript: string;
+  isChecked: boolean;
+}
+export interface VCSaveRequestTrgFile {
+  audioType: string;
+  localFileName: string | null;
+  s3MemberAudioMetaId: number | null;
+}
+
+interface VCSaveRequestDto {
+  projectId: number | null;
+  projectName: string;
+  srcFiles: VCSaveRequestSrcFile[];
+  trgFiles: VCSaveRequestTrgFile[];
 }
 
 /**
@@ -21,8 +42,8 @@ export const processVoiceConversion = async (
   files: File[],
   memberId: number
 ): Promise<VCProcessResponse[]> => {
-  if (vcSaveDto.projectId === null) {
-    try {
+  try {
+    if (vcSaveDto.projectId === null) {
       const formData = new FormData();
 
       // VCSaveDto를 JSON 문자열로 변환하여 추가
@@ -33,10 +54,7 @@ export const processVoiceConversion = async (
         formData.append('files', file);
       });
 
-      //request 데이터를 파일안에 현재 로컬 폴더에 파일에 저장하기
-      // vcSaveDto와 files를 request-log.txt 파일에 저장
       console.log('vcSaveDto', vcSaveDto);
-      // const fs = require('fs');');
 
       const response = await customInstance<ResponseDto<VCProcessResponse[]>>({
         url: '/vc/process',
@@ -51,26 +69,47 @@ export const processVoiceConversion = async (
       console.log('서버 원본 응답:', response);
       console.log('응답 데이터:', response.data);
       return Array.isArray(response.data) ? response.data : [];
-    } catch (error) {
-      console.error('VC 프로세스 실패:', error);
-      throw error;
-    }
-  } else {
-    try {
+    } else {
+      const currentProject = await vcLoad(vcSaveDto.projectId);
+
+      const { vcDetailsRes } = currentProject.data;
+
+      const currentProjectSrcFiles = vcDetailsRes.map((vcDetail) => {
+        return {
+          detailId: vcDetail.id,
+          unitScript: vcDetail.unitScript,
+          srcAudio: vcDetail.srcAudio,
+        };
+      });
+
+      const updatedVCSaveDto: VCSaveRequestDto = {
+        ...vcSaveDto,
+        projectId: vcSaveDto.projectId,
+        projectName: vcSaveDto.projectName,
+        srcFiles: vcSaveDto.srcFiles.map((srcFile, index) => ({
+          id: currentProjectSrcFiles[index]?.detailId || null,
+          localFileName: currentProjectSrcFiles[index]?.srcAudio.split('/').pop()
+            ? null
+            : srcFile.localFileName,
+          unitScript: srcFile.unitScript,
+          isChecked: srcFile.isChecked,
+        })),
+        trgFiles: [
+          {
+            audioType: 'VC_TRG',
+            localFileName: null,
+            s3MemberAudioMetaId: 821,
+          },
+        ],
+      };
+
       const formData = new FormData();
+      formData.append('VCSaveRequestDto', JSON.stringify(updatedVCSaveDto));
+      console.log('updatedVCSaveDto', updatedVCSaveDto);
 
-      // VCSaveDto를 JSON 문자열로 변환하여 추가
-      formData.append('VCSaveRequestDto', JSON.stringify(vcSaveDto));
-
-      // 파일들을 순서대로 추가 (소스 파일들 + 타겟 파일)
       files.forEach((file) => {
         formData.append('files', file);
       });
-
-      //request 데이터를 파일안에 현재 로컬 폴더에 파일에 저장하기
-      // vcSaveDto와 files를 request-log.txt 파일에 저장
-      console.log('vcSaveDto', vcSaveDto);
-      // const fs = require('fs');');
 
       const response = await customInstance<ResponseDto<VCProcessResponse[]>>({
         url: '/vc/process',
@@ -82,17 +121,21 @@ export const processVoiceConversion = async (
         params: { memberId },
       });
 
-      console.log('서버 원본 응답:', response);
-      console.log('응답 데이터:', response.data);
+      console.log('기존 프로젝트 처리 응답:', response);
       return Array.isArray(response.data) ? response.data : [];
-    } catch (error) {
-      console.error('VC 프로세스 실패:', error);
-      throw error;
     }
+  } catch (error) {
+    console.error('VC 프로세스 실패:', error);
+    throw error;
   }
 };
 
-interface VCLoadResponse {
+interface genAudios {
+  id: number;
+  audioUrl: string;
+}
+
+interface VCLoadSaveResponse {
   vcProjectRes: {
     id: number;
     projectName: string;
@@ -107,23 +150,47 @@ interface VCLoadResponse {
     isChecked: boolean;
     unitScript: string;
     srcAudio: string | null;
-    genAudios: {
-      id: number;
-      audioUrl: string;
-    }[];
+    genAudios: genAudios[];
   }[];
+}
+
+interface VCAudio {
+  id: number;
+  audioUrl: string;
+}
+
+interface VCProject {
+  id: number;
+  projectName: string;
+  trgAudios: VCAudio[];
+}
+
+interface VCDetail {
+  id: number;
+  projectId: number;
+  isChecked: boolean;
+  unitScript: string;
+  srcAudio: string;
+  genAudios: genAudios[];
+}
+
+interface VCResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: {
+    vcProjectRes: VCProject;
+    vcDetailsRes: VCDetail[];
+  };
 }
 
 /**
  * VC 프로젝트 상태를 가져옵니다.
  */
-export const vcLoad = async (projectId: number) => {
+export const vcLoad = async (projectId: number): Promise<VCResponse> => {
   try {
-    const response = await customInstance({
-      url: `/vc/${projectId}`,
-      method: 'GET',
-    });
-    return response;
+    const response = await newcustomInstance.get<VCResponse>(`/vc/${projectId}`);
+    return response.data;
   } catch (error) {
     console.error('VC 프로젝트 로드 실패:', error);
     throw error;
@@ -138,7 +205,7 @@ export const vcLoad = async (projectId: number) => {
 export const saveVCProject = async (
   data: VCSaveDto,
   files?: File[]
-): Promise<ResponseDto<VCLoadResponse>> => {
+): Promise<ResponseDto<VCLoadSaveResponse>> => {
   try {
     const formData = new FormData();
 
@@ -179,7 +246,7 @@ export const saveVCProject = async (
       });
     }
 
-    const response = await customInstance<ResponseDto<VCLoadResponse>>({
+    const response = await customInstance<ResponseDto<VCLoadSaveResponse>>({
       url: '/vc/save',
       method: 'POST',
       headers: {

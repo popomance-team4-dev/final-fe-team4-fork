@@ -102,12 +102,15 @@ const TTSPage = () => {
     const loadTTSProject = async () => {
       if (!id) {
         console.warn('ID가 없습니다.');
-        showAlert('프로젝트 데이터가 없음. 저장을 누르면 새 프로젝트가 저장됩니다.', 'destructive');
+        showAlert('저장을 누르면 새 프로젝트가 저장됩니다.', 'default');
+        setItems([]);
+        setHistoryItems([]);
         return;
       }
 
       setIsLoading(true); // 로딩 상태 업데이트
       try {
+        console.log('loadTTSProject 호출:', id);
         const response = await ttsLoad(Number(id));
         const { ttsProject, ttsDetails } = response.data;
 

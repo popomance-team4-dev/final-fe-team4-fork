@@ -63,7 +63,6 @@ const ConcatPage = () => {
       createdAt: new Date(Date.now() - 86400000 * 31).toISOString(), // 한달 전
     },
   ]);
-
   const { id } = useParams();
   const {
     items,
@@ -75,7 +74,6 @@ const ConcatPage = () => {
     handleTextChange,
     handlePlay,
   } = useConcatStore();
-
   const [projectName, setProjectName] = useState('새 프로젝트');
   const [isLoading, setIsLoading] = useState(false);
   const [globalFrontSilenceLength, setGlobalFrontSilenceLength] = useState(0);
@@ -83,17 +81,14 @@ const ConcatPage = () => {
   const hasAudioFile = items.length > 0;
   const [concatAudioUrl, setConcatAudioUrl] = useState<string>('');
   const navigate = useNavigate();
-
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;
-
       setIsLoading(true);
       try {
         const response = await concatLoad(Number(id));
         console.log('API 전체 응답:', response);
         console.log('API 응답 데이터:', response.data);
-
         if (response.data.cnctProjectDto) {
           console.log('프로젝트 정보:', response.data.cnctProjectDto);
           setProjectName(response.data.cnctProjectDto.projectName);
@@ -104,7 +99,6 @@ const ConcatPage = () => {
             Number(response.data.cnctProjectDto.globalTotalSilenceLength) || 0
           );
         }
-
         if (response.data.cnctDetailDtos && Array.isArray(response.data.cnctDetailDtos)) {
           console.log('상세 정보:', response.data.cnctDetailDtos);
           const newItems: ConcatItem[] = response.data.cnctDetailDtos.map((detail) => ({
@@ -125,21 +119,17 @@ const ConcatPage = () => {
         setIsLoading(false);
       }
     };
-
     loadConcatProject();
   }, [id, setItems]);
-
   // 프로젝트 이름 변경
   const handleProjectNameChange = useCallback((newName: string) => {
     console.log('프로젝트 이름 변경:', newName);
     setProjectName(newName);
   }, []);
-
   // 저장
   const handleSave = useCallback(async () => {
     try {
       setIsLoading(true);
-
       const concatSaveDto = {
         projectId: id ? parseInt(id) : null,
         projectName,
@@ -154,18 +144,14 @@ const ConcatPage = () => {
           endSilence: item.endSilence || 0,
         })),
       };
-
       const files = items
         .filter((item) => item.file instanceof File && item.file.size > 0)
         .map((item) => item.file) as File[];
-
       console.log('저장 요청 데이터:', concatSaveDto);
-
       const response = await concatSave({
         concatSaveDto,
         file: files,
       });
-
       console.log('저장 성공:', response);
     } catch (error) {
       console.error('저장 실패:', error);
@@ -173,7 +159,6 @@ const ConcatPage = () => {
       setIsLoading(false);
     }
   }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items]);
-
   // 선택된 항목 삭제
   const handleDeleteSelectedItems = useCallback(async () => {
     if (!id) {
@@ -182,22 +167,18 @@ const ConcatPage = () => {
     }
     try {
       setIsLoading(true);
-
       // 선택된 항목들의 ID 추출
       const selectedDetailIds = items
         .filter((item) => item.isSelected)
         .map((item) => parseInt(item.id));
-
       if (selectedDetailIds.length === 0) {
         console.log('선택된 항목이 없습니다.');
         return;
       }
-
       const deleteResponse = await deleteSelectedConcatItems({
         projectId: id ? parseInt(id) : 0,
         detailIds: selectedDetailIds,
       });
-
       if (deleteResponse.success) {
         deleteSelectedItems();
       }
@@ -207,12 +188,10 @@ const ConcatPage = () => {
       setIsLoading(false);
     }
   }, [id, items, deleteSelectedItems]);
-
   //con cat 오디오 생성
   const handleConcatGenerate = useCallback(async () => {
     try {
       setIsLoading(true);
-
       const selectedItems = items.filter((item) => item.isSelected);
       if (selectedItems.length === 0) {
         console.log('선택된 항목이 없습니다.');
@@ -222,7 +201,6 @@ const ConcatPage = () => {
         'files',
         selectedItems.map((item) => item.file).filter((file) => file !== undefined)
       );
-
       const response = await convertMultipleAudios({
         concatRequestDto: {
           projectId: id ? parseInt(id) : null,
@@ -242,7 +220,6 @@ const ConcatPage = () => {
           .map((item) => item.file)
           .filter((file) => file !== undefined) as File[],
       });
-
       if (response) {
         console.log('Concat 생성 성공:', response);
         setConcatAudioUrl(response.outputConcatAudios.at(-1));
@@ -313,5 +290,4 @@ const ConcatPage = () => {
     </PageLayout>
   );
 };
-
 export default ConcatPage;

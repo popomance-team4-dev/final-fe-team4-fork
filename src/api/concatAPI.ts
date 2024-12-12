@@ -55,6 +55,15 @@ interface DeleteResponse {
   message: string;
   data: string;
 }
+interface ConcatSaveResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: {
+    cnctProjectDto: ConcatProjectDto;
+    cnctDetailDtos: ConcatDetailDto[];
+  };
+}
 /**
  * Concat 프로젝트 상태를 가져옵니다.
  */
@@ -71,28 +80,72 @@ export const concatLoad = async (projectId: number) => {
     throw error;
   }
 };
+
 /**
  * Concat 프로젝트 상태를 저장합니다.
  */
-export const concatSave = async (data: ConcatSaveRequest) => {
+export const concatSave = async (data: ConcatSaveRequest): Promise<ConcatSaveResponse> => {
   try {
-    const formData = new FormData();
-    // 저장할 데이터 로깅
-    console.log('Save API 요청 데이터:', data.concatSaveDto);
-    formData.append('concatSaveDto', JSON.stringify(data.concatSaveDto));
-    if (data.file && data.file.length > 0) {
-      data.file.forEach((file) => {
-        console.log('첨부 파일:', file.name);
-        formData.append('file', file);
+    if (data.concatSaveDto.projectId === null) {
+      const formData = new FormData();
+      // 저장할 데이터 로깅
+      console.log('Save API 요청 데이터:', data.concatSaveDto);
+      formData.append('concatSaveDto', JSON.stringify(data.concatSaveDto));
+
+      if (data.file && data.file.length > 0) {
+        data.file.forEach((file) => {
+          console.log('첨부 파일:', file.name);
+          formData.append('file', file);
+        });
+      }
+      const { data: responseData } = await customInstance.post<any, { data: ConcatSaveResponse }>(
+        '/concat/save',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('Save API 응답:', responseData);
+      return responseData;
+    } else {
+      const formData = new FormData();
+      // 저장할 데이터 로깅
+      console.log('Save API 요청 데이터:', data.concatSaveDto);
+
+      const loadResponse = await concatLoad(data.concatSaveDto.projectId);
+      const { cnctDetailDtos } = loadResponse.data;
+
+      const newConcatDetails = data.concatSaveDto.concatDetails.filter((newDetail) => {
+        return !cnctDetailDtos.some((oldDetail) => oldDetail.id === newDetail.id);
       });
+
+      const newConcatSaveDto = {
+        ...data.concatSaveDto,
+        concatDetails: newConcatDetails,
+      };
+      console.log('새로운 concatSaveDto:', newConcatSaveDto);
+      formData.append('concatSaveDto', JSON.stringify(newConcatSaveDto));
+
+      if (data.file && data.file.length > 0) {
+        data.file.forEach((file) => {
+          console.log('첨부 파일:', file.name);
+          formData.append('file', file);
+        });
+      }
+      const { data: responseData } = await customInstance.post<any, { data: ConcatSaveResponse }>(
+        '/concat/save',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('Save API 응답:', responseData);
+      return responseData;
     }
-    const response = await customInstance.post('/concat/save', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    console.log('Save API 응답:', response.data);
-    return response.data;
   } catch (error) {
     console.error('Concat Save API 에러:', error);
     throw error;

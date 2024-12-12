@@ -272,7 +272,11 @@ const TTSPage = () => {
 
   const handleSave = useCallback(async () => {
     try {
-      await uploadTTSProjectData(projectData, items, setProjectData);
+      const response = await uploadTTSProjectData(projectData, items, setProjectData);
+      // 새 프로젝트인 경우 URL 업데이트
+      if (!projectData.projectId && response?.ttsProject?.id) {
+        window.history.replaceState(null, '', `/tts/${response.ttsProject.id}`);
+      }
       showAlert('프로젝트가 저장되었습니다.', 'default');
     } catch (error) {
       console.error('프로젝트 저장 오류:', error);

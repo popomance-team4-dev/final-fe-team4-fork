@@ -96,6 +96,18 @@ const ConcatPage = () => {
     setAlert({ visible: true, message, variant });
     setTimeout(() => setAlert({ visible: false, message: '', variant: 'default' }), 2000);
   }, []);
+
+  useEffect(() => {
+    if (!id) {
+      // 초기 상태로 리셋
+      setItems([]);
+      setProjectName('새 프로젝트');
+      setGlobalFrontSilenceLength(0);
+      setGlobalTotalSilenceLength(0);
+      setConcatAudioUrl('');
+    }
+  }, [id, setItems]);
+
   useEffect(() => {
     const loadConcatProject = async () => {
       if (!id) return;
@@ -159,15 +171,28 @@ const ConcatPage = () => {
           endSilence: item.endSilence || 0,
         })),
       };
+
       const files = items
         .filter((item) => item.file instanceof File && item.file.size > 0)
         .map((item) => item.file) as File[];
+
       console.log('저장 요청 데이터:', concatSaveDto);
       const response = await concatSave({
         concatSaveDto,
         file: files,
       });
+
       console.log('저장 성공:', response);
+
+      // 새 프로젝트인 경우 URL 업데이트 및 상태 업데이트
+      if (!id && response?.data?.cnctProjectDto?.id) {
+        const newId = response.data.cnctProjectDto.id.toString();
+        // URL 업데이트
+        window.history.replaceState(null, '', `/concat/${newId}`);
+        // 페이지 상태 업데이트
+        navigate(`/concat/${newId}`, { replace: true });
+      }
+
       showAlert('프로젝트가 저장되었습니다.', 'default');
     } catch (error) {
       console.error('저장 실패:', error);
@@ -175,7 +200,15 @@ const ConcatPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [id, projectName, globalFrontSilenceLength, globalTotalSilenceLength, items, showAlert]);
+  }, [
+    id,
+    projectName,
+    globalFrontSilenceLength,
+    globalTotalSilenceLength,
+    items,
+    showAlert,
+    navigate,
+  ]);
   // 선택된 항목 삭제
   const handleDeleteSelectedItems = useCallback(async () => {
     if (!id) {

@@ -351,7 +351,7 @@ export interface VCSrcFile {
 
 export interface VCTrgFile {
   audioType: string;
-  localFileName: string;
+  localFileName: string | null;
   s3MemberAudioMetaId: number | null;
 }
 

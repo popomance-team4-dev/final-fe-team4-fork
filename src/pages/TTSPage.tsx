@@ -102,7 +102,7 @@ const TTSPage = () => {
     const loadTTSProject = async () => {
       if (!id) {
         console.warn('ID가 없습니다.');
-        // showAlert('저장을 누르면 새 프로젝트가 저장됩니다.', 'default');
+        showAlert('저장을 누르면 새 프로젝트가 저장됩니다.', 'default');
         setProjectData(initialProjectData);
         setItems([]);
         setHistoryItems([]);
@@ -173,6 +173,7 @@ const TTSPage = () => {
       value !== null && value !== undefined;
 
     const validations = [
+      { condition: !projectData.projectId, message: '프로젝트를 먼저 저장을 해주세요' },
       {
         condition: !projectData.projectName || !items.length,
         message: '프로젝트 이름 또는 항목이 없습니다.',
